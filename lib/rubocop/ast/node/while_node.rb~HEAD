@@ -2,12 +2,16 @@
 
 module RuboCop
   module AST
-    # A node extension for `until` nodes.
-    class UntilNode < Node
+    # A node extension for `while` nodes.
+    class WhileNode < Node
       include ConditionalNode
       include ModifierNode
 
       def keyword
+        'while'
+      end
+
+      def inverse_keyword
         'until'
       end
 
