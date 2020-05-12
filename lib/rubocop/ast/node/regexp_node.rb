@@ -10,12 +10,15 @@ module RuboCop
         x: Regexp::EXTENDED,
         i: Regexp::IGNORECASE,
         m: Regexp::MULTILINE,
-        n: Regexp::NOENCODING
+        n: Regexp::NOENCODING,
+        o: 0
       }.freeze
 
+      # Note: The 'o' option is ignored.
+      #
       # @return [Regexp] a regexp of this node
       def to_regexp
-        option = regopt.children.map { |opt| OPTIONS[opt] }.inject(:|)
+        option = regopt.children.map { |opt| OPTIONS.fetch(opt) }.inject(:|)
         Regexp.new(content, option)
       end
 
