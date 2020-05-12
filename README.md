@@ -1,7 +1,7 @@
 # RuboCop AST
 
 [![Gem Version](https://badge.fury.io/rb/rubocop-ast.svg)](https://badge.fury.io/rb/rubocop-ast)
-[![CircleCI](https://circleci.com/gh/rubocop-hq/rubocop-ast.svg?style=svg)](https://circleci.com/gh/rubocop-hq/rubocop-ast)
+![CI](https://github.com/rubocop-hq/rubocop-ast/workflows/CI/badge.svg)
 
 Contains the classes needed by [RuboCop](https://github.com/rubocop-hq/rubocop) to deal with Ruby's AST, in particular:
 * `RuboCop::AST::Node`
