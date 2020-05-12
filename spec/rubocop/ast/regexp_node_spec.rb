@@ -47,6 +47,12 @@ RSpec.describe RuboCop::AST::RegexpNode do
       it { expect(regexp_node.to_regexp).to eq(eval(source)) }
     end
     # rubocop:enable Security/Eval
+
+    context 'with a regexp with an "o" option' do
+      let(:source) { '/abc/io' }
+
+      it { expect(regexp_node.to_regexp.inspect).to eq('/abc/i') }
+    end
   end
 
   describe '#regopt' do
