@@ -36,7 +36,9 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
 
       - name: install dependencies
-        run:  bundle install --jobs 3 --retry 3
+        run: |
+          bundle install --jobs 3 --retry 3
+          gem install rubocop
       - name: spec
         run:  bundle exec rake spec
       - name: internal_investigation
