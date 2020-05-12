@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.0.2 (2020-05-12)
+
 ### Bug fixes
 
 * [Perf #106](https://github.com/rubocop-hq/rubocop-performance#106): Fix RegexpNode#to_regexp where option is 'o' + any other ([@marcandre][])
