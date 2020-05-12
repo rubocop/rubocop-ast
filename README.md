@@ -5,7 +5,9 @@
 
 Contains the classes needed by [RuboCop](https://github.com/rubocop-hq/rubocop) to deal with Ruby's AST, in particular:
 * `RuboCop::AST::Node`
-* `RuboCop::NodePattern`
+* `RuboCop::NodePattern` ([doc](manual/node_pattern.md))
+
+This gem may be used independently from the main RuboCop gem.
 
 ## Installation
 
