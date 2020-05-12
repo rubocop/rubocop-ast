@@ -32,4 +32,10 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('parser', '>= 2.7.0.1')
 
   s.add_development_dependency('bundler', '>= 1.15.0', '< 3.0')
+
+  # #### Do NOT add `rubocop` (or anything depending on `rubocop`), even as a
+  # development_dependency to insure that this gem remains independent of `rubocop`.
+  # Bundler loads all dependencies automatically, so specs wouldn't detect it if
+  # we required a file from `rubocop` gem by mistake.
+  # Note that `rake internal_investigation` will use `../rubocop` if present.
 end
