@@ -57,6 +57,7 @@ require_relative 'ast/node/while_node'
 require_relative 'ast/node/yield_node'
 require_relative 'ast/builder'
 require_relative 'ast/traversal'
+require_relative 'ast/version'
 
 require_relative 'token'
 require_relative 'processed_source'
