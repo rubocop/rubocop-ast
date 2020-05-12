@@ -14,12 +14,10 @@ jobs:
       fail-fast: false
       matrix:
         # [ ubuntu, macos, windows ]
-        os: [ windows ]
+        os: [ ubuntu ]
         ruby: [ 2.4, 2.5, 2.6, 2.7, head ]
         include:
           - { os: windows, ruby: mingw }
-        exclude:
-          - { os: windows, ruby: head  }
 
     steps:
       - name: windows misc
@@ -34,12 +32,17 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-
       - name: install dependencies
+        run: bundle install --jobs 3 --retry 3
+      - name: install rubocop for internal investigation
+        if: matrix.os != 'windows'
         run: |
-          bundle install --jobs 3 --retry 3
-          gem install rubocop rubocop-performance rubocop-rspec
+          gem install rubocop-performance rubocop-rspec
+          git clone https://github.com/rubocop-hq/rubocop.git ../rubocop
+          chmod +x ../rubocop/exe/rubocop
+          cd ../rubocop && bundle install --jobs 3 --retry 3
       - name: spec
         run:  bundle exec rake spec
       - name: internal_investigation
+        if: matrix.os != 'windows'
         run:  bundle exec rake internal_investigation
