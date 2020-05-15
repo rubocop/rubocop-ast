@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::Node do
-  let(:node) { RuboCop::ProcessedSource.new(src, ruby_version).ast }
+  let(:node) { RuboCop::AST::ProcessedSource.new(src, ruby_version).ast }
 
   describe '#value_used?' do
     before :all do

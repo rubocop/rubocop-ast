@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe RuboCop::Token do
+RSpec.describe RuboCop::AST::Token do
   let(:processed_source) { parse_source(source) }
 
   let(:source) { <<~RUBY }

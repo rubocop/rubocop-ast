@@ -36,7 +36,7 @@ end
 
 module ParseSourceHelper
   def parse_source(source)
-    RuboCop::ProcessedSource.new(source, ruby_version, nil)
+    RuboCop::AST::ProcessedSource.new(source, ruby_version, nil)
   end
 end
 

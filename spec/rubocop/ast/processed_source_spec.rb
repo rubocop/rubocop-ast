@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe RuboCop::ProcessedSource do
+RSpec.describe RuboCop::AST::ProcessedSource do
   subject(:processed_source) { described_class.new(source, ruby_version, path) }
 
   let(:source) { <<~RUBY }
@@ -69,7 +69,7 @@ RSpec.describe RuboCop::ProcessedSource do
   describe '#tokens' do
     it 'has an array of tokens' do
       expect(processed_source.tokens.is_a?(Array)).to be(true)
-      expect(processed_source.tokens.first.is_a?(RuboCop::Token)).to be(true)
+      expect(processed_source.tokens.first.is_a?(RuboCop::AST::Token)).to be(true)
     end
   end
 
@@ -303,7 +303,7 @@ RSpec.describe RuboCop::ProcessedSource do
         tokens = []
 
         processed_source.each_token do |item|
-          expect(item.is_a?(RuboCop::Token)).to be true
+          expect(item.is_a?(RuboCop::AST::Token)).to be true
           tokens << item
         end
 

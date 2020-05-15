@@ -2,7 +2,7 @@
 
 require 'parser/current'
 
-RSpec.describe RuboCop::NodePattern do
+RSpec.describe RuboCop::AST::NodePattern do
   before { $VERBOSE = true }
 
   after { $VERBOSE = false }
@@ -34,7 +34,7 @@ RSpec.describe RuboCop::NodePattern do
   shared_examples 'invalid' do
     it 'is invalid' do
       expect { instance }
-        .to raise_error(RuboCop::NodePattern::Invalid)
+        .to raise_error(RuboCop::AST::NodePattern::Invalid)
     end
   end
 
@@ -1345,21 +1345,23 @@ RSpec.describe RuboCop::NodePattern do
 
   describe 'funcalls' do
     module RuboCop
-      class NodePattern
-        def goodmatch(_foo)
-          true
-        end
+      module AST
+        class NodePattern
+          def goodmatch(_foo)
+            true
+          end
 
-        def badmatch(_foo)
-          false
-        end
+          def badmatch(_foo)
+            false
+          end
 
-        def witharg(foo, bar)
-          foo == bar
-        end
+          def witharg(foo, bar)
+            foo == bar
+          end
 
-        def withargs(foo, bar, qux)
-          foo.between?(bar, qux)
+          def withargs(foo, bar, qux)
+            foo.between?(bar, qux)
+          end
         end
       end
     end
