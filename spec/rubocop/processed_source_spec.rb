@@ -32,11 +32,10 @@ RSpec.describe RuboCop::ProcessedSource do
       end
     end
 
-    it 'raises RuboCop::Error when the file does not exist' do
+    it 'raises a Errno::ENOENT when the file does not exist' do
       expect do
         described_class.from_file('foo', ruby_version)
-      end.to raise_error(RuboCop::Error)
-        .with_message(/No such file or directory/)
+      end.to raise_error(Errno::ENOENT)
     end
   end
 

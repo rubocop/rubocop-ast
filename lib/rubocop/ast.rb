@@ -3,7 +3,6 @@
 require 'parser'
 require 'forwardable'
 
-require_relative 'error'
 require_relative 'node_pattern'
 
 require_relative 'ast/sexp'
