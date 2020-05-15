@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.0.3 (2020-05-15)
+
 ### Changes
 
 * Classes `NodePattern`, `ProcessedSource` and `Token` moved to `AST::NodePattern`, etc.
