@@ -17,7 +17,7 @@ Gemspec/RequiredRubyVersion:
 InternalAffairs/NodeDestructuring:
   Exclude:
     - 'spec/rubocop/ast/resbody_node_spec.rb'
-    - 'spec/rubocop/node_pattern_spec.rb'
+    - 'spec/rubocop/ast/node_pattern_spec.rb'
 
 # Offense count: 1
 # Configuration parameters: CountComments.
@@ -61,17 +61,17 @@ RSpec/ContextWording:
     - 'spec/rubocop/ast/int_node_spec.rb'
     - 'spec/rubocop/ast/node_spec.rb'
     - 'spec/rubocop/ast/resbody_node_spec.rb'
-    - 'spec/rubocop/node_pattern_spec.rb'
-    - 'spec/rubocop/processed_source_spec.rb'
-    - 'spec/rubocop/token_spec.rb'
+    - 'spec/rubocop/ast/node_pattern_spec.rb'
+    - 'spec/rubocop/ast/processed_source_spec.rb'
+    - 'spec/rubocop/ast/token_spec.rb'
     - 'spec/spec_helper.rb'
 
 # Offense count: 5
 # Configuration parameters: Max.
 RSpec/ExampleLength:
   Exclude:
-    - 'spec/rubocop/node_pattern_spec.rb'
-    - 'spec/rubocop/processed_source_spec.rb'
+    - 'spec/rubocop/ast/node_pattern_spec.rb'
+    - 'spec/rubocop/ast/processed_source_spec.rb'
 
 # Offense count: 50
 # Configuration parameters: AggregateFailuresByDefault.

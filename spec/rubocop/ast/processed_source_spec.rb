@@ -16,7 +16,7 @@ RSpec.describe RuboCop::ProcessedSource do
     describe 'when the file exists' do
       around do |example|
         org_pwd = Dir.pwd
-        Dir.chdir(__dir__)
+        Dir.chdir("#{__dir__}/..")
         example.run
         Dir.chdir(org_pwd)
       end
