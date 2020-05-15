@@ -4,6 +4,9 @@
 
 ### Changes
 
+* Classes `NodePattern`, `ProcessedSource` and `Token` moved to `AST::NodePattern`, etc.
+  The `rubocop` gem has aliases to insure compatibility. [#7]
+
 * `AST::ProcessedSource.from_file` now raises a `Errno::ENOENT` instead of a `RuboCop::Error` [#7]
 
 ## 0.0.2 (2020-05-12)
