@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Changes
+
+* `AST::ProcessedSource.from_file` now raises a `Errno::ENOENT` instead of a `RuboCop::Error` [#7]
+
 ## 0.0.2 (2020-05-12)
 
 ### Bug fixes
