@@ -393,9 +393,9 @@ matched with an expression like:
 Curious about how it works?
 
 Check more details in the
-[documentation](https://www.rubydoc.info/gems/rubocop/RuboCop/NodePattern)
-or browse the [source code](https://github.com/rubocop-hq/rubocop-ast/blob/master/lib/rubocop/node_pattern.rb)
+[documentation](https://www.rubydoc.info/gems/rubocop-ast/RuboCop/AST/NodePattern)
+or browse the [source code](https://github.com/rubocop-hq/rubocop-ast/blob/master/lib/rubocop/ast/node_pattern.rb)
 directly. It's easy to read and hack on.
 
-The [specs](https://github.com/rubocop-hq/rubocop-ast/blob/master/spec/rubocop/node_pattern_spec.rb)
+The [specs](https://github.com/rubocop-hq/rubocop-ast/blob/master/spec/rubocop/ast/node_pattern_spec.rb)
 are also very useful to comprehend each feature.
