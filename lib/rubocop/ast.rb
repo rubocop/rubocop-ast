@@ -3,8 +3,7 @@
 require 'parser'
 require 'forwardable'
 
-require_relative 'node_pattern'
-
+require_relative 'ast/node_pattern'
 require_relative 'ast/sexp'
 require_relative 'ast/node'
 require_relative 'ast/node/mixin/method_identifier_predicates'
@@ -55,8 +54,7 @@ require_relative 'ast/node/when_node'
 require_relative 'ast/node/while_node'
 require_relative 'ast/node/yield_node'
 require_relative 'ast/builder'
+require_relative 'ast/processed_source'
+require_relative 'ast/token'
 require_relative 'ast/traversal'
 require_relative 'ast/version'
-
-require_relative 'token'
-require_relative 'processed_source'
