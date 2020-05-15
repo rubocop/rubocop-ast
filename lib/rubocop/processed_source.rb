@@ -34,14 +34,6 @@ module RuboCop
       parse(source, ruby_version)
     end
 
-    def comment_config
-      @comment_config ||= CommentConfig.new(self)
-    end
-
-    def disabled_line_ranges
-      comment_config.cop_disabled_line_ranges
-    end
-
     def ast_with_comments
       return if !ast || !comments
 
