@@ -45,7 +45,6 @@ Naming/FileName:
 RSpec/BeforeAfterAll:
   Exclude:
     - 'spec/spec_helper.rb'
-    - 'spec/rails_helper.rb'
     - 'spec/support/**/*.rb'
     - 'spec/rubocop/ast/node_spec.rb'
 

@@ -29,11 +29,6 @@ Style/FormatStringToken:
   Exclude:
     - spec/**/*
 
-Style/IpAddresses:
-  # The test for this cop includes strings that would cause offenses
-  Exclude:
-  - spec/rubocop/cop/style/ip_addresses_spec.rb
-
 Layout/EndOfLine:
   EnforcedStyle: lf
 
@@ -88,17 +83,9 @@ Metrics/BlockLength:
     - 'spec/**/*.rb'
     - '**/*.gemspec'
 
-Metrics/ClassLength:
-  Exclude:
-    - lib/rubocop/config_obsoletion.rb
-
 Metrics/ModuleLength:
   Exclude:
     - 'spec/**/*.rb'
-
-RSpec/FilePath:
-  Exclude:
-    - spec/rubocop/formatter/junit_formatter_spec.rb
 
 RSpec/PredicateMatcher:
   EnforcedStyle: explicit
