@@ -796,6 +796,14 @@ RSpec.describe RuboCop::AST::SendNode do
           )
         )
       end
+
+      context 'with a call without arguments' do
+        let(:source) { 'attr_reader' }
+
+        it do
+          expect(send_node.attribute_accessor?).to be(nil)
+        end
+      end
     end
   end
 
