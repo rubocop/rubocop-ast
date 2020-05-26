@@ -37,20 +37,6 @@ RSpec.describe RuboCop::AST::PairNode do
     end
   end
 
-  describe '#colon?' do
-    context 'when using a hash rocket delimiter' do
-      let(:source) { '{ a => 1 }' }
-
-      it { expect(pair_node.colon?).to be_falsey }
-    end
-
-    context 'when using a colon delimiter' do
-      let(:source) { '{ a: 1 }' }
-
-      it { expect(pair_node.colon?).to be_truthy }
-    end
-  end
-
   describe '#delimiter' do
     context 'when using a hash rocket delimiter' do
       let(:source) { '{ a => 1 }' }
