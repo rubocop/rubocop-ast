@@ -36,6 +36,7 @@ RSpec.describe RuboCop::AST::ArrayNode do
 
     context 'with block' do
       it { expect(array_node.each_value {}.is_a?(described_class)).to be(true) }
+
       it do
         ret = []
         array_node.each_value { |i| ret << i.to_s }
