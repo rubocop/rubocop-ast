@@ -40,6 +40,7 @@ RSpec.describe RuboCop::AST::CaseMatchNode do
       end
 
       it { expect(case_match_node.in_pattern_branches.size).to eq(3) }
+
       it {
         expect(case_match_node.in_pattern_branches).to all(be_in_pattern_type)
       }
