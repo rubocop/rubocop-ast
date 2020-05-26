@@ -782,6 +782,23 @@ RSpec.describe RuboCop::AST::SendNode do
     end
   end
 
+  describe '#attribute_accessor?' do
+    context 'with an accessor' do
+      let(:source) { 'attr_reader :foo, bar, *baz' }
+
+      it 'returns the accessor method and Array<accessors>]' do
+        expect(send_node.attribute_accessor?).to contain_exactly(
+          :attr_reader,
+          contain_exactly(
+            be_sym_type,
+            be_send_type,
+            be_splat_type
+          )
+        )
+      end
+    end
+  end
+
   describe '#dot?' do
     context 'with a dot' do
       let(:source) { 'foo.+ 1' }
