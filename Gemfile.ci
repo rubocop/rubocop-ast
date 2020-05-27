@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+# This Gemfile is not required from the main Gemfile by design
+
+gem 'rubocop-performance'
+gem 'rubocop-rspec'
+version = ENV['RUBOCOP_VERSION']
+gem 'rubocop', version unless version == 'master'
+# For 'master', assume that the latest gems are compatible
+# and that action script will install from source

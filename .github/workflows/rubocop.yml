@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   main:
     name: >-
-      ${{ matrix.os }} ${{ matrix.ruby }}
+      ${{ matrix.ruby }} | RuboCop ${{ matrix.rubocop }} (${{ matrix.os }})
     runs-on: ${{ matrix.os }}-latest
     env:
       # See https://github.com/tmm1/test-queue#environment-variables
@@ -13,11 +13,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # [ ubuntu, macos, windows ]
         os: [ ubuntu ]
         ruby: [ 2.4, 2.5, 2.6, 2.7, head ]
+        rubocop: [ master ]
+        # exclude:
+        #   - { rubocop: '0.84.0' }
         include:
-          - { os: windows, ruby: mingw }
+          - { os: windows, rubocop: master, ruby: mingw }
+          - { rubocop: '0.84.0', ruby: 2.4, os: ubuntu }
+          - { rubocop: '0.84.0', ruby: head, os: ubuntu }
 
     steps:
       - name: windows misc
@@ -34,10 +38,14 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
       - name: install dependencies
         run: bundle install --jobs 3 --retry 3
-      - name: install rubocop for internal investigation
+      - name: install rubocop packages for internal investigation
         if: matrix.os != 'windows'
+        env:
+          RUBOCOP_VERSION: ${{ matrix.rubocop }}
+        run: bundle install --gemfile Gemfile.ci
+      - name: install rubocop from source for internal investigation
+        if: "matrix.os != 'windows' && matrix.rubocop == 'master'"
         run: |
-          gem install rubocop-performance rubocop-rspec
           git clone https://github.com/rubocop-hq/rubocop.git ../rubocop
           chmod +x ../rubocop/exe/rubocop
           cd ../rubocop && bundle install --jobs 3 --retry 3
