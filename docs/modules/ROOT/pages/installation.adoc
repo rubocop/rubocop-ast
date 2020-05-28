@@ -1,4 +1,6 @@
-*RuboCop*'s installation is pretty standard:
+= Installation
+
+*RuboCop AST*'s installation is pretty standard:
 
 [source,sh]
 ----

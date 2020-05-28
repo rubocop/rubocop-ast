@@ -1,3 +1,5 @@
+= RuboCop AST
+
 This gem introduces two core classes of RuboCop:
 
 * `RuboCop::Node`, and
