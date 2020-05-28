@@ -1,0 +1,7 @@
+This gem introduces two core classes of RuboCop:
+
+* `RuboCop::Node`, and
+* `RuboCop::AST::NodePattern`.
+
+See xref:node_pattern.adoc["Node Pattern"] to get yourself familiar with ``NodePattern``'s
+capabilities.

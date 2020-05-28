@@ -1,0 +1,13 @@
+*RuboCop*'s installation is pretty standard:
+
+[source,sh]
+----
+$ gem install rubocop-ast
+----
+
+Using `bundler`, include it in your `Gemfile`:
+
+[source,rb]
+----
+gem 'rubocop-ast'
+----
