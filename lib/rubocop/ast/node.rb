@@ -53,6 +53,7 @@ module RuboCop
                     yield].freeze
       OPERATOR_KEYWORDS = %i[and or].freeze
       SPECIAL_KEYWORDS = %w[__FILE__ __LINE__ __ENCODING__].freeze
+      ARGUMENT_TYPES = %i[arg optarg restarg kwarg kwoptarg kwrestarg blockarg].freeze
 
       # @see https://www.rubydoc.info/gems/ast/AST/Node:initialize
       def initialize(type, children = [], properties = {})
@@ -454,6 +455,10 @@ module RuboCop
 
       def argument?
         parent&.send_type? && parent.arguments.include?(self)
+      end
+
+      def argument_type?
+        ARGUMENT_TYPES.include?(type)
       end
 
       def boolean_type?

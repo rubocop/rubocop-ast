@@ -347,4 +347,30 @@ RSpec.describe RuboCop::AST::Node do
       end
     end
   end
+
+  describe '#argument_type?' do
+    context 'block arguments' do
+      let(:src) { 'bar { |a, b = 42, *c, d: 42, **e| nil }' }
+
+      it 'returns true for all argument types' do
+        node.arguments.children.each do |arg|
+          expect(arg.argument_type?).to eq(true)
+        end
+
+        expect(node.arguments.argument_type?).to eq(false)
+      end
+    end
+
+    context 'method arguments' do
+      let(:src) { 'def method_name(a = 0, *b, c: 42, **d); end' }
+
+      it 'returns true for all argument types' do
+        node.arguments.children.each do |arg|
+          expect(arg.argument_type?).to eq(true)
+        end
+
+        expect(node.arguments.argument_type?).to eq(false)
+      end
+    end
+  end
 end
