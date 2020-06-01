@@ -122,7 +122,7 @@ module RuboCop
         METHOD_NAME  = /\#?#{IDENTIFIER}[!?]?\(?/.freeze
         PARAM_NUMBER = /%\d*/.freeze
 
-        SEPARATORS = /[\s]+/.freeze
+        SEPARATORS = /\s+/.freeze
         TOKENS     = Regexp.union(META, PARAM_NUMBER, NUMBER,
                                   METHOD_NAME, SYMBOL, STRING)
 
