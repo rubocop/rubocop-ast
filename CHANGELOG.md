@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#4](https://github.com/rubocop-hq/rubocop-ast/issues/4): Add `interpolation?` for `RegexpNode`. ([@tejasbubane][])
+
 ## 0.0.3 (2020-05-15)
 
 ### Changes

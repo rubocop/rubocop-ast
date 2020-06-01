@@ -31,6 +31,11 @@ module RuboCop
       def content
         children.select(&:str_type?).map(&:str_content).join
       end
+
+      # @return [Bool] if regexp contains interpolation
+      def interpolation?
+        children.any?(&:begin_type?)
+      end
     end
   end
 end

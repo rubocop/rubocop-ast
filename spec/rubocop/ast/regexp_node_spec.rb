@@ -140,4 +140,24 @@ RSpec.describe RuboCop::AST::RegexpNode do
       it { expect(content).to eq("\n.+\n") }
     end
   end
+
+  describe '#interpolation?' do
+    context 'with direct variable interpoation' do
+      let(:source) { '/\n\n#{foo}(abc)+/' }
+
+      it { expect(regexp_node.interpolation?).to eq(true) }
+    end
+
+    context 'with regexp quote' do
+      let(:source) { '/\n\n#{Regexp.quote(foo)}(abc)+/' }
+
+      it { expect(regexp_node.interpolation?).to eq(true) }
+    end
+
+    context 'with no interpolation returns false' do
+      let(:source) { '/a{3,6}/' }
+
+      it { expect(regexp_node.interpolation?).to eq(false) }
+    end
+  end
 end
