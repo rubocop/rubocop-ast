@@ -264,4 +264,30 @@ RSpec.describe RuboCop::AST::RegexpNode do
       it { expect(regexp_node.no_encoding?).to be(true) }
     end
   end
+
+  describe '#single_interpolation?' do
+    context 'with no options' do
+      let(:source) { '/x/' }
+
+      it { expect(regexp_node.single_interpolation?).to be(false) }
+    end
+
+    context 'with other options' do
+      let(:source) { '/x/xm' }
+
+      it { expect(regexp_node.single_interpolation?).to be(false) }
+    end
+
+    context 'with only o option' do
+      let(:source) { '/x/o' }
+
+      it { expect(regexp_node.single_interpolation?).to be(true) }
+    end
+
+    context 'with o and other options' do
+      let(:source) { '/x/xom' }
+
+      it { expect(regexp_node.single_interpolation?).to be(true) }
+    end
+  end
 end

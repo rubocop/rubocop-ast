@@ -52,6 +52,11 @@ module RuboCop
         regopt_include?(:i)
       end
 
+      # @return [Bool] if regexp uses the single-interpolation regopt
+      def single_interpolation?
+        regopt_include?(:o)
+      end
+
       # @return [Bool] if regexp uses the no-encoding regopt
       def no_encoding?
         regopt_include?(:n)
