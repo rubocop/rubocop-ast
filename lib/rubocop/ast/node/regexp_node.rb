@@ -36,6 +36,37 @@ module RuboCop
       def interpolation?
         children.any?(&:begin_type?)
       end
+
+      # @return [Bool] if regexp uses the multiline regopt
+      def multiline?
+        regopt_include?(:m)
+      end
+
+      # @return [Bool] if regexp uses the extended regopt
+      def extended?
+        regopt_include?(:x)
+      end
+
+      # @return [Bool] if regexp uses the ignore-case regopt
+      def ignore_case?
+        regopt_include?(:i)
+      end
+
+      # @return [Bool] if regexp uses the single-interpolation regopt
+      def single_interpolation?
+        regopt_include?(:o)
+      end
+
+      # @return [Bool] if regexp uses the no-encoding regopt
+      def no_encoding?
+        regopt_include?(:n)
+      end
+
+      private
+
+      def regopt_include?(option)
+        regopt.children.include?(option)
+      end
     end
   end
 end

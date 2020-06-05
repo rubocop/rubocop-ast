@@ -160,4 +160,134 @@ RSpec.describe RuboCop::AST::RegexpNode do
       it { expect(regexp_node.interpolation?).to eq(false) }
     end
   end
+
+  describe '#multiline?' do
+    context 'with no options' do
+      let(:source) { '/x/' }
+
+      it { expect(regexp_node.multiline?).to be(false) }
+    end
+
+    context 'with other options' do
+      let(:source) { '/x/ix' }
+
+      it { expect(regexp_node.multiline?).to be(false) }
+    end
+
+    context 'with only m option' do
+      let(:source) { '/x/m' }
+
+      it { expect(regexp_node.multiline?).to be(true) }
+    end
+
+    context 'with m and other options' do
+      let(:source) { '/x/imx' }
+
+      it { expect(regexp_node.multiline?).to be(true) }
+    end
+  end
+
+  describe '#extended?' do
+    context 'with no options' do
+      let(:source) { '/x/' }
+
+      it { expect(regexp_node.extended?).to be(false) }
+    end
+
+    context 'with other options' do
+      let(:source) { '/x/im' }
+
+      it { expect(regexp_node.extended?).to be(false) }
+    end
+
+    context 'with only x option' do
+      let(:source) { '/x/x' }
+
+      it { expect(regexp_node.extended?).to be(true) }
+    end
+
+    context 'with x and other options' do
+      let(:source) { '/x/ixm' }
+
+      it { expect(regexp_node.extended?).to be(true) }
+    end
+  end
+
+  describe '#ignore_case?' do
+    context 'with no options' do
+      let(:source) { '/x/' }
+
+      it { expect(regexp_node.ignore_case?).to be(false) }
+    end
+
+    context 'with other options' do
+      let(:source) { '/x/xm' }
+
+      it { expect(regexp_node.ignore_case?).to be(false) }
+    end
+
+    context 'with only i option' do
+      let(:source) { '/x/i' }
+
+      it { expect(regexp_node.ignore_case?).to be(true) }
+    end
+
+    context 'with i and other options' do
+      let(:source) { '/x/xim' }
+
+      it { expect(regexp_node.ignore_case?).to be(true) }
+    end
+  end
+
+  describe '#no_encoding?' do
+    context 'with no options' do
+      let(:source) { '/x/' }
+
+      it { expect(regexp_node.no_encoding?).to be(false) }
+    end
+
+    context 'with other options' do
+      let(:source) { '/x/xm' }
+
+      it { expect(regexp_node.no_encoding?).to be(false) }
+    end
+
+    context 'with only n option' do
+      let(:source) { '/x/n' }
+
+      it { expect(regexp_node.no_encoding?).to be(true) }
+    end
+
+    context 'with n and other options' do
+      let(:source) { '/x/xnm' }
+
+      it { expect(regexp_node.no_encoding?).to be(true) }
+    end
+  end
+
+  describe '#single_interpolation?' do
+    context 'with no options' do
+      let(:source) { '/x/' }
+
+      it { expect(regexp_node.single_interpolation?).to be(false) }
+    end
+
+    context 'with other options' do
+      let(:source) { '/x/xm' }
+
+      it { expect(regexp_node.single_interpolation?).to be(false) }
+    end
+
+    context 'with only o option' do
+      let(:source) { '/x/o' }
+
+      it { expect(regexp_node.single_interpolation?).to be(true) }
+    end
+
+    context 'with o and other options' do
+      let(:source) { '/x/xom' }
+
+      it { expect(regexp_node.single_interpolation?).to be(true) }
+    end
+  end
 end
