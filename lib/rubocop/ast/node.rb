@@ -21,39 +21,40 @@ module RuboCop
     class Node < Parser::AST::Node # rubocop:disable Metrics/ClassLength
       include RuboCop::AST::Sexp
       extend NodePattern::Macros
+      extend FastArray::Function
 
       # <=> isn't included here, because it doesn't return a boolean.
-      COMPARISON_OPERATORS = %i[== === != <= >= > <].freeze
+      COMPARISON_OPERATORS = FastArray %i[== === != <= >= > <]
 
-      TRUTHY_LITERALS = %i[str dstr xstr int float sym dsym array
-                           hash regexp true irange erange complex
-                           rational regopt].freeze
-      FALSEY_LITERALS = %i[false nil].freeze
-      LITERALS = (TRUTHY_LITERALS + FALSEY_LITERALS).freeze
-      COMPOSITE_LITERALS = %i[dstr xstr dsym array hash irange
-                              erange regexp].freeze
-      BASIC_LITERALS = (LITERALS - COMPOSITE_LITERALS).freeze
-      MUTABLE_LITERALS = %i[str dstr xstr array hash
-                            regexp irange erange].freeze
-      IMMUTABLE_LITERALS = (LITERALS - MUTABLE_LITERALS).freeze
+      TRUTHY_LITERALS = FastArray %i[str dstr xstr int float sym dsym array
+                                     hash regexp true irange erange complex
+                                     rational regopt]
+      FALSEY_LITERALS = FastArray %i[false nil]
+      LITERALS = FastArray(TRUTHY_LITERALS + FALSEY_LITERALS)
+      COMPOSITE_LITERALS = FastArray %i[dstr xstr dsym array hash irange
+                                        erange regexp]
+      BASIC_LITERALS = FastArray(LITERALS - COMPOSITE_LITERALS)
+      MUTABLE_LITERALS = FastArray %i[str dstr xstr array hash
+                                      regexp irange erange]
+      IMMUTABLE_LITERALS = FastArray(LITERALS - MUTABLE_LITERALS)
 
-      EQUALS_ASSIGNMENTS = %i[lvasgn ivasgn cvasgn gvasgn
-                              casgn masgn].freeze
-      SHORTHAND_ASSIGNMENTS = %i[op_asgn or_asgn and_asgn].freeze
-      ASSIGNMENTS = (EQUALS_ASSIGNMENTS + SHORTHAND_ASSIGNMENTS).freeze
+      EQUALS_ASSIGNMENTS = FastArray %i[lvasgn ivasgn cvasgn gvasgn
+                                        casgn masgn]
+      SHORTHAND_ASSIGNMENTS = FastArray %i[op_asgn or_asgn and_asgn]
+      ASSIGNMENTS = FastArray(EQUALS_ASSIGNMENTS + SHORTHAND_ASSIGNMENTS)
 
-      BASIC_CONDITIONALS = %i[if while until].freeze
-      CONDITIONALS = [*BASIC_CONDITIONALS, :case].freeze
-      VARIABLES = %i[ivar gvar cvar lvar].freeze
-      REFERENCES = %i[nth_ref back_ref].freeze
-      KEYWORDS = %i[alias and break case class def defs defined?
-                    kwbegin do else ensure for if module next
-                    not or postexe redo rescue retry return self
-                    super zsuper then undef until when while
-                    yield].freeze
-      OPERATOR_KEYWORDS = %i[and or].freeze
-      SPECIAL_KEYWORDS = %w[__FILE__ __LINE__ __ENCODING__].freeze
-      ARGUMENT_TYPES = %i[arg optarg restarg kwarg kwoptarg kwrestarg blockarg].freeze
+      BASIC_CONDITIONALS = FastArray %i[if while until]
+      CONDITIONALS = FastArray[*BASIC_CONDITIONALS, :case]
+      VARIABLES = FastArray %i[ivar gvar cvar lvar]
+      REFERENCES = FastArray %i[nth_ref back_ref]
+      KEYWORDS = FastArray %i[alias and break case class def defs defined?
+                              kwbegin do else ensure for if module next
+                              not or postexe redo rescue retry return self
+                              super zsuper then undef until when while
+                              yield]
+      OPERATOR_KEYWORDS = FastArray %i[and or]
+      SPECIAL_KEYWORDS = FastArray %w[__FILE__ __LINE__ __ENCODING__]
+      ARGUMENT_TYPES = FastArray %i[arg optarg restarg kwarg kwoptarg kwrestarg blockarg]
 
       # @see https://www.rubydoc.info/gems/ast/AST/Node:initialize
       def initialize(type, children = [], properties = {})

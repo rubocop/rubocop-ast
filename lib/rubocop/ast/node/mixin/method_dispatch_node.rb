@@ -8,9 +8,10 @@ module RuboCop
     module MethodDispatchNode
       extend NodePattern::Macros
       include MethodIdentifierPredicates
+      extend FastArray::Function
 
-      ARITHMETIC_OPERATORS = %i[+ - * / % **].freeze
-      SPECIAL_MODIFIERS = %w[private protected].freeze
+      ARITHMETIC_OPERATORS = FastArray %i[+ - * / % **]
+      SPECIAL_MODIFIERS = FastArray %w[private protected]
 
       # The receiving node of the method dispatch.
       #

@@ -7,7 +7,7 @@ module RuboCop
       extend Forwardable
 
       ARRAY_METHODS =
-        (Array.instance_methods - Object.instance_methods - [:to_a]).freeze
+        Array.instance_methods - Object.instance_methods - [:to_a]
 
       def_delegators :to_a, *ARRAY_METHODS
     end

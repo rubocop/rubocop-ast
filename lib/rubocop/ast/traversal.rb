@@ -8,6 +8,8 @@ module RuboCop
     # Override methods to perform custom processing. Remember to call `super`
     # if you want to recursively process descendant nodes.
     module Traversal
+      extend FastArray::Function
+
       def walk(node)
         return if node.nil?
 
@@ -15,29 +17,29 @@ module RuboCop
         nil
       end
 
-      NO_CHILD_NODES    = %i[true false nil int float complex
-                             rational str sym regopt self lvar
-                             ivar cvar gvar nth_ref back_ref cbase
-                             arg restarg blockarg shadowarg
-                             kwrestarg zsuper redo retry
-                             forward_args forwarded_args
-                             match_var match_nil_pattern empty_else
-                             forward_arg lambda procarg0 __ENCODING__].freeze
-      ONE_CHILD_NODE    = %i[splat kwsplat block_pass not break next
-                             preexe postexe match_current_line defined?
-                             arg_expr pin match_rest if_guard unless_guard
-                             match_with_trailing_comma].freeze
-      MANY_CHILD_NODES  = %i[dstr dsym xstr regexp array hash pair
-                             mlhs masgn or_asgn and_asgn
-                             undef alias args super yield or and
-                             while_post until_post iflipflop eflipflop
-                             match_with_lvasgn begin kwbegin return
-                             in_match match_alt
-                             match_as array_pattern array_pattern_with_tail
-                             hash_pattern const_pattern
-                             index indexasgn].freeze
-      SECOND_CHILD_ONLY = %i[lvasgn ivasgn cvasgn gvasgn optarg kwarg
-                             kwoptarg].freeze
+      NO_CHILD_NODES    = FastArray %i[true false nil int float complex
+                                       rational str sym regopt self lvar
+                                       ivar cvar gvar nth_ref back_ref cbase
+                                       arg restarg blockarg shadowarg
+                                       kwrestarg zsuper redo retry
+                                       forward_args forwarded_args
+                                       match_var match_nil_pattern empty_else
+                                       forward_arg lambda procarg0 __ENCODING__]
+      ONE_CHILD_NODE    = FastArray %i[splat kwsplat block_pass not break next
+                                       preexe postexe match_current_line defined?
+                                       arg_expr pin match_rest if_guard unless_guard
+                                       match_with_trailing_comma]
+      MANY_CHILD_NODES  = FastArray %i[dstr dsym xstr regexp array hash pair
+                                       mlhs masgn or_asgn and_asgn
+                                       undef alias args super yield or and
+                                       while_post until_post iflipflop eflipflop
+                                       match_with_lvasgn begin kwbegin return
+                                       in_match match_alt
+                                       match_as array_pattern array_pattern_with_tail
+                                       hash_pattern const_pattern
+                                       index indexasgn]
+      SECOND_CHILD_ONLY = FastArray %i[lvasgn ivasgn cvasgn gvasgn optarg kwarg
+                                       kwoptarg]
 
       NO_CHILD_NODES.each do |type|
         module_eval("def on_#{type}(node); end", __FILE__, __LINE__)

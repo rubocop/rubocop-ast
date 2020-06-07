@@ -11,7 +11,7 @@ module RuboCop
     class BlockNode < Node
       include MethodIdentifierPredicates
 
-      VOID_CONTEXT_METHODS = %i[each tap].freeze
+      VOID_CONTEXT_METHODS = FastArray %i[each tap]
 
       # The `send` node associated with this block.
       #

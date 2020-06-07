@@ -7,23 +7,25 @@ module RuboCop
     #
     # @note this mixin expects `#method_name` and `#receiver` to be implemented
     module MethodIdentifierPredicates # rubocop:disable Metrics/ModuleLength
-      ENUMERATOR_METHODS = %i[collect collect_concat detect downto each
-                              find find_all find_index inject loop map!
-                              map reduce reject reject! reverse_each select
-                              select! times upto].to_set.freeze
+      extend FastArray::Function
 
-      ENUMERABLE_METHODS = (Enumerable.instance_methods + [:each]).to_set.freeze
+      ENUMERATOR_METHODS = FastArray %i[collect collect_concat detect downto each
+                                        find find_all find_index inject loop map!
+                                        map reduce reject reject! reverse_each select
+                                        select! times upto]
+
+      ENUMERABLE_METHODS = FastArray(Enumerable.instance_methods + [:each])
 
       # http://phrogz.net/programmingruby/language.html#table_18.4
-      OPERATOR_METHODS = %i[| ^ & <=> == === =~ > >= < <= << >> + - * /
-                            % ** ~ +@ -@ !@ ~@ [] []= ! != !~ `].to_set.freeze
+      OPERATOR_METHODS = FastArray %i[| ^ & <=> == === =~ > >= < <= << >> + - * /
+                                      % ** ~ +@ -@ !@ ~@ [] []= ! != !~ `]
 
-      NONMUTATING_BINARY_OPERATOR_METHODS = %i[* / % + - == === != < > <= >= <=>].to_set.freeze
-      NONMUTATING_UNARY_OPERATOR_METHODS = %i[+@ -@ ~ !].to_set.freeze
-      NONMUTATING_OPERATOR_METHODS = (NONMUTATING_BINARY_OPERATOR_METHODS +
-        NONMUTATING_UNARY_OPERATOR_METHODS).freeze
+      NONMUTATING_BINARY_OPERATOR_METHODS = FastArray %i[* / % + - == === != < > <= >= <=>]
+      NONMUTATING_UNARY_OPERATOR_METHODS = FastArray %i[+@ -@ ~ !]
+      NONMUTATING_OPERATOR_METHODS = FastArray(NONMUTATING_BINARY_OPERATOR_METHODS +
+        NONMUTATING_UNARY_OPERATOR_METHODS)
 
-      NONMUTATING_ARRAY_METHODS = %i[
+      NONMUTATING_ARRAY_METHODS = FastArray %i[
         all? any? assoc at bsearch bsearch_index collect
         combination compact count cycle deconstruct difference
         dig drop drop_while each each_index empty? eql?
@@ -36,9 +38,9 @@ module RuboCop
         size slice sort sum take take_while
         to_a to_ary to_h to_s transpose union uniq
         values_at zip |
-      ].to_set.freeze
+      ]
 
-      NONMUTATING_HASH_METHODS = %i[
+      NONMUTATING_HASH_METHODS = FastArray %i[
         any? assoc compact dig each each_key each_pair
         each_value empty? eql? fetch fetch_values filter
         flatten has_key? has_value? hash include? inspect
@@ -46,9 +48,9 @@ module RuboCop
         rehash reject select size slice to_a to_h to_hash
         to_proc to_s transform_keys transform_values value?
         values values_at
-      ].to_set.freeze
+      ]
 
-      NONMUTATING_STRING_METHODS = %i[
+      NONMUTATING_STRING_METHODS = FastArray %i[
         ascii_only? b bytes bytesize byteslice capitalize
         casecmp casecmp? center chars chomp chop chr codepoints
         count crypt delete delete_prefix delete_suffix
@@ -61,7 +63,7 @@ module RuboCop
         strip sub succ sum swapcase to_a to_c to_f to_i to_r to_s
         to_str to_sym tr tr_s unicode_normalize unicode_normalized?
         unpack unpack1 upcase upto valid_encoding?
-      ].to_set.freeze
+      ]
 
       # Checks whether the method name matches the argument.
       #
