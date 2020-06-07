@@ -38,7 +38,7 @@ module RuboCop
       end
 
       # @return [Bool] if regexp uses the multiline regopt
-      def multiline?
+      def multiline_mode?
         regopt_include?(:m)
       end
 
