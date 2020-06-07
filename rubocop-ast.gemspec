@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
     'homepage_uri' => 'https://www.rubocop.org/',
     'changelog_uri' => 'https://github.com/rubocop-hq/rubocop-ast/blob/master/CHANGELOG.md',
     'source_code_uri' => 'https://github.com/rubocop-hq/rubocop-ast/',
-    'documentation_uri' => 'https://docs.rubocop.org/',
+    'documentation_uri' => 'https://docs.rubocop.org/rubocop-ast/',
     'bug_tracker_uri' => 'https://github.com/rubocop-hq/rubocop-ast/issues'
   }
 
