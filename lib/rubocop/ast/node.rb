@@ -23,37 +23,37 @@ module RuboCop
       extend NodePattern::Macros
 
       # <=> isn't included here, because it doesn't return a boolean.
-      COMPARISON_OPERATORS = %i[== === != <= >= > <].freeze
+      COMPARISON_OPERATORS = %i[== === != <= >= > <].to_set.freeze
 
       TRUTHY_LITERALS = %i[str dstr xstr int float sym dsym array
                            hash regexp true irange erange complex
-                           rational regopt].freeze
-      FALSEY_LITERALS = %i[false nil].freeze
-      LITERALS = (TRUTHY_LITERALS + FALSEY_LITERALS).freeze
+                           rational regopt].to_set.freeze
+      FALSEY_LITERALS = %i[false nil].to_set.freeze
+      LITERALS = (TRUTHY_LITERALS + FALSEY_LITERALS).to_set.freeze
       COMPOSITE_LITERALS = %i[dstr xstr dsym array hash irange
-                              erange regexp].freeze
-      BASIC_LITERALS = (LITERALS - COMPOSITE_LITERALS).freeze
+                              erange regexp].to_set.freeze
+      BASIC_LITERALS = (LITERALS - COMPOSITE_LITERALS).to_set.freeze
       MUTABLE_LITERALS = %i[str dstr xstr array hash
-                            regexp irange erange].freeze
-      IMMUTABLE_LITERALS = (LITERALS - MUTABLE_LITERALS).freeze
+                            regexp irange erange].to_set.freeze
+      IMMUTABLE_LITERALS = (LITERALS - MUTABLE_LITERALS).to_set.freeze
 
       EQUALS_ASSIGNMENTS = %i[lvasgn ivasgn cvasgn gvasgn
-                              casgn masgn].freeze
-      SHORTHAND_ASSIGNMENTS = %i[op_asgn or_asgn and_asgn].freeze
-      ASSIGNMENTS = (EQUALS_ASSIGNMENTS + SHORTHAND_ASSIGNMENTS).freeze
+                              casgn masgn].to_set.freeze
+      SHORTHAND_ASSIGNMENTS = %i[op_asgn or_asgn and_asgn].to_set.freeze
+      ASSIGNMENTS = (EQUALS_ASSIGNMENTS + SHORTHAND_ASSIGNMENTS).to_set.freeze
 
-      BASIC_CONDITIONALS = %i[if while until].freeze
-      CONDITIONALS = [*BASIC_CONDITIONALS, :case].freeze
-      VARIABLES = %i[ivar gvar cvar lvar].freeze
-      REFERENCES = %i[nth_ref back_ref].freeze
+      BASIC_CONDITIONALS = %i[if while until].to_set.freeze
+      CONDITIONALS = [*BASIC_CONDITIONALS, :case].to_set.freeze
+      VARIABLES = %i[ivar gvar cvar lvar].to_set.freeze
+      REFERENCES = %i[nth_ref back_ref].to_set.freeze
       KEYWORDS = %i[alias and break case class def defs defined?
                     kwbegin do else ensure for if module next
                     not or postexe redo rescue retry return self
                     super zsuper then undef until when while
-                    yield].freeze
-      OPERATOR_KEYWORDS = %i[and or].freeze
-      SPECIAL_KEYWORDS = %w[__FILE__ __LINE__ __ENCODING__].freeze
-      ARGUMENT_TYPES = %i[arg optarg restarg kwarg kwoptarg kwrestarg blockarg].freeze
+                    yield].to_set.freeze
+      OPERATOR_KEYWORDS = %i[and or].to_set.freeze
+      SPECIAL_KEYWORDS = %w[__FILE__ __LINE__ __ENCODING__].to_set.freeze
+      ARGUMENT_TYPES = %i[arg optarg restarg kwarg kwoptarg kwrestarg blockarg].to_set.freeze
 
       # @see https://www.rubydoc.info/gems/ast/AST/Node:initialize
       def initialize(type, children = [], properties = {})

@@ -10,11 +10,11 @@ module RuboCop
       ENUMERATOR_METHODS = %i[collect collect_concat detect downto each
                               find find_all find_index inject loop map!
                               map reduce reject reject! reverse_each select
-                              select! times upto].freeze
+                              select! times upto].to_set.freeze
 
       # http://phrogz.net/programmingruby/language.html#table_18.4
       OPERATOR_METHODS = %i[| ^ & <=> == === =~ > >= < <= << >> + - * /
-                            % ** ~ +@ -@ !@ ~@ [] []= ! != !~ `].freeze
+                            % ** ~ +@ -@ !@ ~@ [] []= ! != !~ `].to_set.freeze
 
       # Checks whether the method name matches the argument.
       #
