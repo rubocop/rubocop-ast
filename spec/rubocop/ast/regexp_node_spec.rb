@@ -161,29 +161,29 @@ RSpec.describe RuboCop::AST::RegexpNode do
     end
   end
 
-  describe '#multiline?' do
+  describe '#multiline_mode?' do
     context 'with no options' do
       let(:source) { '/x/' }
 
-      it { expect(regexp_node.multiline?).to be(false) }
+      it { expect(regexp_node.multiline_mode?).to be(false) }
     end
 
     context 'with other options' do
       let(:source) { '/x/ix' }
 
-      it { expect(regexp_node.multiline?).to be(false) }
+      it { expect(regexp_node.multiline_mode?).to be(false) }
     end
 
     context 'with only m option' do
       let(:source) { '/x/m' }
 
-      it { expect(regexp_node.multiline?).to be(true) }
+      it { expect(regexp_node.multiline_mode?).to be(true) }
     end
 
     context 'with m and other options' do
       let(:source) { '/x/imx' }
 
-      it { expect(regexp_node.multiline?).to be(true) }
+      it { expect(regexp_node.multiline_mode?).to be(true) }
     end
   end
 
