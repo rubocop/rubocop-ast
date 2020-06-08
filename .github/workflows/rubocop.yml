@@ -1,3 +1,5 @@
+# NOTE: When changing minimal version of Ruby or Rubocop, change all of them
+
 name: CI
 
 on: [push, pull_request]
@@ -5,7 +7,7 @@ on: [push, pull_request]
 jobs:
   ast_specs:
     name: >-
-      ${{ matrix.ruby }} | RuboCop ${{ matrix.rubocop }} (${{ matrix.os }})
+      AST | ${{ matrix.rubocop }} | ${{ matrix.ruby }} (${{ matrix.os }})
     runs-on: ${{ matrix.os }}-latest
     env:
       # See https://github.com/tmm1/test-queue#environment-variables
@@ -16,8 +18,6 @@ jobs:
         os: [ ubuntu ]
         ruby: [ 2.4, 2.5, 2.6, 2.7, head ]
         rubocop: [ master ]
-        # exclude:
-        #   - { rubocop: '0.84.0' }
         include:
           - { os: windows, rubocop: master, ruby: mingw }
           - { rubocop: '0.84.0', ruby: 2.4, os: ubuntu }
@@ -56,7 +56,7 @@ jobs:
         run:  bundle exec rake internal_investigation
   rubocop_specs:
     name: >-
-      Full specs ${{ matrix.ruby }} (${{ matrix.os }})
+      Main | ${{ matrix.rubocop }} | ${{ matrix.ruby }} (${{ matrix.os }})
     runs-on: ${{ matrix.os }}-latest
     env:
       # See https://github.com/tmm1/test-queue#environment-variables
@@ -66,7 +66,7 @@ jobs:
       matrix:
         os: [ ubuntu ]
         ruby: [ 2.4, 2.7 ]
-        rubocop: [ master ]
+        rubocop: [ '0.84.0', master ]
 
     steps:
       - name: checkout
@@ -77,10 +77,13 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
       - name: install dependencies
         run: bundle install --jobs 3 --retry 3
-      - name: install rubocop from source for internal investigation
-        run: |
-          git clone https://github.com/rubocop-hq/rubocop.git ../rubocop
-          chmod +x ../rubocop/exe/rubocop
-          cd ../rubocop && bundle install --jobs 3 --retry 3
+      - name: clone rubocop from source for full specs -- master
+        if: matrix.rubocop == 'master'
+        run: git clone --branch ${{ matrix.rubocop }} https://github.com/rubocop-hq/rubocop.git ../rubocop
+      - name: install rubocop from source for full specs -- branch
+        if: matrix.rubocop != 'master'
+        run: git clone --branch v${{ matrix.rubocop }} https://github.com/rubocop-hq/rubocop.git ../rubocop
+      - name: install rubocop dependencies
+        run: cd ../rubocop && bundle install --jobs 3 --retry 3
       - name: spec
         run:  cd ../rubocop && bundle exec rake spec
