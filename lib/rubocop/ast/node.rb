@@ -510,6 +510,21 @@ module RuboCop
          (block (send #global_const?({:Class :Module}) :new ...) ...)}
       PATTERN
 
+      def_node_matcher :struct_constructor?, <<~PATTERN
+        (block (send #global_const?(:Struct) :new ...) _ $_)
+      PATTERN
+
+      def_node_matcher :class_definition?, <<~PATTERN
+        {(class _ _ $_)
+         (sclass _ $_)
+         (block (send #global_const?({:Struct :Class}) :new ...) _ $_)}
+      PATTERN
+
+      def_node_matcher :module_definition?, <<~PATTERN
+        {(module _ $_)
+         (block (send #global_const?(:Module) :new ...) _ $_)}
+      PATTERN
+
       # Some expressions are evaluated for their value, some for their side
       # effects, and some for both
       # If we know that an expression is useful only for its side effects, that

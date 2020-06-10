@@ -373,4 +373,273 @@ RSpec.describe RuboCop::AST::Node do
       end
     end
   end
+
+  describe '#class_constructor?' do
+    context 'class definition with a block' do
+      let(:src) { 'Class.new { a = 42 }' }
+
+      it 'matches' do
+        expect(node.class_constructor?).to eq(true)
+      end
+    end
+
+    context 'module definition with a block' do
+      let(:src) { 'Module.new { a = 42 }' }
+
+      it 'matches' do
+        expect(node.class_constructor?).to eq(true)
+      end
+    end
+
+    context 'class definition' do
+      let(:src) { 'class Foo; a = 42; end' }
+
+      it 'does not match' do
+        expect(node.class_constructor?).to eq(nil)
+      end
+    end
+
+    context 'class definition on outer scope' do
+      let(:src) { '::Class.new { a = 42 }' }
+
+      it 'matches' do
+        expect(node.class_constructor?).to eq(true)
+      end
+    end
+  end
+
+  describe '#struct_constructor?' do
+    context 'struct definition with a block' do
+      let(:src) { 'Struct.new { a = 42 }' }
+
+      it 'matches' do
+        expect(node.struct_constructor?).to eq(node.body)
+      end
+    end
+
+    context 'struct definition without block' do
+      let(:src) { 'Struct.new(:foo, :bar)' }
+
+      it 'does not match' do
+        expect(node.struct_constructor?).to eq(nil)
+      end
+    end
+
+    context '::Struct' do
+      let(:src) { '::Struct.new { a = 42 }' }
+
+      it 'matches' do
+        expect(node.struct_constructor?).to eq(node.body)
+      end
+    end
+  end
+
+  describe '#class_definition?' do
+    context 'without inheritance' do
+      let(:src) { 'class Foo; a = 42; end' }
+
+      it 'matches' do
+        expect(node.class_definition?).to eq(node.body)
+      end
+    end
+
+    context 'with inheritance' do
+      let(:src) { 'class Foo < Bar; a = 42; end' }
+
+      it 'matches' do
+        expect(node.class_definition?).to eq(node.body)
+      end
+    end
+
+    context 'with ::ClassName' do
+      let(:src) { 'class ::Foo < Bar; a = 42; end' }
+
+      it 'matches' do
+        expect(node.class_definition?).to eq(node.body)
+      end
+    end
+
+    context 'with Struct' do
+      let(:src) do
+        <<~RUBY
+          Person = Struct.new(:name, :age) do
+            a = 2
+            def details; end
+          end
+        RUBY
+      end
+
+      it 'matches' do
+        class_node = node.children.last
+        expect(class_node.class_definition?).to eq(class_node.body)
+      end
+    end
+
+    context 'constant defined as Struct without block' do
+      let(:src) { 'Person = Struct.new(:name, :age)' }
+
+      it 'does not match' do
+        expect(node.class_definition?).to eq(nil)
+      end
+    end
+
+    context 'with Class.new' do
+      let(:src) do
+        <<~RUBY
+          Person = Class.new do
+            a = 2
+            def details; end
+          end
+        RUBY
+      end
+
+      it 'matches' do
+        class_node = node.children.last
+        expect(class_node.class_definition?).to eq(class_node.body)
+      end
+    end
+
+    context 'namespaced class' do
+      let(:src) do
+        <<~RUBY
+          class Foo::Bar::Baz
+            BAZ = 2
+            def variables; end
+          end
+        RUBY
+      end
+
+      it 'matches' do
+        expect(node.class_definition?).to eq(node.body)
+      end
+    end
+
+    context 'with self singleton class' do
+      let(:src) do
+        <<~RUBY
+          class << self
+            BAZ = 2
+            def variables; end
+          end
+        RUBY
+      end
+
+      it 'matches' do
+        expect(node.class_definition?).to eq(node.body)
+      end
+    end
+
+    context 'with object singleton class' do
+      let(:src) do
+        <<~RUBY
+          class << foo
+            BAZ = 2
+            def variables; end
+          end
+        RUBY
+      end
+
+      it 'matches' do
+        expect(node.class_definition?).to eq(node.body)
+      end
+    end
+  end
+
+  describe '#module_definition?' do
+    context 'using module keyword' do
+      let(:src) { 'module Foo; A = 42; end' }
+
+      it 'matches' do
+        expect(node.module_definition?).to eq(node.body)
+      end
+    end
+
+    context 'with ::ModuleName' do
+      let(:src) { 'module ::Foo; A = 42; end' }
+
+      it 'matches' do
+        expect(node.module_definition?).to eq(node.body)
+      end
+    end
+
+    context 'with Module.new' do
+      let(:src) do
+        <<~RUBY
+          Person = Module.new do
+            a = 2
+            def details; end
+          end
+        RUBY
+      end
+
+      it 'matches' do
+        module_node = node.children.last
+        expect(module_node.module_definition?).to eq(module_node.body)
+      end
+    end
+
+    context 'prepend Module.new' do
+      let(:src) do
+        <<~RUBY
+          prepend(Module.new do
+            a = 2
+            def details; end
+          end)
+        RUBY
+      end
+
+      it 'matches' do
+        module_node = node.children.last
+        expect(module_node.module_definition?).to eq(module_node.body)
+      end
+    end
+
+    context 'nested modules' do
+      let(:src) do
+        <<~RUBY
+          module Foo
+            module Bar
+              BAZ = 2
+              def variables; end
+            end
+          end
+        RUBY
+      end
+
+      it 'matches' do
+        expect(node.module_definition?).to eq(node.body)
+      end
+    end
+
+    context 'namespaced modules' do
+      let(:src) do
+        <<~RUBY
+          module Foo::Bar::Baz
+            BAZ = 2
+            def variables; end
+          end
+        RUBY
+      end
+
+      it 'matches' do
+        expect(node.module_definition?).to eq(node.body)
+      end
+    end
+
+    context 'included module definition' do
+      let(:src) do
+        <<~RUBY
+          include(Module.new do
+            BAZ = 2
+            def variables; end
+          end)
+        RUBY
+      end
+
+      it 'matches' do
+        module_node = node.children.last
+        expect(module_node.module_definition?).to eq(module_node.body)
+      end
+    end
+  end
 end
