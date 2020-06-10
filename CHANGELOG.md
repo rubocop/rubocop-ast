@@ -8,6 +8,7 @@
 * [#55](https://github.com/rubocop-hq/rubocop-ast/pull/55): Add `ProcessedSource#line_with_comment?`. ([@marcandre][])
 * [#63](https://github.com/rubocop-hq/rubocop-ast/pull/63): NodePattern now supports patterns as arguments to predicate and functions. ([@marcandre][])
 * [#64](https://github.com/rubocop-hq/rubocop-ast/pull/64): Add `Node#global_const?`. ([@marcandre][])
+* [#28](https://github.com/rubocop-hq/rubocop-ast/issues/28): Add `struct_constructor?`, `class_definition?` and `module_definition?` matchers. ([@tejasbubane][])
 
 ### Bug fixes
 
