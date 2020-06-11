@@ -1146,6 +1146,17 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:ruby) { '10' }
 
       it_behaves_like 'matching'
+
+      context 'in root position' do
+        let(:pattern) { '%1' }
+        let(:matcher) { Object.new }
+        let(:params) { [matcher] }
+        let(:ruby) { '10' }
+
+        before { expect(matcher).to receive(:===).with(s(:int, 10)).and_return true } # rubocop:todo RSpec/ExpectInHook
+
+        it_behaves_like 'matching'
+      end
     end
 
     context 'in a nested sequence' do
