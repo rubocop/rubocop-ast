@@ -70,7 +70,8 @@ module RuboCop
     #     '(send %1 _)'       # % stands for a parameter which must be supplied to
     #                         # #match at matching time
     #                         # it will be compared to the corresponding value in
-    #                         # the AST using #==
+    #                         # the AST using #=== so you can pass Procs, Regexp
+    #                         # in addition to Nodes or literals.
     #                         # a bare '%' is the same as '%1'
     #                         # the number of extra parameters passed to #match
     #                         # must equal the highest % value in the pattern
@@ -612,7 +613,7 @@ module RuboCop
         end
 
         def compile_param(number)
-          "#{CUR_ELEMENT} == #{get_param(number)}"
+          "#{get_param(number)} === #{CUR_ELEMENT}"
         end
 
         def compile_args(tokens)

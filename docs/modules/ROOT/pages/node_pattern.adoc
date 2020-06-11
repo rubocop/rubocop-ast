@@ -374,6 +374,41 @@ def_node_matcher :initializing_with_user?, <<~PATTERN
 PATTERN
 ----
 
+== `%` for arguments
+
+Arguments can be passed to matchers, either as external method arguments,
+or to be used to compare elements. An example of method argument:
+
+[source,ruby]
+----
+def multiple_of?(n, factor)
+  n % factor == 0
+end
+
+def_node_matcher :int_node_multiple?, '(int #multiple_of?(%1))'
+
+# ...
+
+int_node_multiple?(node, 10) # => true if node is an 'int' node with a multiple of 10
+----
+
+Arguments can be used to match nodes directly:
+
+[source,ruby]
+----
+def_node_matcher :has_sensitive_data?, '(hash <(pair (_ %1) $_) ...>)'
+
+# ...
+
+has_user_data?(node, :password) # => true if node is a hash with a key +:password+
+
+# matching uses ===, so to match strings or symbols, 'pass' or 'password' one can:
+has_user_data?(node, /^pass(word)?$/i)
+
+# one can also pass lambdas...
+has_user_data?(node, ->(key) { # return true or false depending on key })
+----
+
 == `nil` or `nil?`
 
 Take a special attention to nil behavior:
