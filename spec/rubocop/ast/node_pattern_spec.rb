@@ -17,17 +17,18 @@ RSpec.describe RuboCop::AST::NodePattern do
   let(:node) { root_node }
   let(:params) { [] }
   let(:instance) { described_class.new(pattern) }
+  let(:result) { instance.match(node, *params) }
 
   shared_examples 'matching' do
     include RuboCop::AST::Sexp
     it 'matches' do
-      expect(instance.match(node, *params)).to be true
+      expect(result).to be true
     end
   end
 
   shared_examples 'nonmatching' do
     it "doesn't match" do
-      expect(instance.match(node, *params).nil?).to be(true)
+      expect(result).to be nil
     end
   end
 
@@ -1778,6 +1779,36 @@ RSpec.describe RuboCop::AST::NodePattern do
 
     it 'yields the given argument if it is not a Node' do
       expect(described_class.descend(42).to_a).to eq([42])
+    end
+  end
+
+  context 'macros' do
+    before do
+      stub_const('MyClass', Class.new do
+        extend RuboCop::AST::NodePattern::Macros
+      end)
+    end
+
+    context 'def_node_matcher' do
+      let(:pattern) { '(sym :hello)' }
+      let(:method_name) { :my_matcher }
+      let(:defined_class) do
+        MyClass.def_node_matcher method_name, pattern
+        MyClass
+      end
+      let(:result) { defined_class.new.send(method_name, node, *params) }
+
+      context 'when called on matching code' do
+        let(:ruby) { ':hello' }
+
+        it_behaves_like 'matching'
+      end
+
+      context 'when called on non-matching code' do
+        let(:ruby) { ':world' }
+
+        it_behaves_like 'nonmatching'
+      end
     end
   end
 end
