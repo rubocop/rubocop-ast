@@ -782,6 +782,21 @@ RSpec.describe RuboCop::AST::SendNode do
     end
   end
 
+  describe '#enumerable_method?' do
+    context 'with an enumerable method' do
+      let(:send_node) { parse_source(source).ast.send_node }
+      let(:source) { 'foo.all? { |e| bar?(e) }' }
+
+      it { expect(send_node.enumerable_method?).to be_truthy }
+    end
+
+    context 'with a regular method' do
+      let(:source) { 'foo.bar(:baz)' }
+
+      it { expect(send_node.enumerable_method?).to be_falsey }
+    end
+  end
+
   describe '#attribute_accessor?' do
     context 'with an accessor' do
       let(:source) { 'attr_reader :foo, bar, *baz' }
