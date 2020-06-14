@@ -1414,4 +1414,16 @@ RSpec.describe RuboCop::AST::SendNode do
       it { expect(send_node.binary_operation?).to be(false) }
     end
   end
+
+  describe '#post_condition_loop?' do
+    let(:source) { 'foo(bar)' }
+
+    it { expect(send_node.post_condition_loop?).to be(false) }
+  end
+
+  describe '#loop_keyword?' do
+    let(:source) { 'foo(bar)' }
+
+    it { expect(send_node.loop_keyword?).to be(false) }
+  end
 end

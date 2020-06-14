@@ -42,4 +42,32 @@ RSpec.describe RuboCop::AST::WhileNode do
       it { expect(while_node.do?).to be_falsey }
     end
   end
+
+  describe '#post_condition_loop?' do
+    context 'with a statement while' do
+      let(:source) { 'while foo; bar; end' }
+
+      it { expect(while_node.post_condition_loop?).to be_falsey }
+    end
+
+    context 'with a modifier while' do
+      let(:source) { 'begin foo; end while bar' }
+
+      it { expect(while_node.post_condition_loop?).to be_truthy }
+    end
+  end
+
+  describe '#loop_keyword?' do
+    context 'with a statement while' do
+      let(:source) { 'while foo; bar; end' }
+
+      it { expect(while_node.loop_keyword?).to be_truthy }
+    end
+
+    context 'with a modifier while' do
+      let(:source) { 'begin foo; end while bar' }
+
+      it { expect(while_node.loop_keyword?).to be_truthy }
+    end
+  end
 end
