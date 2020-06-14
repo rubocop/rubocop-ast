@@ -2,6 +2,7 @@
 
 require 'parser'
 require 'forwardable'
+require 'set'
 
 require_relative 'ast/node_pattern'
 require_relative 'ast/sexp'

@@ -736,6 +736,126 @@ RSpec.describe RuboCop::AST::SendNode do
     end
   end
 
+  describe '#nonmutating_binary_operator_method?' do
+    context 'with a nonmutating binary operator method' do
+      let(:source) { 'foo + bar' }
+
+      it { expect(send_node.nonmutating_binary_operator_method?).to be_truthy }
+    end
+
+    context 'with a mutating binary operator method' do
+      let(:source) { 'foo << bar' }
+
+      it { expect(send_node.nonmutating_binary_operator_method?).to be_falsey }
+    end
+
+    context 'with a regular method' do
+      let(:source) { 'foo.bar(:baz)' }
+
+      it { expect(send_node.nonmutating_binary_operator_method?).to be_falsey }
+    end
+  end
+
+  describe '#nonmutating_unary_operator_method?' do
+    context 'with a nonmutating unary operator method' do
+      let(:source) { '!foo' }
+
+      it { expect(send_node.nonmutating_unary_operator_method?).to be_truthy }
+    end
+
+    context 'with a regular method' do
+      let(:source) { 'foo.bar(:baz)' }
+
+      it { expect(send_node.nonmutating_unary_operator_method?).to be_falsey }
+    end
+  end
+
+  describe '#nonmutating_operator_method?' do
+    context 'with a nonmutating binary operator method' do
+      let(:source) { 'foo + bar' }
+
+      it { expect(send_node.nonmutating_operator_method?).to be_truthy }
+    end
+
+    context 'with a nonmutating unary operator method' do
+      let(:source) { '!foo' }
+
+      it { expect(send_node.nonmutating_operator_method?).to be_truthy }
+    end
+
+    context 'with a mutating binary operator method' do
+      let(:source) { 'foo << bar' }
+
+      it { expect(send_node.nonmutating_operator_method?).to be_falsey }
+    end
+
+    context 'with a regular method' do
+      let(:source) { 'foo.bar(:baz)' }
+
+      it { expect(send_node.nonmutating_operator_method?).to be_falsey }
+    end
+  end
+
+  describe '#nonmutating_array_method?' do
+    context 'with a nonmutating Array method' do
+      let(:source) { 'array.reverse' }
+
+      it { expect(send_node.nonmutating_array_method?).to be_truthy }
+    end
+
+    context 'with a mutating Array method' do
+      let(:source) { 'array.push(foo)' }
+
+      it { expect(send_node.nonmutating_array_method?).to be_falsey }
+    end
+
+    context 'with a regular method' do
+      let(:source) { 'foo.bar(:baz)' }
+
+      it { expect(send_node.nonmutating_array_method?).to be_falsey }
+    end
+  end
+
+  describe '#nonmutating_hash_method?' do
+    context 'with a nonmutating Hash method' do
+      let(:source) { 'hash.slice(:foo, :bar)' }
+
+      it { expect(send_node.nonmutating_hash_method?).to be_truthy }
+    end
+
+    context 'with a mutating Hash method' do
+      let(:source) { 'hash.delete(:foo)' }
+
+      it { expect(send_node.nonmutating_hash_method?).to be_falsey }
+    end
+
+    context 'with a regular method' do
+      let(:source) { 'foo.bar(:baz)' }
+
+      it { expect(send_node.nonmutating_hash_method?).to be_falsey }
+    end
+  end
+
+  describe '#nonmutating_string_method?' do
+    context 'with a nonmutating String method' do
+      let(:source) { 'string.squeeze' }
+
+      it { expect(send_node.nonmutating_string_method?).to be_truthy }
+    end
+
+    context 'with a mutating String method' do
+      let(:source) { 'string.lstrip!' }
+
+      it { expect(send_node.nonmutating_string_method?).to be_falsey }
+    end
+
+    context 'with a regular method' do
+      let(:source) { 'foo.bar(:baz)' }
+
+      it { expect(send_node.nonmutating_string_method?).to be_falsey }
+    end
+  end
+
   describe '#comparison_method?' do
     context 'with a comparison method' do
       let(:source) { 'foo.bar >= :baz' }
