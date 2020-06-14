@@ -12,6 +12,8 @@ module RuboCop
                               map reduce reject reject! reverse_each select
                               select! times upto].freeze
 
+      ENUMERABLE_METHODS = (Enumerable.instance_methods + [:each]).freeze
+
       # http://phrogz.net/programmingruby/language.html#table_18.4
       OPERATOR_METHODS = %i[| ^ & <=> == === =~ > >= < <= << >> + - * /
                             % ** ~ +@ -@ !@ ~@ [] []= ! != !~ `].freeze
@@ -51,6 +53,13 @@ module RuboCop
       def enumerator_method?
         ENUMERATOR_METHODS.include?(method_name) ||
           method_name.to_s.start_with?('each_')
+      end
+
+      # Checks whether the method is an Enumerable method.
+      #
+      # @return [Boolean] whether the method is an Enumerable method
+      def enumerable_method?
+        ENUMERABLE_METHODS.include?(method_name)
       end
 
       # Checks whether the method is a predicate method.

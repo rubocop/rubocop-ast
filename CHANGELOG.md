@@ -4,6 +4,7 @@
 
 ### New features
 
+* [#37](https://github.com/rubocop-hq/rubocop-ast/pull/37): Add `enumerable_method?` for `MethodIdentifierPredicates`. ([@fatkodima][])
 * [#4](https://github.com/rubocop-hq/rubocop-ast/issues/4): Add `interpolation?` for `RegexpNode`. ([@tejasbubane][])
 * [#20](https://github.com/rubocop-hq/rubocop-ast/pull/20): Add option predicates for `RegexpNode`. ([@owst][])
 * [#11](https://github.com/rubocop-hq/rubocop-ast/issues/11): Add `argument_type?` method to make it easy to recognize argument nodes. ([@tejasbubane][])
@@ -32,3 +33,4 @@
 
 [@marcandre]: https://github.com/marcandre
 [@owst]: https://github.com/owst
+[@fatkodima]: https://github.com/fatkodima
