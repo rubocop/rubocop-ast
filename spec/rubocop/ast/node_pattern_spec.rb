@@ -1783,31 +1783,204 @@ RSpec.describe RuboCop::AST::NodePattern do
   end
 
   context 'macros' do
+    include RuboCop::AST::Sexp
+
     before do
       stub_const('MyClass', Class.new do
         extend RuboCop::AST::NodePattern::Macros
       end)
     end
 
-    context 'def_node_matcher' do
-      let(:pattern) { '(sym :hello)' }
-      let(:method_name) { :my_matcher }
-      let(:defined_class) do
-        MyClass.def_node_matcher method_name, pattern
-        MyClass
+    let(:method_name) { :my_matcher }
+    let(:line_no) { __LINE__ + 2 }
+    let(:defined_class) do
+      MyClass.public_send helper_name, method_name, pattern
+      MyClass
+    end
+    let(:ruby) { ':hello' }
+    let(:result) { defined_class.new.send(method_name, node, *params) }
+
+    context 'with a pattern without captures' do
+      let(:pattern) { '(sym _)' }
+
+      context 'def_node_matcher' do
+        let(:helper_name) { :def_node_matcher }
+
+        context 'when called on matching code' do
+          it_behaves_like 'matching'
+        end
+
+        context 'when called on non-matching code' do
+          let(:ruby) { '"world"' }
+
+          it_behaves_like 'nonmatching'
+        end
+
+        context 'when it errors' do
+          let(:params) { [:extra] }
+
+          it 'raises an error with the right location' do
+            expect { result }.to(raise_error do |err|
+              expect(err.is_a?(ArgumentError)).to be(true)
+              expect(err.message).to include('wrong number of arguments')
+              expect(err.backtrace_locations.first.lineno).to be(line_no)
+            end)
+          end
+        end
       end
-      let(:result) { defined_class.new.send(method_name, node, *params) }
 
-      context 'when called on matching code' do
-        let(:ruby) { ':hello' }
+      context 'def_node_search' do
+        let(:helper_name) { :def_node_search }
+        let(:ruby) { 'foo(:hello, :world)' }
 
-        it_behaves_like 'matching'
+        context('without a predicate name') do
+          context 'when called on matching code' do
+            it 'returns an enumerator yielding the matches' do
+              expect(result.is_a?(Enumerator)).to be(true)
+              expect(result.to_a).to match_array [s(:sym, :hello), s(:sym, :world)]
+            end
+          end
+
+          context 'when called on non-matching code' do
+            let(:ruby) { 'foo("hello", "world")' }
+
+            it 'returns an enumerator yielding nothing' do
+              expect(result.is_a?(Enumerator)).to be(true)
+              expect(result.to_a).to eq []
+            end
+          end
+
+          context 'when it errors' do
+            let(:params) { [:extra] }
+
+            it 'raises an error with the right location' do
+              expect { result }.to(raise_error do |err|
+                expect(err.is_a?(ArgumentError)).to be(true)
+                expect(err.message).to include('wrong number of arguments')
+                expect(err.backtrace_locations.first.lineno).to be(line_no)
+              end)
+            end
+          end
+        end
+
+        context('with a predicate name') do
+          let(:method_name) { :my_matcher? }
+
+          context 'when called on matching code' do
+            it_behaves_like 'matching'
+          end
+
+          context 'when called on non-matching code' do
+            let(:ruby) { '"world"' }
+
+            it_behaves_like 'nonmatching'
+          end
+
+          context 'when it errors' do
+            let(:params) { [:extra] }
+
+            it 'raises an error with the right location' do
+              expect { result }.to(raise_error do |err|
+                expect(err.is_a?(ArgumentError)).to be(true)
+                expect(err.message).to include('wrong number of arguments')
+                expect(err.backtrace_locations.first.lineno).to be(line_no)
+              end)
+            end
+          end
+        end
+      end
+    end
+
+    context 'with a pattern with captures' do
+      let(:pattern) { '(sym $_)' }
+
+      context 'def_node_matcher' do
+        let(:helper_name) { :def_node_matcher }
+
+        context 'when called on matching code' do
+          let(:captured_val) { :hello }
+
+          it_behaves_like 'single capture'
+        end
+
+        context 'when called on non-matching code' do
+          let(:ruby) { '"world"' }
+
+          it_behaves_like 'nonmatching'
+        end
+
+        context 'when it errors' do
+          let(:params) { [:extra] }
+
+          it 'raises an error with the right location' do
+            expect { result }.to(raise_error do |err|
+              expect(err.is_a?(ArgumentError)).to be(true)
+              expect(err.message).to include('wrong number of arguments')
+              expect(err.backtrace_locations.first.lineno).to be(line_no)
+            end)
+          end
+        end
       end
 
-      context 'when called on non-matching code' do
-        let(:ruby) { ':world' }
+      context 'def_node_search' do
+        let(:helper_name) { :def_node_search }
+        let(:ruby) { 'foo(:hello, :world)' }
 
-        it_behaves_like 'nonmatching'
+        context('without a predicate name') do
+          context 'when called on matching code' do
+            it 'returns an enumerator yielding the captures' do
+              expect(result.is_a?(Enumerator)).to be(true)
+              expect(result.to_a).to match_array %i[hello world]
+            end
+          end
+
+          context 'when called on non-matching code' do
+            let(:ruby) { 'foo("hello", "world")' }
+
+            it 'returns an enumerator yielding nothing' do
+              expect(result.is_a?(Enumerator)).to be(true)
+              expect(result.to_a).to eq []
+            end
+          end
+
+          context 'when it errors' do
+            let(:params) { [:extra] }
+
+            it 'raises an error with the right location' do
+              expect { result }.to(raise_error do |err|
+                expect(err.is_a?(ArgumentError)).to be(true)
+                expect(err.message).to include('wrong number of arguments')
+                expect(err.backtrace_locations.first.lineno).to be(line_no)
+              end)
+            end
+          end
+        end
+
+        context('with a predicate name') do
+          let(:method_name) { :my_matcher? }
+
+          context 'when called on matching code' do
+            it_behaves_like 'matching'
+          end
+
+          context 'when called on non-matching code' do
+            let(:ruby) { '"world"' }
+
+            it_behaves_like 'nonmatching'
+          end
+
+          context 'when it errors' do
+            let(:params) { [:extra] }
+
+            it 'raises an error with the right location' do
+              expect { result }.to(raise_error do |err|
+                expect(err.is_a?(ArgumentError)).to be(true)
+                expect(err.message).to include('wrong number of arguments')
+                expect(err.backtrace_locations.first.lineno).to be(line_no)
+              end)
+            end
+          end
+        end
       end
     end
   end

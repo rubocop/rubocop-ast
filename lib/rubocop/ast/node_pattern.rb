@@ -784,7 +784,8 @@ module RuboCop
         # yield all descendants which match.
         def def_node_search(method_name, pattern_str)
           compiler = Compiler.new(pattern_str, 'node')
-          called_from = caller(1..1).first.split(':')
+          location = caller_locations(1, 1).first
+          called_from = [location.path, location.lineno]
 
           if method_name.to_s.end_with?('?')
             node_search_first(method_name, compiler, called_from)
