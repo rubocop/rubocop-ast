@@ -60,4 +60,16 @@ RSpec.describe RuboCop::AST::ForNode do
 
     it { expect(for_node.body.sym_type?).to be(true) }
   end
+
+  describe '#post_condition_loop?' do
+    let(:source) { 'for foo in bar; baz; end' }
+
+    it { expect(for_node.post_condition_loop?).to be_falsey }
+  end
+
+  describe '#loop_keyword?' do
+    let(:source) { 'for foo in bar; baz; end' }
+
+    it { expect(for_node.loop_keyword?).to be_truthy }
+  end
 end

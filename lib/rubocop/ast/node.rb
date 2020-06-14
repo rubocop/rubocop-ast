@@ -44,6 +44,8 @@ module RuboCop
 
       BASIC_CONDITIONALS = %i[if while until].freeze
       CONDITIONALS = [*BASIC_CONDITIONALS, :case].freeze
+      POST_CONDITION_LOOP_TYPES = %i[while_post until_post].freeze
+      LOOP_TYPES = (POST_CONDITION_LOOP_TYPES + %i[while until for]).freeze
       VARIABLES = %i[ivar gvar cvar lvar].freeze
       REFERENCES = %i[nth_ref back_ref].freeze
       KEYWORDS = %i[alias and break case class def defs defined?
@@ -424,6 +426,14 @@ module RuboCop
 
       def conditional?
         CONDITIONALS.include?(type)
+      end
+
+      def post_condition_loop?
+        POST_CONDITION_LOOP_TYPES.include?(type)
+      end
+
+      def loop_keyword?
+        LOOP_TYPES.include?(type)
       end
 
       def keyword?

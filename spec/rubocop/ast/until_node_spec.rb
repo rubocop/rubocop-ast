@@ -42,4 +42,32 @@ RSpec.describe RuboCop::AST::UntilNode do
       it { expect(until_node.do?).to be_falsey }
     end
   end
+
+  describe '#post_condition_loop?' do
+    context 'with a statement until' do
+      let(:source) { 'until foo; bar; end' }
+
+      it { expect(until_node.post_condition_loop?).to be_falsey }
+    end
+
+    context 'with a modifier until' do
+      let(:source) { 'begin foo; end until bar' }
+
+      it { expect(until_node.post_condition_loop?).to be_truthy }
+    end
+  end
+
+  describe '#loop_keyword?' do
+    context 'with a statement until' do
+      let(:source) { 'until foo; bar; end' }
+
+      it { expect(until_node.loop_keyword?).to be_truthy }
+    end
+
+    context 'with a modifier until' do
+      let(:source) { 'begin foo; end until bar' }
+
+      it { expect(until_node.loop_keyword?).to be_truthy }
+    end
+  end
 end
