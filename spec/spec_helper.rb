@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 require 'yaml'
-require 'rubocop-ast'
 
-if ENV['COVERAGE'] == 'true'
+if ENV.fetch('COVERAGE', 'f').start_with? 't'
   require 'simplecov'
   SimpleCov.start
 end
+
+require 'rubocop-ast'
 
 RSpec.shared_context 'ruby 2.3', :ruby23 do
   let(:ruby_version) { 2.3 }
