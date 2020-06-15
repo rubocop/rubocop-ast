@@ -32,6 +32,11 @@ module RuboCop
         children.select(&:str_type?).map(&:str_content).join
       end
 
+      # @return [Bool] if char is one of the delimiters
+      def delimiter?(char)
+        [loc.begin.source[-1], loc.end.source[0]].include?(char)
+      end
+
       # @return [Bool] if regexp contains interpolation
       def interpolation?
         children.any?(&:begin_type?)
