@@ -9,7 +9,7 @@ Contains the classes needed by [RuboCop](https://github.com/rubocop-hq/rubocop) 
 * `RuboCop::AST::Node`
 * `RuboCop::AST::NodePattern` ([doc](docs/modules/ROOT/pages/node_pattern.adoc))
 
-This gem may be used independently from the main RuboCop gem. In was extracted from RuboCop in version 0.84 and its only
+This gem may be used independently from the main RuboCop gem. It was extracted from RuboCop in version 0.84 and its only
 dependency is the `parser` gem, which `rubocop-ast` extends.
 
 ## Installation
