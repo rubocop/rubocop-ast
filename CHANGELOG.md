@@ -13,6 +13,7 @@
 * [#41](https://github.com/rubocop-hq/rubocop-ast/pull/41): Add `delimiters` and related predicates for `RegexpNode`. ([@owst][])
 * [#46](https://github.com/rubocop-hq/rubocop-ast/pull/46): Basic support for [non-legacy AST output from parser](https://github.com/whitequark/parser/#usage). Note that there is no support (yet) in main RuboCop gem. ([@marcandre][])
 * [#48](https://github.com/rubocop-hq/rubocop-ast/pull/48): Support `Parser::Ruby28` for Ruby 2.8 (3.0) parser. ([@koic][])
+* [#35](https://github.com/rubocop-hq/rubocop-ast/pull/35): NodePattern now accepts `%named_param` and `%CONST`. The macros `def_node_pattern` and `def_node_search` accept default named parameters. ([@marcandre][])
 
 ## 0.0.3 (2020-05-15)
 

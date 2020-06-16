@@ -1162,6 +1162,25 @@ RSpec.describe RuboCop::AST::NodePattern do
       end
     end
 
+    context 'with a constant argument' do
+      let(:pattern) { '(send (int equal?(%CONST)) ...)' }
+      let(:ruby) { '1 + 2' }
+
+      before { stub_const 'CONST', const_value }
+
+      context 'for which the predicate is true' do
+        let(:const_value) { 1 }
+
+        it_behaves_like 'matching'
+      end
+
+      context 'for which the predicate is false' do
+        let(:const_value) { 2 }
+
+        it_behaves_like 'nonmatching'
+      end
+    end
+
     context 'with multiple arguments' do
       let(:pattern) { '(str between?(%1, %2))' }
       let(:ruby) { '"c"' }
@@ -2101,6 +2120,21 @@ RSpec.describe RuboCop::AST::NodePattern do
             end
           end
         end
+      end
+    end
+
+    context 'with a pattern with a constant' do
+      let(:pattern) { '(sym %TEST)' }
+      let(:helper_name) { :def_node_matcher }
+
+      before { defined_class::TEST = hello_matcher }
+
+      it_behaves_like 'matching'
+
+      context 'when the value is not in the set' do
+        let(:ruby) { ':world' }
+
+        it_behaves_like 'nonmatching'
       end
     end
   end

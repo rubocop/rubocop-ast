@@ -86,6 +86,7 @@ module RuboCop
     #                         # parameters (see `%1`)
     #                         # Note that the macros `def_node_pattern` and
     #                         # `def_node_search` accept default values for these.
+    #     '(send _ %CONST)'   # the named constant will act like `%1` and `%named`.
     #     '^^send'            # each ^ ascends one level in the AST
     #                         # so this matches against the grandparent node
     #     '`send'             # descends any number of level in the AST
@@ -129,11 +130,12 @@ module RuboCop
         NUMBER       = /-?\d+(?:\.\d+)?/.freeze
         STRING       = /".+?"/.freeze
         METHOD_NAME  = /\#?#{IDENTIFIER}[!?]?\(?/.freeze
+        PARAM_CONST  = /%[A-Z:][a-zA-Z_:]+/.freeze
         KEYWORD_NAME = /%[a-z_]+/.freeze
         PARAM_NUMBER = /%\d*/.freeze
 
         SEPARATORS = /\s+/.freeze
-        TOKENS     = Regexp.union(META, KEYWORD_NAME, PARAM_NUMBER, NUMBER,
+        TOKENS     = Regexp.union(META, PARAM_CONST, KEYWORD_NAME, PARAM_NUMBER, NUMBER,
                                   METHOD_NAME, SYMBOL, STRING)
 
         TOKEN = /\G(?:#{SEPARATORS}|#{TOKENS}|.)/.freeze
@@ -145,6 +147,7 @@ module RuboCop
         FUNCALL   = /\A\##{METHOD_NAME}/.freeze
         LITERAL   = /\A(?:#{SYMBOL}|#{NUMBER}|#{STRING})\Z/.freeze
         PARAM     = /\A#{PARAM_NUMBER}\Z/.freeze
+        CONST     = /\A#{PARAM_CONST}\Z/.freeze
         KEYWORD   = /\A#{KEYWORD_NAME}\Z/.freeze
         CLOSING   = /\A(?:\)|\}|\])\Z/.freeze
 
@@ -245,6 +248,7 @@ module RuboCop
           when PREDICATE then compile_predicate(token)
           when NODE      then compile_nodetype(token)
           when KEYWORD   then compile_keyword(token[1..-1])
+          when CONST     then compile_const(token[1..-1])
           when PARAM     then compile_param(token[1..-1])
           when CLOSING   then fail_due_to("#{token} in invalid position")
           when nil       then fail_due_to('pattern ended prematurely')
@@ -628,6 +632,10 @@ module RuboCop
           "#{get_param(number)} === #{CUR_ELEMENT}"
         end
 
+        def compile_const(const)
+          "#{get_const(const)} === #{CUR_ELEMENT}"
+        end
+
         def compile_keyword(keyword)
           "#{get_keyword(keyword)} === #{CUR_ELEMENT}"
         end
@@ -649,6 +657,7 @@ module RuboCop
             access_unify(name) || fail_due_to('invalid in arglist: ' + token)
           when LITERAL   then token
           when KEYWORD   then get_keyword(name)
+          when CONST     then get_const(name)
           when PARAM     then get_param(name)
           when CLOSING   then fail_due_to("#{token} in invalid position")
           when nil       then fail_due_to('pattern ended prematurely')
@@ -671,6 +680,10 @@ module RuboCop
         def get_keyword(name)
           @keywords << name
           name
+        end
+
+        def get_const(const)
+          const # Output the constant exactly as given
         end
 
         def emit_yield_capture(when_no_capture = '')
