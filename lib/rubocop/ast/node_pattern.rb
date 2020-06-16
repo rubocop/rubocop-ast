@@ -82,6 +82,10 @@ module RuboCop
     #                         # for consistency, %0 is the 'root node' which is
     #                         # passed as the 1st argument to #match, where the
     #                         # matching process starts
+    #     '(send _ %named)'   # arguments can also be passed as named
+    #                         # parameters (see `%1`)
+    #                         # Note that the macros `def_node_pattern` and
+    #                         # `def_node_search` accept default values for these.
     #     '^^send'            # each ^ ascends one level in the AST
     #                         # so this matches against the grandparent node
     #     '`send'             # descends any number of level in the AST
@@ -125,10 +129,11 @@ module RuboCop
         NUMBER       = /-?\d+(?:\.\d+)?/.freeze
         STRING       = /".+?"/.freeze
         METHOD_NAME  = /\#?#{IDENTIFIER}[!?]?\(?/.freeze
+        KEYWORD_NAME = /%[a-z_]+/.freeze
         PARAM_NUMBER = /%\d*/.freeze
 
         SEPARATORS = /\s+/.freeze
-        TOKENS     = Regexp.union(META, PARAM_NUMBER, NUMBER,
+        TOKENS     = Regexp.union(META, KEYWORD_NAME, PARAM_NUMBER, NUMBER,
                                   METHOD_NAME, SYMBOL, STRING)
 
         TOKEN = /\G(?:#{SEPARATORS}|#{TOKENS}|.)/.freeze
@@ -140,6 +145,7 @@ module RuboCop
         FUNCALL   = /\A\##{METHOD_NAME}/.freeze
         LITERAL   = /\A(?:#{SYMBOL}|#{NUMBER}|#{STRING})\Z/.freeze
         PARAM     = /\A#{PARAM_NUMBER}\Z/.freeze
+        KEYWORD   = /\A#{KEYWORD_NAME}\Z/.freeze
         CLOSING   = /\A(?:\)|\}|\])\Z/.freeze
 
         REST      = '...'
@@ -198,6 +204,7 @@ module RuboCop
           @captures = 0  # number of captures seen
           @unify    = {} # named wildcard -> temp variable
           @params   = 0  # highest % (param) number seen
+          @keywords = Set[] # keyword parameters seen
           run(node_var)
         end
 
@@ -237,6 +244,7 @@ module RuboCop
           when LITERAL   then compile_literal(token)
           when PREDICATE then compile_predicate(token)
           when NODE      then compile_nodetype(token)
+          when KEYWORD   then compile_keyword(token[1..-1])
           when PARAM     then compile_param(token[1..-1])
           when CLOSING   then fail_due_to("#{token} in invalid position")
           when nil       then fail_due_to('pattern ended prematurely')
@@ -620,6 +628,10 @@ module RuboCop
           "#{get_param(number)} === #{CUR_ELEMENT}"
         end
 
+        def compile_keyword(keyword)
+          "#{get_keyword(keyword)} === #{CUR_ELEMENT}"
+        end
+
         def compile_args(tokens)
           index = tokens.find_index { |token| token == ')' }
 
@@ -631,12 +643,13 @@ module RuboCop
         end
 
         def compile_arg(token)
+          name = token[1..-1]
           case token
-          when WILDCARD  then
-            name = token[1..-1]
+          when WILDCARD
             access_unify(name) || fail_due_to('invalid in arglist: ' + token)
           when LITERAL   then token
-          when PARAM     then get_param(token[1..-1])
+          when KEYWORD   then get_keyword(name)
+          when PARAM     then get_param(name)
           when CLOSING   then fail_due_to("#{token} in invalid position")
           when nil       then fail_due_to('pattern ended prematurely')
           else fail_due_to("invalid token in arglist: #{token.inspect}")
@@ -653,6 +666,11 @@ module RuboCop
           number = number.empty? ? 1 : Integer(number)
           @params = number if number > @params
           number.zero? ? @root : "param#{number}"
+        end
+
+        def get_keyword(name)
+          @keywords << name
+          name
         end
 
         def emit_yield_capture(when_no_capture = '')
@@ -680,9 +698,15 @@ module RuboCop
           (1..@params).map { |n| "param#{n}" }.join(',')
         end
 
-        def emit_trailing_params
+        def emit_keyword_list(forwarding: false)
+          pattern = "%<keyword>s: #{'%<keyword>s' if forwarding}"
+          @keywords.map { |k| format(pattern, keyword: k) }.join(',')
+        end
+
+        def emit_trailing_params(forwarding: false)
           params = emit_param_list
-          params.empty? ? '' : ",#{params}"
+          keywords = emit_keyword_list(forwarding: forwarding)
+          [params, keywords].reject(&:empty?).map { |p| ", #{p}" }.join
         end
 
         def emit_method_code
@@ -759,21 +783,32 @@ module RuboCop
           pattern.scan(TOKEN).reject { |token| token =~ /\A#{SEPARATORS}\Z/ }
         end
 
-        def def_helper(base, src)
+        def def_helper(base, method_name, **defaults)
           location = caller_locations(3, 1).first
+          unless defaults.empty?
+            base.send :define_method, method_name do |*args, **values|
+              send method_name, *args, **defaults, **values
+            end
+            method_name = :"without_defaults_#{method_name}"
+          end
+          src = yield method_name
           base.class_eval(src, location.path, location.lineno)
         end
 
-        def def_node_matcher(base, method_name)
-          def_helper(base, <<~RUBY)
-            def #{method_name}(node = self#{emit_trailing_params})
-              #{emit_method_code}
-            end
-          RUBY
+        def def_node_matcher(base, method_name, **defaults)
+          def_helper(base, method_name, **defaults) do |name|
+            <<~RUBY
+              def #{name}(node = self#{emit_trailing_params})
+                #{emit_method_code}
+              end
+            RUBY
+          end
         end
 
-        def def_node_search(base, method_name)
-          def_helper(base, emit_node_search(method_name))
+        def def_node_search(base, method_name, **defaults)
+          def_helper(base, method_name, **defaults) do |name|
+            emit_node_search(name)
+          end
         end
 
         def emit_node_search(method_name)
@@ -782,7 +817,7 @@ module RuboCop
           else
             prelude = <<~RUBY
               return enum_for(:#{method_name},
-                node0#{emit_trailing_params}) unless block_given?
+                node0#{emit_trailing_params(forwarding: true)}) unless block_given?
             RUBY
             on_match = emit_yield_capture('node')
           end
@@ -814,8 +849,9 @@ module RuboCop
         # yield to the block (passing any captures as block arguments).
         # If the node matches, and no block is provided, the new method will
         # return the captures, or `true` if there were none.
-        def def_node_matcher(method_name, pattern_str)
-          Compiler.new(pattern_str, 'node').def_node_matcher(self, method_name)
+        def def_node_matcher(method_name, pattern_str, **keyword_defaults)
+          Compiler.new(pattern_str, 'node')
+                  .def_node_matcher(self, method_name, **keyword_defaults)
         end
 
         # Define a method which recurses over the descendants of an AST node,
@@ -824,8 +860,9 @@ module RuboCop
         # If the method name ends with '?', the new method will return `true`
         # as soon as it finds a descendant which matches. Otherwise, it will
         # yield all descendants which match.
-        def def_node_search(method_name, pattern_str)
-          Compiler.new(pattern_str, 'node').def_node_search(self, method_name)
+        def def_node_search(method_name, pattern_str, **keyword_defaults)
+          Compiler.new(pattern_str, 'node')
+                  .def_node_search(self, method_name, **keyword_defaults)
         end
       end
 
@@ -839,11 +876,15 @@ module RuboCop
         instance_eval(src, __FILE__, __LINE__ + 1)
       end
 
-      def match(*args)
+      def match(*args, **rest)
         # If we're here, it's because the singleton method has not been defined,
         # either because we've been dup'ed or serialized through YAML
         initialize(pattern)
-        match(*args)
+        if rest.empty?
+          match(*args)
+        else
+          match(*args, **rest)
+        end
       end
 
       def marshal_load(pattern)
