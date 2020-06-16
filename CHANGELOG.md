@@ -32,5 +32,6 @@
 * Gem extracted from RuboCop. ([@marcandre][])
 
 [@marcandre]: https://github.com/marcandre
+[@tejasbubane]: https://github.com/tejasbubane
 [@owst]: https://github.com/owst
 [@fatkodima]: https://github.com/fatkodima
