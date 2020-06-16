@@ -436,6 +436,23 @@ interesting_call?(node, method: /^transform/) # match anything starting with 'tr
 
 Named parameters as arguments to custom methods are also supported.
 
+== `%CONST` for constants
+
+Constants can be included in patterns. They will be matched using `===`, so
++Regexp+ / +Set+ / +Proc+ can be used in addition to literals and +Nodes+:
+
+[source,ruby]
+----
+SOME_CALLS = Set[:transform_values, :transform_keys,
+                 :transform_values!, :transform_keys!,
+                 :to_h].freeze
+
+def_node_matcher :interesting_call?, '(send _ %SOME_CALLS ...)'
+
+----
+
+Constants as arguments to custom methods are also supported.
+
 == `nil` or `nil?`
 
 Take a special attention to nil behavior:
