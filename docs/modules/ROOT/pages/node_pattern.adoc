@@ -413,6 +413,29 @@ NOTE: `Array#===` will never match a single node element (so don't pass arrays),
 but `Set#===` is an alias to `Set#include?` (Ruby 2.5+ only), and so can be
 very useful to match within many possible literals / Nodes.
 
+== `%param_name` for named parameters
+
+Arguments can be passed as named parameters. They will be matched using `===`
+(see `%` above).
+
+Contrary to positional arguments, defaults values can be passed to
+`def_node_matcher` and `def_node_search`:
+
+[source,ruby]
+----
+def_node_matcher :interesting_call?, '(send _ %method ...)',
+                 method: Set[:transform_values, :transform_keys,
+                             :transform_values!, :transform_keys!,
+                             :to_h].freeze
+
+# Usage:
+
+interesting_call?(node) # use the default methods
+interesting_call?(node, method: /^transform/) # match anything starting with 'transform'
+----
+
+Named parameters as arguments to custom methods are also supported.
+
 == `nil` or `nil?`
 
 Take a special attention to nil behavior:

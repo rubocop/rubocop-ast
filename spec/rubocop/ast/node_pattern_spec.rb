@@ -16,8 +16,15 @@ RSpec.describe RuboCop::AST::NodePattern do
 
   let(:node) { root_node }
   let(:params) { [] }
+  let(:keyword_params) { {} }
   let(:instance) { described_class.new(pattern) }
-  let(:result) { instance.match(node, *params) }
+  let(:result) do
+    if keyword_params.empty? # Avoid bug in Ruby < 2.6
+      instance.match(node, *params)
+    else
+      instance.match(node, *params, **keyword_params)
+    end
+  end
 
   shared_examples 'matching' do
     include RuboCop::AST::Sexp
@@ -1122,6 +1129,39 @@ RSpec.describe RuboCop::AST::NodePattern do
       end
     end
 
+    context 'with a named argument' do
+      let(:pattern) { '(send (int equal?(%param)) ...)' }
+      let(:ruby) { '1 + 2' }
+
+      context 'for which the predicate is true' do
+        let(:keyword_params) { { param: 1 } }
+
+        it_behaves_like 'matching'
+      end
+
+      context 'for which the predicate is false' do
+        let(:keyword_params) { { param: 2 } }
+
+        it_behaves_like 'nonmatching'
+      end
+
+      context 'when not given' do
+        let(:keyword_params) { {} }
+
+        it 'raises an error' do
+          expect { result }.to raise_error(ArgumentError)
+        end
+      end
+
+      context 'with extra arguments' do
+        let(:keyword_params) { { param: 1, extra: 2 } }
+
+        it 'raises an error' do
+          expect { result }.to raise_error(ArgumentError)
+        end
+      end
+    end
+
     context 'with multiple arguments' do
       let(:pattern) { '(str between?(%1, %2))' }
       let(:ruby) { '"c"' }
@@ -1157,6 +1197,35 @@ RSpec.describe RuboCop::AST::NodePattern do
         before { expect(matcher).to receive(:===).with(s(:int, 10)).and_return true } # rubocop:todo RSpec/ExpectInHook
 
         it_behaves_like 'matching'
+      end
+    end
+
+    context 'as named parameters' do
+      let(:pattern) { '%foo' }
+      let(:matcher) { Object.new }
+      let(:keyword_params) { { foo: matcher } }
+      let(:ruby) { '10' }
+
+      context 'when provided as argument to match' do
+        before { expect(matcher).to receive(:===).with(s(:int, 10)).and_return true } # rubocop:todo RSpec/ExpectInHook
+
+        it_behaves_like 'matching'
+      end
+
+      context 'when extra are provided' do
+        let(:keyword_params) { { foo: matcher, bar: matcher } }
+
+        it 'raises an ArgumentError' do
+          expect { result }.to raise_error(ArgumentError)
+        end
+      end
+
+      context 'when not provided' do
+        let(:keyword_params) { {} }
+
+        it 'raises an ArgumentError' do
+          expect { result }.to raise_error(ArgumentError)
+        end
       end
     end
 
@@ -1791,14 +1860,27 @@ RSpec.describe RuboCop::AST::NodePattern do
       end)
     end
 
+    let(:keyword_defaults) { {} }
     let(:method_name) { :my_matcher }
     let(:line_no) { __LINE__ + 2 }
     let(:defined_class) do
-      MyClass.public_send helper_name, method_name, pattern
+      MyClass.public_send helper_name, method_name, pattern, **keyword_defaults
       MyClass
     end
     let(:ruby) { ':hello' }
-    let(:result) { defined_class.new.send(method_name, node, *params) }
+    let(:result) do
+      if keyword_params.empty? # Avoid bug in Ruby < 2.7
+        defined_class.new.send(method_name, node, *params)
+      else
+        defined_class.new.send(method_name, node, *params, **keyword_params)
+      end
+    end
+
+    if Set[1] === 1 # rubocop:disable Style/CaseEquality
+      let(:hello_matcher) { Set[:hello, :foo] }
+    else
+      let(:hello_matcher) { Set[:hello, :foo].method(:include?).to_proc }
+    end
 
     context 'with a pattern without captures' do
       let(:pattern) { '(sym _)' }
@@ -1931,6 +2013,44 @@ RSpec.describe RuboCop::AST::NodePattern do
             it 'returns an enumerator yielding the captures' do
               expect(result.is_a?(Enumerator)).to be(true)
               expect(result.to_a).to match_array %i[hello world]
+            end
+
+            context 'when the pattern contains keyword_params' do
+              let(:pattern) { '(sym $%foo)' }
+              let(:keyword_params) { { foo: hello_matcher } }
+
+              it 'returns an enumerator yielding the captures' do
+                expect(result.is_a?(Enumerator)).to be(true)
+                expect(result.to_a).to match_array %i[hello]
+              end
+
+              # rubocop:disable RSpec/NestedGroups
+              context 'when helper is called with default keyword_params' do
+                let(:keyword_defaults) { { foo: :world } }
+
+                it 'is overriden when calling the matcher' do
+                  expect(result.is_a?(Enumerator)).to be(true)
+                  expect(result.to_a).to match_array %i[hello]
+                end
+
+                context 'and no value is given to the matcher' do
+                  let(:keyword_params) { {} }
+
+                  it 'uses the defaults' do
+                    expect(result.is_a?(Enumerator)).to be(true)
+                    expect(result.to_a).to match_array %i[world]
+                  end
+                end
+
+                context 'some defaults are not params' do
+                  let(:keyword_defaults) { { bar: :world } }
+
+                  it 'raises an error' do
+                    expect { result }.to raise_error(ArgumentError)
+                  end
+                end
+              end
+              # rubocop:enable RSpec/NestedGroups
             end
           end
 
