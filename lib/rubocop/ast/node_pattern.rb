@@ -70,8 +70,12 @@ module RuboCop
     #     '(send %1 _)'       # % stands for a parameter which must be supplied to
     #                         # #match at matching time
     #                         # it will be compared to the corresponding value in
-    #                         # the AST using #=== so you can pass Procs, Regexp
-    #                         # in addition to Nodes or literals.
+    #                         # the AST using #=== so you can pass Procs, Regexp,
+    #                         # etc. in addition to Nodes or literals.
+    #                         # `Array#===` will never match a node element, but
+    #                         # `Set#===` is an alias to `Set#include?` (Ruby 2.5+
+    #                         # only), and so can be very useful to match within
+    #                         # many possible literals / Nodes.
     #                         # a bare '%' is the same as '%1'
     #                         # the number of extra parameters passed to #match
     #                         # must equal the highest % value in the pattern

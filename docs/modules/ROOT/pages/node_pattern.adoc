@@ -409,6 +409,10 @@ has_user_data?(node, /^pass(word)?$/i)
 has_user_data?(node, ->(key) { # return true or false depending on key })
 ----
 
+NOTE: `Array#===` will never match a single node element (so don't pass arrays),
+but `Set#===` is an alias to `Set#include?` (Ruby 2.5+ only), and so can be
+very useful to match within many possible literals / Nodes.
+
 == `nil` or `nil?`
 
 Take a special attention to nil behavior:
