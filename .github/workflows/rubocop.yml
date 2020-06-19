@@ -66,7 +66,7 @@ jobs:
         if: matrix.coverage != true
         run:  bundle exec rake spec
       - name: internal_investigation
-        if: "matrix.os != 'windows' && matrix.coverage != true"
+        if: "matrix.os != 'windows' && matrix.coverage != true && matrix.rubocop == 'master'"
         run:  bundle exec rake internal_investigation
   rubocop_specs:
     name: >-
