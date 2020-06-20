@@ -4,6 +4,7 @@ module RuboCop
   module AST
     # Common functionality for nodes that are parameterized:
     # `send`, `super`, `zsuper`, `def`, `defs`
+    # and (modern only): `index`, `indexasgn`, `lambda`
     module ParameterizedNode
       # Checks whether this node's arguments are wrapped in parentheses.
       #

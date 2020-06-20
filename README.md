@@ -30,6 +30,16 @@ gem 'rubocop-ast'
 
 Refer to the documentation of `RuboCop::AST::Node` and [`RuboCop::AST::NodePattern`](docs/modules/ROOT/pages/node_pattern.adoc)
 
+### Parser compatibility switches
+
+The main `RuboCop` gem uses [legacy AST output from parser](https://github.com/whitequark/parser/#usage).
+This gem is meant to be compatible with all settings. For example, to have `-> { ... }` emitted
+as `LambdaNode` instead of `SendNode`:
+
+```ruby
+RuboCop::AST::Builder.emit_lambda = true
+```
+
 ## Contributing
 
 Checkout the [contribution guidelines](CONTRIBUTING.md).

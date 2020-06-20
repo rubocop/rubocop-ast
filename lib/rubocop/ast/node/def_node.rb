@@ -24,7 +24,7 @@ module RuboCop
       #
       # @return [Boolean] whether the `def` node uses argument forwarding
       def argument_forwarding?
-        arguments.any?(&:forward_args_type?)
+        arguments.any?(&:forward_args_type?) || arguments.any?(&:forward_arg_type?)
       end
 
       # The name of the defined method as a symbol.

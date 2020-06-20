@@ -19,9 +19,10 @@ module RuboCop
                              rational str sym regopt self lvar
                              ivar cvar gvar nth_ref back_ref cbase
                              arg restarg blockarg shadowarg
-                             kwrestarg zsuper lambda redo retry
+                             kwrestarg zsuper redo retry
                              forward_args forwarded_args
-                             match_var match_nil_pattern empty_else].freeze
+                             match_var match_nil_pattern empty_else
+                             forward_arg lambda procarg0 __ENCODING__].freeze
       ONE_CHILD_NODE    = %i[splat kwsplat block_pass not break next
                              preexe postexe match_current_line defined?
                              arg_expr pin match_rest if_guard unless_guard
@@ -33,7 +34,8 @@ module RuboCop
                              match_with_lvasgn begin kwbegin return
                              in_match match_alt
                              match_as array_pattern array_pattern_with_tail
-                             hash_pattern const_pattern].freeze
+                             hash_pattern const_pattern
+                             index indexasgn].freeze
       SECOND_CHILD_ONLY = %i[lvasgn ivasgn cvasgn gvasgn optarg kwarg
                              kwoptarg].freeze
 
