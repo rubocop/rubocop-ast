@@ -8,6 +8,7 @@ if ENV.fetch('COVERAGE', 'f').start_with? 't'
 end
 
 require 'rubocop-ast'
+RuboCop::AST::Builder.modernize if ENV['MODERNIZE']
 
 RSpec.shared_context 'ruby 2.3', :ruby23 do
   let(:ruby_version) { 2.3 }

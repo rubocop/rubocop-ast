@@ -3,7 +3,8 @@
 module RuboCop
   module AST
     # Common functionality for nodes that are a kind of method dispatch:
-    # `send`, `csend`, `super`, `zsuper`, `yield`, `defined?`
+    # `send`, `csend`, `super`, `zsuper`, `yield`, `defined?`,
+    # and (modern only): `index`, `indexasgn`, `lambda`
     module MethodDispatchNode
       extend NodePattern::Macros
       include MethodIdentifierPredicates
