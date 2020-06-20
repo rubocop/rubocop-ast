@@ -20,12 +20,14 @@ jobs:
         ruby: [ 2.4, 2.5, 2.6, 2.7, head ]
         rubocop: [ master ]
         coverage: [ null ]
+        modern: [ null ]
         title: [ null ]
         include:
           - { os: windows, rubocop: master, ruby: mingw }
           - { rubocop: '0.84.0', ruby: 2.4, os: ubuntu }
           - { rubocop: '0.84.0', ruby: head, os: ubuntu }
           - { rubocop: '0.84.0', ruby: 2.4, os: ubuntu, coverage: true, title: 'Cov' }
+          - { rubocop: master, ruby: 2.7, os: ubuntu, modern: true, title: 'Modern' }
 
     steps:
       - name: windows misc
@@ -62,6 +64,9 @@ jobs:
         with:
           coverageCommand: bundle exec rake spec
           debug: true
+      - name: Set modernize mode
+        if: matrix.modern == true
+        run: echo '::set-env name=MODERNIZE::true'
       - name: spec
         if: matrix.coverage != true
         run:  bundle exec rake spec
