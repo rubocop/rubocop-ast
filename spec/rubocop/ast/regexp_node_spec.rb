@@ -141,6 +141,194 @@ RSpec.describe RuboCop::AST::RegexpNode do
     end
   end
 
+  describe '#slash_literal?' do
+    context 'with /-delimiters' do
+      let(:source) { '/abc/' }
+
+      it { expect(regexp_node.slash_literal?).to eq(true) }
+    end
+
+    context 'with %r/-delimiters' do
+      let(:source) { '%r/abc/' }
+
+      it { expect(regexp_node.slash_literal?).to eq(false) }
+    end
+
+    context 'with %r{-delimiters' do
+      let(:source) { '%r{abc}' }
+
+      it { expect(regexp_node.slash_literal?).to eq(false) }
+    end
+
+    context 'with multi-line %r{-delimiters' do
+      let(:source) do
+        <<~SRC
+          %r{
+            abc
+          }x
+        SRC
+      end
+
+      it { expect(regexp_node.slash_literal?).to eq(false) }
+    end
+
+    context 'with %r<-delimiters' do
+      let(:source) { '%r<abc>x' }
+
+      it { expect(regexp_node.slash_literal?).to eq(false) }
+    end
+  end
+
+  describe '#percent_r_literal?' do
+    context 'with /-delimiters' do
+      let(:source) { '/abc/' }
+
+      it { expect(regexp_node.percent_r_literal?).to eq(false) }
+    end
+
+    context 'with %r/-delimiters' do
+      let(:source) { '%r/abc/' }
+
+      it { expect(regexp_node.percent_r_literal?).to eq(true) }
+    end
+
+    context 'with %r{-delimiters' do
+      let(:source) { '%r{abc}' }
+
+      it { expect(regexp_node.percent_r_literal?).to eq(true) }
+    end
+
+    context 'with multi-line %r{-delimiters' do
+      let(:source) do
+        <<~SRC
+          %r{
+            abc
+          }x
+        SRC
+      end
+
+      it { expect(regexp_node.percent_r_literal?).to eq(true) }
+    end
+
+    context 'with %r<-delimiters' do
+      let(:source) { '%r<abc>x' }
+
+      it { expect(regexp_node.percent_r_literal?).to eq(true) }
+    end
+  end
+
+  describe '#delimiters' do
+    context 'with /-delimiters' do
+      let(:source) { '/abc/' }
+
+      it { expect(regexp_node.delimiters).to eq(['/', '/']) }
+    end
+
+    context 'with %r/-delimiters' do
+      let(:source) { '%r/abc/' }
+
+      it { expect(regexp_node.delimiters).to eq(['/', '/']) }
+    end
+
+    context 'with %r{-delimiters' do
+      let(:source) { '%r{abc}' }
+
+      it { expect(regexp_node.delimiters).to eq(['{', '}']) }
+    end
+
+    context 'with multi-line %r{-delimiters' do
+      let(:source) do
+        <<~SRC
+          %r{
+            abc
+          }x
+        SRC
+      end
+
+      it { expect(regexp_node.delimiters).to eq(['{', '}']) }
+    end
+
+    context 'with %r<-delimiters' do
+      let(:source) { '%r<abc>x' }
+
+      it { expect(regexp_node.delimiters).to eq(['<', '>']) }
+    end
+  end
+
+  describe '#delimiter?' do
+    context 'with /-delimiters' do
+      let(:source) { '/abc/' }
+
+      it { expect(regexp_node.delimiter?('/')).to eq(true) }
+
+      it { expect(regexp_node.delimiter?('{')).to eq(false) }
+    end
+
+    context 'with %r/-delimiters' do
+      let(:source) { '%r/abc/' }
+
+      it { expect(regexp_node.delimiter?('/')).to eq(true) }
+
+      it { expect(regexp_node.delimiter?('{')).to eq(false) }
+      it { expect(regexp_node.delimiter?('}')).to eq(false) }
+      it { expect(regexp_node.delimiter?('%')).to eq(false) }
+      it { expect(regexp_node.delimiter?('r')).to eq(false) }
+      it { expect(regexp_node.delimiter?('%r')).to eq(false) }
+      it { expect(regexp_node.delimiter?('%r/')).to eq(false) }
+    end
+
+    context 'with %r{-delimiters' do
+      let(:source) { '%r{abc}' }
+
+      it { expect(regexp_node.delimiter?('{')).to eq(true) }
+      it { expect(regexp_node.delimiter?('}')).to eq(true) }
+
+      it { expect(regexp_node.delimiter?('/')).to eq(false) }
+      it { expect(regexp_node.delimiter?('%')).to eq(false) }
+      it { expect(regexp_node.delimiter?('r')).to eq(false) }
+      it { expect(regexp_node.delimiter?('%r')).to eq(false) }
+      it { expect(regexp_node.delimiter?('%r/')).to eq(false) }
+      it { expect(regexp_node.delimiter?('%r{')).to eq(false) }
+    end
+
+    context 'with multi-line %r{-delimiters' do
+      let(:source) do
+        <<~SRC
+          %r{
+            abc
+          }x
+        SRC
+      end
+
+      it { expect(regexp_node.delimiter?('{')).to eq(true) }
+      it { expect(regexp_node.delimiter?('}')).to eq(true) }
+
+      it { expect(regexp_node.delimiter?('/')).to eq(false) }
+      it { expect(regexp_node.delimiter?('%')).to eq(false) }
+      it { expect(regexp_node.delimiter?('r')).to eq(false) }
+      it { expect(regexp_node.delimiter?('%r')).to eq(false) }
+      it { expect(regexp_node.delimiter?('%r/')).to eq(false) }
+      it { expect(regexp_node.delimiter?('%r{')).to eq(false) }
+    end
+
+    context 'with %r<-delimiters' do
+      let(:source) { '%r<abc>x' }
+
+      it { expect(regexp_node.delimiter?('<')).to eq(true) }
+      it { expect(regexp_node.delimiter?('>')).to eq(true) }
+
+      it { expect(regexp_node.delimiter?('{')).to eq(false) }
+      it { expect(regexp_node.delimiter?('}')).to eq(false) }
+      it { expect(regexp_node.delimiter?('/')).to eq(false) }
+      it { expect(regexp_node.delimiter?('%')).to eq(false) }
+      it { expect(regexp_node.delimiter?('r')).to eq(false) }
+      it { expect(regexp_node.delimiter?('%r')).to eq(false) }
+      it { expect(regexp_node.delimiter?('%r/')).to eq(false) }
+      it { expect(regexp_node.delimiter?('%r{')).to eq(false) }
+      it { expect(regexp_node.delimiter?('%r<')).to eq(false) }
+    end
+  end
+
   describe '#interpolation?' do
     context 'with direct variable interpoation' do
       let(:source) { '/\n\n#{foo}(abc)+/' }

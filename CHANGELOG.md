@@ -10,6 +10,7 @@
 * [#20](https://github.com/rubocop-hq/rubocop-ast/pull/20): Add option predicates for `RegexpNode`. ([@owst][])
 * [#11](https://github.com/rubocop-hq/rubocop-ast/issues/11): Add `argument_type?` method to make it easy to recognize argument nodes. ([@tejasbubane][])
 * [#31](https://github.com/rubocop-hq/rubocop-ast/pull/31): Use `param === node` to match params, which allows Regexp, Proc, Set, etc. ([@marcandre][])
+* [#41](https://github.com/rubocop-hq/rubocop-ast/pull/41): Add `delimiters` and related predicates for `RegexpNode`. ([@owst][])
 
 ## 0.0.3 (2020-05-15)
 
