@@ -7,3 +7,20 @@ This gem introduces two core classes of RuboCop:
 
 See xref:node_pattern.adoc["Node Pattern"] to get yourself familiar with ``NodePattern``'s
 capabilities.
+
+This gem is essentially an extension of the https://github.com/whitequark/parser/[`parser`] gem.
+
+Sample usage:
+```ruby
+class MyRule < Parser::AST::Processor
+  include RuboCop::AST::Traversal
+
+  def on_sym(node)
+    puts "I found a symbol! #{node.value}"
+  end
+end
+
+source = RuboCop::ProcessedSource.new(code, 2.7)
+rule = MyRule.new
+source.ast.each_node { |n| rule.process(n) }
+```
