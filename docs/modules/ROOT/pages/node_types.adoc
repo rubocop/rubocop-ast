@@ -4,7 +4,7 @@ This is a partial list of the node types parsed by the AST and corresponding met
 
 `Rubocop::AST` defines some additional methods on certain node types by giving them a separate class. You can see the method definitions in the https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/Node[API documentation].
 
-For full information, please see the https://github.com/whitequark/parser/blob/master/doc/AST_FORMAT.md[parser documentation]. This page will act as a quick index to that page, which has more examples and fuller explanation of the different location pieces.
+For full information, please see the https://github.com/whitequark/parser/blob/master/doc/AST_FORMAT.md[parser documentation]. This page will act as a quick index to that page, which has more examples and fuller explanation of the different location pieces. You can also see a full AST for yourself by running `ruby-parse --legacy -L -e "ruby(code: 'here')"`.
 
 There are a few "meta-types" of nodes that will be mentioned in descriptions:
 
@@ -27,6 +27,7 @@ The following fields are given when relevant to nodes in the source code:
 * Start of `do..end` blocks (containing the `do` keyword)
 * `then` keyword
 * `begin` keyword
+* The first symbol in literals (like `"` for strings or `:` for symbols)
 |colon|The `:` symbol, used as part of a ternary (`:`)
 |dot|The `.` or `&.` operator used for `send` and `csend` nodes.
 |double_colon|The `::` operator
@@ -38,7 +39,7 @@ The following fields are given when relevant to nodes in the source code:
 |in|The `in` keyword (as in `for..in`)
 |keyword|Any text-based keyword, like `begin` or `and`, with the exception of other keywords handled by other fields. This will include the full string containing the keyword.
 |name|Used when *defining* something (like `const` or `arg`).
-|operator|Any symbol representing an operator, like `*` or `\|\|=`.
+|operator|Any symbol representing an operator, like `*` (splat) or `\|\|=`.
 |question|The `?` symbol used as part of a ternary (`if`)
 |selector|Used for method invocation (`send` / `csend`) or operators that are actually methods (like `+`)
 
@@ -50,7 +51,7 @@ The following fields are given when relevant to nodes in the source code:
 |=============================================
 |Type|Description|Children|Example|Node Class
 
-|alias|Method alias|First child is a `sym`, `dsym` or `gvar` (new method name), second child is an expression node (old method name).|alias :foo :bar|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/AliasNode[AliasNode]
+|alias|Method alias|Two children - both are `sym`, `dsym` or `gvar` nodes.|alias :foo :bar|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/AliasNode[AliasNode]
 
 |and|And operator|Two children are both expression nodes representing the operands.|a and b|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/AndNode[AndNode]
 
