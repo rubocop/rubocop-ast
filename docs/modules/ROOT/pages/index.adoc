@@ -8,7 +8,46 @@ This gem introduces two core classes of RuboCop:
 See xref:node_pattern.adoc["Node Pattern"] to get yourself familiar with ``NodePattern``'s
 capabilities.
 
-This gem is essentially an extension of the https://github.com/whitequark/parser/[`parser`] gem.
+This gem is essentially an extension of the https://github.com/whitequark/parser/[`parser`] gem, which adds a simpler and more powerful object-oriented API to make it easier to work with nodes.
+
+Examples using `parser` and `rubocop-ast`:
+
+[cols="a,a"]
+|======================
+|`parser`|`rubocop-ast`
+|```ruby
+
+# type = :if
+is_if = node.loc.keyword == 'if'
+if_branch = node.children[1]
+else_branch = node.children[2]
+has_elsif_branch = node.children[2].type == :if && node.children[2].keyword == 'elsif'
+```
+
+| ```ruby
+# type = :if
+is_if = node.if?
+if_branch = node.if_branch
+else_branch = node.else_branch
+has_elsif_branch = node.elsif_conditional?
+```
+|
+```ruby
+# type = :hash
+pairs = node.children
+pairs.each do \|pair_node\|
+  key = pair_node.children[0]
+  value = pair_node.children[1]
+  do_something(key, value)
+end
+```
+|```ruby
+# type = :hash
+node.each_pair do \|pair_node\|
+  do_something(pair_node.key, pair_node.value)
+end
+```
+|======================
 
 Sample usage:
 ```ruby
