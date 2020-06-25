@@ -27,6 +27,15 @@ module RuboCop
         arguments.any?(&:forward_args_type?) || arguments.any?(&:forward_arg_type?)
       end
 
+      # Checks whether this is an endless method definition node
+      # as per the feature added in Ruby 2.8.
+      #
+      # @note This is written in a way that may support method definition
+      #       which are rumored to be added in a later version of Ruby.
+      #
+      # @return [Boolean] whether the `def_s` node
+      alias endless? def_e_type?
+
       # The name of the defined method as a symbol.
       #
       # @return [Symbol] the name of the defined method

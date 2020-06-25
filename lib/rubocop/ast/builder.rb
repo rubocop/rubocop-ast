@@ -26,6 +26,7 @@ module RuboCop
         case:         CaseNode,
         class:        ClassNode,
         def:          DefNode,
+        def_e:        DefNode,
         defined?:     DefinedNode,
         defs:         DefNode,
         ensure:       EnsureNode,

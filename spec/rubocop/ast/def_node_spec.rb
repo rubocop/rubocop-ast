@@ -15,6 +15,12 @@ RSpec.describe RuboCop::AST::DefNode do
 
       it { expect(def_node.is_a?(described_class)).to be(true) }
     end
+
+    context 'with a def_e node', :ruby28 do
+      let(:source) { 'def foo() = 42' }
+
+      it { expect(def_node.is_a?(described_class)).to be(true) }
+    end
   end
 
   describe '#method_name' do
@@ -40,6 +46,12 @@ RSpec.describe RuboCop::AST::DefNode do
       let(:source) { 'def -@; end' }
 
       it { expect(def_node.method_name).to eq(:-@) }
+    end
+
+    context 'with endless method definition', :ruby28 do
+      let(:source) { 'def foo() = 42' }
+
+      it { expect(def_node.method_name).to eq(:foo) }
     end
   end
 
@@ -108,6 +120,12 @@ RSpec.describe RuboCop::AST::DefNode do
       let(:source) { 'def foo(...); end' }
 
       it { expect(def_node.arguments.size).to eq(1) }
+    end
+
+    context 'with endless method definition', :ruby28 do
+      let(:source) { 'def foo(bar, baz) = 42' }
+
+      it { expect(def_node.arguments.size).to eq(2) }
     end
   end
 
@@ -354,6 +372,20 @@ RSpec.describe RuboCop::AST::DefNode do
       let(:source) { 'def foo(...); end' }
 
       it { expect(def_node.argument_forwarding?).to be_truthy }
+    end
+  end
+
+  context 'when using Ruby 2.8 or newer', :ruby28 do
+    context 'with endless method definition', :ruby28 do
+      let(:source) { 'def foo() = 42' }
+
+      it { expect(def_node.endless?).to be(true) }
+    end
+
+    context 'with normal method definition' do
+      let(:source) { 'def foo; end' }
+
+      it { expect(def_node.endless?).to be(false) }
     end
   end
 

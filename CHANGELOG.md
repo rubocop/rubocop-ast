@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#49](https://github.com/rubocop-hq/rubocop-ast/pull/49): Support "Endless method definition" syntax for Ruby 2.8 (3.0). ([@koic][])
+
 ## 0.1.0 (2020-06-26)
 
 ### New features
