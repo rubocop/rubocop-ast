@@ -17,6 +17,7 @@
 * [#83](https://github.com/rubocop-hq/rubocop-ast/pull/83): Add `ProcessedSource#each_comment_in_lines` ([@marcandre][])
 * [#84](https://github.com/rubocop-hq/rubocop-ast/pull/84): Add `Source::Range#line_span` ([@marcandre][])
 * [#87](https://github.com/rubocop-hq/rubocop-ast/pull/87): Add `CaseNode#branches` ([@marcandre][])
+* [#89](https://github.com/rubocop-hq/rubocop-ast/pull/89): Support `mrasgn` has the same structure as `masgn` except that the child nodes are reversed for Ruby 2.8 (3.0) parser. ([@koic][])
 
 ### Bug fixes
 

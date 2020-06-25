@@ -28,7 +28,7 @@ module RuboCop
                              arg_expr pin match_rest if_guard unless_guard
                              match_with_trailing_comma].freeze
       MANY_CHILD_NODES  = %i[dstr dsym xstr regexp array hash pair
-                             mlhs masgn or_asgn and_asgn
+                             mlhs masgn or_asgn and_asgn rasgn mrasgn
                              undef alias args super yield or and
                              while_post until_post iflipflop eflipflop
                              match_with_lvasgn begin kwbegin return
