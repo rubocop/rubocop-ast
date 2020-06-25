@@ -38,7 +38,7 @@ module RuboCop
       IMMUTABLE_LITERALS = (LITERALS - MUTABLE_LITERALS).freeze
 
       EQUALS_ASSIGNMENTS = %i[lvasgn ivasgn cvasgn gvasgn
-                              casgn masgn].freeze
+                              casgn masgn rasgn mrasgn].freeze
       SHORTHAND_ASSIGNMENTS = %i[op_asgn or_asgn and_asgn].freeze
       ASSIGNMENTS = (EQUALS_ASSIGNMENTS + SHORTHAND_ASSIGNMENTS).freeze
 
