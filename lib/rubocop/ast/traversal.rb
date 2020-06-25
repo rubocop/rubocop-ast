@@ -34,7 +34,7 @@ module RuboCop
                              match_with_lvasgn begin kwbegin return
                              in_match match_alt
                              match_as array_pattern array_pattern_with_tail
-                             hash_pattern const_pattern
+                             hash_pattern const_pattern find_pattern
                              index indexasgn].freeze
       SECOND_CHILD_ONLY = %i[lvasgn ivasgn cvasgn gvasgn optarg kwarg
                              kwoptarg].freeze

@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#50](https://github.com/rubocop-hq/rubocop-ast/pull/50): Support find pattern matching for Ruby 2.8 (3.0) parser. ([@koic][])
+
 ## 0.1.0 (2020-06-26)
 
 ### New features
