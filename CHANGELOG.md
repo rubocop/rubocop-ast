@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.1.0 (2020-06-26)
+
 ### New features
 
 * [#36](https://github.com/rubocop-hq/rubocop-ast/pull/36): Add `post_condition_loop?` and `loop_keyword?` for `Node`. ([@fatkodima][])
