@@ -432,6 +432,7 @@ module RuboCop
         POST_CONDITION_LOOP_TYPES.include?(type)
       end
 
+      # Note: `loop { }` is a normal method call and thus not a loop keyword.
       def loop_keyword?
         LOOP_TYPES.include?(type)
       end
