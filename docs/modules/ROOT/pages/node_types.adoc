@@ -34,7 +34,7 @@ The following fields are given when relevant to nodes in the source code:
 |else|The `else` or `elsif` keyword
 |end|* End of parentheses or square brackets `)` or `]`
 * The `end` keyword
-* The last symbol in literals (like `"` for strings or `:` for symbols)
+* The last symbol in literals (like `"` for strings)
 |heredoc_body|The body of a string in heredoc format.
 |heredoc_end|The end of the heredoc statement.
 |in|The `in` keyword (as in `for..in`)
