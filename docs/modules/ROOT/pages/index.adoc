@@ -2,8 +2,61 @@
 
 This gem introduces two core classes of RuboCop:
 
-* `RuboCop::Node`, and
-* `RuboCop::AST::NodePattern`.
+* `RuboCop::Node` - this is an extension of the https://github.com/whitequark/parser/[`parser`] gem's `Node` class, which adds a simpler and more powerful object-oriented API to make it easier to work with nodes.
+* `RuboCop::AST::NodePattern` - a regular expression-style method to traverse and match nodes in an Abstract Syntax Tree. See xref:node_pattern.adoc["Node Pattern"] to get yourself familiar with ``NodePattern``'s capabilities.
 
-See xref:node_pattern.adoc["Node Pattern"] to get yourself familiar with ``NodePattern``'s
-capabilities.
+`Rubocop::AST` provides a wrapper around `parser`'s `Node` class (in other words, `RuboCop::AST::Node < Parser::AST::Node`). In addition to a number of methods to make it easier to work with, the wrapper class also provides ways to inspect the *parents* of nodes, which the `parser` nodes do not support.
+
+Examples using `parser` and `rubocop-ast`:
+
+[cols="a,a"]
+|======================
+|`parser`|`rubocop-ast`
+|```ruby
+
+# type = :if
+is_if = node.loc.keyword == 'if'
+if_branch = node.children[1]
+else_branch = node.children[2]
+has_elsif_branch = node.children[2].type == :if && node.children[2].keyword == 'elsif'
+```
+
+| ```ruby
+# type = :if
+is_if = node.if?
+if_branch = node.if_branch
+else_branch = node.else_branch
+has_elsif_branch = node.elsif_conditional?
+```
+|
+```ruby
+# type = :hash
+pairs = node.children
+pairs.each do \|pair_node\|
+  key = pair_node.children[0]
+  value = pair_node.children[1]
+  do_something(key, value)
+end
+```
+|```ruby
+# type = :hash
+node.each_pair do \|pair_node\|
+  do_something(pair_node.key, pair_node.value)
+end
+```
+|======================
+
+Sample usage:
+```ruby
+class MyRule < Parser::AST::Processor
+  include RuboCop::AST::Traversal
+
+  def on_sym(node)
+    puts "I found a symbol! #{node.value}"
+  end
+end
+
+source = RuboCop::ProcessedSource.new(code, 2.7)
+rule = MyRule.new
+source.ast.each_node { |n| rule.process(n) }
+```
