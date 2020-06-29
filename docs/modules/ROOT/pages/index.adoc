@@ -2,10 +2,10 @@
 
 This gem introduces two core classes of RuboCop:
 
-* `RuboCop::Node` - this is an extension of the https://github.com/whitequark/parser/[`parser`] gem's `Node` class, which adds a simpler and more powerful object-oriented API to make it easier to work with nodes.
+* `RuboCop::AST::Node` - this is an extension of the https://github.com/whitequark/parser/[`parser`] gem's `Node` class, which adds a simpler and more powerful object-oriented API to make it easier to work with nodes.
 * `RuboCop::AST::NodePattern` - a regular expression-style method to traverse and match nodes in an Abstract Syntax Tree. See xref:node_pattern.adoc["Node Pattern"] to get yourself familiar with ``NodePattern``'s capabilities.
 
-`Rubocop::AST` provides a wrapper around `parser`'s `Node` class (in other words, `RuboCop::AST::Node < Parser::AST::Node`). In addition to a number of methods to make it easier to work with, the wrapper class also provides ways to inspect the *parents* of nodes, which the `parser` nodes do not support.
+`RuboCop::AST::Node` provides a wrapper around ``parser``'s `Node` class (in other words, `RuboCop::AST::Node < Parser::AST::Node`). In addition to a number of methods to make it easier to work with, the wrapper class also provides ways to inspect the *parents* of nodes, which the `parser` nodes do not support.
 
 Examples using `parser` and `rubocop-ast`:
 
