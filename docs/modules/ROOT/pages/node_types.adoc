@@ -2,7 +2,7 @@
 
 This is a partial list of the node types parsed by the AST and corresponding methods and information associated with them.
 
-`Rubocop::AST` defines some additional methods on certain node types by giving them a separate class. You can see the method definitions in the https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/Node[API documentation].
+`RuboCop::AST::Node` defines some additional methods on certain node types by giving them a separate class. You can see the method definitions in the https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/Node[API documentation].
 
 For full information, please see the https://github.com/whitequark/parser/blob/master/doc/AST_FORMAT.md[parser documentation]. This page will act as a quick index to that page, which has more examples and fuller explanation of the different location pieces. You can also see a full AST for yourself by running `ruby-parse --legacy -L -e "ruby(code: 'here')"`.
 
