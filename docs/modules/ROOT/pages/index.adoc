@@ -5,31 +5,49 @@ This gem introduces two core classes of RuboCop:
 * `RuboCop::AST::Node` - this is an extension of the https://github.com/whitequark/parser/[`parser`] gem's `Node` class, which adds a simpler and more powerful object-oriented API to make it easier to work with nodes.
 * `RuboCop::AST::NodePattern` - a regular expression-style method to traverse and match nodes in an Abstract Syntax Tree. See xref:node_pattern.adoc["Node Pattern"] to get yourself familiar with ``NodePattern``'s capabilities.
 
+NOTE: This gem may be used independently from the main RuboCop gem. It was extracted from RuboCop in version 0.84 and its only
+dependency is the https://github.com/whitequark/parser[parser] gem, which `rubocop-ast` extends.
+
+== Rationale
+
+While working with `parser`'s AST representation is fairly easy (especially when compared to the AST of Ruby's built-in `ripper` library), there's still areas we felt could be improved:
+
+* the canonical way to work with an AST node is to deconstruct the node in array-like fashion, which results in code that's hard to read
+* looking for complex AST node patterns requires a lot of boilerplate code
+* there's no easy way to tell apart AST nodes of certain types - e.g. prefix vs postfix conditionals
+* there's no easy way to grab the parent node of some node
+
+Enter `rubocop-ast`, which aims to solve those problems. This library evolved for years as part of RuboCop and was eventually spun off in the hope that it might be useful
+for other projects built on top of `parser`.
+
 `RuboCop::AST::Node` provides a wrapper around ``parser``'s `Node` class (in other words, `RuboCop::AST::Node < Parser::AST::Node`). In addition to a number of methods to make it easier to work with, the wrapper class also provides ways to inspect the *parents* of nodes, which the `parser` nodes do not support.
 
-Examples using `parser` and `rubocop-ast`:
+Here are a few examples using `parser` and `rubocop-ast`:
 
 [cols="a,a"]
 |======================
 |`parser`|`rubocop-ast`
-|```ruby
-
+a|
+[source,ruby]
+----
 # type = :if
 is_if = node.loc.keyword == 'if'
 if_branch = node.children[1]
 else_branch = node.children[2]
 has_elsif_branch = node.children[2].type == :if && node.children[2].keyword == 'elsif'
-```
-
-| ```ruby
+----
+a|
+[source,ruby]
+----
 # type = :if
 is_if = node.if?
 if_branch = node.if_branch
 else_branch = node.else_branch
 has_elsif_branch = node.elsif_conditional?
-```
-|
-```ruby
+----
+a|
+[source,ruby]
+----
 # type = :hash
 pairs = node.children
 pairs.each do \|pair_node\|
@@ -37,17 +55,21 @@ pairs.each do \|pair_node\|
   value = pair_node.children[1]
   do_something(key, value)
 end
-```
-|```ruby
+----
+a|
+[source,ruby]
+----
 # type = :hash
 node.each_pair do \|pair_node\|
   do_something(pair_node.key, pair_node.value)
 end
-```
+----
 |======================
 
 Sample usage:
-```ruby
+
+[source,ruby]
+----
 class MyRule < Parser::AST::Processor
   include RuboCop::AST::Traversal
 
@@ -59,4 +81,4 @@ end
 source = RuboCop::ProcessedSource.new(code, 2.7)
 rule = MyRule.new
 source.ast.each_node { |n| rule.process(n) }
-```
+----
