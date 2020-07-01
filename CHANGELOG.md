@@ -17,6 +17,7 @@
 
 ### Changes
 
+* [#44](https://github.com/rubocop-hq/rubocop-ast/issue/44): **(Breaking)** Use `parser` flag `self.emit_forward_arg = true` by default. ([@marcandre][])
 * [#86](https://github.com/rubocop-hq/rubocop-ast/pull/86): `PairNode#delimiter` and `inverse_delimiter` now accept their argument as a named argument. ([@marcandre][])
 
 ## 0.2.0 (2020-07-19)

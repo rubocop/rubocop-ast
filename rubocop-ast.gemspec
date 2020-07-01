@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
     'bug_tracker_uri' => 'https://github.com/rubocop-hq/rubocop-ast/issues'
   }
 
-  s.add_runtime_dependency('parser', '>= 2.7.0.1')
+  s.add_runtime_dependency('parser', '>= 2.7.1.4')
 
   s.add_development_dependency('bundler', '>= 1.15.0', '< 3.0')
 

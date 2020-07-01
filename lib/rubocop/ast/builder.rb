@@ -14,6 +14,8 @@ module RuboCop
     #   parser = Parser::Ruby25.new(builder)
     #   root_node = parser.parse(buffer)
     class Builder < Parser::Builders::Default
+      self.emit_forward_arg = true
+
       NODE_MAP = {
         and:          AndNode,
         alias:        AliasNode,
