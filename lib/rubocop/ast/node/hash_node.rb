@@ -8,6 +8,9 @@ module RuboCop
     class HashNode < Node
       # Returns an array of all the key value pairs in the `hash` literal.
       #
+      # @note this may be different from children as `kwsplat` nodes are
+      # ignored.
+      #
       # @return [Array<PairNode>] an array of `pair` nodes
       def pairs
         each_pair.to_a
@@ -23,6 +26,8 @@ module RuboCop
       # Calls the given block for each `pair` node in the `hash` literal.
       # If no block is given, an `Enumerator` is returned.
       #
+      # @note `kwsplat` nodes are ignored.
+      #
       # @return [self] if a block is given
       # @return [Enumerator] if no block is given
       def each_pair
@@ -37,6 +42,8 @@ module RuboCop
 
       # Returns an array of all the keys in the `hash` literal.
       #
+      # @note `kwsplat` nodes are ignored.
+      #
       # @return [Array<Node>] an array of keys in the `hash` literal
       def keys
         each_key.to_a
@@ -44,6 +51,8 @@ module RuboCop
 
       # Calls the given block for each `key` node in the `hash` literal.
       # If no block is given, an `Enumerator` is returned.
+      #
+      # @note `kwsplat` nodes are ignored.
       #
       # @return [self] if a block is given
       # @return [Enumerator] if no block is given
@@ -59,6 +68,8 @@ module RuboCop
 
       # Returns an array of all the values in the `hash` literal.
       #
+      # @note `kwsplat` nodes are ignored.
+      #
       # @return [Array<Node>] an array of values in the `hash` literal
       def values
         each_pair.map(&:value)
@@ -66,6 +77,8 @@ module RuboCop
 
       # Calls the given block for each `value` node in the `hash` literal.
       # If no block is given, an `Enumerator` is returned.
+      #
+      # @note `kwsplat` nodes are ignored.
       #
       # @return [self] if a block is given
       # @return [Enumerator] if no block is given
@@ -85,6 +98,8 @@ module RuboCop
       # @note A multiline `pair` is considered to be on the same line if it
       #       shares any of its lines with another `pair`
       #
+      # @note `kwsplat` nodes are ignored.
+      #
       # @return [Boolean] whether any `pair` nodes are on the same line
       def pairs_on_same_line?
         pairs.each_cons(2).any? { |first, second| first.same_line?(second) }
@@ -92,6 +107,8 @@ module RuboCop
 
       # Checks whether this `hash` uses a mix of hash rocket and colon
       # delimiters for its pairs.
+      #
+      # @note `kwsplat` nodes are ignored.
       #
       # @return [Boolean] whether the `hash` uses mixed delimiters
       def mixed_delimiters?
