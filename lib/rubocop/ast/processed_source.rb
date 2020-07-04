@@ -71,18 +71,22 @@ module RuboCop
         Digest::SHA1.hexdigest(@raw_source)
       end
 
+      # @deprecated Use `comments.each`
       def each_comment
         comments.each { |comment| yield comment }
       end
 
+      # @deprecated Use `comments.find`
       def find_comment
         comments.find { |comment| yield comment }
       end
 
+      # @deprecated Use `tokens.each`
       def each_token
         tokens.each { |token| yield token }
       end
 
+      # @deprecated Use `tokens.find`
       def find_token
         tokens.find { |token| yield token }
       end
