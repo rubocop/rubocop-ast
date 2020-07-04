@@ -14,9 +14,7 @@ module RuboCop
       # Returns an array of all value nodes in the `array` literal.
       #
       # @return [Array<Node>] an array of value nodes
-      def values
-        each_child_node.to_a
-      end
+      alias values children
 
       # Calls the given block for all values in the `array` literal.
       #
