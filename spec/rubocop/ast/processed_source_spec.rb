@@ -251,22 +251,61 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
     end
 
-    describe '#commented?' do
-      subject(:commented) { processed_source.commented?(range) }
+    describe '#line_with_comment?' do
+      let(:source) { <<~RUBY }
+        # comment
+        [
+          1, # comment
+          2
+        ]
+      RUBY
+
+      it 'returns true for lines with comments' do
+        expect(processed_source.line_with_comment?(1)).to be true
+        expect(processed_source.line_with_comment?(3)).to be true
+      end
+
+      it 'returns false for lines without comments' do
+        expect(processed_source.line_with_comment?(2)).to be false
+        expect(processed_source.line_with_comment?(4)).to be false
+      end
+    end
+
+    describe '#contains_comment?' do
+      subject(:commented) { processed_source.contains_comment?(range) }
 
       let(:source) { <<~RUBY }
         # comment
-        [ 1, 2 ]
+        [ 1,
+          { a: 2,
+            b: 3 # comment
+          }
+        ]
       RUBY
+      let(:ast) { processed_source.ast }
+      let(:array) { ast }
+      let(:hash) { array.children[1] }
 
       context 'provided source_range on line without comment' do
-        let(:range) { processed_source.find_token(&:left_bracket?).pos }
+        let(:range) { hash.pairs.first.loc.expression }
 
         it { is_expected.to be false }
       end
 
-      context 'provided source_range on line with comment' do
+      context 'provided source_range on comment line' do
         let(:range) { processed_source.find_token(&:comment?).pos }
+
+        it { is_expected.to be true }
+      end
+
+      context 'provided source_range on line with comment' do
+        let(:range) { hash.pairs.last.loc.expression }
+
+        it { is_expected.to be true }
+      end
+
+      context 'provided a multiline source_range with at least one line with comment' do
+        let(:range) { array.loc.expression }
 
         it { is_expected.to be true }
       end
