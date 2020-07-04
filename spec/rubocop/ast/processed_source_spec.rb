@@ -252,23 +252,23 @@ RSpec.describe RuboCop::AST::ProcessedSource do
     end
 
     describe '#commented?' do
+      subject(:commented) { processed_source.commented?(range) }
+
       let(:source) { <<~RUBY }
         # comment
         [ 1, 2 ]
       RUBY
 
-      context 'provided source_range on line with comment' do
-        it 'returns true' do
-          bracket_range = processed_source.find_token(&:left_bracket?).pos
-          expect(processed_source.commented?(bracket_range)).to be false
-        end
+      context 'provided source_range on line without comment' do
+        let(:range) { processed_source.find_token(&:left_bracket?).pos }
+
+        it { is_expected.to be false }
       end
 
-      context 'provided source_range on line without comment' do
-        it 'returns false' do
-          comment_range = processed_source.find_token(&:comment?).pos
-          expect(processed_source.commented?(comment_range)).to be true
-        end
+      context 'provided source_range on line with comment' do
+        let(:range) { processed_source.find_token(&:comment?).pos }
+
+        it { is_expected.to be true }
       end
     end
 
