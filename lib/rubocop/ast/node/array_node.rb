@@ -16,11 +16,7 @@ module RuboCop
       # @return [Array<Node>] an array of value nodes
       alias values children
 
-      # Calls the given block for all values in the `array` literal.
-      #
-      # @yieldparam [Node] node each node
-      # @return [self] if a block is given
-      # @return [Enumerator] if no block is given
+      # @deprecated Use `values.each` (a.k.a. `children.each`)
       def each_value(&block)
         return to_enum(__method__) unless block_given?
 

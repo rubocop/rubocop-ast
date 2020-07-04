@@ -15,11 +15,7 @@ module RuboCop
         'case'
       end
 
-      # Calls the given block for each `when` node in the `case` statement.
-      # If no block is given, an `Enumerator` is returned.
-      #
-      # @return [self] if a block is given
-      # @return [Enumerator] if no block is given
+      # @deprecated Use `when_branches.each`
       def each_when
         return when_branches.to_enum(__method__) unless block_given?
 

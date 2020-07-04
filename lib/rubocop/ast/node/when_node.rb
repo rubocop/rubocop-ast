@@ -13,11 +13,7 @@ module RuboCop
         node_parts[0...-1]
       end
 
-      # Calls the given block for each condition node in the `when` branch.
-      # If no block is given, an `Enumerator` is returned.
-      #
-      # @return [self] if a block is given
-      # @return [Enumerator] if no block is given
+      # @deprecated Use `conditions.each`
       def each_condition
         return conditions.to_enum(__method__) unless block_given?
 
