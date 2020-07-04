@@ -5,6 +5,11 @@
 ### New features
 
 * [#50](https://github.com/rubocop-hq/rubocop-ast/pull/50): Support find pattern matching for Ruby 2.8 (3.0) parser. ([@koic][])
+* [#55](https://github.com/rubocop-hq/rubocop-ast/pull/55): Add `ProcessedSource#line_with_comment?`. ([@marcandre][])
+
+### Bug fixes
+
+* [#55](https://github.com/rubocop-hq/rubocop-ast/pull/55): Fix `ProcessedSource#commented?` for multi-line ranges. Renamed `contains_comment?` ([@marcandre][])
 
 ## 0.1.0 (2020-06-26)
 

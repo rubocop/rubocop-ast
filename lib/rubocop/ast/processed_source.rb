@@ -99,9 +99,19 @@ module RuboCop
         ast.nil?
       end
 
-      def commented?(source_range)
-        comment_lines.include?(source_range.line)
+      # @return [Boolean] if the given line number has a comment.
+      def line_with_comment?(line)
+        comment_lines.include?(line)
       end
+
+      # @return [Boolean] if any of the lines in the given `source_range` has a comment.
+      def contains_comment?(source_range)
+        (source_range.line..source_range.last_line).any? do |line|
+          line_with_comment?(line)
+        end
+      end
+      # @deprecated use contains_comment?
+      alias commented? contains_comment?
 
       def comments_before_line(line)
         comments.select { |c| c.location.line <= line }
