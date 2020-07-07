@@ -7,19 +7,21 @@ module RuboCop
     #
     # @note this mixin expects `#method_name` and `#receiver` to be implemented
     module MethodIdentifierPredicates # rubocop:disable Metrics/ModuleLength
+      extend AutoConstToSet
+
       ENUMERATOR_METHODS = %i[collect collect_concat detect downto each
                               find find_all find_index inject loop map!
                               map reduce reject reject! reverse_each select
-                              select! times upto].to_set.freeze
+                              select! times upto].freeze
 
-      ENUMERABLE_METHODS = (Enumerable.instance_methods + [:each]).to_set.freeze
+      ENUMERABLE_METHODS = (Enumerable.instance_methods + [:each]).freeze
 
       # http://phrogz.net/programmingruby/language.html#table_18.4
       OPERATOR_METHODS = %i[| ^ & <=> == === =~ > >= < <= << >> + - * /
-                            % ** ~ +@ -@ !@ ~@ [] []= ! != !~ `].to_set.freeze
+                            % ** ~ +@ -@ !@ ~@ [] []= ! != !~ `].freeze
 
-      NONMUTATING_BINARY_OPERATOR_METHODS = %i[* / % + - == === != < > <= >= <=>].to_set.freeze
-      NONMUTATING_UNARY_OPERATOR_METHODS = %i[+@ -@ ~ !].to_set.freeze
+      NONMUTATING_BINARY_OPERATOR_METHODS = %i[* / % + - == === != < > <= >= <=>].freeze
+      NONMUTATING_UNARY_OPERATOR_METHODS = %i[+@ -@ ~ !].freeze
       NONMUTATING_OPERATOR_METHODS = (NONMUTATING_BINARY_OPERATOR_METHODS +
         NONMUTATING_UNARY_OPERATOR_METHODS).freeze
 
@@ -36,7 +38,7 @@ module RuboCop
         size slice sort sum take take_while
         to_a to_ary to_h to_s transpose union uniq
         values_at zip |
-      ].to_set.freeze
+      ].freeze
 
       NONMUTATING_HASH_METHODS = %i[
         any? assoc compact dig each each_key each_pair
@@ -46,7 +48,7 @@ module RuboCop
         rehash reject select size slice to_a to_h to_hash
         to_proc to_s transform_keys transform_values value?
         values values_at
-      ].to_set.freeze
+      ].freeze
 
       NONMUTATING_STRING_METHODS = %i[
         ascii_only? b bytes bytesize byteslice capitalize
@@ -61,7 +63,7 @@ module RuboCop
         strip sub succ sum swapcase to_a to_c to_f to_i to_r to_s
         to_str to_sym tr tr_s unicode_normalize unicode_normalized?
         unpack unpack1 upcase upto valid_encoding?
-      ].to_set.freeze
+      ].freeze
 
       # Checks whether the method name matches the argument.
       #
@@ -75,49 +77,49 @@ module RuboCop
       #
       # @return [Boolean] whether the method is an operator
       def operator_method?
-        OPERATOR_METHODS.include?(method_name)
+        OPERATOR_METHODS_SET.include?(method_name)
       end
 
       # Checks whether the method is a nonmutating binary operator method.
       #
       # @return [Boolean] whether the method is a nonmutating binary operator method
       def nonmutating_binary_operator_method?
-        NONMUTATING_BINARY_OPERATOR_METHODS.include?(method_name)
+        NONMUTATING_BINARY_OPERATOR_METHODS_SET.include?(method_name)
       end
 
       # Checks whether the method is a nonmutating unary operator method.
       #
       # @return [Boolean] whether the method is a nonmutating unary operator method
       def nonmutating_unary_operator_method?
-        NONMUTATING_UNARY_OPERATOR_METHODS.include?(method_name)
+        NONMUTATING_UNARY_OPERATOR_METHODS_SET.include?(method_name)
       end
 
       # Checks whether the method is a nonmutating operator method.
       #
       # @return [Boolean] whether the method is a nonmutating operator method
       def nonmutating_operator_method?
-        NONMUTATING_OPERATOR_METHODS.include?(method_name)
+        NONMUTATING_OPERATOR_METHODS_SET.include?(method_name)
       end
 
       # Checks whether the method is a nonmutating Array method.
       #
       # @return [Boolean] whether the method is a nonmutating Array method
       def nonmutating_array_method?
-        NONMUTATING_ARRAY_METHODS.include?(method_name)
+        NONMUTATING_ARRAY_METHODS_SET.include?(method_name)
       end
 
       # Checks whether the method is a nonmutating Hash method.
       #
       # @return [Boolean] whether the method is a nonmutating Hash method
       def nonmutating_hash_method?
-        NONMUTATING_HASH_METHODS.include?(method_name)
+        NONMUTATING_HASH_METHODS_SET.include?(method_name)
       end
 
       # Checks whether the method is a nonmutating String method.
       #
       # @return [Boolean] whether the method is a nonmutating String method
       def nonmutating_string_method?
-        NONMUTATING_STRING_METHODS.include?(method_name)
+        NONMUTATING_STRING_METHODS_SET.include?(method_name)
       end
 
       # Checks whether the method is a comparison method.
@@ -138,7 +140,7 @@ module RuboCop
       #
       # @return [Boolean] whether the method is an enumerator
       def enumerator_method?
-        ENUMERATOR_METHODS.include?(method_name) ||
+        ENUMERATOR_METHODS_SET.include?(method_name) ||
           method_name.to_s.start_with?('each_')
       end
 
@@ -146,7 +148,7 @@ module RuboCop
       #
       # @return [Boolean] whether the method is an Enumerable method
       def enumerable_method?
-        ENUMERABLE_METHODS.include?(method_name)
+        ENUMERABLE_METHODS_SET.include?(method_name)
       end
 
       # Checks whether the method is a predicate method.

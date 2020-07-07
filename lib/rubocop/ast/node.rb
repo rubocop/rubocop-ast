@@ -21,6 +21,7 @@ module RuboCop
     class Node < Parser::AST::Node # rubocop:disable Metrics/ClassLength
       include RuboCop::AST::Sexp
       extend NodePattern::Macros
+      extend AutoConstToSet
 
       # <=> isn't included here, because it doesn't return a boolean.
       COMPARISON_OPERATORS = %i[== === != <= >= > <].freeze
@@ -360,27 +361,27 @@ module RuboCop
       PATTERN
 
       def literal?
-        LITERALS.include?(type)
+        LITERALS_SET.include?(type)
       end
 
       def basic_literal?
-        BASIC_LITERALS.include?(type)
+        BASIC_LITERALS_SET.include?(type)
       end
 
       def truthy_literal?
-        TRUTHY_LITERALS.include?(type)
+        TRUTHY_LITERALS_SET.include?(type)
       end
 
       def falsey_literal?
-        FALSEY_LITERALS.include?(type)
+        FALSEY_LITERALS_SET.include?(type)
       end
 
       def mutable_literal?
-        MUTABLE_LITERALS.include?(type)
+        MUTABLE_LITERALS_SET.include?(type)
       end
 
       def immutable_literal?
-        IMMUTABLE_LITERALS.include?(type)
+        IMMUTABLE_LITERALS_SET.include?(type)
       end
 
       %i[literal basic_literal].each do |kind|
@@ -401,55 +402,55 @@ module RuboCop
       end
 
       def variable?
-        VARIABLES.include?(type)
+        VARIABLES_SET.include?(type)
       end
 
       def reference?
-        REFERENCES.include?(type)
+        REFERENCES_SET.include?(type)
       end
 
       def equals_asgn?
-        EQUALS_ASSIGNMENTS.include?(type)
+        EQUALS_ASSIGNMENTS_SET.include?(type)
       end
 
       def shorthand_asgn?
-        SHORTHAND_ASSIGNMENTS.include?(type)
+        SHORTHAND_ASSIGNMENTS_SET.include?(type)
       end
 
       def assignment?
-        ASSIGNMENTS.include?(type)
+        ASSIGNMENTS_SET.include?(type)
       end
 
       def basic_conditional?
-        BASIC_CONDITIONALS.include?(type)
+        BASIC_CONDITIONALS_SET.include?(type)
       end
 
       def conditional?
-        CONDITIONALS.include?(type)
+        CONDITIONALS_SET.include?(type)
       end
 
       def post_condition_loop?
-        POST_CONDITION_LOOP_TYPES.include?(type)
+        POST_CONDITION_LOOP_TYPES_SET.include?(type)
       end
 
       # Note: `loop { }` is a normal method call and thus not a loop keyword.
       def loop_keyword?
-        LOOP_TYPES.include?(type)
+        LOOP_TYPES_SET.include?(type)
       end
 
       def keyword?
         return true if special_keyword? || send_type? && prefix_not?
-        return false unless KEYWORDS.include?(type)
+        return false unless KEYWORDS_SET.include?(type)
 
-        !OPERATOR_KEYWORDS.include?(type) || loc.operator.is?(type.to_s)
+        !OPERATOR_KEYWORDS_SET.include?(type) || loc.operator.is?(type.to_s)
       end
 
       def special_keyword?
-        SPECIAL_KEYWORDS.include?(source)
+        SPECIAL_KEYWORDS_SET.include?(source)
       end
 
       def operator_keyword?
-        OPERATOR_KEYWORDS.include?(type)
+        OPERATOR_KEYWORDS_SET.include?(type)
       end
 
       def parenthesized_call?
@@ -469,7 +470,7 @@ module RuboCop
       end
 
       def argument_type?
-        ARGUMENT_TYPES.include?(type)
+        ARGUMENT_TYPES_SET.include?(type)
       end
 
       def boolean_type?

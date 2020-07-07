@@ -8,6 +8,7 @@ module RuboCop
     module MethodDispatchNode
       extend NodePattern::Macros
       include MethodIdentifierPredicates
+      extend AutoConstToSet
 
       ARITHMETIC_OPERATORS = %i[+ - * / % **].freeze
       SPECIAL_MODIFIERS = %w[private protected].freeze
@@ -167,7 +168,7 @@ module RuboCop
       # @return [Boolean] whether the dispatched method is an arithmetic
       #                   operation
       def arithmetic_operation?
-        ARITHMETIC_OPERATORS.include?(method_name)
+        ARITHMETIC_OPERATORS_SET.include?(method_name)
       end
 
       # Checks if this node is part of a chain of `def` modifiers.
