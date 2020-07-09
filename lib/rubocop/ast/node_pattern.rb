@@ -199,22 +199,26 @@ module RuboCop
         RUBY
         REPEATED_TEMPLATE.location = [__FILE__, line + 1]
 
-        def initialize(str, node_var = 'node0')
+        def initialize(str, root = 'node0', node_var = root)
           @string   = str
-          @root     = node_var
+          # For def_node_pattern, root == node_var
+          # For def_node_search, root is the root node to search on,
+          # and node_var is the current descendant being searched.
+          @root     = root
+          @node_var = node_var
 
           @temps    = 0  # avoid name clashes between temp variables
           @captures = 0  # number of captures seen
           @unify    = {} # named wildcard -> temp variable
           @params   = 0  # highest % (param) number seen
           @keywords = Set[] # keyword parameters seen
-          run(node_var)
+          run
         end
 
-        def run(node_var)
+        def run
           @tokens = Compiler.tokens(@string)
 
-          @match_code = with_context(compile_expr, node_var, use_temp_node: false)
+          @match_code = with_context(compile_expr, @node_var, use_temp_node: false)
           @match_code.prepend("(captures = Array.new(#{@captures})) && ") \
             if @captures.positive?
 
@@ -698,10 +702,10 @@ module RuboCop
           @keywords.map { |k| format(pattern, keyword: k) }.join(',')
         end
 
-        def emit_trailing_params(forwarding: false)
+        def emit_params(*first, forwarding: false)
           params = emit_param_list
           keywords = emit_keyword_list(forwarding: forwarding)
-          [params, keywords].reject(&:empty?).map { |p| ", #{p}" }.join
+          [*first, params, keywords].reject(&:empty?).join(',')
         end
 
         def emit_method_code
@@ -793,7 +797,7 @@ module RuboCop
         def def_node_matcher(base, method_name, **defaults)
           def_helper(base, method_name, **defaults) do |name|
             <<~RUBY
-              def #{name}(node = self#{emit_trailing_params})
+              def #{name}(#{emit_params('node = self')})
                 #{emit_method_code}
               end
             RUBY
@@ -810,20 +814,18 @@ module RuboCop
           if method_name.to_s.end_with?('?')
             on_match = 'return true'
           else
-            prelude = <<~RUBY
-              return enum_for(:#{method_name},
-                node0#{emit_trailing_params(forwarding: true)}) unless block_given?
-            RUBY
-            on_match = emit_yield_capture('node')
+            args = emit_params(":#{method_name}", @root, forwarding: true)
+            prelude = "return enum_for(#{args}) unless block_given?\n"
+            on_match = emit_yield_capture(@node_var)
           end
           emit_node_search_body(method_name, prelude: prelude, on_match: on_match)
         end
 
         def emit_node_search_body(method_name, prelude:, on_match:)
           <<~RUBY
-            def #{method_name}(node0#{emit_trailing_params})
+            def #{method_name}(#{emit_params(@root)})
               #{prelude}
-              node0.each_node do |node|
+              #{@root}.each_node do |#{@node_var}|
                 if #{match_code}
                   #{on_match}
                 end
@@ -856,7 +858,7 @@ module RuboCop
         # as soon as it finds a descendant which matches. Otherwise, it will
         # yield all descendants which match.
         def def_node_search(method_name, pattern_str, **keyword_defaults)
-          Compiler.new(pattern_str, 'node')
+          Compiler.new(pattern_str, 'node0', 'node')
                   .def_node_search(self, method_name, **keyword_defaults)
         end
       end
@@ -865,8 +867,8 @@ module RuboCop
 
       def initialize(str)
         @pattern = str
-        compiler = Compiler.new(str)
-        src = "def match(node0#{compiler.emit_trailing_params});" \
+        compiler = Compiler.new(str, 'node0')
+        src = "def match(#{compiler.emit_params('node0')});" \
               "#{compiler.emit_method_code}end"
         instance_eval(src, __FILE__, __LINE__ + 1)
       end
