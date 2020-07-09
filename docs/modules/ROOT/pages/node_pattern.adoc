@@ -292,7 +292,7 @@ You can also use it at the node level, asking for each child:
 * `(int odd?)` will match only with odd numbers, asking it to the current
 number.
 
-== `#` to call external methods
+== `#` to call functions
 
 Sometimes, we want to add extra logic. Let's imagine we're searching for
 prime numbers, so we have a method to detect it:
@@ -310,11 +310,35 @@ def prime?(n)
 end
 ----
 
-We can use the `#prime?` method directly in the expression:
+We can use the `#prime?` function directly in the expression:
 
 ----
 (int #prime?)
 ----
+
+== Arguments for predicate and function calls
+
+Arguments can be passed to predicates and function calls, like literals, parameters:
+
+[source,ruby]
+----
+def divisible_by?(value, divisor)
+  value % divisor == 0
+end
+----
+
+Example patterns using this function:
+----
+(int #divisible_by?(42))
+(send (int _value) :+ (int #divisible_by?(_value))
+----
+
+The arguments can be pattern themselves, in which case a matcher responding to `===` will be passed. This makes patterns composable:
+
+```ruby
+def_node_pattern :global_const?, '(const {nil? cbase} %1)'
+def_node_pattern :class_creator, '(send #global_const?({:Class :Module}) :new ...)'
+```
 
 == Using node matcher macros
 

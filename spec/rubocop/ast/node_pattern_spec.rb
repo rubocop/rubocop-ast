@@ -1181,6 +1181,28 @@ RSpec.describe RuboCop::AST::NodePattern do
       end
     end
 
+    context 'with an expression argument' do
+      before do
+        def instance.some_function(node, arg)
+          arg === node # rubocop:disable Style/CaseEquality
+        end
+      end
+
+      let(:pattern) { '(send (int _value) :+ #some_function( {(int _value) (float _value)} ) )' }
+
+      context 'for which the predicate is true' do
+        let(:ruby) { '2 + 2.0' }
+
+        it_behaves_like 'matching'
+      end
+
+      context 'for which the predicate is false' do
+        let(:ruby) { '2 + 3.0' }
+
+        it_behaves_like 'nonmatching'
+      end
+    end
+
     context 'with multiple arguments' do
       let(:pattern) { '(str between?(%1, %2))' }
       let(:ruby) { '"c"' }

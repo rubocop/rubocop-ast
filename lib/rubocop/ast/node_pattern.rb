@@ -96,6 +96,9 @@ module RuboCop
     #                         # if that returns a truthy value, the match succeeds
     #     'equal?(%1)'        # predicates can be given 1 or more extra args
     #     '#method(%0, 1)'    # funcalls can also be given 1 or more extra args
+    #                         # These arguments can be patterns themselves, in
+    #                         # which case a matcher responding to === will be
+    #                         # passed.
     #
     # You can nest arbitrarily deep:
     #
@@ -626,6 +629,13 @@ module RuboCop
           "#{atom} === #{CUR_ELEMENT}"
         end
 
+        def expr_to_atom(expr)
+          with_temp_variables do |compare|
+            in_context = with_context(expr, compare, use_temp_node: false)
+            "::RuboCop::AST::NodePattern::Matcher.new{|#{compare}| #{in_context}}"
+          end
+        end
+
         # @return compiled atom (e.g. ":literal" or "SOME_CONST")
         #         or nil if not a simple atom (unknown wildcard, other tokens)
         def compile_atom(token)
@@ -642,7 +652,7 @@ module RuboCop
 
         def compile_arg
           token = tokens.shift
-          compile_atom(token) || fail_due_to("invalid in arglist: #{token.inspect}")
+          compile_atom(token) || expr_to_atom(compile_expr(token))
         end
 
         def next_capture
@@ -910,6 +920,17 @@ module RuboCop
         end
 
         nil
+      end
+
+      # @api private
+      class Matcher
+        def initialize(&block)
+          @block = block
+        end
+
+        def ===(compare)
+          @block.call(compare)
+        end
       end
     end
   end
