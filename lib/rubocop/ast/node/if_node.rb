@@ -64,10 +64,9 @@ module RuboCop
       #
       # @return [String] the inverse keyword of the `if` statement
       def inverse_keyword
-        if keyword == 'if'
-          'unless'
-        elsif keyword == 'unless'
-          'if'
+        case keyword
+        when 'if' then 'unless'
+        when 'unless' then 'if'
         else
           ''
         end
