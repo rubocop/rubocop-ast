@@ -84,7 +84,7 @@ module RuboCop
     #                         # matching process starts
     #     '(send _ %named)'   # arguments can also be passed as named
     #                         # parameters (see `%1`)
-    #                         # Note that the macros `def_node_pattern` and
+    #                         # Note that the macros `def_node_matcher` and
     #                         # `def_node_search` accept default values for these.
     #     '(send _ %CONST)'   # the named constant will act like `%1` and `%named`.
     #     '^^send'            # each ^ ascends one level in the AST
