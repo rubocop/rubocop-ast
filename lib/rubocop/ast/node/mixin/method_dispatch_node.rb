@@ -49,7 +49,7 @@ module RuboCop
       #
       # @return [Boolean] whether the dispatched method is a macro method
       def macro?
-        !receiver && macro_scope?
+        !receiver && macro_scope?(self)
       end
 
       # Checks whether the dispatched method is an access modifier.
@@ -254,15 +254,15 @@ module RuboCop
         node.parent.nil?
       end
 
-      def_node_matcher :adjacent_def_modifier?, <<~PATTERN
+      def_node_matcher :adjacent_def_modifier?, <<~PATTERN, on_self: true
         (send nil? _ ({def defs} ...))
       PATTERN
 
-      def_node_matcher :bare_access_modifier_declaration?, <<~PATTERN
+      def_node_matcher :bare_access_modifier_declaration?, <<~PATTERN, on_self: true
         (send nil? {:public :protected :private :module_function})
       PATTERN
 
-      def_node_matcher :non_bare_access_modifier_declaration?, <<~PATTERN
+      def_node_matcher :non_bare_access_modifier_declaration?, <<~PATTERN, on_self: true
         (send nil? {:public :protected :private :module_function} _)
       PATTERN
     end

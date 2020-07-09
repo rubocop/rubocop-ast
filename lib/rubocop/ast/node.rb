@@ -640,7 +640,7 @@ module RuboCop
 
           yield unless receiver.const_type?
           receiver.const_name
-        elsif !new_class_or_module_block?(ancestor)
+        elsif !ancestor.new_class_or_module_block?
           yield
         end
       end

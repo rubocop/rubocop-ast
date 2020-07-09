@@ -705,7 +705,8 @@ module RuboCop
         def emit_params(*first, forwarding: false)
           params = emit_param_list
           keywords = emit_keyword_list(forwarding: forwarding)
-          [*first, params, keywords].reject(&:empty?).join(',')
+          root = @root unless @root == 'self'
+          [*first, *root, params, keywords].reject(&:empty?).join(',')
         end
 
         def emit_method_code
@@ -797,7 +798,7 @@ module RuboCop
         def def_node_matcher(base, method_name, **defaults)
           def_helper(base, method_name, **defaults) do |name|
             <<~RUBY
-              def #{name}(#{emit_params('node = self')})
+              def #{name}(#{emit_params})
                 #{emit_method_code}
               end
             RUBY
@@ -814,7 +815,7 @@ module RuboCop
           if method_name.to_s.end_with?('?')
             on_match = 'return true'
           else
-            args = emit_params(":#{method_name}", @root, forwarding: true)
+            args = emit_params(":#{method_name}", forwarding: true)
             prelude = "return enum_for(#{args}) unless block_given?\n"
             on_match = emit_yield_capture(@node_var)
           end
@@ -823,7 +824,7 @@ module RuboCop
 
         def emit_node_search_body(method_name, prelude:, on_match:)
           <<~RUBY
-            def #{method_name}(#{emit_params(@root)})
+            def #{method_name}(#{emit_params})
               #{prelude}
               #{@root}.each_node do |#{@node_var}|
                 if #{match_code}
@@ -846,8 +847,8 @@ module RuboCop
         # yield to the block (passing any captures as block arguments).
         # If the node matches, and no block is provided, the new method will
         # return the captures, or `true` if there were none.
-        def def_node_matcher(method_name, pattern_str, **keyword_defaults)
-          Compiler.new(pattern_str, 'node')
+        def def_node_matcher(method_name, pattern_str, on_self: :auto, **keyword_defaults)
+          Compiler.new(pattern_str, _root_name(on_self))
                   .def_node_matcher(self, method_name, **keyword_defaults)
         end
 
@@ -857,9 +858,15 @@ module RuboCop
         # If the method name ends with '?', the new method will return `true`
         # as soon as it finds a descendant which matches. Otherwise, it will
         # yield all descendants which match.
-        def def_node_search(method_name, pattern_str, **keyword_defaults)
-          Compiler.new(pattern_str, 'node0', 'node')
+        def def_node_search(method_name, pattern_str, on_self: :auto, **keyword_defaults)
+          Compiler.new(pattern_str, _root_name(on_self), 'node')
                   .def_node_search(self, method_name, **keyword_defaults)
+        end
+
+        # @api private
+        def _root_name(on_self)
+          on_self = self <= RuboCop::AST::Node if on_self == :auto
+          on_self ? 'self' : 'node0'
         end
       end
 
@@ -867,8 +874,8 @@ module RuboCop
 
       def initialize(str)
         @pattern = str
-        compiler = Compiler.new(str, 'node0')
-        src = "def match(#{compiler.emit_params('node0')});" \
+        compiler = Compiler.new(str)
+        src = "def match(#{compiler.emit_params});" \
               "#{compiler.emit_method_code}end"
         instance_eval(src, __FILE__, __LINE__ + 1)
       end
