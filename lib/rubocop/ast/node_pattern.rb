@@ -234,6 +234,10 @@ module RuboCop
           #   CUR_NODE: Ruby code that evaluates to an AST node
           #   CUR_ELEMENT: Either the node or the type if in first element of
           #   a sequence (aka seq_head, e.g. "(seq_head first_node_arg ...")
+          if (atom = compile_atom(token))
+            return atom_to_expr(atom)
+          end
+
           case token
           when '('       then compile_seq
           when '{'       then compile_union
@@ -242,16 +246,10 @@ module RuboCop
           when '$'       then compile_capture
           when '^'       then compile_ascend
           when '`'       then compile_descend
-          when WILDCARD  then compile_wildcard(token[1..-1])
+          when WILDCARD  then compile_new_wildcard(token[1..-1])
           when FUNCALL   then compile_funcall(token)
-          when LITERAL   then compile_literal(token)
           when PREDICATE then compile_predicate(token)
           when NODE      then compile_nodetype(token)
-          when KEYWORD   then compile_keyword(token[1..-1])
-          when CONST     then compile_const(token[1..-1])
-          when PARAM     then compile_param(token[1..-1])
-          when CLOSING   then fail_due_to("#{token} in invalid position")
-          when nil       then fail_due_to('pattern ended prematurely')
           else                fail_due_to("invalid token #{token.inspect}")
           end
         end
@@ -581,24 +579,13 @@ module RuboCop
           end
         end
 
-        def compile_wildcard(name)
-          if name.empty?
-            'true'
-          elsif @unify.key?(name)
-            # we have already seen a wildcard with this name before
-            # so the value it matched the first time will already be stored
-            # in a temp. check if this value matches the one stored in the temp
-            "#{CUR_ELEMENT} == #{access_unify(name)}"
-          else
-            n = @unify[name] = "unify_#{name.gsub('-', '__')}"
-            # double assign to avoid "assigned but unused variable"
-            "(#{n} = #{CUR_ELEMENT}; " \
-            "#{n} = #{n}; true)"
-          end
-        end
+        # Known wildcards are considered atoms, see `compile_atom`
+        def compile_new_wildcard(name)
+          return 'true' if name.empty?
 
-        def compile_literal(literal)
-          "#{CUR_ELEMENT} == #{literal}"
+          n = @unify[name] = "unify_#{name.gsub('-', '__')}"
+          # double assign to avoid "assigned but unused variable"
+          "(#{n} = #{CUR_ELEMENT}; #{n} = #{n}; true)"
         end
 
         def compile_predicate(predicate)
@@ -628,18 +615,6 @@ module RuboCop
           "#{compile_guard_clause} && #{CUR_NODE}.#{type.tr('-', '_')}_type?"
         end
 
-        def compile_param(number)
-          "#{get_param(number)} === #{CUR_ELEMENT}"
-        end
-
-        def compile_const(const)
-          "#{get_const(const)} === #{CUR_ELEMENT}"
-        end
-
-        def compile_keyword(keyword)
-          "#{get_keyword(keyword)} === #{CUR_ELEMENT}"
-        end
-
         def compile_args(tokens)
           index = tokens.find_index { |token| token == ')' }
 
@@ -650,19 +625,26 @@ module RuboCop
           end
         end
 
-        def compile_arg(token)
-          name = token[1..-1]
+        def atom_to_expr(atom)
+          "#{atom} === #{CUR_ELEMENT}"
+        end
+
+        # @return compiled atom (e.g. ":literal" or "SOME_CONST")
+        #         or nil if not a simple atom (unknown wildcard, other tokens)
+        def compile_atom(token)
           case token
-          when WILDCARD
-            access_unify(name) || fail_due_to('invalid in arglist: ' + token)
+          when WILDCARD  then access_unify(token[1..-1]) # could be nil
           when LITERAL   then token
-          when KEYWORD   then get_keyword(name)
-          when CONST     then get_const(name)
-          when PARAM     then get_param(name)
+          when KEYWORD   then get_keyword(token[1..-1])
+          when CONST     then get_const(token[1..-1])
+          when PARAM     then get_param(token[1..-1])
           when CLOSING   then fail_due_to("#{token} in invalid position")
           when nil       then fail_due_to('pattern ended prematurely')
-          else fail_due_to("invalid token in arglist: #{token.inspect}")
           end
+        end
+
+        def compile_arg(token)
+          compile_atom(token) || fail_due_to("invalid in arglist: #{token.inspect}")
         end
 
         def next_capture
