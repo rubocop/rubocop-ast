@@ -110,11 +110,6 @@ module RuboCop
     # and so on. Therefore, if you add methods which are named like
     # `#prefix_type?` to the AST node class, then 'prefix' will become usable as
     # a pattern.
-    #
-    # Also note that if you need a "guard clause" to protect against possible nils
-    # in a certain place in the AST, you can do it like this: `[!nil <pattern>]`
-    #
-    # The compiler code is very simple; don't be afraid to read through it!
     class NodePattern
       # @private
       Invalid = Class.new(StandardError)
