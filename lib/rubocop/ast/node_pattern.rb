@@ -594,7 +594,7 @@ module RuboCop
 
         def compile_predicate(predicate)
           if predicate.end_with?('(') # is there an arglist?
-            args = compile_args(tokens)
+            args = compile_args
             predicate = predicate[0..-2] # drop the trailing (
             "#{CUR_ELEMENT}.#{predicate}(#{args.join(',')})"
           else
@@ -607,7 +607,7 @@ module RuboCop
           # code is used in. pass target value as an argument
           method = method[1..-1] # drop the leading #
           if method.end_with?('(') # is there an arglist?
-            args = compile_args(tokens)
+            args = compile_args
             method = method[0..-2] # drop the trailing (
             "#{method}(#{CUR_ELEMENT},#{args.join(',')})"
           else
@@ -619,13 +619,11 @@ module RuboCop
           "#{compile_guard_clause} && #{CUR_NODE}.#{type.tr('-', '_')}_type?"
         end
 
-        def compile_args(tokens)
-          index = tokens.find_index { |token| token == ')' }
-
-          tokens.slice!(0..index).each_with_object([]) do |token, args|
-            next if [')', ','].include?(token)
-
-            args << compile_arg(token)
+        def compile_args
+          tokens_until(')', 'call arguments').map do
+            arg = compile_arg
+            tokens.shift if tokens.first == ','
+            arg
           end
         end
 
@@ -647,7 +645,8 @@ module RuboCop
           end
         end
 
-        def compile_arg(token)
+        def compile_arg
+          token = tokens.shift
           compile_atom(token) || fail_due_to("invalid in arglist: #{token.inspect}")
         end
 
