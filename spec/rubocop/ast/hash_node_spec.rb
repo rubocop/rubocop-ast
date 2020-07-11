@@ -150,11 +150,7 @@ RSpec.describe RuboCop::AST::HashNode do
 
     context 'when passed a block' do
       let(:expected) do
-        [
-          [*hash_node.pairs[0]],
-          [*hash_node.pairs[1]],
-          [*hash_node.pairs[2]]
-        ]
+        hash_node.pairs.map(&:to_a)
       end
 
       it 'yields all the pairs' do
