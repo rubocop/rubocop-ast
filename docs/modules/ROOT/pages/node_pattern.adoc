@@ -187,6 +187,12 @@ $ ruby-parse -e '1.0'
 
 * `({int float} _)` - int or float types, no matter the value
 
+== `[]` for "AND"
+
+Imagine you want to check if the number is `odd?` and also positive numbers:
+
+`(int [odd? positive?])` - is an int and the value should be odd and positive.
+
 == `$` for captures
 
 You can capture elements or nodes along with your search, prefixing the expression
@@ -285,12 +291,6 @@ You can also use it at the node level, asking for each child:
 
 * `(int odd?)` will match only with odd numbers, asking it to the current
 number.
-
-== `[]` for "AND"
-
-Imagine you want to check if the number is `odd?` and also positive numbers:
-
-`(int [odd? positive?])` - is an int and the value should be odd and positive.
 
 == `#` to call external methods
 
