@@ -262,7 +262,7 @@ module RuboCop
         def tokens_until(stop, what)
           return to_enum __method__, stop, what unless block_given?
 
-          fail_due_to("empty #{what}") if tokens.first == stop && what
+          fail_due_to("empty #{what}") if tokens.first == stop
           yield until tokens.first == stop
           tokens.shift
         end
