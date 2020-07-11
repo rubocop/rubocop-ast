@@ -1852,6 +1852,18 @@ RSpec.describe RuboCop::AST::NodePattern do
 
       it_behaves_like 'invalid'
     end
+
+    context 'with doubled comma in arg list' do
+      let(:pattern) { '(send #func(:foo, ,:bar))' }
+
+      it_behaves_like 'invalid'
+    end
+
+    context 'with leading comma in arg list' do
+      let(:pattern) { '(send #func(, :foo))' }
+
+      it_behaves_like 'invalid'
+    end
   end
 
   describe '.descend' do
