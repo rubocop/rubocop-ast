@@ -313,8 +313,8 @@ module RuboCop
       def_node_matcher :defined_module0, <<~PATTERN
         {(class (const $_ $_) ...)
          (module (const $_ $_) ...)
-         (casgn $_ $_        (send (const nil? {:Class :Module}) :new ...))
-         (casgn $_ $_ (block (send (const nil? {:Class :Module}) :new ...) ...))}
+         (casgn $_ $_        (send #global_const?({:Class :Module}) :new ...))
+         (casgn $_ $_ (block (send #global_const?({:Class :Module}) :new ...) ...))}
       PATTERN
 
       private :defined_module0
@@ -496,16 +496,18 @@ module RuboCop
 
       def_node_matcher :proc?, <<~PATTERN
         {(block (send nil? :proc) ...)
-         (block (send (const nil? :Proc) :new) ...)
-         (send (const nil? :Proc) :new)}
+         (block (send #global_const?(:Proc) :new) ...)
+         (send #global_const?(:Proc) :new)}
       PATTERN
 
       def_node_matcher :lambda?, '({block numblock} (send nil? :lambda) ...)'
       def_node_matcher :lambda_or_proc?, '{lambda? proc?}'
 
+      def_node_matcher :global_const?, '(const {nil? cbase} %1)'
+
       def_node_matcher :class_constructor?, <<~PATTERN
-        {       (send (const nil? {:Class :Module}) :new ...)
-         (block (send (const nil? {:Class :Module}) :new ...) ...)}
+        {       (send #global_const?({:Class :Module}) :new ...)
+         (block (send #global_const?({:Class :Module}) :new ...) ...)}
       PATTERN
 
       # Some expressions are evaluated for their value, some for their side

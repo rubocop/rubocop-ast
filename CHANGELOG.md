@@ -7,6 +7,7 @@
 * [#50](https://github.com/rubocop-hq/rubocop-ast/pull/50): Support find pattern matching for Ruby 2.8 (3.0) parser. ([@koic][])
 * [#55](https://github.com/rubocop-hq/rubocop-ast/pull/55): Add `ProcessedSource#line_with_comment?`. ([@marcandre][])
 * [#63](https://github.com/rubocop-hq/rubocop-ast/pull/63): NodePattern now supports patterns as arguments to predicate and functions. ([@marcandre][])
+* [#64](https://github.com/rubocop-hq/rubocop-ast/pull/64): Add `Node#global_const?`. ([@marcandre][])
 
 ### Bug fixes
 
