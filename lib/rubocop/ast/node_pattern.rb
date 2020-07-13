@@ -133,6 +133,8 @@ module RuboCop
         PARAM_NUMBER = /%\d*/.freeze
 
         SEPARATORS = /\s+/.freeze
+        ONLY_SEPARATOR = /\A#{SEPARATORS}\Z/.freeze
+
         TOKENS     = Regexp.union(META, PARAM_CONST, KEYWORD_NAME, PARAM_NUMBER, NUMBER,
                                   METHOD_NAME, SYMBOL, STRING)
 
@@ -783,7 +785,7 @@ module RuboCop
         end
 
         def self.tokens(pattern)
-          pattern.scan(TOKEN).reject { |token| token =~ /\A#{SEPARATORS}\Z/ }
+          pattern.scan(TOKEN).grep_v(ONLY_SEPARATOR)
         end
 
         def def_helper(base, method_name, **defaults)
