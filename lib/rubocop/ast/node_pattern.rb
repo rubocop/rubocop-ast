@@ -135,8 +135,8 @@ module RuboCop
         SEPARATORS = /\s+/.freeze
         ONLY_SEPARATOR = /\A#{SEPARATORS}\Z/.freeze
 
-        TOKENS     = Regexp.union(META, PARAM_CONST, KEYWORD_NAME, PARAM_NUMBER, NUMBER,
-                                  METHOD_NAME, SYMBOL, STRING)
+        TOKENS = Regexp.union(META, PARAM_CONST, KEYWORD_NAME, PARAM_NUMBER, NUMBER,
+                              METHOD_NAME, SYMBOL, STRING)
 
         TOKEN = /\G(?:#{SEPARATORS}|#{TOKENS}|.)/.freeze
 
