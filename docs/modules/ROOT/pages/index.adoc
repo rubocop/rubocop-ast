@@ -10,7 +10,7 @@ dependency is the https://github.com/whitequark/parser[parser] gem, which `ruboc
 
 == Rationale
 
-While working with `parser`'s AST representation is fairly easy (especially when compared to the AST of Ruby's built-in `ripper` library), there's still areas we felt could be improved:
+While working with ``parser``'s AST representation is fairly easy (especially when compared to the AST of Ruby's built-in `ripper` library), there's still areas we felt could be improved:
 
 * the canonical way to work with an AST node is to deconstruct the node in array-like fashion, which results in code that's hard to read
 * looking for complex AST node patterns requires a lot of boilerplate code
