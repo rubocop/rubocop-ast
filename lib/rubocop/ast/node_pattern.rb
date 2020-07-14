@@ -326,11 +326,15 @@ module RuboCop
         # @private
         # Builds Ruby code for a sequence
         # (head *first_terms variadic_term *last_terms)
-        class Sequence < SimpleDelegator
+        class Sequence
+          extend Forwardable
+          def_delegators :@compiler, :compile_guard_clause, :with_seq_head_context,
+                         :with_child_context, :fail_due_to
+
           def initialize(compiler, *arity_term_list)
             @arities, @terms = arity_term_list.transpose
 
-            super(compiler)
+            @compiler = compiler
             @variadic_index = @arities.find_index { |a| a.is_a?(Range) }
             fail_due_to 'multiple variable patterns in same sequence' \
               if @variadic_index && !@arities.one? { |a| a.is_a?(Range) }
