@@ -163,6 +163,7 @@ module RuboCop
         CUR_NODE = "#{CUR_PLACEHOLDER} node@@@"
         CUR_ELEMENT = "#{CUR_PLACEHOLDER} element@@@"
         SEQ_HEAD_GUARD = '@@@seq guard head@@@'
+        MULTIPLE_CUR_PLACEHOLDER = /#{CUR_PLACEHOLDER}.*#{CUR_PLACEHOLDER}/.freeze
 
         line = __LINE__
         ANY_ORDER_TEMPLATE = ERB.new <<~RUBY.gsub("-%>\n", '%>')
@@ -750,7 +751,7 @@ module RuboCop
         end
 
         def auto_use_temp_node?(code)
-          code.scan(CUR_PLACEHOLDER).count > 1
+          code.match?(MULTIPLE_CUR_PLACEHOLDER)
         end
 
         # with_<...>_context methods are used whenever the context,
