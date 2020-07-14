@@ -793,13 +793,19 @@ module RuboCop
           pattern.scan(TOKEN).grep_v(ONLY_SEPARATOR)
         end
 
+        # This method minimizes the closure for our method
+        def wrapping_block(method_name, **defaults)
+          proc do |*args, **values|
+            send method_name, *args, **defaults, **values
+          end
+        end
+
         def def_helper(base, method_name, **defaults)
           location = caller_locations(3, 1).first
           unless defaults.empty?
-            base.send :define_method, method_name do |*args, **values|
-              send method_name, *args, **defaults, **values
-            end
-            method_name = :"without_defaults_#{method_name}"
+            call = :"without_defaults_#{method_name}"
+            base.send :define_method, method_name, &wrapping_block(call, **defaults)
+            method_name = call
           end
           src = yield method_name
           base.class_eval(src, location.path, location.lineno)
