@@ -24,6 +24,7 @@
 ### Bug fixes
 
 * [#55](https://github.com/rubocop-hq/rubocop-ast/pull/55): Fix `ProcessedSource#commented?` for multi-line ranges. Renamed `contains_comment?` ([@marcandre][])
+* [#69](https://github.com/rubocop-hq/rubocop-ast/pull/69): **(Potentially breaking)** `RetryNode` has many errors. It is now a `Node`. ([@marcandre][])
 
 ## 0.1.0 (2020-06-26)
 

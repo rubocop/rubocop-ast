@@ -193,8 +193,6 @@ The following fields are given when relevant to nodes in the source code:
 
 |restarg|Positional splat argument. Must come inside an `args`.|One child - a symbol, representing the argument name (if given). If no name given, there are no children.|def foo(*rest)|N/A
 
-|retry|Retry command|None|retry|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/RetryNode[RetryNode]
-
 |return|Return statement|Zero or one child, an expression node for the value to return.|return|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ReturnNode[ReturnNode]
 
 |sclass|Singleton class declaration.|Two children. The first child is the expression for the class being opened (e.g. `self`); second child is a body statement.|class << some_var|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/SelfClassNode[SelfClassNode]
