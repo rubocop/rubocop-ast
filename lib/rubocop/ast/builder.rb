@@ -42,6 +42,7 @@ module RuboCop
         kwsplat:      KeywordSplatNode,
         lambda:       LambdaNode,
         module:       ModuleNode,
+        next:         NextNode,
         or:           OrNode,
         pair:         PairNode,
         regexp:       RegexpNode,

@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#70](https://github.com/rubocop-hq/rubocop-ast/pull/70): Add `NextNode` ([@marcandre][])
+
 ### Bug fixes
 
 * [#70](https://github.com/rubocop-hq/rubocop-ast/pull/70): Fix arguments processing for `BreakNode` ([@marcandre][])
