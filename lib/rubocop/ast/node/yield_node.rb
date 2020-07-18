@@ -16,6 +16,8 @@ module RuboCop
       def node_parts
         [nil, :yield, *to_a]
       end
+
+      alias arguments children
     end
   end
 end
