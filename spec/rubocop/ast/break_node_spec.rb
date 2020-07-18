@@ -10,4 +10,10 @@ RSpec.describe RuboCop::AST::BreakNode do
       it { expect(break_node.is_a?(described_class)).to be(true) }
     end
   end
+
+  describe '#arguments' do
+    let(:source) { 'break 1, 2' }
+
+    it { expect(break_node.arguments.size).to eq 2 }
+  end
 end

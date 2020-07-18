@@ -9,9 +9,7 @@ module RuboCop
       include MethodDispatchNode
       include ParameterizedNode
 
-      def arguments
-        []
-      end
+      alias arguments children
     end
   end
 end

@@ -11,6 +11,7 @@
 
 ### Bug fixes
 
+* [#70](https://github.com/rubocop-hq/rubocop-ast/pull/70): Fix arguments processing for `BreakNode` ([@marcandre][])
 * [#55](https://github.com/rubocop-hq/rubocop-ast/pull/55): Fix `ProcessedSource#commented?` for multi-line ranges. Renamed `contains_comment?` ([@marcandre][])
 
 ## 0.1.0 (2020-06-26)
