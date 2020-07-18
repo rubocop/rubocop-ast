@@ -26,13 +26,6 @@ module RuboCop
         node_parts[1]
       end
 
-      # An array containing the arguments of the dispatched method.
-      #
-      # @return [Array<Node>] the arguments of the dispatched method
-      def arguments
-        node_parts[2..-1]
-      end
-
       # The `block` node associated with this method dispatch, if any.
       #
       # @return [BlockNode, nil] the `block` node associated with this method
