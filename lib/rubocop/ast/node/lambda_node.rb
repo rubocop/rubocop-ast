@@ -21,7 +21,7 @@ module RuboCop
     # The main RuboCop runs in legacy mode; this node is only used
     # if user `AST::Builder.modernize` or `AST::Builder.emit_lambda=true`
     class LambdaNode < Node
-      include ParameterizedNode
+      include ParameterizedNode::RestArguments
       include MethodDispatchNode
 
       # For similarity with legacy mode
@@ -45,13 +45,20 @@ module RuboCop
       end
 
       # For similarity with legacy mode
+      def receiver
+        nil
+      end
+
+      # For similarity with legacy mode
       def method_name
         :lambda
       end
 
+      private
+
       # For similarity with legacy mode
-      def arguments
-        []
+      def first_argument_index
+        2
       end
     end
   end
