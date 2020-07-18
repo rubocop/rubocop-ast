@@ -8,17 +8,7 @@ module RuboCop
     class ReturnNode < Node
       include MethodDispatchNode
       include ParameterizedNode
-
-      # Returns the arguments of the `return`.
-      #
-      # @return [Array] The arguments of the `return`.
-      def arguments
-        if node_parts.one? && node_parts.first.begin_type?
-          node_parts.first.children
-        else
-          node_parts
-        end
-      end
+      include WrappedArgumentsNode
     end
   end
 end
