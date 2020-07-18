@@ -6,7 +6,6 @@ module RuboCop
     # plain node when the builder constructs the AST, making its methods
     # available to all `break` nodes within RuboCop.
     class BreakNode < Node
-      include MethodDispatchNode
       include ParameterizedNode
       include WrappedArgumentsNode
     end

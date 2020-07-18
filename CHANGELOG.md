@@ -5,6 +5,7 @@
 ### Bug fixes
 
 * [#70](https://github.com/rubocop-hq/rubocop-ast/pull/70): Fix arguments processing for `BreakNode` ([@marcandre][])
+* [#70](https://github.com/rubocop-hq/rubocop-ast/pull/70): **(Potentially breaking)** `BreakNode` and `ReturnNode` no longer include `MethodDispatchNode`. These methods were severely broken ([@marcandre][])
 
 ## 0.2.0 (2020-07-19)
 
