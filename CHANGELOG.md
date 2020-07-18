@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Bug fixes
+
+* [#70](https://github.com/rubocop-hq/rubocop-ast/pull/70): Fix arguments processing for `BreakNode` ([@marcandre][])
+
 ## 0.2.0 (2020-07-19)
 
 ### New features

@@ -8,10 +8,7 @@ module RuboCop
     class BreakNode < Node
       include MethodDispatchNode
       include ParameterizedNode
-
-      def arguments
-        []
-      end
+      include WrappedArgumentsNode
     end
   end
 end
