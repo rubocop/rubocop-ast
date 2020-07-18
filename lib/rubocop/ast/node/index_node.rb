@@ -17,7 +17,7 @@ module RuboCop
     # The main RuboCop runs in legacy mode; this node is only used
     # if user `AST::Builder.modernize` or `AST::Builder.emit_index=true`
     class IndexNode < Node
-      include ParameterizedNode
+      include ParameterizedNode::RestArguments
       include MethodDispatchNode
 
       # For similarity with legacy mode
@@ -35,11 +35,13 @@ module RuboCop
         :[]
       end
 
+      private
+
       # An array containing the arguments of the dispatched method.
       #
       # @return [Array<Node>] the arguments of the dispatched method
-      def arguments
-        node_parts[1..-1]
+      def first_argument_index
+        1
       end
     end
   end

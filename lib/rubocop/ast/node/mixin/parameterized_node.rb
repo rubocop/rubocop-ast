@@ -2,6 +2,8 @@
 
 module RuboCop
   module AST
+    # Requires implementing `arguments`.
+    #
     # Common functionality for nodes that are parameterized:
     # `send`, `super`, `zsuper`, `def`, `defs`
     # and (modern only): `index`, `indexasgn`, `lambda`
@@ -56,6 +58,43 @@ module RuboCop
       def block_argument?
         arguments? &&
           (last_argument.block_pass_type? || last_argument.blockarg_type?)
+      end
+
+      # A specialized `ParameterizedNode`.
+      # Requires implementing `first_argument_index`
+      # Implements `arguments` as `children[first_argument_index..-1]`
+      # and optimizes other calls
+      module RestArguments
+        include ParameterizedNode
+        # @return [Array] arguments, if any
+        def arguments
+          children[first_argument_index..-1]
+        end
+
+        # A shorthand for getting the first argument of the node.
+        # Equivalent to `arguments.first`.
+        #
+        # @return [Node, nil] the first argument of the node,
+        #                     or `nil` if there are no arguments
+        def first_argument
+          children[first_argument_index]
+        end
+
+        # A shorthand for getting the last argument of the node.
+        # Equivalent to `arguments.last`.
+        #
+        # @return [Node, nil] the last argument of the node,
+        #                     or `nil` if there are no arguments
+        def last_argument
+          children[-1] if arguments?
+        end
+
+        # Checks whether this node has any arguments.
+        #
+        # @return [Boolean] whether this node has any arguments
+        def arguments?
+          children.size > first_argument_index
+        end
       end
     end
   end
