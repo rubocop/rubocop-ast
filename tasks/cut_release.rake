@@ -11,9 +11,19 @@ namespace :cut_release do
     end
   end
 
+  def version_sans_patch(version)
+    version.split('.').take(2).join('.')
+  end
+
   def update_file(path)
     content = File.read(path)
     File.write(path, yield(content))
+  end
+
+  def update_antora(version)
+    update_file('docs/antora.yml') do |yaml|
+      yaml.gsub(/version: .*/, "version: '#{version}'")
+    end
   end
 
   def add_header_to_changelog(version)
@@ -34,6 +44,7 @@ namespace :cut_release do
     new_version = Bump::Bump.current
 
     add_header_to_changelog(new_version)
+    update_antora(new_version)
 
     puts "Changed version from #{old_version} to #{new_version}."
   end
