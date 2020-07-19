@@ -22,7 +22,7 @@ namespace :cut_release do
 
   def update_antora(version)
     update_file('docs/antora.yml') do |yaml|
-      yaml.gsub(/version: .*/, "version: '#{version}'")
+      yaml.gsub(/version: .*/, "version: '#{version_sans_patch(version)}'")
     end
   end
 
