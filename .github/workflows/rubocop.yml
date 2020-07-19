@@ -21,6 +21,7 @@ jobs:
         rubocop: [ master ]
         coverage: [ null ]
         modern: [ null ]
+        internal_investigation: [ null ]
         title: [ null ]
         include:
           - { os: windows, rubocop: master, ruby: mingw }
@@ -28,6 +29,7 @@ jobs:
           - { rubocop: '0.84.0', ruby: head, os: ubuntu }
           - { rubocop: '0.84.0', ruby: 2.4, os: ubuntu, coverage: true, title: 'Cov' }
           - { rubocop: master, ruby: 2.7, os: ubuntu, modern: true, title: 'Modern' }
+          - { rubocop: master, ruby: 2.7, os: ubuntu, internal_investigation: true, modern: true, title: 'Style' }
 
     steps:
       - name: windows misc
@@ -68,10 +70,10 @@ jobs:
         if: matrix.modern == true
         run: echo '::set-env name=MODERNIZE::true'
       - name: spec
-        if: matrix.coverage != true
+        if: "matrix.coverage != true && matrix.internal_investigation != true"
         run:  bundle exec rake spec
       - name: internal_investigation
-        if: "matrix.os != 'windows' && matrix.coverage != true && matrix.rubocop == 'master'"
+        if: matrix.internal_investigation
         run:  bundle exec rake internal_investigation
   rubocop_specs:
     name: >-
