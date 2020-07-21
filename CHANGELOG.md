@@ -8,6 +8,7 @@
 * [#85](https://github.com/rubocop-hq/rubocop-ast/pull/85): Add `IntNode#value` and `FloatNode#value`. ([@fatkodima][])
 * [#82](https://github.com/rubocop-hq/rubocop-ast/pull/82): `NodePattern`: Allow comments ([@marcandre][])
 * [#83](https://github.com/rubocop-hq/rubocop-ast/pull/83): Add `ProcessedSource#comment_at_line` ([@marcandre][])
+* [#83](https://github.com/rubocop-hq/rubocop-ast/pull/83): Add `ProcessedSource#each_comment_in_lines` ([@marcandre][])
 
 ### Bug fixes
 

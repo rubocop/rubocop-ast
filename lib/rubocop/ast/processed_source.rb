@@ -76,7 +76,7 @@ module RuboCop
         comments.each(&block)
       end
 
-      # @deprecated Use `comments.find` or `comment_at_line`
+      # @deprecated Use `comment_at_line`, `each_comment_in_lines`, or `comments.find`
       def find_comment(&block)
         comments.find(&block)
       end
@@ -109,17 +109,29 @@ module RuboCop
         comment_index.include?(line)
       end
 
-      # @return [Boolean] if any of the lines in the given `source_range` has a comment.
-      def contains_comment?(source_range)
-        (source_range.line..source_range.last_line).any? do |line|
-          line_with_comment?(line)
+      # Enumerates on the comments contained with the given `line_range`
+      def each_comment_in_lines(line_range)
+        return to_enum(:each_comment_in_lines, line_range) unless block_given?
+
+        line_range.each do |line|
+          if (comment = comment_index[line])
+            yield comment
+          end
         end
+      end
+
+      # @return [Boolean] if any of the lines in the given `source_range` has a comment.
+      # Consider using `each_comment_in_lines` instead
+      def contains_comment?(source_range)
+        each_comment_in_lines(source_range.line..source_range.last_line).any?
       end
       # @deprecated use contains_comment?
       alias commented? contains_comment?
 
+      # @deprecated Use `each_comment_in_lines`
+      # Should have been called `comments_before_or_at_line`. Doubtful it has of any valid use.
       def comments_before_line(line)
-        comments.select { |c| c.location.line <= line }
+        each_comment_in_lines(0..line).to_a
       end
 
       def start_with?(string)
