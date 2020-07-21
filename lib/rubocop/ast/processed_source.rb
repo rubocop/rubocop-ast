@@ -76,7 +76,7 @@ module RuboCop
         comments.each(&block)
       end
 
-      # @deprecated Use `comments.find`
+      # @deprecated Use `comments.find` or `comment_at_line`
       def find_comment(&block)
         comments.find(&block)
       end
@@ -99,9 +99,14 @@ module RuboCop
         ast.nil?
       end
 
+      # @return [Comment, nil] the comment at that line, if any.
+      def comment_at_line(line)
+        comment_index[line]
+      end
+
       # @return [Boolean] if the given line number has a comment.
       def line_with_comment?(line)
-        comment_lines.include?(line)
+        comment_index.include?(line)
       end
 
       # @return [Boolean] if any of the lines in the given `source_range` has a comment.
@@ -144,8 +149,10 @@ module RuboCop
 
       private
 
-      def comment_lines
-        @comment_lines ||= comments.map { |c| c.location.line }
+      def comment_index
+        @comment_index ||= {}.tap do |hash|
+          comments.each { |c| hash[c.location.line] = c }
+        end
       end
 
       def parse(source, ruby_version)

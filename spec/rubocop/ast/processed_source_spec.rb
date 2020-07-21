@@ -257,6 +257,17 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
     end
 
+    describe '#comment_at_line' do
+      it 'returns the comment at the given line number' do
+        expect(processed_source.comment_at_line(1).text).to eq '# comment one'
+        expect(processed_source.comment_at_line(4).text).to eq '# comment two'
+      end
+
+      it 'returns nil if line has no comment' do
+        expect(processed_source.comment_at_line(3)).to be nil
+      end
+    end
+
     describe '#line_with_comment?' do
       it 'returns true for lines with comments' do
         expect(processed_source.line_with_comment?(1)).to be true
