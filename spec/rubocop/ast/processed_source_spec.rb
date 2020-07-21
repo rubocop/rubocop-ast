@@ -268,6 +268,15 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
     end
 
+    describe '#each_comment_in_lines' do
+      it 'yields the comments' do
+        enum = processed_source.each_comment_in_lines(1..4)
+        expect(enum.is_a?(Enumerable)).to be(true)
+        expect(enum.to_a).to eq processed_source.comments
+        expect(processed_source.each_comment_in_lines(2..5).map(&:text)).to eq ['# comment two']
+      end
+    end
+
     describe '#line_with_comment?' do
       it 'returns true for lines with comments' do
         expect(processed_source.line_with_comment?(1)).to be true
