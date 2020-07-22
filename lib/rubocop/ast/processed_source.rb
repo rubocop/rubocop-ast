@@ -156,6 +156,9 @@ module RuboCop
           @buffer.source = source
         rescue EncodingError => e
           @parser_error = e
+          @ast = nil
+          @comments = []
+          @tokens = []
           return
         end
 

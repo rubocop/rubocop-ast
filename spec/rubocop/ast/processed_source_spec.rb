@@ -12,6 +12,10 @@ RSpec.describe RuboCop::AST::ProcessedSource do
   RUBY
   let(:path) { 'ast/and_node_spec.rb' }
 
+  shared_context 'invalid encoding source' do
+    let(:source) { "# \xf9" }
+  end
+
   describe '.from_file' do
     describe 'when the file exists' do
       around do |example|
@@ -64,20 +68,20 @@ RSpec.describe RuboCop::AST::ProcessedSource do
         processed_source.comments.first.is_a?(Parser::Source::Comment)
       ).to be(true)
     end
+
+    context 'when the source is invalid' do
+      include_context 'invalid encoding source'
+
+      it 'returns []' do
+        expect(processed_source.comments).to eq []
+      end
+    end
   end
 
   describe '#tokens' do
     it 'has an array of tokens' do
       expect(processed_source.tokens.is_a?(Array)).to be(true)
       expect(processed_source.tokens.first.is_a?(RuboCop::AST::Token)).to be(true)
-    end
-  end
-
-  shared_context 'invalid encoding source' do
-    let(:source) do
-      [
-        "# \xf9"
-      ].join("\n")
     end
   end
 
