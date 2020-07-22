@@ -165,12 +165,12 @@ module RuboCop
       def tokenize(parser)
         begin
           ast, comments, tokens = parser.tokenize(@buffer)
-
-          ast.respond_to?(:complete!) && ast.complete!
+          ast ||= nil # force `false` to `nil`, see https://github.com/whitequark/parser/pull/722
         rescue Parser::SyntaxError
           # All errors are in diagnostics. No need to handle exception.
         end
 
+        ast&.complete!
         tokens = tokens.map { |t| Token.from_parser_token(t) } if tokens
 
         [ast, comments, tokens]
