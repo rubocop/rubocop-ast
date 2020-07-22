@@ -173,7 +173,7 @@ module RuboCop
         end
 
         ast&.complete!
-        tokens = tokens.map { |t| Token.from_parser_token(t) }
+        tokens.map! { |t| Token.from_parser_token(t) }
 
         [ast, comments, tokens]
       end
