@@ -218,10 +218,12 @@ RSpec.describe RuboCop::AST::ProcessedSource do
 
   context 'with heavily commented source' do
     let(:source) { <<~RUBY }
-      def foo # comment one
-        bar # comment two
-      end # comment three
-      foo
+      # comment one
+      [ 1,
+        { a: 2,
+          b: 3 # comment two
+        }
+      ]
     RUBY
 
     describe '#each_comment' do
@@ -233,17 +235,17 @@ RSpec.describe RuboCop::AST::ProcessedSource do
           comments << item
         end
 
-        expect(comments.size).to eq 3
+        expect(comments.size).to eq 2
       end
     end
 
     describe '#find_comment' do
       it 'yields correct comment' do
         comment = processed_source.find_comment do |item|
-          item.text == '# comment three'
+          item.text == '# comment two'
         end
 
-        expect(comment.text).to eq '# comment three'
+        expect(comment.text).to eq '# comment two'
       end
 
       it 'yields nil when there is no match' do
@@ -256,36 +258,20 @@ RSpec.describe RuboCop::AST::ProcessedSource do
     end
 
     describe '#line_with_comment?' do
-      let(:source) { <<~RUBY }
-        # comment
-        [
-          1, # comment
-          2
-        ]
-      RUBY
-
       it 'returns true for lines with comments' do
         expect(processed_source.line_with_comment?(1)).to be true
-        expect(processed_source.line_with_comment?(3)).to be true
+        expect(processed_source.line_with_comment?(4)).to be true
       end
 
       it 'returns false for lines without comments' do
         expect(processed_source.line_with_comment?(2)).to be false
-        expect(processed_source.line_with_comment?(4)).to be false
+        expect(processed_source.line_with_comment?(5)).to be false
       end
     end
 
     describe '#contains_comment?' do
       subject(:commented) { processed_source.contains_comment?(range) }
 
-      let(:source) { <<~RUBY }
-        # comment
-        [ 1,
-          { a: 2,
-            b: 3 # comment
-          }
-        ]
-      RUBY
       let(:ast) { processed_source.ast }
       let(:array) { ast }
       let(:hash) { array.children[1] }
