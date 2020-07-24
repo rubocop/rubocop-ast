@@ -477,6 +477,22 @@ def_node_matcher :interesting_call?, '(send _ %SOME_CALLS ...)'
 
 Constants as arguments to custom methods are also supported.
 
+== Comments
+
+You may have comments in node patterns at the end of lines
+by preceeding them with `'# '`:
+
+[source,ruby]
+----
+def_node_matcher :complex_stuff, <<~PATTERN
+  (send
+    {#global_const?(:Kernel) nil?}  # check for explicit call like Kernel.p too
+    {:p :pp}                        # let's consider `pp` also
+    $...                            # capture all arguments
+  )
+PATTERN
+----
+
 == `nil` or `nil?`
 
 Take a special attention to nil behavior:
