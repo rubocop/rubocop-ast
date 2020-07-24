@@ -4,6 +4,7 @@ require 'parser'
 require 'forwardable'
 require 'set'
 
+require_relative 'ast/ext/range'
 require_relative 'ast/node_pattern'
 require_relative 'ast/sexp'
 require_relative 'ast/node'

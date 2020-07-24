@@ -9,6 +9,7 @@
 * [#82](https://github.com/rubocop-hq/rubocop-ast/pull/82): `NodePattern`: Allow comments ([@marcandre][])
 * [#83](https://github.com/rubocop-hq/rubocop-ast/pull/83): Add `ProcessedSource#comment_at_line` ([@marcandre][])
 * [#83](https://github.com/rubocop-hq/rubocop-ast/pull/83): Add `ProcessedSource#each_comment_in_lines` ([@marcandre][])
+* [#84](https://github.com/rubocop-hq/rubocop-ast/pull/84): Add `Source::Range#line_span` ([@marcandre][])
 
 ### Bug fixes
 
