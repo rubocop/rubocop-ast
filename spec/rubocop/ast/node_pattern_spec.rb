@@ -1889,6 +1889,14 @@ RSpec.describe RuboCop::AST::NodePattern do
     end
   end
 
+  describe 'comments' do
+    let(:pattern) { "(int # We want an int\n$_) # Let's capture the value" }
+    let(:ruby) { '42' }
+    let(:captured_val) { 42 }
+
+    it_behaves_like 'single capture'
+  end
+
   describe '.descend' do
     let(:ruby) { '[[1, 2], 3]' }
 

@@ -99,6 +99,7 @@ module RuboCop
     #                         # These arguments can be patterns themselves, in
     #                         # which case a matcher responding to === will be
     #                         # passed.
+    #     '# comment'         # comments are accepted at the end of lines
     #
     # You can nest arbitrarily deep:
     #
@@ -122,6 +123,8 @@ module RuboCop
       class Compiler
         SYMBOL       = %r{:(?:[\w+@*/?!<>=~|%^-]+|\[\]=?)}.freeze
         IDENTIFIER   = /[a-zA-Z_][a-zA-Z0-9_-]*/.freeze
+        COMMENT      = /#\s.*$/.freeze
+
         META         = Regexp.union(
           %w"( ) { } [ ] $< < > $... $ ! ^ ` ... + * ?"
         ).freeze
@@ -788,7 +791,7 @@ module RuboCop
         end
 
         def self.tokens(pattern)
-          pattern.scan(TOKEN).grep_v(ONLY_SEPARATOR)
+          pattern.gsub(COMMENT, '').scan(TOKEN).grep_v(ONLY_SEPARATOR)
         end
 
         # This method minimizes the closure for our method
