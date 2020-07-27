@@ -17,7 +17,7 @@ RSpec.describe RuboCop::AST::AutoConstToSet do
     expect(mod::WORDS_SET).to eq Set['hello', 'world']
   end
 
-  it 'raises an erreor if constant is already a set' do
+  it 'raises an error if constant is already a set' do
     stub_const('Mod::WORDS', %w[hello world].to_set.freeze)
     expect { mod::WORDS_SET }.to raise_error(TypeError)
   end
