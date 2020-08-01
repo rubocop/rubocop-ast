@@ -6,8 +6,7 @@ module RuboCop
     # plain node when the builder constructs the AST, making its methods
     # available to all `next` nodes within RuboCop.
     class NextNode < Node
-      include ParameterizedNode
-      include WrappedArgumentsNode
+      include ParameterizedNode::WrappedArguments
     end
   end
 end
