@@ -16,12 +16,10 @@ module RuboCop
       end
 
       # @deprecated Use `in_pattern_branches.each`
-      def each_in_pattern
+      def each_in_pattern(&block)
         return in_pattern_branches.to_enum(__method__) unless block_given?
 
-        in_pattern_branches.each do |condition|
-          yield condition
-        end
+        in_pattern_branches.each(&block)
 
         self
       end

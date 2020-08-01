@@ -72,23 +72,23 @@ module RuboCop
       end
 
       # @deprecated Use `comments.each`
-      def each_comment
-        comments.each { |comment| yield comment }
+      def each_comment(&block)
+        comments.each(&block)
       end
 
       # @deprecated Use `comments.find`
-      def find_comment
-        comments.find { |comment| yield comment }
+      def find_comment(&block)
+        comments.find(&block)
       end
 
       # @deprecated Use `tokens.each`
-      def each_token
-        tokens.each { |token| yield token }
+      def each_token(&block)
+        tokens.each(&block)
       end
 
       # @deprecated Use `tokens.find`
-      def find_token
-        tokens.find { |token| yield token }
+      def find_token(&block)
+        tokens.find(&block)
       end
 
       def file_path

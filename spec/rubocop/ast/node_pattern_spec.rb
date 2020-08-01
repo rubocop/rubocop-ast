@@ -1468,6 +1468,7 @@ RSpec.describe RuboCop::AST::NodePattern do
   describe 'funcalls' do
     module RuboCop
       module AST
+        # Add test function calls
         class NodePattern
           def goodmatch(_foo)
             true

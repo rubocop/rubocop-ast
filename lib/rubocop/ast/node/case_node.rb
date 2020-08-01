@@ -16,12 +16,10 @@ module RuboCop
       end
 
       # @deprecated Use `when_branches.each`
-      def each_when
+      def each_when(&block)
         return when_branches.to_enum(__method__) unless block_given?
 
-        when_branches.each do |condition|
-          yield condition
-        end
+        when_branches.each(&block)
 
         self
       end

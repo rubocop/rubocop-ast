@@ -7,6 +7,7 @@ RSpec.describe RuboCop::AST::Node do
     before :all do
       module RuboCop
         module AST
+          # Patch Node
           class Node
             # Let's make our predicate matchers read better
             def used?
