@@ -22,4 +22,12 @@ RSpec.describe RuboCop::AST::IntNode do
       it { expect(int_node.sign?).to be_truthy }
     end
   end
+
+  describe '#value' do
+    let(:source) do
+      '10'
+    end
+
+    it { expect(int_node.value).to eq(10) }
+  end
 end

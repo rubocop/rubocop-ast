@@ -5,6 +5,7 @@
 ### New features
 
 * [#70](https://github.com/rubocop-hq/rubocop-ast/pull/70): Add `NextNode` ([@marcandre][])
+* [#85](https://github.com/rubocop-hq/rubocop-ast/pull/85): Add `IntNode#value` and `FloatNode#value`. ([@fatkodima][])
 
 ### Bug fixes
 
