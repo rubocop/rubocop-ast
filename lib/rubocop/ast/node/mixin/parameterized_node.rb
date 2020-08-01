@@ -60,6 +60,22 @@ module RuboCop
           (last_argument.block_pass_type? || last_argument.blockarg_type?)
       end
 
+      # A specialized `ParameterizedNode` for node that have a single child
+      # containing either `nil`, an argument, or a `begin` node with all the
+      # arguments
+      module WrappedArguments
+        include ParameterizedNode
+        # @return [Array] The arguments of the node.
+        def arguments
+          first = children.first
+          if first&.begin_type?
+            first.children
+          else
+            children
+          end
+        end
+      end
+
       # A specialized `ParameterizedNode`.
       # Requires implementing `first_argument_index`
       # Implements `arguments` as `children[first_argument_index..-1]`
