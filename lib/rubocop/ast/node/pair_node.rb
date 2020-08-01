@@ -32,7 +32,7 @@ module RuboCop
       #
       # @param [Boolean] with_spacing whether to include spacing
       # @return [String] the delimiter of the `pair`
-      def delimiter(with_spacing = false)
+      def delimiter(*deprecated, with_spacing: deprecated.first)
         if with_spacing
           hash_rocket? ? SPACED_HASH_ROCKET : SPACED_COLON
         else
@@ -44,7 +44,7 @@ module RuboCop
       #
       # @param [Boolean] with_spacing whether to include spacing
       # @return [String] the inverse delimiter of the `pair`
-      def inverse_delimiter(with_spacing = false)
+      def inverse_delimiter(*deprecated, with_spacing: deprecated.first)
         if with_spacing
           hash_rocket? ? SPACED_COLON : SPACED_HASH_ROCKET
         else
