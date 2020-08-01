@@ -455,7 +455,6 @@ module RuboCop
           [0..Float::INFINITY, 'true']
         end
 
-        # rubocop:disable Metrics/AbcSize
         # rubocop:disable Metrics/MethodLength
         def compile_any_order(capture_all = nil)
           rest = capture_rest = nil
@@ -475,7 +474,6 @@ module RuboCop
           end
         end
         # rubocop:enable Metrics/MethodLength
-        # rubocop:enable Metrics/AbcSize
 
         def insure_same_captures(enum, what)
           return to_enum __method__, enum, what unless block_given?

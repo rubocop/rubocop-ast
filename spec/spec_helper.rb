@@ -30,12 +30,14 @@ RSpec.shared_context 'ruby 2.7', :ruby27 do
   let(:ruby_version) { 2.7 }
 end
 
+# ...
 module DefaultRubyVersion
   extend RSpec::SharedContext
 
   let(:ruby_version) { 2.4 }
 end
 
+# ...
 module ParseSourceHelper
   def parse_source(source)
     RuboCop::AST::ProcessedSource.new(source, ruby_version, nil)

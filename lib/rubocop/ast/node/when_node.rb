@@ -14,12 +14,10 @@ module RuboCop
       end
 
       # @deprecated Use `conditions.each`
-      def each_condition
+      def each_condition(&block)
         return conditions.to_enum(__method__) unless block_given?
 
-        conditions.each do |condition|
-          yield condition
-        end
+        conditions.each(&block)
 
         self
       end

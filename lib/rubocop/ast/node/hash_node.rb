@@ -56,12 +56,10 @@ module RuboCop
       #
       # @return [self] if a block is given
       # @return [Enumerator] if no block is given
-      def each_key
+      def each_key(&block)
         return pairs.map(&:key).to_enum unless block_given?
 
-        pairs.map(&:key).each do |key|
-          yield key
-        end
+        pairs.map(&:key).each(&block)
 
         self
       end
@@ -82,12 +80,10 @@ module RuboCop
       #
       # @return [self] if a block is given
       # @return [Enumerator] if no block is given
-      def each_value
+      def each_value(&block)
         return pairs.map(&:value).to_enum unless block_given?
 
-        pairs.map(&:value).each do |value|
-          yield value
-        end
+        pairs.map(&:value).each(&block)
 
         self
       end

@@ -158,12 +158,10 @@ module RuboCop
       end
 
       # @deprecated Use `branches.each`
-      def each_branch
+      def each_branch(&block)
         return branches.to_enum(__method__) unless block_given?
 
-        branches.each do |branch|
-          yield branch
-        end
+        branches.each(&block)
       end
     end
   end
