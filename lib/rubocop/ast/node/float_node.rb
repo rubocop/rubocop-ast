@@ -6,6 +6,7 @@ module RuboCop
     # node when the builder constructs the AST, making its methods available to
     # all `float` nodes within RuboCop.
     class FloatNode < Node
+      include BasicLiteralNode
       include NumericNode
     end
   end
