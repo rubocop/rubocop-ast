@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.3.0 (2020-08-01)
+
 ### New features
 
 * [#70](https://github.com/rubocop-hq/rubocop-ast/pull/70): Add `NextNode` ([@marcandre][])
