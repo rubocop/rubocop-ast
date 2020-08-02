@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#88](https://github.com/rubocop-hq/rubocop-ast/pull/88): Add `RescueNode`. Add `ResbodyNode#exceptions` and `ResbodyNode#branch_index`. ([@fatkodima][])
+
 ## 0.3.0 (2020-08-01)
 
 ### New features
