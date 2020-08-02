@@ -48,6 +48,7 @@ module RuboCop
         or:           OrNode,
         pair:         PairNode,
         regexp:       RegexpNode,
+        rescue:       RescueNode,
         resbody:      ResbodyNode,
         return:       ReturnNode,
         csend:        SendNode,

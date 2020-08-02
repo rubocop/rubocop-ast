@@ -13,6 +13,40 @@ RSpec.describe RuboCop::AST::ResbodyNode do
     it { expect(resbody_node.is_a?(described_class)).to be(true) }
   end
 
+  describe '#exceptions' do
+    context 'without exception' do
+      let(:source) { <<~RUBY }
+        begin
+        rescue
+        end
+      RUBY
+
+      it { expect(resbody_node.exceptions.size).to eq(0) }
+    end
+
+    context 'with a single exception' do
+      let(:source) { <<~RUBY }
+        begin
+        rescue FooError
+        end
+      RUBY
+
+      it { expect(resbody_node.exceptions.size).to eq(1) }
+      it { expect(resbody_node.exceptions).to all(be_const_type) }
+    end
+
+    context 'with multiple exceptions' do
+      let(:source) { <<~RUBY }
+        begin
+        rescue FooError, BarError
+        end
+      RUBY
+
+      it { expect(resbody_node.exceptions.size).to eq(2) }
+      it { expect(resbody_node.exceptions).to all(be_const_type) }
+    end
+  end
+
   describe '#exception_variable' do
     context 'for an explicit rescue' do
       let(:source) { 'begin; beginbody; rescue Error => ex; rescuebody; end' }
@@ -37,5 +71,21 @@ RSpec.describe RuboCop::AST::ResbodyNode do
     let(:source) { 'begin; beginbody; rescue Error => ex; :rescuebody; end' }
 
     it { expect(resbody_node.body.sym_type?).to be(true) }
+  end
+
+  describe '#branch_index' do
+    let(:source) { <<~RUBY }
+      begin
+      rescue FooError then foo
+      rescue BarError, BazError then bar_and_baz
+      rescue QuuxError => e then quux
+      end
+    RUBY
+
+    let(:resbodies) { parse_source(source).ast.children.first.resbody_branches }
+
+    it { expect(resbodies[0].branch_index).to eq(0) }
+    it { expect(resbodies[1].branch_index).to eq(1) }
+    it { expect(resbodies[2].branch_index).to eq(2) }
   end
 end
