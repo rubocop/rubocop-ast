@@ -147,5 +147,27 @@ RSpec.describe RuboCop::AST::CaseNode do
         expect(case_node.branches).to match [nil, be_int_type]
       end
     end
+
+    context 'when compared to an IfNode' do
+      let(:source) { <<~RUBY }
+        case
+        when foo then 1
+        when bar then 2
+        else
+        end
+
+        if foo then 1
+        elsif bar then 2
+        else
+        end
+      RUBY
+
+      let(:case_node) { ast.children.first }
+      let(:if_node) { ast.children.last }
+
+      it 'returns the same' do
+        expect(case_node.branches).to eq if_node.branches
+      end
+    end
   end
 end
