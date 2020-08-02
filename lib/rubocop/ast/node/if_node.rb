@@ -147,7 +147,7 @@ module RuboCop
       def branches
         branches = [if_branch]
 
-        return branches unless else_branch
+        return branches unless else?
 
         other_branches = if elsif_conditional?
                            else_branch.branches
