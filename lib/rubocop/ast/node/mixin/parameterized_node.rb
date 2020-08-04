@@ -82,9 +82,9 @@ module RuboCop
       # and optimizes other calls
       module RestArguments
         include ParameterizedNode
-        # @return [Array] arguments, if any
+        # @return [Array<Node>] arguments, if any
         def arguments
-          children[first_argument_index..-1]
+          children[first_argument_index..-1].freeze
         end
 
         # A shorthand for getting the first argument of the node.

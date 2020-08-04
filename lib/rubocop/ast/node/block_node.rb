@@ -25,7 +25,7 @@ module RuboCop
       # @return [Array<Node>]
       def arguments
         if numblock_type?
-          [] # Numbered parameters have no block arguments.
+          [].freeze # Numbered parameters have no block arguments.
         else
           node_parts[1]
         end
