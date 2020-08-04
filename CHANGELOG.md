@@ -13,6 +13,7 @@
 ### Changes
 
 * [#94](https://github.com/rubocop-hq/rubocop-ast/pull/94): In Ruby 2.4, `Set#===` is harmonized with Ruby 2.5+ to call `include?`. ([@marcandre][])
+* [#91](https://github.com/rubocop-hq/rubocop-ast/pull/91): **(Potentially breaking)** `Node#arguments` always returns a frozen array ([@marcandre][])
 
 ## 0.3.0 (2020-08-01)
 
