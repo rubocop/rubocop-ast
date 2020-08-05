@@ -159,6 +159,20 @@ module RuboCop
           .length
       end
 
+      def tokens_within(range_or_node)
+        begin_index = first_token_index(range_or_node)
+        end_index = last_token_index(range_or_node)
+        sorted_tokens[begin_index..end_index]
+      end
+
+      def first_token_of(range_or_node)
+        sorted_tokens[first_token_index(range_or_node)]
+      end
+
+      def last_token_of(range_or_node)
+        sorted_tokens[last_token_index(range_or_node)]
+      end
+
       private
 
       def comment_index
@@ -238,6 +252,31 @@ module RuboCop
           parser.diagnostics.consumer = lambda do |diagnostic|
             @diagnostics << diagnostic
           end
+        end
+      end
+
+      def first_token_index(range_or_node)
+        begin_pos = source_range(range_or_node).begin_pos
+        sorted_tokens.bsearch_index { |token| token.begin_pos >= begin_pos }
+      end
+
+      def last_token_index(range_or_node)
+        end_pos = source_range(range_or_node).end_pos
+        sorted_tokens.bsearch_index { |token| token.end_pos >= end_pos }
+      end
+
+      # The tokens list is always sorted by token position, except for cases when heredoc
+      # is passed as a method argument. In this case tokens are interleaved by
+      # heredoc contents' tokens.
+      def sorted_tokens
+        @sorted_tokens ||= tokens.sort_by(&:begin_pos)
+      end
+
+      def source_range(range_or_node)
+        if range_or_node.respond_to?(:source_range)
+          range_or_node.source_range
+        else
+          range_or_node
         end
       end
     end

@@ -10,6 +10,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
     end
     some_method
   RUBY
+  let(:ast) { processed_source.ast }
   let(:path) { 'ast/and_node_spec.rb' }
 
   shared_context 'invalid encoding source' do
@@ -292,7 +293,6 @@ RSpec.describe RuboCop::AST::ProcessedSource do
     describe '#contains_comment?' do
       subject(:commented) { processed_source.contains_comment?(range) }
 
-      let(:ast) { processed_source.ast }
       let(:array) { ast }
       let(:hash) { array.children[1] }
 
@@ -462,6 +462,91 @@ RSpec.describe RuboCop::AST::ProcessedSource do
 
       brace_token = processed_source.find_token(&:left_brace?)
       expect(processed_source.following_line(brace_token)).to eq '# line 3'
+    end
+  end
+
+  describe '#tokens_within' do
+    let(:source) { <<~RUBY }
+      foo(1, 2)
+      bar(3)
+    RUBY
+
+    it 'returns tokens for node' do
+      node = ast.children[1]
+      tokens = processed_source.tokens_within(node.source_range)
+
+      expect(tokens.map(&:text)).to eq(['bar', '(', '3', ')'])
+    end
+
+    it 'accepts Node as an argument' do
+      node = ast.children[1]
+      tokens = processed_source.tokens_within(node)
+
+      expect(tokens.map(&:text)).to eq(['bar', '(', '3', ')'])
+    end
+
+    context 'when heredoc as argument is present' do
+      let(:source) { <<~RUBY }
+        foo(1, [before], <<~DOC, [after])
+          inside heredoc.
+        DOC
+        bar(2)
+      RUBY
+
+      it 'returns tokens for node before heredoc' do
+        node = ast.children[0].arguments[1]
+        tokens = processed_source.tokens_within(node.source_range)
+
+        expect(tokens.map(&:text)).to eq(['[', 'before', ']'])
+      end
+
+      it 'returns tokens for heredoc node' do
+        node = ast.children[0].arguments[2]
+        tokens = processed_source.tokens_within(node.source_range)
+
+        expect(tokens.map(&:text)).to eq(['<<"'])
+      end
+
+      it 'returns tokens for node after heredoc' do
+        node = ast.children[0].arguments[3]
+        tokens = processed_source.tokens_within(node.source_range)
+
+        expect(tokens.map(&:text)).to eq(['[', 'after', ']'])
+      end
+    end
+  end
+
+  describe '#first_token_of' do
+    let(:source) { <<~RUBY }
+      foo(1, 2)
+      bar(3)
+    RUBY
+
+    it 'returns first token for node' do
+      node = ast.children[1]
+      expect(processed_source.first_token_of(node.source_range).text).to eq('bar')
+    end
+
+    it 'accepts Node as an argument' do
+      node = ast.children[1]
+      expect(processed_source.first_token_of(node).text).to eq('bar')
+    end
+  end
+
+  describe '#last_token_of' do
+    let(:source) { <<~RUBY }
+      foo(1, 2)
+      bar = baz
+    RUBY
+
+    it 'returns last token for node' do
+      node = ast.children[1]
+      expect(processed_source.last_token_of(node.source_range).text).to eq('baz')
+    end
+
+    it 'accepts Node as an argument' do
+      node = ast.children[1]
+      expect(processed_source.last_token_of(node).text).to eq('baz')
     end
   end
 end
