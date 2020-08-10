@@ -117,9 +117,38 @@ module RuboCop
       # Returns the index of the receiver node in its siblings. (Sibling index
       # uses zero based numbering.)
       #
-      # @return [Integer] the index of the receiver node in its siblings
+      # @return [Integer, nil] the index of the receiver node in its siblings
       def sibling_index
         parent&.children&.index { |sibling| sibling.equal?(self) }
+      end
+
+      # @return [Node, nil] the right (aka next) sibling
+      def right_sibling
+        return unless parent
+
+        parent.children[sibling_index + 1].freeze
+      end
+
+      # @return [Node, nil] the left (aka previous) sibling
+      def left_sibling
+        i = sibling_index
+        return if i.nil? || i.zero?
+
+        parent.children[i - 1].freeze
+      end
+
+      # @return [Array<Node>] the left (aka previous) siblings
+      def left_siblings
+        return [].freeze unless parent
+
+        parent.children[0...sibling_index].freeze
+      end
+
+      # @return [Array<Node>] the right (aka next) siblings
+      def right_siblings
+        return [].freeze unless parent
+
+        parent.children[sibling_index + 1..-1].freeze
       end
 
       # Common destructuring method. This can be used to normalize

@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::Node do
-  let(:node) { RuboCop::AST::ProcessedSource.new(src, ruby_version).ast }
+  let(:ast) { RuboCop::AST::ProcessedSource.new(src, ruby_version).ast }
+  let(:node) { ast }
 
   describe '#value_used?' do
     before :all do
@@ -333,18 +334,39 @@ RSpec.describe RuboCop::AST::Node do
     end
   end
 
-  describe '#sibling_index' do
-    let(:src) do
-      [
-        'def foo; end',
-        'def bar; end',
-        'def baz; end'
-      ].join("\n")
+  describe 'sibling_access' do
+    let(:src) { '[0, 1, 2, 3, 4, 5]' }
+
+    it 'returns trivial values for a root node' do
+      expect(node.sibling_index).to eq nil
+      expect(node.left_sibling).to eq nil
+      expect(node.right_sibling).to eq nil
+      expect(node.left_siblings).to eq []
+      expect(node.right_siblings).to eq []
     end
 
-    it 'returns its sibling index' do
-      (0..2).each do |n|
-        expect(node.children[n].sibling_index).to eq(n)
+    context 'for a node with siblings' do
+      let(:node) { ast.children[2] }
+
+      it 'returns the expected values' do
+        expect(node.sibling_index).to eq 2
+        expect(node.left_sibling.value).to eq 1
+        expect(node.right_sibling.value).to eq 3
+        expect(node.left_siblings.map(&:value)).to eq [0, 1]
+        expect(node.right_siblings.map(&:value)).to eq [3, 4, 5]
+      end
+    end
+
+    context 'for a single child' do
+      let(:src) { '[0]' }
+      let(:node) { ast.children[0] }
+
+      it 'returns the expected values' do
+        expect(node.sibling_index).to eq 0
+        expect(node.left_sibling).to eq nil
+        expect(node.right_sibling).to eq nil
+        expect(node.left_siblings.map(&:value)).to eq []
+        expect(node.right_siblings.map(&:value)).to eq []
       end
     end
   end

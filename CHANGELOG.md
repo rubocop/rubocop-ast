@@ -7,6 +7,7 @@
 * [#92](https://github.com/rubocop-hq/rubocop-ast/pull/92): Add `ProcessedSource#tokens_within`, `ProcessedSource#first_token_of` and `ProcessedSource#last_token_of`. ([@fatkodima][])
 * [#88](https://github.com/rubocop-hq/rubocop-ast/pull/88): Add `RescueNode`. Add `ResbodyNode#exceptions` and `ResbodyNode#branch_index`. ([@fatkodima][])
 * [#89](https://github.com/rubocop-hq/rubocop-ast/pull/89): Support right hand assignment for Ruby 2.8 (3.0) parser. ([@koic][])
+* [#93](https://github.com/rubocop-hq/rubocop-ast/pull/93): Add `Node#{left|right}_sibling{s}` ([@marcandre][])
 
 ## 0.3.0 (2020-08-01)
 
