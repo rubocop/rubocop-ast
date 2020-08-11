@@ -116,12 +116,15 @@ module RuboCop
 
       # Returns the index of the receiver node in its siblings. (Sibling index
       # uses zero based numbering.)
+      # Use is discouraged, this is a potentially slow method.
       #
       # @return [Integer, nil] the index of the receiver node in its siblings
       def sibling_index
         parent&.children&.index { |sibling| sibling.equal?(self) }
       end
 
+      # Use is discouraged, this is a potentially slow method and can lead
+      # to even slower algorithms
       # @return [Node, nil] the right (aka next) sibling
       def right_sibling
         return unless parent
@@ -129,6 +132,8 @@ module RuboCop
         parent.children[sibling_index + 1].freeze
       end
 
+      # Use is discouraged, this is a potentially slow method and can lead
+      # to even slower algorithms
       # @return [Node, nil] the left (aka previous) sibling
       def left_sibling
         i = sibling_index
@@ -137,6 +142,8 @@ module RuboCop
         parent.children[i - 1].freeze
       end
 
+      # Use is discouraged, this is a potentially slow method and can lead
+      # to even slower algorithms
       # @return [Array<Node>] the left (aka previous) siblings
       def left_siblings
         return [].freeze unless parent
@@ -144,6 +151,8 @@ module RuboCop
         parent.children[0...sibling_index].freeze
       end
 
+      # Use is discouraged, this is a potentially slow method and can lead
+      # to even slower algorithms
       # @return [Array<Node>] the right (aka next) siblings
       def right_siblings
         return [].freeze unless parent
