@@ -9,6 +9,10 @@
 * [#89](https://github.com/rubocop-hq/rubocop-ast/pull/89): Support right hand assignment for Ruby 2.8 (3.0) parser. ([@koic][])
 * [#93](https://github.com/rubocop-hq/rubocop-ast/pull/93): Add `Node#{left|right}_sibling{s}` ([@marcandre][])
 
+### Changes
+
+* [#94](https://github.com/rubocop-hq/rubocop-ast/pull/94): In Ruby 2.4, `Set#===` is harmonized with Ruby 2.5+ to call `include?`. ([@marcandre][])
+
 ## 0.3.0 (2020-08-01)
 
 ### New features
