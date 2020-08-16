@@ -1,6 +1,6 @@
 # CAUTION: There's probably a way to refactor this nicely. PR welcome.
+# NOTE: Reflect changes in .mergify.yml
 # NOTE: When changing minimal version of Ruby or Rubocop, change all of them
-
 name: CI
 
 on: [push, pull_request]

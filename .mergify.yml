@@ -1,0 +1,33 @@
+pull_request_rules:
+  - name: automatic merge for master when reviewed and CI passes
+    actions:
+      merge:
+        method: rebase
+    conditions:
+      - base=master
+      - label=auto-merge
+      - "#review-requested=0"
+      - "#changes-requested-reviews-by=0"
+      - 'status-success=Specs | RuboCop: master | 2.4 (ubuntu)'
+      - 'status-success=Specs | RuboCop: master | 2.5 (ubuntu)'
+      - 'status-success=Specs | RuboCop: master | 2.6 (ubuntu)'
+      - 'status-success=Specs | RuboCop: master | 2.7 (ubuntu)'
+      - 'status-success=Specs | RuboCop: master | head (ubuntu)'
+      - 'status-success=Specs | RuboCop: master | mingw (windows)'
+      - 'status-success=Specs | RuboCop: 0.87.0 | 2.4 (ubuntu)'
+      - 'status-success=Specs | RuboCop: 0.87.0 | head (ubuntu)'
+      - 'status-success=Coverage | RuboCop: 0.87.0 | 2.4 (ubuntu)'
+      - 'status-success=Specs "modern" | RuboCop: master | 2.7 (ubuntu)'
+      - 'status-success=Coding Style | RuboCop: master | 2.7 (ubuntu)'
+      - 'status-success=Main Gem Specs | RuboCop: 0.87.0 | 2.4 (ubuntu)'
+      - 'status-success=Main Gem Specs | RuboCop: master | 2.4 (ubuntu)'
+      - 'status-success=Main Gem Specs | RuboCop: 0.87.0 | 2.7 (ubuntu)'
+      - 'status-success=Main Gem Specs | RuboCop: master | 2.7 (ubuntu)'
+
+  - name: delete head branch after auto-merge
+    conditions:
+      - merged
+      - label=auto-merge
+    actions:
+      delete_head_branch: {}
+
