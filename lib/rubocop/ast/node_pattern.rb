@@ -205,7 +205,7 @@ module RuboCop
 
         def initialize(str, root = 'node0', node_var = root)
           @string   = str
-          # For def_node_pattern, root == node_var
+          # For def_node_matcher, root == node_var
           # For def_node_search, root is the root node to search on,
           # and node_var is the current descendant being searched.
           @root     = root

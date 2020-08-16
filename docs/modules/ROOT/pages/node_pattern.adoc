@@ -336,8 +336,8 @@ Example patterns using this function:
 The arguments can be pattern themselves, in which case a matcher responding to `===` will be passed. This makes patterns composable:
 
 ```ruby
-def_node_pattern :global_const?, '(const {nil? cbase} %1)'
-def_node_pattern :class_creator, '(send #global_const?({:Class :Module}) :new ...)'
+def_node_matcher :global_const?, '(const {nil? cbase} %1)'
+def_node_matcher :class_creator, '(send #global_const?({:Class :Module}) :new ...)'
 ```
 
 == Using node matcher macros
