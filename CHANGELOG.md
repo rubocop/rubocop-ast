@@ -8,6 +8,7 @@
 * [#88](https://github.com/rubocop-hq/rubocop-ast/pull/88): Add `RescueNode`. Add `ResbodyNode#exceptions` and `ResbodyNode#branch_index`. ([@fatkodima][])
 * [#89](https://github.com/rubocop-hq/rubocop-ast/pull/89): Support right hand assignment for Ruby 2.8 (3.0) parser. ([@koic][])
 * [#93](https://github.com/rubocop-hq/rubocop-ast/pull/93): Add `Node#{left|right}_sibling{s}` ([@marcandre][])
+* [#99](https://github.com/rubocop-hq/rubocop-ast/pull/99): Add `ConstNode` and some helper methods. ([@marcandre][])
 
 ### Changes
 
