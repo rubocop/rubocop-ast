@@ -27,6 +27,7 @@ module RuboCop
         case_match:   CaseMatchNode,
         case:         CaseNode,
         class:        ClassNode,
+        const:        ConstNode,
         def:          DefNode,
         defined?:     DefinedNode,
         defs:         DefNode,
