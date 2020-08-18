@@ -3,17 +3,20 @@
 require 'parser/current'
 
 RSpec.describe RuboCop::AST::NodePattern do
-  let(:root_node) do
-    buffer = Parser::Source::Buffer.new('(string)', 1)
-    buffer.source = ruby
+  include RuboCop::AST::Sexp
+
+  def parse(code)
+    buffer = Parser::Source::Buffer.new('(string)', 1, source: code)
     builder = RuboCop::AST::Builder.new
     Parser::CurrentRuby.new(builder).parse(buffer)
   end
 
+  let(:root_node) { parse(ruby) }
   let(:node) { root_node }
   let(:params) { [] }
   let(:keyword_params) { {} }
   let(:instance) { described_class.new(pattern) }
+  let(:method_name) { :match }
   let(:result) do
     if keyword_params.empty? # Avoid bug in Ruby < 2.6
       instance.match(node, *params)
@@ -22,11 +25,26 @@ RSpec.describe RuboCop::AST::NodePattern do
     end
   end
 
-  shared_examples 'matching' do
-    include RuboCop::AST::Sexp
-    it 'matches' do
-      expect(result).to be true
+  RSpec::Matchers.define :match_code do |code, *params, **keyword_params|
+    match do |pattern|
+      instance = pattern.is_a?(String) ? described_class.new(pattern) : pattern
+      code = parse(code) if code.is_a?(String)
+      if keyword_params.empty? # Avoid bug in Ruby < 2.6
+        instance.public_send(method_name, code, *params)
+      else
+        instance.public_send(method_name, code, *params, **keyword_params)
+      end
     end
+  end
+
+  RSpec::Matchers.define_negated_matcher :not_match_code, :match_code
+
+  def match_codes(*codes)
+    codes.map { |code| match_code(code) }.inject(:and)
+  end
+
+  def not_match_codes(*codes)
+    codes.map { |code| not_match_code(code) }.inject(:and)
   end
 
   shared_examples 'nonmatching' do
@@ -43,7 +61,6 @@ RSpec.describe RuboCop::AST::NodePattern do
   end
 
   shared_examples 'single capture' do
-    include RuboCop::AST::Sexp
     it 'yields captured value(s) and returns true if there is a block' do
       expect do |probe|
         compiled = instance
@@ -62,7 +79,6 @@ RSpec.describe RuboCop::AST::NodePattern do
   end
 
   shared_examples 'multiple capture' do
-    include RuboCop::AST::Sexp
     it 'yields captured value(s) and returns true if there is a block' do
       expect do |probe|
         compiled = instance
@@ -86,7 +102,7 @@ RSpec.describe RuboCop::AST::NodePattern do
     context 'on a node with the same type' do
       let(:ruby) { 'obj.method' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'on a node with a different type' do
@@ -100,7 +116,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:ruby) { 'a += 1' }
 
       # this is an (op-asgn ...) node
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     describe '#pattern' do
@@ -119,14 +135,14 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:instance) { Marshal.load(Marshal.dump(super())) }
       let(:ruby) { 'obj.method' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     describe '#dup' do
       let(:instance) { super().dup }
       let(:ruby) { 'obj.method' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     if RUBY_VERSION >= '2.6'
@@ -136,7 +152,7 @@ RSpec.describe RuboCop::AST::NodePattern do
         end
         let(:ruby) { 'obj.method' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
     end
 
@@ -159,7 +175,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'on a node with the same type' do
         let(:ruby) { '@ivar + 2' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'on a child with a different type' do
@@ -175,7 +191,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'on a child with the same type' do
         let(:ruby) { 'foo.bar' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'on a child with a different type' do
@@ -198,42 +214,42 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:pattern) { '(int -100)' }
       let(:ruby) { '-100' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'positive float literals' do
       let(:pattern) { '(float 1.0)' }
       let(:ruby) { '1.0' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'negative float literals' do
       let(:pattern) { '(float -2.5)' }
       let(:ruby) { '-2.5' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'single quoted string literals' do
       let(:pattern) { '(str "foo")' }
       let(:ruby) { '"foo"' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'double quoted string literals' do
       let(:pattern) { '(str "foo")' }
       let(:ruby) { "'foo'" }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'symbol literals' do
       let(:pattern) { '(sym :foo)' }
       let(:ruby) { ':foo' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     describe 'bare literal' do
@@ -247,7 +263,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'on a matching literal' do
         let(:node) { root_node.children[0] }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
     end
   end
@@ -257,7 +273,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:pattern) { '(nil)' }
       let(:ruby) { 'nil' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'nil value in AST' do
@@ -271,7 +287,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:pattern) { '(send nil? :foo)' }
       let(:ruby) { 'foo' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'against a node pattern (bug #5470)' do
@@ -288,7 +304,7 @@ RSpec.describe RuboCop::AST::NodePattern do
     context 'on a node with the same type and matching children' do
       let(:ruby) { '1 + 1' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'on a node with a different type' do
@@ -328,7 +344,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:pattern) { '(send (send _ :a) :b)' }
       let(:ruby) { 'obj.a.b' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
   end
 
@@ -338,20 +354,20 @@ RSpec.describe RuboCop::AST::NodePattern do
     context 'on a node with the same type and exact number of children' do
       let(:ruby) { '1.blah' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'on a node with the same type and more children' do
       context 'with 1 child more' do
         let(:ruby) { '1.blah(1)' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'with 2 children more' do
         let(:ruby) { '1.blah(1, :something)' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
     end
 
@@ -388,28 +404,28 @@ RSpec.describe RuboCop::AST::NodePattern do
         let(:pattern) { '_' }
         let(:ruby) { 'class << self; def something; 1; end end.freeze' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'within a sequence' do
         let(:pattern) { '(const _ _)' }
         let(:ruby) { 'Const' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'within a sequence with other patterns intervening' do
         let(:pattern) { '(ivasgn _ (int _))' }
         let(:ruby) { '@abc = 22' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'in head position of a sequence' do
         let(:pattern) { '(_ int ...)' }
         let(:ruby) { '1 + a' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'negated' do
@@ -426,7 +442,7 @@ RSpec.describe RuboCop::AST::NodePattern do
         let(:pattern) { '_node' }
         let(:ruby) { 'class << self; def something; 1; end end.freeze' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'within a sequence' do
@@ -434,7 +450,7 @@ RSpec.describe RuboCop::AST::NodePattern do
           let(:pattern) { '(send _num :+ _num)' }
           let(:ruby) { '5 + 5' }
 
-          it_behaves_like 'matching'
+          it { expect(pattern).to match_code(node) }
         end
 
         context 'with values which cannot be unified' do
@@ -448,7 +464,7 @@ RSpec.describe RuboCop::AST::NodePattern do
           let(:pattern) { '(_type _ _type)' }
           let(:ruby) { 'obj.send' }
 
-          it_behaves_like 'matching'
+          it { expect(pattern).to match_code(node) }
         end
       end
 
@@ -456,14 +472,14 @@ RSpec.describe RuboCop::AST::NodePattern do
         let(:pattern) { '(ivasgn _ivar (int _val))' }
         let(:ruby) { '@abc = 22' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'in head position of a sequence' do
         let(:pattern) { '(_type int ...)' }
         let(:ruby) { '1 + a' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'within a union' do
@@ -472,7 +488,7 @@ RSpec.describe RuboCop::AST::NodePattern do
             let(:pattern) { '{(array (int 1) _num) (array _num (int 1))}' }
             let(:ruby) { '[2, 1]' }
 
-            it_behaves_like 'matching'
+            it { expect(pattern).to match_code(node) }
           end
 
           context 'with partial unification' do
@@ -481,13 +497,13 @@ RSpec.describe RuboCop::AST::NodePattern do
             context 'matching the unified branch' do
               let(:ruby) { '[5, 5]' }
 
-              it_behaves_like 'matching'
+              it { expect(pattern).to match_code(node) }
             end
 
             context 'matching the free branch' do
               let(:ruby) { '[2, 1]' }
 
-              it_behaves_like 'matching'
+              it { expect(pattern).to match_code(node) }
             end
 
             context 'that can not be unified' do
@@ -508,7 +524,7 @@ RSpec.describe RuboCop::AST::NodePattern do
           context 'matching a branch' do
             let(:ruby) { '[2, [2, 1]]' }
 
-            it_behaves_like 'matching'
+            it { expect(pattern).to match_code(node) }
           end
 
           context 'that can not be unified' do
@@ -552,13 +568,13 @@ RSpec.describe RuboCop::AST::NodePattern do
             context 'matching the first branch' do
               let(:ruby) { '[[1, 2], 2]' }
 
-              it_behaves_like 'matching'
+              it { expect(pattern).to match_code(node) }
             end
 
             context 'matching another branch' do
               let(:ruby) { '[[2, 1], 2]' }
 
-              it_behaves_like 'matching'
+              it { expect(pattern).to match_code(node) }
             end
 
             context 'that can not be unified' do
@@ -579,7 +595,7 @@ RSpec.describe RuboCop::AST::NodePattern do
           let(:pattern) { '(send _ {:a :b})' }
           let(:ruby) { 'obj.b' }
 
-          it_behaves_like 'matching'
+          it { expect(pattern).to match_code(node) }
         end
 
         context 'when the AST does not have a matching symbol' do
@@ -594,21 +610,21 @@ RSpec.describe RuboCop::AST::NodePattern do
         let(:pattern) { '(send (str {"a" "b"}) :upcase)' }
         let(:ruby) { '"a".upcase' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'containing integer literals' do
         let(:pattern) { '(send (int {1 10}) :abs)' }
         let(:ruby) { '10.abs' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'containing mixed node and literals' do
         let(:pattern) { '(send {int nil?} ...)' }
         let(:ruby) { 'obj' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'containing multiple []' do
@@ -617,13 +633,13 @@ RSpec.describe RuboCop::AST::NodePattern do
         context 'on a node which meets all requirements of the first []' do
           let(:ruby) { '3' }
 
-          it_behaves_like 'matching'
+          it { expect(pattern).to match_code(node) }
         end
 
         context 'on a node which meets all requirements of the second []' do
           let(:ruby) { '2.4' }
 
-          it_behaves_like 'matching'
+          it { expect(pattern).to match_code(node) }
         end
 
         context 'on a node which meets some requirements but not all' do
@@ -638,14 +654,14 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:pattern) { '(send {const int} ...)' }
       let(:ruby) { 'Const.method' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'with a nested sequence' do
       let(:pattern) { '{(send int ...) (send const ...)}' }
       let(:ruby) { 'Const.method' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
   end
 
@@ -893,7 +909,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'with a non-matching symbol' do
         let(:ruby) { 'obj.xyz' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'with a non-matching symbol, but too many children' do
@@ -915,7 +931,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'with a non-matching symbol' do
         let(:ruby) { '"bar".upcase' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
     end
 
@@ -931,7 +947,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'with a non-matching value' do
         let(:ruby) { '@a = 3' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
     end
 
@@ -947,13 +963,13 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'with a node of different type' do
         let(:ruby) { '@@a = 1' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'with a node with non-matching children' do
         let(:ruby) { '@b = 1' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
     end
 
@@ -969,7 +985,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'with a node which meets only 1 requirement of []' do
         let(:ruby) { '1' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
     end
 
@@ -979,13 +995,13 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'with (send str :+ (send str :to_i))' do
         let(:ruby) { '"abc" + "1".to_i' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'with (send int :- int)' do
         let(:ruby) { '1 - 1' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'with (send str :<< str)' do
@@ -1052,7 +1068,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:pattern) { '(... (int 1))' }
       let(:ruby) { '10 * 1' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
   end
 
@@ -1061,14 +1077,14 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:pattern) { 'send_type?' }
       let(:ruby) { '1.inc' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
 
       context 'with name containing a numeral' do
         before { RuboCop::AST::Node.def_node_matcher :custom_42?, 'send_type?' }
 
         let(:pattern) { 'custom_42?' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
     end
 
@@ -1077,14 +1093,14 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:pattern) { '(!nil? int ...)' }
       let(:ruby) { '1.inc' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'applied to an integer for which the predicate is true' do
       let(:pattern) { '(send (int odd?) :inc)' }
       let(:ruby) { '1.inc' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'applied to an integer for which the predicate is false' do
@@ -1106,7 +1122,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:pattern) { '(send int !nil?)' }
       let(:ruby) { '1.inc' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'when in last-child position, but all children have already ' \
@@ -1124,7 +1140,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'for which the predicate is true' do
         let(:params) { [1] }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node, 1) }
       end
 
       context 'for which the predicate is false' do
@@ -1141,7 +1157,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'for which the predicate is true' do
         let(:keyword_params) { { param: 1 } }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node, param: 1) }
       end
 
       context 'for which the predicate is false' do
@@ -1176,7 +1192,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'for which the predicate is true' do
         let(:const_value) { 1 }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'for which the predicate is false' do
@@ -1198,7 +1214,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'for which the predicate is true' do
         let(:ruby) { '2 + 2.0' }
 
-        it_behaves_like 'matching'
+        it { expect(instance).to match_code(node) }
       end
 
       context 'for which the predicate is false' do
@@ -1215,7 +1231,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'for which the predicate is true' do
         let(:params) { %w[a d] }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node, 'a', 'd') }
       end
 
       context 'for which the predicate is false' do
@@ -1232,7 +1248,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:params) { [s(:int, 10)] }
       let(:ruby) { '10' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node, s(:int, 10)) }
 
       context 'in root position' do
         let(:pattern) { '%1' }
@@ -1242,7 +1258,7 @@ RSpec.describe RuboCop::AST::NodePattern do
 
         before { expect(matcher).to receive(:===).with(s(:int, 10)).and_return true } # rubocop:todo RSpec/ExpectInHook
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node, matcher) }
       end
     end
 
@@ -1255,7 +1271,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'when provided as argument to match' do
         before { expect(matcher).to receive(:===).with(s(:int, 10)).and_return true } # rubocop:todo RSpec/ExpectInHook
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node, foo: matcher) }
       end
 
       context 'when extra are provided' do
@@ -1280,7 +1296,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:params) { %i[inc dec] }
       let(:ruby) { '5.dec.inc' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node, :inc, :dec) }
     end
 
     context 'when preceded by ...' do
@@ -1288,7 +1304,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:params) { [s(:int, 10)] }
       let(:ruby) { '1 + 10' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node, s(:int, 10)) }
     end
 
     context 'when preceded by $...' do
@@ -1322,7 +1338,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:params) { [:A] }
       let(:ruby) { 'Namespace::B' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node, :A) }
     end
 
     context 'without explicit number' do
@@ -1330,7 +1346,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:params) { [:A, s(:const, nil, :Namespace)] }
       let(:ruby) { 'Namespace::A' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node, :A, s(:const, nil, :Namespace)) }
     end
 
     context 'when inside a union, with a matching value' do
@@ -1338,7 +1354,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:params) { [10] }
       let(:ruby) { '10' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node, 10) }
     end
 
     context 'when inside a union, with a nonmatching value' do
@@ -1354,7 +1370,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:params) { [10, 20] }
       let(:ruby) { '20' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node, 10, 20) }
     end
 
     context 'param number zero' do
@@ -1365,7 +1381,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'in a position which matches original target node' do
         let(:node) { root_node.children[0] }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'in a position which does not match original target node' do
@@ -1384,7 +1400,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'which matches' do
         let(:pattern) { '^send' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context "which doesn't match" do
@@ -1401,12 +1417,12 @@ RSpec.describe RuboCop::AST::NodePattern do
         let(:ruby) { '1.inc' }
         let(:pattern) { '(send ^send :inc)' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
 
         context 'of a sequence' do
           let(:pattern) { '(send ^(send _ _) :inc)' }
 
-          it_behaves_like 'matching'
+          it { expect(pattern).to match_code(node) }
         end
       end
 
@@ -1414,12 +1430,12 @@ RSpec.describe RuboCop::AST::NodePattern do
         let(:node) { root_node.children[0] }
         let(:pattern) { '(^send 1)' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
 
         context 'of a sequence' do
           let(:pattern) { '(^(send _ _) 1)' }
 
-          it_behaves_like 'matching'
+          it { expect(pattern).to match_code(node) }
         end
       end
     end
@@ -1430,7 +1446,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:ruby) { '1.inc { something }' }
       let(:node) { root_node.children[0].children[0] }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'inside an intersection' do
@@ -1438,7 +1454,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:ruby) { '1.inc { something }' }
       let(:node) { root_node.children[0].children[0] }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'inside a union' do
@@ -1446,7 +1462,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:ruby) { '"str".concat(local += "abc")' }
       let(:node) { root_node.children[2].children[2] }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     # NOTE!! a pitfall of doing this is that unification is done using #==
@@ -1459,7 +1475,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'with self in the right position' do
         let(:node) { root_node.children[2] }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'with self in the wrong position' do
@@ -1498,7 +1514,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:pattern) { '(lvasgn #goodmatch ...)' }
       let(:ruby) { 'a = 1' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'with one argument' do
@@ -1506,7 +1522,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:ruby) { '"foo"' }
       let(:params) { %w[foo] }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node, 'foo') }
     end
 
     context 'with multiple arguments' do
@@ -1514,7 +1530,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:ruby) { '"c"' }
       let(:params) { %w[a d] }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node, 'a', 'd') }
     end
   end
 
@@ -1682,7 +1698,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'without capture' do
         let(:pattern) { '(array sym int* int)' }
 
-        it_behaves_like 'matching'
+        it { expect(pattern).to match_code(node) }
       end
 
       context 'with matching children' do
@@ -1798,7 +1814,7 @@ RSpec.describe RuboCop::AST::NodePattern do
     context 'with a literal match' do
       let(:pattern) { '(array (int 1) `4)' }
 
-      it_behaves_like 'matching'
+      it { expect(pattern).to match_code(node) }
     end
 
     context 'without match' do
@@ -1921,6 +1937,14 @@ RSpec.describe RuboCop::AST::NodePattern do
   context 'macros' do
     include RuboCop::AST::Sexp
 
+    subject(:result) do
+      if keyword_params.empty? # Avoid bug in Ruby < 2.7
+        defined_class.new.send(method_name, node, *params)
+      else
+        defined_class.new.send(method_name, node, *params, **keyword_params)
+      end
+    end
+
     before do
       stub_const('MyClass', Class.new do
         extend RuboCop::AST::NodePattern::Macros
@@ -1935,13 +1959,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       MyClass
     end
     let(:ruby) { ':hello' }
-    let(:result) do
-      if keyword_params.empty? # Avoid bug in Ruby < 2.7
-        defined_class.new.send(method_name, node, *params)
-      else
-        defined_class.new.send(method_name, node, *params, **keyword_params)
-      end
-    end
+    let(:instance) { defined_class.new }
 
     if Set[1] === 1 # rubocop:disable Style/CaseEquality
       let(:hello_matcher) { Set[:hello, :foo] }
@@ -1956,7 +1974,7 @@ RSpec.describe RuboCop::AST::NodePattern do
         let(:helper_name) { :def_node_matcher }
 
         context 'when called on matching code' do
-          it_behaves_like 'matching'
+          it { expect(instance).to match_code(node) }
         end
 
         context 'when called on non-matching code' do
@@ -2016,7 +2034,7 @@ RSpec.describe RuboCop::AST::NodePattern do
           let(:method_name) { :my_matcher? }
 
           context 'when called on matching code' do
-            it_behaves_like 'matching'
+            it { expect(instance).to match_code(node) }
           end
 
           context 'when called on non-matching code' do
@@ -2047,9 +2065,7 @@ RSpec.describe RuboCop::AST::NodePattern do
         let(:helper_name) { :def_node_matcher }
 
         context 'when called on matching code' do
-          let(:captured_val) { :hello }
-
-          it_behaves_like 'single capture'
+          it { is_expected.to eq :hello }
         end
 
         context 'when called on non-matching code' do
@@ -2147,7 +2163,7 @@ RSpec.describe RuboCop::AST::NodePattern do
           let(:method_name) { :my_matcher? }
 
           context 'when called on matching code' do
-            it_behaves_like 'matching'
+            it { expect(instance).to match_code(node) }
           end
 
           context 'when called on non-matching code' do
@@ -2177,7 +2193,7 @@ RSpec.describe RuboCop::AST::NodePattern do
 
       before { defined_class::TEST = hello_matcher }
 
-      it_behaves_like 'matching'
+      it { expect(instance).to match_code(node) }
 
       context 'when the value is not in the set' do
         let(:ruby) { ':world' }
