@@ -21,6 +21,7 @@ module RuboCop
     class Node < Parser::AST::Node # rubocop:disable Metrics/ClassLength
       include RuboCop::AST::Sexp
       extend NodePattern::Macros
+      include RuboCop::AST::Descendence
 
       # <=> isn't included here, because it doesn't return a boolean.
       COMPARISON_OPERATORS = %i[== === != <= >= > <].freeze
@@ -209,104 +210,6 @@ module RuboCop
       # @return [Array<Node>] an array of ancestor nodes
       def ancestors
         each_ancestor.to_a
-      end
-
-      # Calls the given block for each child node.
-      # If no block is given, an `Enumerator` is returned.
-      #
-      # Note that this is different from `node.children.each { |child| ... }`
-      # which yields all children including non-node elements.
-      #
-      # @overload each_child_node
-      #   Yield all nodes.
-      # @overload each_child_node(type)
-      #   Yield only nodes matching the type.
-      #   @param [Symbol] type a node type
-      # @overload each_child_node(type_a, type_b, ...)
-      #   Yield only nodes matching any of the types.
-      #   @param [Symbol] type_a a node type
-      #   @param [Symbol] type_b a node type
-      # @yieldparam [Node] node each child node
-      # @return [self] if a block is given
-      # @return [Enumerator] if no block is given
-      def each_child_node(*types)
-        return to_enum(__method__, *types) unless block_given?
-
-        children.each do |child|
-          next unless child.is_a?(Node)
-
-          yield child if types.empty? || types.include?(child.type)
-        end
-
-        self
-      end
-
-      # Returns an array of child nodes.
-      # This is a shorthand for `node.each_child_node.to_a`.
-      #
-      # @return [Array<Node>] an array of child nodes
-      def child_nodes
-        each_child_node.to_a
-      end
-
-      # Calls the given block for each descendant node with depth first order.
-      # If no block is given, an `Enumerator` is returned.
-      #
-      # @overload each_descendant
-      #   Yield all nodes.
-      # @overload each_descendant(type)
-      #   Yield only nodes matching the type.
-      #   @param [Symbol] type a node type
-      # @overload each_descendant(type_a, type_b, ...)
-      #   Yield only nodes matching any of the types.
-      #   @param [Symbol] type_a a node type
-      #   @param [Symbol] type_b a node type
-      # @yieldparam [Node] node each descendant node
-      # @return [self] if a block is given
-      # @return [Enumerator] if no block is given
-      def each_descendant(*types, &block)
-        return to_enum(__method__, *types) unless block_given?
-
-        visit_descendants(types, &block)
-
-        self
-      end
-
-      # Returns an array of descendant nodes.
-      # This is a shorthand for `node.each_descendant.to_a`.
-      #
-      # @return [Array<Node>] an array of descendant nodes
-      def descendants
-        each_descendant.to_a
-      end
-
-      # Calls the given block for the receiver and each descendant node in
-      # depth-first order.
-      # If no block is given, an `Enumerator` is returned.
-      #
-      # This method would be useful when you treat the receiver node as the root
-      # of a tree and want to iterate over all nodes in the tree.
-      #
-      # @overload each_node
-      #   Yield all nodes.
-      # @overload each_node(type)
-      #   Yield only nodes matching the type.
-      #   @param [Symbol] type a node type
-      # @overload each_node(type_a, type_b, ...)
-      #   Yield only nodes matching any of the types.
-      #   @param [Symbol] type_a a node type
-      #   @param [Symbol] type_b a node type
-      # @yieldparam [Node] node each node
-      # @return [self] if a block is given
-      # @return [Enumerator] if no block is given
-      def each_node(*types, &block)
-        return to_enum(__method__, *types) unless block_given?
-
-        yield self if types.empty? || types.include?(type)
-
-        visit_descendants(types, &block)
-
-        self
       end
 
       # Note: Some rare nodes may have no source, like `s(:args)` in `foo {}`
@@ -628,15 +531,6 @@ module RuboCop
           child_nodes.all?(&:pure?)
         else
           false
-        end
-      end
-
-      protected
-
-      def visit_descendants(types, &block)
-        each_child_node do |child|
-          yield child if types.empty? || types.include?(child.type)
-          child.visit_descendants(types, &block)
         end
       end
 
