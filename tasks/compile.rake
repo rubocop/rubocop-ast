@@ -79,3 +79,24 @@ task :tokenize do
   end
   exit(0)
 end
+
+desc 'Test pattern against ruby code'
+task :test_pattern do
+  require_relative '../lib/rubocop/ast'
+  require 'parser/current'
+
+  if (pattern = ARGV[1]) && (ruby = ARGV[2])
+    require_relative '../lib/rubocop/ast/node_pattern/debug'
+    context = ::RuboCop::AST::NodePattern::Debug::Context.new
+    np = ::RuboCop::AST::NodePattern.new(pattern, context: context)
+    builder = ::RuboCop::AST::Builder.new
+    buffer = ::Parser::Source::Buffer.new('(ruby)', source: ruby)
+    ruby_ast = ::Parser::CurrentRuby.new(builder).parse(buffer)
+    np.as_lambda.call(ruby_ast, trace: context.trace)
+    puts ::RuboCop::AST::NodePattern::Debug::Colorizer.new(context).colorize(np.ast)
+  else
+    puts 'Usage:'
+    puts "  rake test-pattern '(send nil? :example...)' 'example(42)'"
+  end
+  exit(0)
+end
