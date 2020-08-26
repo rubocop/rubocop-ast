@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-require 'rubocop/rake_task'
+begin
+  require 'rubocop/rake_task'
+rescue LoadError
+  return
+end
 require 'English'
 
 def commit_paths(commit_range)
