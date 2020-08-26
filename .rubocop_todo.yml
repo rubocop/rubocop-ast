@@ -32,7 +32,7 @@ Metrics/MethodLength:
 # Offense count: 1
 # Configuration parameters: CountComments.
 Metrics/ModuleLength:
-  Max: 101
+  Max: 108
 
 # Offense count: 1
 # Configuration parameters: ExpectMatchingDefinition, Regex, IgnoreExecutableScripts, AllowedAcronyms.
@@ -73,6 +73,7 @@ RSpec/ExampleLength:
     - 'spec/rubocop/ast/node_pattern_spec.rb'
     - 'spec/rubocop/ast/processed_source_spec.rb'
     - 'spec/rubocop/ast/send_node_spec.rb'
+    - 'spec/rubocop/ast/node_pattern/parser_spec.rb'
 
 # Offense count: 6
 RSpec/LeakyConstantDeclaration:

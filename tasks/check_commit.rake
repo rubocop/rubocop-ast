@@ -2,7 +2,7 @@
 
 begin
   require 'rubocop/rake_task'
-rescue LoadError
+rescue LoadError, Gem::MissingSpecError
   return
 end
 require 'English'

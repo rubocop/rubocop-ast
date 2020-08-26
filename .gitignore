@@ -1,3 +1,8 @@
+# generated parser / lexer
+/lib/rubocop/ast/node_pattern/parser.racc.rb
+/lib/rubocop/ast/node_pattern/parser.output
+/lib/rubocop/ast/node_pattern/lexer.rex.rb
+
 # rcov generated
 coverage
 coverage.data
