@@ -8,7 +8,12 @@ gem 'bump', require: false
 gem 'pry'
 gem 'rake', '~> 12.0'
 gem 'rspec', '~> 3.7'
-gem 'rubocop', '~> 0.89'
+local_ast = File.expand_path('../rubocop', __dir__)
+if Dir.exist? local_ast
+  gem 'rubocop', path: local_ast
+else
+  gem 'rubocop', '~> 0.89' # rubocop:disable Bundler/DuplicatedGem
+end
 gem 'rubocop-performance', '~> 1.0'
 gem 'rubocop-rspec', '~> 1.0'
 # Workaround for cc-test-reporter with SimpleCov 0.18.
