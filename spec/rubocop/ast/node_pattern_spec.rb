@@ -3,10 +3,6 @@
 require 'parser/current'
 
 RSpec.describe RuboCop::AST::NodePattern do
-  before { $VERBOSE = true }
-
-  after { $VERBOSE = false }
-
   let(:root_node) do
     buffer = Parser::Source::Buffer.new('(string)', 1)
     buffer.source = ruby
@@ -133,14 +129,15 @@ RSpec.describe RuboCop::AST::NodePattern do
       it_behaves_like 'matching'
     end
 
-    describe 'yaml compatibility' do
-      let(:instance) do
-        $VERBOSE = false
-        YAML.safe_load(YAML.dump(super()), [described_class])
-      end
-      let(:ruby) { 'obj.method' }
+    if RUBY_VERSION >= '2.6'
+      describe 'yaml compatibility' do
+        let(:instance) do
+          YAML.safe_load(YAML.dump(super()), permitted_classes: [described_class])
+        end
+        let(:ruby) { 'obj.method' }
 
-      it_behaves_like 'matching'
+        it_behaves_like 'matching'
+      end
     end
 
     describe '#==' do
