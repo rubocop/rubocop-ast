@@ -698,6 +698,14 @@ RSpec.describe RuboCop::AST::NodePattern do
 
       it_behaves_like 'single capture'
     end
+
+    context 'nested in any child' do
+      let(:pattern) { '(send $<(const nil? $_) $...>)' }
+      let(:ruby) { 'A.method' }
+      let(:captured_vals) { [[s(:const, nil, :A), :method], :A, [:method]] }
+
+      it_behaves_like 'multiple capture'
+    end
   end
 
   describe 'captures which also perform a match' do
