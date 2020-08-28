@@ -33,7 +33,7 @@ rule
     | node_pattern repetition
       {
         main, repeat_t = val
-        emit_unary_op(:repetition, repeat_t, main, repeat_t.first)
+        emit_unary_op(:repetition, repeat_t, main, repeat_t)
       }
     | opt_capture '<' node_pattern_list opt_rest '>'
       {

@@ -72,7 +72,7 @@ desc 'Tokens of pattern for debugging purposes'
 task :tokenize do
   require_relative '../lib/rubocop/ast'
   if (pattern = ARGV[1])
-    puts ::RuboCop::AST::NodePattern::Parser.new.tokenize(pattern).last
+    puts ::RuboCop::AST::NodePattern::Parser::WithLoc.new.tokenize(pattern).last
   else
     puts 'Usage:'
     puts "  rake parse '(send nil? :example...)'"

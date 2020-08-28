@@ -90,6 +90,10 @@ module RuboCop
           def sequence
             SequenceCompiler
           end
+
+          def parser
+            Parser::WithLoc
+          end
         end
       end
     end

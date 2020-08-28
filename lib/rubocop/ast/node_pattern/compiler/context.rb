@@ -52,6 +52,10 @@ module RuboCop
             SequenceCompiler
           end
 
+          def parser
+            Parser
+          end
+
           # Utilities
 
           def with_temp_variables(*names, &block)
