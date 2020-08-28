@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+$VERBOSE = true
 
 if ENV.fetch('COVERAGE', 'f').start_with? 't'
   require 'simplecov'
