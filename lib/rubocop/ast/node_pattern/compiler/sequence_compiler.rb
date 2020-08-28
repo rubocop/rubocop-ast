@@ -134,8 +134,7 @@ module RuboCop
 
             storage = context.next_capture
             term = compile(node.child)
-            idx = compile_cur_index { @cur_index_var }
-            capture = "#{@seq_var}.children[#{@prev_index_var}...#{idx}]"
+            capture = "#{@seq_var}.children[#{compile_matched(:range)}]"
             "#{term} && (#{storage} = #{capture})"
           end
 
@@ -177,13 +176,41 @@ module RuboCop
             end
           end
 
+          # Assumes `@cur_index` is already updated
+          def compile_matched(kind)
+            to = compile_cur_index
+            from = if @prev_index == :variadic_mode
+                     @prev_index_used = true
+                     @prev_index_var
+                   else
+                     compile_index(@prev_index)
+                   end
+            case kind
+            when :range
+              "#{from}...#{to}"
+            when :length
+              "#{to} - #{from}"
+            end
+          end
+
+          def handle_prev
+            @prev_index = @cur_index
+            @prev_index_used = false
+            code = yield
+            if @prev_index_used
+              @prev_index_used = false
+              code = "(#{@prev_index_var} = #{@cur_index_var}; true) && #{code}"
+            end
+
+            code
+          end
+
           def compile_terms(seq)
             arities = remaining_arities(seq)
             total_arity = arities.shift
             terms = seq.children.map do |child|
               @remaining_arity = arities.shift
-              term = compile(child)
-              term
+              handle_prev { compile(child) }
             end
             [
               compile_child_nb_guard(total_arity),
@@ -214,7 +241,7 @@ module RuboCop
             end
             min_to_match = node.arity_range.begin
             if min_to_match.positive?
-              enough_matched = "#{@cur_index_var} - #{@prev_index_var} >= #{min_to_match}"
+              enough_matched = "#{compile_matched(:length)} >= #{min_to_match}"
             end
             return 'true' unless not_too_much_remaining || enough_matched
 
@@ -235,22 +262,21 @@ module RuboCop
           end
 
           def empty_loop
-            idx = compile_cur_index { @cur_index_var }
             @cur_index = -@remaining_arity.begin - DELTA
             @in_sync = false
-            "(#{@prev_index_var} = #{idx}; true)"
+            'true'
           end
 
           def compile_cur_index
-            if @cur_index == :variadic_mode
-              yield
-            elsif @cur_index >= 0
-              @cur_index
-            elsif @in_sync   # This branch is not necessary, it's just there to return
-              @cur_index_var # something simpler than the calculation from the end
-            else
-              "#{@seq_var}.children.size - #{-(@cur_index + DELTA)}"
-            end
+            return @cur_index_var if @in_sync
+
+            compile_index
+          end
+
+          def compile_index(cur = @cur_index)
+            return cur if cur >= 0
+
+            "#{@seq_var}.children.size - #{-(cur + DELTA)}"
           end
 
           # Note: assumes `@cur_index != :seq_head`. Node types using `within_loop` must
@@ -273,10 +299,7 @@ module RuboCop
           end
 
           def compile_loop(term)
-            set_previous = "(#{@prev_index_var} = #{@cur_index_var}; true) &&"
-
             <<~RUBY
-              #{set_previous}
               (#{compile_max_matched}).times do
                 break #{compile_min_check} unless #{term}
               end \\

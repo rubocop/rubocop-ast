@@ -37,7 +37,7 @@ module RuboCop
 
           def on_ascend
             context.with_temp_variables do |ascend|
-              term = self.class.compile(context, node.child, var: ascend)
+              term = context.node_pattern.compile(context, node.child, var: ascend)
               "(#{ascend} = #{access_node}) && (#{ascend} = #{ascend}.parent) && #{term}"
             end
           end
@@ -45,7 +45,7 @@ module RuboCop
           def on_descend
             context.with_temp_variables { |descendant| <<~RUBY.chomp }
               ::RuboCop::AST::NodePattern.descend(#{access}).any? do |#{descendant}|
-                #{NodePatternCompiler.compile(context, node.child, var: descendant)}
+                #{context.node_pattern.compile(context, node.child, var: descendant)}
               end
             RUBY
           end
@@ -114,7 +114,7 @@ module RuboCop
           # @param [Array<Node>, nil]
           # @return [String, nil]
           def compile_args(arg_list, first: nil)
-            args = arg_list&.map { |arg| AtomCompiler.compile(context, arg) }
+            args = arg_list&.map { |arg| context.atom.compile(context, arg) }
             args = [first, *args] if first
             "(#{args.join(', ')})" if args
           end

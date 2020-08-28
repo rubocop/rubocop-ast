@@ -58,7 +58,7 @@ module RuboCop
 
       def initialize(str, context: Compiler::Context.new)
         @pattern = str
-        @ast = Parser.new.parse(str)
+        @ast = context.parser.new.parse(str)
         @context = context
         @match_code = @context.node_pattern.compile(@context, @ast, var: VAR)
         @cache = {}
