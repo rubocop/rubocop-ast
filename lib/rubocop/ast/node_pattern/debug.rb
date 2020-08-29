@@ -45,7 +45,7 @@ module RuboCop
         end
 
         # @api private
-        module CompilerInspection
+        module InstrumentationSubcompiler
           def do_compile
             "#{tracer(:enter)} && #{super} && #{tracer(:success)}"
           end
@@ -60,12 +60,12 @@ module RuboCop
 
         # @api private
         class NodePatternSubcompiler < Compiler::NodePatternSubcompiler
-          prepend CompilerInspection
+          include InstrumentationSubcompiler
         end
 
         # @api private
         class SequenceSubcompiler < Compiler::SequenceSubcompiler
-          prepend CompilerInspection
+          include InstrumentationSubcompiler
         end
 
         # @api private
