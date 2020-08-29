@@ -6,12 +6,12 @@ module RuboCop
       class Compiler
         # Compiles terms within a sequence to code that evalues to true or false.
         # Compilation of the nodes that can match only a single term is deferred to
-        # `NodePatternCompiler`; only nodes that can match multiple terms are
+        # `NodePatternSubcompiler`; only nodes that can match multiple terms are
         # compiled here.
         # Assumes the given `var` is a `::RuboCop::AST::Node`
         #
         # rubocop:disable Metrics/ClassLength
-        class SequenceCompiler < Compiler
+        class SequenceSubcompiler < Compiler
           # Calls `compile_sequence`; the actual `compile` method
           # will be used for the different terms of the sequence.
           # The only case of re-entrant call to `compile` is `on_capture`

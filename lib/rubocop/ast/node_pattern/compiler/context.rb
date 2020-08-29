@@ -41,15 +41,15 @@ module RuboCop
           end
 
           def atom
-            AtomCompiler
+            AtomSubcompiler
           end
 
           def node_pattern
-            NodePatternCompiler
+            NodePatternSubcompiler
           end
 
           def sequence
-            SequenceCompiler
+            SequenceSubcompiler
           end
 
           def parser

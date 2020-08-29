@@ -7,7 +7,7 @@ module RuboCop
         # Compiles code that evalues to true or false
         # for a given value `var` (typically a RuboCop::AST::Node)
         # or it's `node.type` if `seq_head` is true
-        class NodePatternCompiler < Compiler
+        class NodePatternSubcompiler < Compiler
           def self.compile(context, node, var: nil, access: var, seq_head: false)
             new(context, node, var, access, seq_head).do_compile
           end

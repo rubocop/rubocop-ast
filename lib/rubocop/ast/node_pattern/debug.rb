@@ -59,12 +59,12 @@ module RuboCop
         end
 
         # @api private
-        class NodePatternCompiler < Compiler::NodePatternCompiler
+        class NodePatternSubcompiler < Compiler::NodePatternSubcompiler
           prepend CompilerInspection
         end
 
         # @api private
-        class SequenceCompiler < Compiler::SequenceCompiler
+        class SequenceSubcompiler < Compiler::SequenceSubcompiler
           prepend CompilerInspection
         end
 
@@ -84,11 +84,11 @@ module RuboCop
           end
 
           def node_pattern
-            NodePatternCompiler
+            NodePatternSubcompiler
           end
 
           def sequence
-            SequenceCompiler
+            SequenceSubcompiler
           end
 
           def parser
