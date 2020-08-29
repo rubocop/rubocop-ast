@@ -86,14 +86,14 @@ task :test_pattern do
   require 'parser/current'
 
   if (pattern = ARGV[1]) && (ruby = ARGV[2])
-    require_relative '../lib/rubocop/ast/node_pattern/debug'
-    compiler = ::RuboCop::AST::NodePattern::Debug::Compiler.new
+    require_relative '../lib/rubocop/ast/node_pattern/compiler/debug'
+    compiler = ::RuboCop::AST::NodePattern::Compiler::Debug.new
     np = ::RuboCop::AST::NodePattern.new(pattern, compiler: compiler)
     builder = ::RuboCop::AST::Builder.new
     buffer = ::Parser::Source::Buffer.new('(ruby)', source: ruby)
     ruby_ast = ::Parser::CurrentRuby.new(builder).parse(buffer)
     np.as_lambda.call(ruby_ast, trace: compiler.trace)
-    puts ::RuboCop::AST::NodePattern::Debug::Colorizer.new(compiler).colorize(np.ast)
+    puts ::RuboCop::AST::NodePattern::Compiler::Debug::Colorizer.new(compiler).colorize(np.ast)
   else
     puts 'Usage:'
     puts "  rake test-pattern '(send nil? :example...)' 'example(42)'"

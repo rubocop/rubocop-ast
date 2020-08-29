@@ -3,7 +3,8 @@
 module RuboCop
   module AST
     class NodePattern
-      # The global state used when compiling a node pattern.
+      # The top-level compiler holding the global state
+      # Defers work to its subcompilers
       class Compiler
         extend Forwardable
         attr_reader :captures, :named_parameters, :positional_parameters, :binding
@@ -44,19 +45,19 @@ module RuboCop
         end
 
         def atom
-          AtomSubcompiler
+          self.class::AtomSubcompiler
         end
 
         def node_pattern
-          NodePatternSubcompiler
+          self.class::NodePatternSubcompiler
         end
 
         def sequence
-          SequenceSubcompiler
+          self.class::SequenceSubcompiler
         end
 
         def parser
-          Parser
+          self.class::Parser
         end
 
         # Utilities

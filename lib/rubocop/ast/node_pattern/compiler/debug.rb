@@ -5,7 +5,23 @@ require 'rainbow'
 module RuboCop
   module AST
     class NodePattern
-      module Debug
+      class Compiler::Debug < Compiler
+        attr_reader :trace, :node_ids
+
+        def initialize
+          super
+          @node_ids = Hash.new { |h, k| h[k] = h.size }.compare_by_identity
+          @trace = { enter: {}, success: {} }
+        end
+
+        def named_parameters
+          super << :trace
+        end
+
+        def parser
+          Parser::WithMeta
+        end
+
         # @api private
         Colorizer = Struct.new(:compiler) do # rubocop:disable Metrics/BlockLength
           def colorize(ast, color_map: self.color_map(ast))
@@ -17,7 +33,7 @@ module RuboCop
           def color_map(ast)
             ast.each_descendant
                .map { |node| color_map_for(node) }
-               .inject(color_map(ast), :merge)
+               .inject(color_map_for(ast), :merge)
           end
 
           private
@@ -66,34 +82,6 @@ module RuboCop
         # @api private
         class SequenceSubcompiler < Compiler::SequenceSubcompiler
           include InstrumentationSubcompiler
-        end
-
-        # @api private
-        # Context with trace information
-        class Compiler < NodePattern::Compiler
-          attr_reader :trace, :node_ids
-
-          def initialize
-            super
-            @node_ids = Hash.new { |h, k| h[k] = h.size }.compare_by_identity
-            @trace = { enter: {}, success: {} }
-          end
-
-          def named_parameters
-            super << :trace
-          end
-
-          def node_pattern
-            NodePatternSubcompiler
-          end
-
-          def sequence
-            SequenceSubcompiler
-          end
-
-          def parser
-            Parser::WithMeta
-          end
         end
       end
     end
