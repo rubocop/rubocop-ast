@@ -16,8 +16,8 @@ module RuboCop
           # will be used for the different terms of the sequence.
           # The only case of re-entrant call to `compile` is `visit_capture`
           def self.compile(compiler, node, var:)
-            compiler = new(compiler)
-            compiler.compile_sequence(node, var)
+            subcompiler = new(compiler)
+            subcompiler.compile_sequence(node, var)
           end
 
           # @api private

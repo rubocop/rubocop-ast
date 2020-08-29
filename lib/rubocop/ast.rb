@@ -79,3 +79,6 @@ require_relative 'ast/processed_source'
 require_relative 'ast/token'
 require_relative 'ast/traversal'
 require_relative 'ast/version'
+
+::RuboCop::AST::NodePattern::Parser.autoload :WithMeta, "#{__dir__}/ast/node_pattern/with_meta"
+::RuboCop::AST::NodePattern::Compiler.autoload :Debug, "#{__dir__}/ast/node_pattern/compiler/debug"
