@@ -5,17 +5,21 @@ module RuboCop
     class NodePattern
       class Compiler
         # The global state used when compiling a node pattern.
-        class Context < Binding
-          attr_reader :captures, :named_parameters, :positional_parameters
+        class Context
+          extend Forwardable
+          attr_reader :captures, :named_parameters, :positional_parameters, :binding
 
           def initialize
             @temp_depth = 0 # avoid name clashes between temp variables
             @captures = 0 # number of captures seen
             @positional_parameters = 0 # highest % (param) number seen
             @named_parameters = Set[] # keyword parameters
+            @binding = Binding.new # bound variables
 
             super
           end
+
+          def_delegators :binding, :bind, :union_bind
 
           def positional_parameter(number)
             @positional_parameters = number if number > @positional_parameters
