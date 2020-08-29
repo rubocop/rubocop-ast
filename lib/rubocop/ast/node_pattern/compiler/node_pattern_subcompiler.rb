@@ -8,6 +8,8 @@ module RuboCop
         # for a given value `var` (typically a RuboCop::AST::Node)
         # or it's `node.type` if `seq_head` is true
         class NodePatternSubcompiler < Subcompiler
+          attr_reader :access, :seq_head
+
           def initialize(compiler, var: nil, access: var, seq_head: false)
             super(compiler)
             @var = var
@@ -15,26 +17,17 @@ module RuboCop
             @seq_head = seq_head
           end
 
-          protected
-
-          attr_reader :access, :seq_head
-
           private
 
-          def visit_other_type
-            value = compiler.compile_as_atom( node)
-            compile_value(value)
-          end
-
           def visit_negation
-            term = compile(node.child)
-            "!(#{term})"
+            expr = compile(node.child)
+            "!(#{expr})"
           end
 
           def visit_ascend
             compiler.with_temp_variables do |ascend|
-              term = compiler.compile_as_node_pattern( node.child, var: ascend)
-              "(#{ascend} = #{access_node}) && (#{ascend} = #{ascend}.parent) && #{term}"
+              expr = compiler.compile_as_node_pattern( node.child, var: ascend)
+              "(#{ascend} = #{access_node}) && (#{ascend} = #{ascend}.parent) && #{expr}"
             end
           end
 
@@ -56,15 +49,11 @@ module RuboCop
               return "(#{unify_name} = #{access_element}; #{unify_name} = #{unify_name}; true)"
             end
 
-            compile_value(name)
+            compile_value_match(name)
           end
 
           def visit_capture
             "(#{compiler.next_capture} = #{access_element}; #{compile(node.child)})"
-          end
-
-          def compile_value(value)
-            "#{value} === #{access_element}"
           end
 
           ### Lists
@@ -105,7 +94,17 @@ module RuboCop
             end
           end
 
+          # Assumes other types are atoms.
+          def visit_other_type
+            value = compiler.compile_as_atom( node)
+            compile_value_match(value)
+          end
+
           # Compiling helpers
+
+          def compile_value_match(value)
+            "#{value} === #{access_element}"
+          end
 
           # @param [Array<Node>, nil]
           # @return [String, nil]

@@ -9,13 +9,6 @@ module RuboCop
         class AtomSubcompiler < Subcompiler
           private
 
-          def visit_other_type
-            compiler.with_temp_variables do |compare|
-              code = compiler.compile_as_node_pattern( node, var: compare)
-              "->(#{compare}) { #{code} }"
-            end
-          end
-
           def visit_unify
             compiler.bind(node.child) do
               raise Invalid, 'unified variables can not appear first as argument'
@@ -38,6 +31,14 @@ module RuboCop
 
           def visit_positional_parameter
             compiler.positional_parameter(node.child)
+          end
+
+          # Assumes other types are node patterns.
+          def visit_other_type
+            compiler.with_temp_variables do |compare|
+              code = compiler.compile_as_node_pattern( node, var: compare)
+              "->(#{compare}) { #{code} }"
+            end
           end
         end
       end
