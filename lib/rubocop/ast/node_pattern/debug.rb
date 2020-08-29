@@ -7,7 +7,7 @@ module RuboCop
     class NodePattern
       module Debug
         # @api private
-        Colorizer = Struct.new(:context) do # rubocop:disable Metrics/BlockLength
+        Colorizer = Struct.new(:compiler) do # rubocop:disable Metrics/BlockLength
           def colorize(ast, color_map: self.color_map(ast))
             ast.loc.expression.source_buffer.source.chars.map.with_index do |char, i|
               Rainbow(char).color((color_map[i] || COLORS[:not_visitable]))
@@ -37,10 +37,10 @@ module RuboCop
           end
 
           def visited(node)
-            id = context.node_ids.fetch(node) { return :not_visitable }
-            return :not_visited unless context.trace[:enter][id]
+            id = compiler.node_ids.fetch(node) { return :not_visitable }
+            return :not_visited unless compiler.trace[:enter][id]
 
-            context.trace[:success][id]
+            compiler.trace[:success][id]
           end
         end
 
@@ -53,7 +53,7 @@ module RuboCop
           private
 
           def tracer(kind)
-            id = context.node_ids[node]
+            id = compiler.node_ids[node]
             "(trace[:#{kind}][#{id}] ||= true)"
           end
         end

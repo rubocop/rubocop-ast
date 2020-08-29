@@ -8,8 +8,8 @@ module RuboCop
         # for a given value `var` (typically a RuboCop::AST::Node)
         # or it's `node.type` if `seq_head` is true
         class NodePatternSubcompiler < Subcompiler
-          def self.compile(context, node, var: nil, access: var, seq_head: false)
-            new(context, node, var, access, seq_head).do_compile
+          def self.compile(compiler, node, var: nil, access: var, seq_head: false)
+            new(compiler, node, var, access, seq_head).do_compile
           end
 
           protected
@@ -18,15 +18,15 @@ module RuboCop
 
           private
 
-          def initialize(context, node, var, access, seq_head)
-            super(context, node)
+          def initialize(compiler, node, var, access, seq_head)
+            super(compiler, node)
             @var = var
             @access = access
             @seq_head = seq_head
           end
 
           def on_type_missing
-            value = context.atom.compile(context, node)
+            value = compiler.atom.compile(compiler, node)
             compile_value(value)
           end
 
@@ -36,16 +36,16 @@ module RuboCop
           end
 
           def on_ascend
-            context.with_temp_variables do |ascend|
-              term = context.node_pattern.compile(context, node.child, var: ascend)
+            compiler.with_temp_variables do |ascend|
+              term = compiler.node_pattern.compile(compiler, node.child, var: ascend)
               "(#{ascend} = #{access_node}) && (#{ascend} = #{ascend}.parent) && #{term}"
             end
           end
 
           def on_descend
-            context.with_temp_variables { |descendant| <<~RUBY.chomp }
+            compiler.with_temp_variables { |descendant| <<~RUBY.chomp }
               ::RuboCop::AST::NodePattern.descend(#{access}).any? do |#{descendant}|
-                #{context.node_pattern.compile(context, node.child, var: descendant)}
+                #{compiler.node_pattern.compile(compiler, node.child, var: descendant)}
               end
             RUBY
           end
@@ -55,7 +55,7 @@ module RuboCop
           end
 
           def on_unify
-            name = context.bind(node.child) do |unify_name|
+            name = compiler.bind(node.child) do |unify_name|
               # double assign to avoid "assigned but unused variable"
               return "(#{unify_name} = #{access_element}; #{unify_name} = #{unify_name}; true)"
             end
@@ -64,7 +64,7 @@ module RuboCop
           end
 
           def on_capture
-            "(#{context.next_capture} = #{access_element}; #{compile(node.child)})"
+            "(#{compiler.next_capture} = #{access_element}; #{compile(node.child)})"
           end
 
           def compile_value(value)
@@ -75,8 +75,8 @@ module RuboCop
 
           def on_union
             multiple_access(:union) do
-              enum = context.union_bind(node.children)
-              terms = context.enforce_same_captures(enum)
+              enum = compiler.union_bind(node.children)
+              terms = compiler.enforce_same_captures(enum)
                              .map { |child| compile(child) }
 
               "(#{terms.join(' || ')})"
@@ -104,7 +104,7 @@ module RuboCop
 
           def on_sequence
             multiple_access(:sequence) do |var|
-              term = context.sequence.compile(context, node, var: var)
+              term = compiler.sequence.compile(compiler, node, var: var)
               "#{compile_guard_clause} && #{term}"
             end
           end
@@ -114,7 +114,7 @@ module RuboCop
           # @param [Array<Node>, nil]
           # @return [String, nil]
           def compile_args(arg_list, first: nil)
-            args = arg_list&.map { |arg| context.atom.compile(context, arg) }
+            args = arg_list&.map { |arg| compiler.atom.compile(compiler, arg) }
             args = [first, *args] if first
             "(#{args.join(', ')})" if args
           end
@@ -136,7 +136,7 @@ module RuboCop
           def multiple_access(kind)
             return yield @var if @var
 
-            context.with_temp_variables(kind) do |var|
+            compiler.with_temp_variables(kind) do |var|
               memo = "#{var} = #{access}"
               @var = @access = var
               "(#{memo}; #{yield @var})"

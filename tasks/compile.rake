@@ -87,13 +87,13 @@ task :test_pattern do
 
   if (pattern = ARGV[1]) && (ruby = ARGV[2])
     require_relative '../lib/rubocop/ast/node_pattern/debug'
-    context = ::RuboCop::AST::NodePattern::Debug::Compiler.new
-    np = ::RuboCop::AST::NodePattern.new(pattern, context: context)
+    compiler = ::RuboCop::AST::NodePattern::Debug::Compiler.new
+    np = ::RuboCop::AST::NodePattern.new(pattern, compiler: compiler)
     builder = ::RuboCop::AST::Builder.new
     buffer = ::Parser::Source::Buffer.new('(ruby)', source: ruby)
     ruby_ast = ::Parser::CurrentRuby.new(builder).parse(buffer)
-    np.as_lambda.call(ruby_ast, trace: context.trace)
-    puts ::RuboCop::AST::NodePattern::Debug::Colorizer.new(context).colorize(np.ast)
+    np.as_lambda.call(ruby_ast, trace: compiler.trace)
+    puts ::RuboCop::AST::NodePattern::Debug::Colorizer.new(compiler).colorize(np.ast)
   else
     puts 'Usage:'
     puts "  rake test-pattern '(send nil? :example...)' 'example(42)'"

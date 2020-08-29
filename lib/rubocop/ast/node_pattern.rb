@@ -54,13 +54,13 @@ module RuboCop
 
       attr_reader :pattern, :ast, :match_code
 
-      def_delegators :@context, :captures, :named_parameters, :positional_parameters
+      def_delegators :@compiler, :captures, :named_parameters, :positional_parameters
 
       def initialize(str, compiler: Compiler.new)
         @pattern = str
         @ast = compiler.parser.new.parse(str)
-        @context = compiler
-        @match_code = @context.node_pattern.compile(@context, @ast, var: VAR)
+        @compiler = compiler
+        @match_code = @compiler.node_pattern.compile(@compiler, @ast, var: VAR)
         @cache = {}
       end
 
@@ -116,7 +116,7 @@ module RuboCop
 
       def freeze
         @match_code.freeze
-        @context.freeze
+        @compiler.freeze
         super
       end
     end

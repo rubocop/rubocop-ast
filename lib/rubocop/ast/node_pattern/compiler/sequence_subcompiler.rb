@@ -15,8 +15,8 @@ module RuboCop
           # Calls `compile_sequence`; the actual `compile` method
           # will be used for the different terms of the sequence.
           # The only case of re-entrant call to `compile` is `on_capture`
-          def self.compile(context, node, var:)
-            compiler = new(context)
+          def self.compile(compiler, node, var:)
+            compiler = new(compiler)
             compiler.compile_sequence(node, var)
           end
 
@@ -25,7 +25,7 @@ module RuboCop
             @seq_var = seq_var # Holds the name of the variable holding the AST::Node we are matching
 
             # rubocop:disable Layout/CommentIndentation
-            context.with_temp_variables do |cur_child, cur_index, previous_index|
+            compiler.with_temp_variables do |cur_child, cur_index, previous_index|
               @cur_child_var = cur_child        # To hold the current child node
               @cur_index_var = cur_index        # To hold the current child index (always >= 0)
               @prev_index_var = previous_index  # To hold the child index before we enter the
@@ -68,7 +68,7 @@ module RuboCop
                        { access: "#{@seq_var}.children[#{idx}]" }
                      end
 
-            term = context.node_pattern.compile(context, node, **access)
+            term = compiler.node_pattern.compile(compiler, node, **access)
             compile_and_advance(term)
           end
 
@@ -84,7 +84,7 @@ module RuboCop
 
           def on_any_order
             within_loop do
-              context.with_temp_variables do |matched|
+              compiler.with_temp_variables do |matched|
                 case_terms = compile_any_order_branches(matched)
                 else_code, init = compile_any_order_else
                 term = "#{compile_case(case_terms, else_code)} && (#{compile_loop_advance}; true)"
@@ -109,7 +109,7 @@ module RuboCop
 
           def compile_any_order_branches(matched_var)
             node.term_nodes.map.with_index do |node, i|
-              code = context.node_pattern.compile(context, node, var: cur_child_var, seq_head: false)
+              code = compiler.node_pattern.compile(compiler, node, var: cur_child_var, seq_head: false)
               var = "#{matched_var}[#{i}]"
               "when !#{var} && #{code} then #{var} = true"
             end
@@ -121,7 +121,7 @@ module RuboCop
             if !rest
               'false'
             elsif rest.capture?
-              capture_rest = context.next_capture
+              capture_rest = compiler.next_capture
               init = "#{capture_rest} = [];"
               ["#{capture_rest} << #{cur_child_var}", init]
             else
@@ -132,7 +132,7 @@ module RuboCop
           def on_capture
             return on_type_missing if node.child.arity == 1
 
-            storage = context.next_capture
+            storage = compiler.next_capture
             term = compile(node.child)
             capture = "#{@seq_var}.children[#{compile_matched(:range)}]"
             "#{term} && (#{storage} = #{capture})"
@@ -160,9 +160,9 @@ module RuboCop
           end
 
           def compile_captured_repetition(child_code, child_captures)
-            captured_range = "#{context.captures - child_captures}...#{context.captures}"
+            captured_range = "#{compiler.captures - child_captures}...#{compiler.captures}"
             captured = "captures[#{captured_range}]"
-            context.with_temp_variables do |accumulate|
+            compiler.with_temp_variables do |accumulate|
               code = "#{child_code} && #{accumulate}.push(#{captured})"
               <<~RUBY
                 (#{accumulate} = Array.new) &&

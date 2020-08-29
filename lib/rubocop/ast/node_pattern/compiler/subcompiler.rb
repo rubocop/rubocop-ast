@@ -14,12 +14,12 @@ module RuboCop
 
           protected
 
-          attr_reader :context, :node
+          attr_reader :compiler, :node
 
           private
 
-          def initialize(context, node = nil)
-            @context = context
+          def initialize(compiler, node = nil)
+            @compiler = compiler
             @node = node
           end
 
