@@ -36,7 +36,7 @@ module RuboCop
           # Assumes other types are node patterns.
           def visit_other_type
             compiler.with_temp_variables do |compare|
-              code = compiler.compile_as_node_pattern( node, var: compare)
+              code = compiler.compile_as_node_pattern(node, var: compare)
               "->(#{compare}) { #{code} }"
             end
           end

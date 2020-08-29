@@ -6,7 +6,6 @@ module RuboCop
       class Parser
         # Overrides Parser to use `WithMeta` variants and provide additional methods
         class WithMeta < Parser
-
           # Overrides Lexer to token locations and comments
           class Lexer < NodePattern::Lexer
             attr_reader :source_buffer

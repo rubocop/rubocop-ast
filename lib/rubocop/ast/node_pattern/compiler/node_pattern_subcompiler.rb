@@ -26,7 +26,7 @@ module RuboCop
 
           def visit_ascend
             compiler.with_temp_variables do |ascend|
-              expr = compiler.compile_as_node_pattern( node.child, var: ascend)
+              expr = compiler.compile_as_node_pattern(node.child, var: ascend)
               "(#{ascend} = #{access_node}) && (#{ascend} = #{ascend}.parent) && #{expr}"
             end
           end
@@ -34,7 +34,7 @@ module RuboCop
           def visit_descend
             compiler.with_temp_variables { |descendant| <<~RUBY.chomp }
               ::RuboCop::AST::NodePattern.descend(#{access}).any? do |#{descendant}|
-                #{compiler.compile_as_node_pattern( node.child, var: descendant)}
+                #{compiler.compile_as_node_pattern(node.child, var: descendant)}
               end
             RUBY
           end
@@ -62,7 +62,7 @@ module RuboCop
             multiple_access(:union) do
               enum = compiler.union_bind(node.children)
               terms = compiler.enforce_same_captures(enum)
-                             .map { |child| compile(child) }
+                              .map { |child| compile(child) }
 
               "(#{terms.join(' || ')})"
             end
@@ -89,14 +89,14 @@ module RuboCop
 
           def visit_sequence
             multiple_access(:sequence) do |var|
-              term = compiler.compile_sequence( node, var: var)
+              term = compiler.compile_sequence(node, var: var)
               "#{compile_guard_clause} && #{term}"
             end
           end
 
           # Assumes other types are atoms.
           def visit_other_type
-            value = compiler.compile_as_atom( node)
+            value = compiler.compile_as_atom(node)
             compile_value_match(value)
           end
 
@@ -109,7 +109,7 @@ module RuboCop
           # @param [Array<Node>, nil]
           # @return [String, nil]
           def compile_args(arg_list, first: nil)
-            args = arg_list&.map { |arg| compiler.compile_as_atom( arg) }
+            args = arg_list&.map { |arg| compiler.compile_as_atom(arg) }
             args = [first, *args] if first
             "(#{args.join(', ')})" if args
           end

@@ -12,10 +12,11 @@ module RuboCop
         #
         # rubocop:disable Metrics/ClassLength
         class SequenceSubcompiler < Subcompiler
+          DELTA = 1
           # Calls `compile_sequence`; the actual `compile` method
           # will be used for the different terms of the sequence.
           # The only case of re-entrant call to `compile` is `visit_capture`
-          def initialize(compiler, sequence: , var:)
+          def initialize(compiler, sequence:, var:)
             @seq = sequence # The node to be compiled
             @seq_var = var  # Holds the name of the variable holding the AST::Node we are matching
             super(compiler)
@@ -50,8 +51,6 @@ module RuboCop
           private
 
           private :compile # Not meant to be called from outside
-
-          DELTA = 1
 
           attr_reader :cur_child_var
 
@@ -224,10 +223,10 @@ module RuboCop
           def remaining_arities
             last = 0..0
             arities = @seq.children
-                      .reverse
-                      .map(&:arity_range)
-                      .map { |r| last = last.begin + r.begin..last.max + r.max }
-                      .reverse!
+                          .reverse
+                          .map(&:arity_range)
+                          .map { |r| last = last.begin + r.begin..last.max + r.max }
+                          .reverse!
             arities.push 0..0
           end
 
