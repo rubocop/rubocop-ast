@@ -70,7 +70,7 @@ module RuboCop
 
         # @api private
         # Context with trace information
-        class Context < Compiler::Context
+        class Compiler < NodePattern::Compiler
           attr_reader :trace, :node_ids
 
           def initialize

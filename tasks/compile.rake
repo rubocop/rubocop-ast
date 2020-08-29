@@ -87,7 +87,7 @@ task :test_pattern do
 
   if (pattern = ARGV[1]) && (ruby = ARGV[2])
     require_relative '../lib/rubocop/ast/node_pattern/debug'
-    context = ::RuboCop::AST::NodePattern::Debug::Context.new
+    context = ::RuboCop::AST::NodePattern::Debug::Compiler.new
     np = ::RuboCop::AST::NodePattern.new(pattern, context: context)
     builder = ::RuboCop::AST::Builder.new
     buffer = ::Parser::Source::Buffer.new('(ruby)', source: ruby)

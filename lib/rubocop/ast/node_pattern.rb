@@ -56,10 +56,10 @@ module RuboCop
 
       def_delegators :@context, :captures, :named_parameters, :positional_parameters
 
-      def initialize(str, context: Compiler::Context.new)
+      def initialize(str, compiler: Compiler.new)
         @pattern = str
-        @ast = context.parser.new.parse(str)
-        @context = context
+        @ast = compiler.parser.new.parse(str)
+        @context = compiler
         @match_code = @context.node_pattern.compile(@context, @ast, var: VAR)
         @cache = {}
       end
