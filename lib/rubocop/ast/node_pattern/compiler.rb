@@ -57,7 +57,7 @@ module RuboCop
         end
 
         def parser
-          self.class::Parser
+          Parser
         end
 
         # Utilities

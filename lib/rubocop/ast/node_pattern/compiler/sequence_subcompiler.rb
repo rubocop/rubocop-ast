@@ -14,7 +14,7 @@ module RuboCop
         class SequenceSubcompiler < Subcompiler
           # Calls `compile_sequence`; the actual `compile` method
           # will be used for the different terms of the sequence.
-          # The only case of re-entrant call to `compile` is `on_capture`
+          # The only case of re-entrant call to `compile` is `visit_capture`
           def self.compile(compiler, node, var:)
             compiler = new(compiler)
             compiler.compile_sequence(node, var)
@@ -56,7 +56,7 @@ module RuboCop
           attr_reader :cur_child_var
 
           # Single node patterns are all handled here
-          def on_type_missing
+          def visit_other_type
             access = case @cur_index
                      when :seq_head
                        { var: @seq_var,
@@ -72,7 +72,7 @@ module RuboCop
             compile_and_advance(term)
           end
 
-          def on_repetition
+          def visit_repetition
             within_loop do
               child_captures = node.child.nb_captures
               child_code = compile(node.child)
@@ -82,7 +82,7 @@ module RuboCop
             end
           end
 
-          def on_any_order
+          def visit_any_order
             within_loop do
               compiler.with_temp_variables do |matched|
                 case_terms = compile_any_order_branches(matched)
@@ -129,8 +129,8 @@ module RuboCop
             end
           end
 
-          def on_capture
-            return on_type_missing if node.child.arity == 1
+          def visit_capture
+            return visit_other_type if node.child.arity == 1
 
             storage = compiler.next_capture
             term = compile(node.child)
@@ -138,7 +138,7 @@ module RuboCop
             "#{term} && (#{storage} = #{capture})"
           end
 
-          def on_rest
+          def visit_rest
             empty_loop
           end
 

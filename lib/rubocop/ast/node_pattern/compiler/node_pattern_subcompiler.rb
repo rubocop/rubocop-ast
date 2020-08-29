@@ -25,24 +25,24 @@ module RuboCop
             @seq_head = seq_head
           end
 
-          def on_type_missing
+          def visit_other_type
             value = compiler.atom.compile(compiler, node)
             compile_value(value)
           end
 
-          def on_negation
+          def visit_negation
             term = compile(node.child)
             "!(#{term})"
           end
 
-          def on_ascend
+          def visit_ascend
             compiler.with_temp_variables do |ascend|
               term = compiler.node_pattern.compile(compiler, node.child, var: ascend)
               "(#{ascend} = #{access_node}) && (#{ascend} = #{ascend}.parent) && #{term}"
             end
           end
 
-          def on_descend
+          def visit_descend
             compiler.with_temp_variables { |descendant| <<~RUBY.chomp }
               ::RuboCop::AST::NodePattern.descend(#{access}).any? do |#{descendant}|
                 #{compiler.node_pattern.compile(compiler, node.child, var: descendant)}
@@ -50,11 +50,11 @@ module RuboCop
             RUBY
           end
 
-          def on_wildcard
+          def visit_wildcard
             'true'
           end
 
-          def on_unify
+          def visit_unify
             name = compiler.bind(node.child) do |unify_name|
               # double assign to avoid "assigned but unused variable"
               return "(#{unify_name} = #{access_element}; #{unify_name} = #{unify_name}; true)"
@@ -63,7 +63,7 @@ module RuboCop
             compile_value(name)
           end
 
-          def on_capture
+          def visit_capture
             "(#{compiler.next_capture} = #{access_element}; #{compile(node.child)})"
           end
 
@@ -73,7 +73,7 @@ module RuboCop
 
           ### Lists
 
-          def on_union
+          def visit_union
             multiple_access(:union) do
               enum = compiler.union_bind(node.children)
               terms = compiler.enforce_same_captures(enum)
@@ -83,26 +83,26 @@ module RuboCop
             end
           end
 
-          def on_intersection
+          def visit_intersection
             multiple_access(:intersection) do
               node.children.map { |child| compile(child) }
                   .join(' && ')
             end
           end
 
-          def on_predicate
+          def visit_predicate
             "#{access_element}.#{node.method_name}#{compile_args(node.arg_list)}"
           end
 
-          def on_function_call
+          def visit_function_call
             "#{node.method_name}#{compile_args(node.arg_list, first: access_element)}"
           end
 
-          def on_node_type
+          def visit_node_type
             "#{access_node}.#{node.child.to_s.tr('-', '_')}_type?"
           end
 
-          def on_sequence
+          def visit_sequence
             multiple_access(:sequence) do |var|
               term = compiler.sequence.compile(compiler, node, var: var)
               "#{compile_guard_clause} && #{term}"

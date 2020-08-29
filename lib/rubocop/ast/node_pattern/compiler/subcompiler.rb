@@ -9,7 +9,7 @@ module RuboCop
         class Subcompiler
           # @api private
           def do_compile
-            callback(self.class.registry[node.type])
+            callback(self.class.registry.fetch(node.type, :visit_other_type))
           end
 
           protected
@@ -35,12 +35,12 @@ module RuboCop
             send(method)
           end
 
-          @registry = Hash.new(:on_type_missing)
+          @registry = {}
           class << self
             attr_reader :registry
 
             def method_added(method)
-              @registry[Regexp.last_match(1).to_sym] = method if method =~ /^on_(.*)/
+              @registry[Regexp.last_match(1).to_sym] = method if method =~ /^visit_(.*)/
               super
             end
 
