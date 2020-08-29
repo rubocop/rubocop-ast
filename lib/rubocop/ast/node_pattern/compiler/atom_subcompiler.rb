@@ -6,7 +6,7 @@ module RuboCop
       class Compiler
         # Generates code that evaluates to a value (Ruby object)
         # This value responds to `===`.
-        class AtomSubcompiler < Compiler
+        class AtomSubcompiler < Subcompiler
           def self.compile(context, node)
             new(context, node).do_compile
           end

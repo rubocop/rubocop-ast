@@ -11,7 +11,7 @@ module RuboCop
         # Assumes the given `var` is a `::RuboCop::AST::Node`
         #
         # rubocop:disable Metrics/ClassLength
-        class SequenceSubcompiler < Compiler
+        class SequenceSubcompiler < Subcompiler
           # Calls `compile_sequence`; the actual `compile` method
           # will be used for the different terms of the sequence.
           # The only case of re-entrant call to `compile` is `on_capture`
