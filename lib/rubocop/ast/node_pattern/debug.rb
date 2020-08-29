@@ -92,7 +92,7 @@ module RuboCop
           end
 
           def parser
-            Parser::WithLoc
+            Parser::WithMeta
           end
         end
       end

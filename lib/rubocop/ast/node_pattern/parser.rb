@@ -51,10 +51,10 @@ module RuboCop
           raise NodePattern::Invalid, "parse error on value #{val.inspect} (#{detail})"
         end
 
-        class WithLoc < Parser
-          Lexer = NodePattern::Lexer::WithLoc
+        class WithMeta < Parser
+          Lexer = NodePattern::Lexer::WithMeta
 
-          def initialize(builder = Builder::WithLoc.new)
+          def initialize(builder = Builder::WithMeta.new)
             super
           end
 

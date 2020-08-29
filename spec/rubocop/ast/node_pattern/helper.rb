@@ -24,5 +24,5 @@ end
 RSpec.shared_context 'parser' do
   include NodePatternHelper
 
-  let(:parser) { RuboCop::AST::NodePattern::Parser::WithLoc.new }
+  let(:parser) { RuboCop::AST::NodePattern::Parser::WithMeta.new }
 end

@@ -40,7 +40,7 @@ module RuboCop
           [type, value]
         end
 
-        class WithLoc < Lexer
+        class WithMeta < Lexer
           attr_reader :source_buffer
 
           def initialize(str_or_buffer)

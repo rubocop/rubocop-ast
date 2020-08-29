@@ -2,7 +2,7 @@
 
 RSpec.describe RuboCop::AST::NodePattern::Lexer do
   let(:source) { '(send nil? #func(:foo) #func (bar))' }
-  let(:lexer) { described_class::WithLoc.new(source) }
+  let(:lexer) { described_class::WithMeta.new(source) }
   let(:tokens) do
     tokens = []
     while (token = lexer.next_token)

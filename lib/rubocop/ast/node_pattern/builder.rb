@@ -34,7 +34,7 @@ module RuboCop
           Node::MAP[type].new(type, *args)
         end
 
-        class Builder::WithLoc < Builder
+        class Builder::WithMeta < Builder
           def emit_atom(type, token)
             value, loc = token
             begin_l = loc.resize(1)
