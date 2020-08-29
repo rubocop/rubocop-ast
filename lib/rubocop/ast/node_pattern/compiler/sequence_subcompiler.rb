@@ -15,15 +15,13 @@ module RuboCop
           # Calls `compile_sequence`; the actual `compile` method
           # will be used for the different terms of the sequence.
           # The only case of re-entrant call to `compile` is `visit_capture`
-          def self.compile(compiler, node, var:)
-            subcompiler = new(compiler)
-            subcompiler.compile_sequence(node, var)
+          def initialize(compiler, sequence: , var:)
+            @seq = sequence # The node to be compiled
+            @seq_var = var  # Holds the name of the variable holding the AST::Node we are matching
+            super(compiler)
           end
 
-          # @api private
-          def compile_sequence(seq, seq_var)
-            @seq_var = seq_var # Holds the name of the variable holding the AST::Node we are matching
-
+          def compile_sequence
             # rubocop:disable Layout/CommentIndentation
             compiler.with_temp_variables do |cur_child, cur_index, previous_index|
               @cur_child_var = cur_child        # To hold the current child node
@@ -44,12 +42,14 @@ module RuboCop
               @in_sync = false                  # `true` iff `@cur_child_var` and `@cur_index_var`
                                                 # correspond to `@cur_index`
                                                 # Must be true if `@cur_index` is `:variadic_mode`
-              compile_terms(seq)
+              compile_terms
             end
             # rubocop:enable Layout/CommentIndentation
           end
 
           private
+
+          private :compile # Not meant to be called from outside
 
           DELTA = 1
 
@@ -68,7 +68,7 @@ module RuboCop
                        { access: "#{@seq_var}.children[#{idx}]" }
                      end
 
-            term = compiler.compile_as_node_pattern( node, **access)
+            term = compiler.compile_as_node_pattern(node, **access)
             compile_and_advance(term)
           end
 
@@ -109,7 +109,7 @@ module RuboCop
 
           def compile_any_order_branches(matched_var)
             node.term_nodes.map.with_index do |node, i|
-              code = compiler.compile_as_node_pattern( node, var: cur_child_var, seq_head: false)
+              code = compiler.compile_as_node_pattern(node, var: cur_child_var, seq_head: false)
               var = "#{matched_var}[#{i}]"
               "when !#{var} && #{code} then #{var} = true"
             end
@@ -205,10 +205,10 @@ module RuboCop
             code
           end
 
-          def compile_terms(seq)
-            arities = remaining_arities(seq)
+          def compile_terms
+            arities = remaining_arities
             total_arity = arities.shift
-            terms = seq.children.map do |child|
+            terms = @seq.children.map do |child|
               @remaining_arity = arities.shift
               handle_prev { compile(child) }
             end
@@ -221,10 +221,9 @@ module RuboCop
           # @return [Array<Range>] total arities (as Ranges) of remaining children nodes
           # E.g. For sequence `(_  _? <_ _>)`, arities are: 1, 0..1, 2
           # and remaining arities are: 3..4, 2..3, 2..2, 0..0
-          def remaining_arities(seq)
-            children = seq.children
+          def remaining_arities
             last = 0..0
-            arities = children
+            arities = @seq.children
                       .reverse
                       .map(&:arity_range)
                       .map { |r| last = last.begin + r.begin..last.max + r.max }

@@ -51,8 +51,8 @@ module RuboCop
           self.class::NodePatternSubcompiler.new(self, **options).compile(node)
         end
 
-        def compile_sequence(*args, **options)
-          self.class::SequenceSubcompiler.compile(self, *args, **options)
+        def compile_sequence(sequence, var:)
+          self.class::SequenceSubcompiler.new(self, sequence: sequence, var: var).compile_sequence
         end
 
         def parser
