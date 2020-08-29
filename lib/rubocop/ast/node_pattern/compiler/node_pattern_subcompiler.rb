@@ -8,8 +8,11 @@ module RuboCop
         # for a given value `var` (typically a RuboCop::AST::Node)
         # or it's `node.type` if `seq_head` is true
         class NodePatternSubcompiler < Subcompiler
-          def self.compile(compiler, node, var: nil, access: var, seq_head: false)
-            new(compiler, node, var, access, seq_head).do_compile
+          def initialize(compiler, var: nil, access: var, seq_head: false)
+            super(compiler)
+            @var = var
+            @access = access
+            @seq_head = seq_head
           end
 
           protected
@@ -17,13 +20,6 @@ module RuboCop
           attr_reader :access, :seq_head
 
           private
-
-          def initialize(compiler, node, var, access, seq_head)
-            super(compiler, node)
-            @var = var
-            @access = access
-            @seq_head = seq_head
-          end
 
           def visit_other_type
             value = compiler.compile_as_atom( node)

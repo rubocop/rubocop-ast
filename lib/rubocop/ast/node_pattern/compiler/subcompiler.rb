@@ -7,6 +7,19 @@ module RuboCop
         # Base class for subcompilers
         # Implements visitor pattern
         class Subcompiler
+          def initialize(compiler)
+            @compiler = compiler
+            @node = nil
+          end
+
+          def compile(node)
+            prev = @node
+            @node = node
+            do_compile
+          ensure
+            @node = prev
+          end
+
           # @api private
           def do_compile
             callback(self.class.registry.fetch(node.type, :visit_other_type))
@@ -17,19 +30,6 @@ module RuboCop
           attr_reader :compiler, :node
 
           private
-
-          def initialize(compiler, node = nil)
-            @compiler = compiler
-            @node = node
-          end
-
-          def compile(node)
-            prev = @node
-            @node = node
-            do_compile
-          ensure
-            @node = prev
-          end
 
           def callback(method)
             send(method)

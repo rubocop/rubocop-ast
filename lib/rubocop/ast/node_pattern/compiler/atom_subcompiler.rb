@@ -7,10 +7,6 @@ module RuboCop
         # Generates code that evaluates to a value (Ruby object)
         # This value responds to `===`.
         class AtomSubcompiler < Subcompiler
-          def self.compile(compiler, node)
-            new(compiler, node).do_compile
-          end
-
           private
 
           def visit_other_type

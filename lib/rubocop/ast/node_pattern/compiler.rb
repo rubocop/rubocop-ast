@@ -15,8 +15,7 @@ module RuboCop
           @positional_parameters = 0 # highest % (param) number seen
           @named_parameters = Set[] # keyword parameters
           @binding = Binding.new # bound variables
-
-          super
+          @atom_subcompiler = self.class::AtomSubcompiler.new(self)
         end
 
         def_delegators :binding, :bind, :union_bind
@@ -44,12 +43,12 @@ module RuboCop
           end
         end
 
-        def compile_as_atom(*args, **options)
-          self.class::AtomSubcompiler.compile(self, *args, **options)
+        def compile_as_atom(node)
+          @atom_subcompiler.compile(node)
         end
 
-        def compile_as_node_pattern(*args, **options)
-          self.class::NodePatternSubcompiler.compile(self, *args, **options)
+        def compile_as_node_pattern(node, **options)
+          self.class::NodePatternSubcompiler.new(self, **options).compile(node)
         end
 
         def compile_sequence(*args, **options)
