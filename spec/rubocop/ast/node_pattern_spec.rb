@@ -1829,6 +1829,24 @@ RSpec.describe RuboCop::AST::NodePattern do
       it_behaves_like 'invalid'
     end
 
+    context 'with empty union subsequence in seq head' do
+      let(:pattern) { '({foo|})' }
+
+      it_behaves_like 'invalid'
+    end
+
+    context 'with unsupported subsequence in seq head within union' do
+      let(:pattern) { '({foo bar+})' }
+
+      it_behaves_like 'invalid'
+    end
+
+    context 'with variadic unions where not supported' do
+      let(:pattern) { '(_ [_ {foo | ...}])' }
+
+      it_behaves_like 'invalid'
+    end
+
     context 'with empty intersection' do
       let(:pattern) { '[]' }
 

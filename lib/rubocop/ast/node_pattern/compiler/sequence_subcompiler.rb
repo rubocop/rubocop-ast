@@ -100,6 +100,55 @@ module RuboCop
             end
           end
 
+          def visit_union
+            return visit_other_type if node.arity == 1
+
+            forks = compiler.each_union(node.children).to_h do |child|
+              subsequence_terms = child.is_a?(Node::Subsequence) ? child.children : [child]
+              fork = dup
+              code = fork.compile_terms(subsequence_terms, @remaining_arity)
+              @in_sync = false if @cur_index != :variadic_mode
+              [fork, code]
+            end
+            preserve_union_start(forks)
+            merge_forks!(forks)
+            expr = forks.values.join(" || \n")
+            "(#{expr})"
+          end
+
+          # Modifies in place `forks` to insure that `cur_{child|index}_var` are ok
+          def preserve_union_start(forks)
+            return if @cur_index != :variadic_mode || forks.size <= 1
+
+            compiler.with_temp_variables do |union_reset|
+              cur = "(#{union_reset} = [#{@cur_child_var}, #{@cur_index_var}]) && "
+              reset = "(#{@cur_child_var}, #{@cur_index_var} = #{union_reset}) && "
+              forks.transform_values! do |code|
+                code = "#{cur}#{code}"
+                cur = reset
+                code
+              end
+            end
+          end
+
+          # Modifies in place `forks`
+          # Syncs our state
+          def merge_forks!(forks)
+            sub_compilers = forks.keys
+            if !node.variadic? # e.g {a b | c d}
+              @cur_index = sub_compilers.first.cur_index # all cur_index should be equivalent
+            elsif use_index_from_end
+              # nothing to do
+            else
+              # can't use index from end, so we must sync all forks
+              @cur_index = :variadic_mode
+              forks.each do |sub, code|
+                sub.sync { |sync_code| forks[sub] = "#{code} && #{sync_code}" }
+              end
+            end
+            @in_sync = sub_compilers.all? { |sub| sub.in_sync }
+          end
+
           def compile_case(when_branches, else_code)
             <<~RUBY
               case
@@ -149,7 +198,12 @@ module RuboCop
           def compile_and_advance(term)
             case @cur_index
             when :variadic_mode
-              "#{term} && (#{compile_loop_advance}; true)"
+              if use_index_from_end
+                @in_sync = false
+                term
+              else
+                "#{term} && (#{compile_loop_advance}; true)"
+              end
             when :seq_head
               # @in_sync = false # already the case
               @cur_index = 0
@@ -207,30 +261,46 @@ module RuboCop
             code
           end
 
-          def compile_terms
-            arities = remaining_arities
+          protected
+
+          attr_reader :in_sync, :cur_index
+
+          def compile_terms(children = @seq.children, last_arity = 0..0)
+            arities = remaining_arities(children, last_arity)
             total_arity = arities.shift
-            terms = @seq.children.map do |child|
+            guard = compile_child_nb_guard(total_arity)
+            terms = children.map do |child|
               @remaining_arity = arities.shift
               handle_prev { compile(child) }
             end
             [
-              compile_child_nb_guard(total_arity),
+              guard,
               terms
             ].join(" &&\n")
           end
 
+          # yield `sync_code` iff not already in sync
+          def sync
+            return if @in_sync
+
+            code = compile_loop_advance("= #{compile_cur_index}")
+            @in_sync = true
+            yield "(#{code}; true)"
+          end
+
+          private
+
           # @return [Array<Range>] total arities (as Ranges) of remaining children nodes
           # E.g. For sequence `(_  _? <_ _>)`, arities are: 1, 0..1, 2
           # and remaining arities are: 3..4, 2..3, 2..2, 0..0
-          def remaining_arities
-            last = 0..0
-            arities = @seq.children
-                          .reverse
-                          .map(&:arity_range)
-                          .map { |r| last = last.begin + r.begin..last.max + r.max }
-                          .reverse!
-            arities.push 0..0
+          def remaining_arities(children, last_arity)
+            last = last_arity
+            arities = children
+                      .reverse
+                      .map(&:arity_range)
+                      .map { |r| last = last.begin + r.begin..last.max + r.max }
+                      .reverse!
+            arities.push last_arity
           end
 
           # @return [String] code that evaluates to `false` if the matched arity is too small
@@ -250,7 +320,16 @@ module RuboCop
           end
 
           def compile_remaining
-            "#{@seq_var}.children.size - #{@cur_index_var}"
+            offset = case @cur_index
+            when :seq_head
+              ' + 1'
+            when :variadic_mode
+              " - #{@cur_index_var}"
+            else
+              raise "unexpected compiling condition #{@cur_index}"
+            end
+
+            "#{@seq_var}.children.size #{offset}"
           end
 
           def compile_max_matched
@@ -283,13 +362,16 @@ module RuboCop
           # Note: assumes `@cur_index != :seq_head`. Node types using `within_loop` must
           # have `def in_sequence_head; :raise; end`
           def within_loop
-            return yield if @in_sync
-
-            init = compile_loop_advance("= #{compile_cur_index}")
-            @in_sync = true
-            @cur_index = :variadic_mode
-            "(#{init}; true) && #{yield}"
+            sync do |sync_code|
+              @cur_index = :variadic_mode
+              "#{sync_code} && #{yield}"
+            end || yield
           ensure
+            use_index_from_end
+          end
+
+          # returns truthy iff `@cur_index` switched to relative from end mode (i.e. < 0)
+          def use_index_from_end
             if @remaining_arity.begin == @remaining_arity.max
               @cur_index = -@remaining_arity.begin - DELTA
             end
@@ -308,14 +390,13 @@ module RuboCop
           end
 
           def compile_child_nb_guard(arity_range)
-            # The -1 are because of seq_head
             case arity_range.max
             when Float::INFINITY
-              "#{@seq_var}.children.size >= #{arity_range.begin - 1}"
+              "#{compile_remaining} >= #{arity_range.begin}"
             when arity_range.begin
-              "#{@seq_var}.children.size == #{arity_range.begin - 1}"
+              "#{compile_remaining} == #{arity_range.begin}"
             else
-              "(#{arity_range.begin - 1}..#{arity_range.max - 1}).cover?(#{@seq_var}.children.size)"
+              "(#{arity_range.begin}..#{arity_range.max}).cover?(#{compile_remaining})"
             end
           end
         end
