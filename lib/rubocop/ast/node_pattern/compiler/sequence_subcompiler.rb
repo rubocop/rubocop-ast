@@ -68,7 +68,7 @@ module RuboCop
                        { access: "#{@seq_var}.children[#{idx}]" }
                      end
 
-            term = compiler.node_pattern.compile(compiler, node, **access)
+            term = compiler.compile_as_node_pattern( node, **access)
             compile_and_advance(term)
           end
 
@@ -109,7 +109,7 @@ module RuboCop
 
           def compile_any_order_branches(matched_var)
             node.term_nodes.map.with_index do |node, i|
-              code = compiler.node_pattern.compile(compiler, node, var: cur_child_var, seq_head: false)
+              code = compiler.compile_as_node_pattern( node, var: cur_child_var, seq_head: false)
               var = "#{matched_var}[#{i}]"
               "when !#{var} && #{code} then #{var} = true"
             end

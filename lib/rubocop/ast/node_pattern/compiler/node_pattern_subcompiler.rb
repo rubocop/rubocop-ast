@@ -26,7 +26,7 @@ module RuboCop
           end
 
           def visit_other_type
-            value = compiler.atom.compile(compiler, node)
+            value = compiler.compile_as_atom( node)
             compile_value(value)
           end
 
@@ -37,7 +37,7 @@ module RuboCop
 
           def visit_ascend
             compiler.with_temp_variables do |ascend|
-              term = compiler.node_pattern.compile(compiler, node.child, var: ascend)
+              term = compiler.compile_as_node_pattern( node.child, var: ascend)
               "(#{ascend} = #{access_node}) && (#{ascend} = #{ascend}.parent) && #{term}"
             end
           end
@@ -45,7 +45,7 @@ module RuboCop
           def visit_descend
             compiler.with_temp_variables { |descendant| <<~RUBY.chomp }
               ::RuboCop::AST::NodePattern.descend(#{access}).any? do |#{descendant}|
-                #{compiler.node_pattern.compile(compiler, node.child, var: descendant)}
+                #{compiler.compile_as_node_pattern( node.child, var: descendant)}
               end
             RUBY
           end
@@ -104,7 +104,7 @@ module RuboCop
 
           def visit_sequence
             multiple_access(:sequence) do |var|
-              term = compiler.sequence.compile(compiler, node, var: var)
+              term = compiler.compile_sequence( node, var: var)
               "#{compile_guard_clause} && #{term}"
             end
           end
@@ -114,7 +114,7 @@ module RuboCop
           # @param [Array<Node>, nil]
           # @return [String, nil]
           def compile_args(arg_list, first: nil)
-            args = arg_list&.map { |arg| compiler.atom.compile(compiler, arg) }
+            args = arg_list&.map { |arg| compiler.compile_as_atom( arg) }
             args = [first, *args] if first
             "(#{args.join(', ')})" if args
           end

@@ -44,16 +44,16 @@ module RuboCop
           end
         end
 
-        def atom
-          self.class::AtomSubcompiler
+        def compile_as_atom(*args, **options)
+          self.class::AtomSubcompiler.compile(self, *args, **options)
         end
 
-        def node_pattern
-          self.class::NodePatternSubcompiler
+        def compile_as_node_pattern(*args, **options)
+          self.class::NodePatternSubcompiler.compile(self, *args, **options)
         end
 
-        def sequence
-          self.class::SequenceSubcompiler
+        def compile_sequence(*args, **options)
+          self.class::SequenceSubcompiler.compile(self, *args, **options)
         end
 
         def parser

@@ -60,7 +60,7 @@ module RuboCop
         @pattern = str
         @ast = compiler.parser.new.parse(str)
         @compiler = compiler
-        @match_code = @compiler.node_pattern.compile(@compiler, @ast, var: VAR)
+        @match_code = @compiler.compile_as_node_pattern(@ast, var: VAR)
         @cache = {}
       end
 
