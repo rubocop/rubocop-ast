@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
-require_relative 'lexer.rex'
+begin
+  require_relative 'lexer.rex'
+rescue LoadError
+  msg = '*** You must run `rake generate` to generate the lexer and the parser ***'
+  puts '*' * msg.length, msg, '*' * msg.length
+  raise
+end
 
 module RuboCop
   module AST
