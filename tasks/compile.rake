@@ -45,7 +45,7 @@ rule '.racc.rb' => '.y' do |t|
 end
 
 desc 'Compile pattern to Ruby code for debugging purposes'
-task :compile do
+task compile: :generate do
   if (pattern = ARGV[1])
     require_relative '../lib/rubocop/ast'
     puts ::RuboCop::AST::NodePattern.new(pattern).compile_as_lambda
@@ -57,7 +57,7 @@ task :compile do
 end
 
 desc 'Parse pattern to AST for debugging purposes'
-task :parse do
+task parse: :generate do
   if (pattern = ARGV[1])
     require_relative '../lib/rubocop/ast'
     puts ::RuboCop::AST::NodePattern::Parser.new.parse(pattern)
@@ -69,7 +69,7 @@ task :parse do
 end
 
 desc 'Tokens of pattern for debugging purposes'
-task :tokenize do
+task tokenize: :generate do
   if (pattern = ARGV[1])
     require_relative '../lib/rubocop/ast'
     puts ::RuboCop::AST::NodePattern::Parser::WithMeta.new.tokenize(pattern).last
@@ -81,7 +81,7 @@ task :tokenize do
 end
 
 desc 'Test pattern against ruby code'
-task :test_pattern do
+task test_pattern: :generate do
   if (pattern = ARGV[1]) && (ruby = ARGV[2])
     require_relative '../lib/rubocop/ast'
     require 'parser/current'
