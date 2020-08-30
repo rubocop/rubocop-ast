@@ -42,7 +42,9 @@ module RuboCop
             @captures = captures_before
             yield node
             captures_after ||= @captures
-            raise Invalid, 'each branch must have same # of captures' if captures_after != @captures
+            if captures_after != @captures
+              raise Invalid, 'each branch must have same number of captures'
+            end
           end
         end
 
