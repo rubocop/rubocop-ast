@@ -68,15 +68,6 @@ module RuboCop
         # Subclasses for specific node types
         ###
 
-        # Registry
-        MAP = Hash.new(Node)
-        def self.setup_registry
-          %i[sequence repetition rest capture predicate any_order function_call].each do |type|
-            MAP[type] = const_get(type.to_s.gsub(/(_|^)(.)/) { Regexp.last_match(2).upcase })
-          end
-          MAP.freeze
-        end
-
         # Node class for `$something`
         class Capture < Node
           # Delegate most introspection methods to it's only child
@@ -188,7 +179,16 @@ module RuboCop
           end
         end
 
-        setup_registry
+        # Registry
+        MAP = Hash.new(Node).merge!(
+          sequence: Sequence,
+          repetition: Repetition,
+          rest: Rest,
+          capture: Capture,
+          predicate: Predicate,
+          any_order: AnyOrder,
+          function_call: FunctionCall
+        ).freeze
       end
     end
   end
