@@ -21,7 +21,7 @@ module RuboCop
           @atom_subcompiler = self.class::AtomSubcompiler.new(self)
         end
 
-        def_delegators :binding, :bind, :union_bind
+        def_delegators :binding, :bind
 
         def positional_parameter(number)
           @positional_parameters = number if number > @positional_parameters
@@ -33,19 +33,10 @@ module RuboCop
           name
         end
 
-        def enforce_same_captures(enum)
-          return to_enum __method__, enum unless block_given?
-
-          captures_before = captures_after = nil
-          enum.each do |node|
-            captures_before ||= @captures
-            @captures = captures_before
-            yield node
-            captures_after ||= @captures
-            if captures_after != @captures
-              raise Invalid, 'each branch must have same number of captures'
-            end
-          end
+        # Enumerates `enum` while keeping track of state accross
+        # union branches (captures and unification).
+        def each_union(enum, &block)
+          enforce_same_captures(binding.union_bind(enum), &block)
         end
 
         def compile_as_atom(node)
@@ -86,6 +77,21 @@ module RuboCop
         end
 
         private
+
+        def enforce_same_captures(enum)
+          return to_enum __method__, enum unless block_given?
+
+          captures_before = captures_after = nil
+          enum.each do |node|
+            captures_before ||= @captures
+            @captures = captures_before
+            yield node
+            captures_after ||= @captures
+            if captures_after != @captures
+              raise Invalid, 'each branch must have same number of captures'
+            end
+          end
+        end
 
         def new_capture
           @captures

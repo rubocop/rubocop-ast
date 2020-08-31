@@ -63,8 +63,7 @@ module RuboCop
 
           def visit_union
             multiple_access(:union) do
-              enum = compiler.union_bind(node.children)
-              terms = compiler.enforce_same_captures(enum)
+              terms = compiler.each_union(node.children)
                               .map { |child| compile(child) }
 
               "(#{terms.join(' || ')})"
