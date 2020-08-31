@@ -26,9 +26,9 @@ module RuboCop
           1
         end
 
-        # Return [Symbol] either :ok, :raise, or :insert_wildcard
+        # @return [Array<Nodes>, nil] replace node with result, or `nil` if no change requested.
         def in_sequence_head
-          :ok
+          nil
         end
 
         ###
@@ -64,6 +64,12 @@ module RuboCop
         INT_TO_RANGE = Hash.new { |h, k| h[k] = k..k }
         private_constant :INT_TO_RANGE
 
+        module ForbidInSeqHead
+          def in_sequence_head
+            raise NodePattern::Invalid, "A sequence can not start with #{children.first}"
+          end
+        end
+
         ###
         # Subclasses for specific node types
         ###
@@ -71,7 +77,7 @@ module RuboCop
         # Node class for `$something`
         class Capture < Node
           # Delegate most introspection methods to it's only child
-          def_delegators :child, :arity, :rest?, :in_sequence_head
+          def_delegators :child, :arity, :rest?
 
           def capture?
             true
@@ -80,23 +86,25 @@ module RuboCop
           def nb_captures
             1 + super
           end
+
+          def in_sequence_head # ($...) => (_ $...)
+            wildcard, original_child = child.in_sequence_head
+            return unless original_child
+
+            [wildcard, self]
+          end
         end
 
         # Node class for `(type first second ...)`
         class Sequence < Node
+          include ForbidInSeqHead
+
           def initialize(type, children = [], properties = {})
-            case children.first.in_sequence_head
-            when :insert_wildcard
-              children = [Node.new(:wildcard), *children]
-            when :raise
-              raise NodePattern::Invalid, "A sequence can not start with #{children.first}"
+            if (replace = children.first.in_sequence_head)
+              children = [*replace, *children[1..-1]]
             end
 
             super
-          end
-
-          def in_sequence_head
-            :raise
           end
         end
 
@@ -114,6 +122,8 @@ module RuboCop
 
         # Node class for `int+`
         class Repetition < Node
+          include ForbidInSeqHead
+
           def operator
             children[1]
           end
@@ -126,10 +136,6 @@ module RuboCop
 
           def arity
             ARITIES[operator]
-          end
-
-          def in_sequence_head
-            :raise
           end
         end
 
@@ -147,12 +153,14 @@ module RuboCop
           end
 
           def in_sequence_head
-            :insert_wildcard
+            [Node.new(:wildcard), self]
           end
         end
 
         # Node class for `<int str ...>`
         class AnyOrder < Node
+          include ForbidInSeqHead
+
           ARITIES = Hash.new { |h, k| h[k] = k - 1..Float::INFINITY }
           private_constant :ARITIES
 
@@ -172,10 +180,6 @@ module RuboCop
             return children.size unless ends_with_rest?
 
             ARITIES[children.size]
-          end
-
-          def in_sequence_head
-            :raise
           end
         end
 
