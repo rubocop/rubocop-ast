@@ -364,8 +364,12 @@ module RuboCop
           def within_loop
             sync do |sync_code|
               @cur_index = :variadic_mode
+              @max_matched = compile_max_matched
               "#{sync_code} && #{yield}"
-            end || yield
+            end || begin
+              @max_matched = compile_max_matched
+              yield
+            end
           ensure
             use_index_from_end
           end
@@ -383,7 +387,7 @@ module RuboCop
 
           def compile_loop(term)
             <<~RUBY
-              (#{compile_max_matched}).times do
+              (#{@max_matched}).times do
                 break #{compile_min_check} unless #{term}
               end \\
             RUBY
