@@ -15,7 +15,10 @@ Gem::Specification.new do |s|
 
   s.email = 'rubocop@googlegroups.com'
   s.files = `git ls-files lib LICENSE.txt README.md`
-            .split($RS)
+            .split($RS) + %w[
+              lib/rubocop/ast/node_pattern/parser.racc.rb
+              lib/rubocop/ast/node_pattern/lexer.rex.rb
+            ]
   s.extra_rdoc_files = ['LICENSE.txt', 'README.md']
   s.homepage = 'https://github.com/rubocop-hq/rubocop-ast'
   s.licenses = ['MIT']
@@ -30,6 +33,8 @@ Gem::Specification.new do |s|
   }
 
   s.add_runtime_dependency('parser', '>= 2.7.1.5')
+
+  s.add_runtime_dependency('strscan', '>= 1.0.0') # Ruby 2.4 doesn't provide `captures`
 
   s.add_development_dependency('bundler', '>= 1.15.0', '< 3.0')
 
