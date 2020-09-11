@@ -61,6 +61,16 @@ RSpec.describe RuboCop::AST::NodePattern::Parser do
       )
     end
 
+    it 'parses unions of literals as a set' do
+      expect_parsing(
+        s(:sequence, s(:set, s(:symbol, :a), s(:number, 42), s(:string, 'hello'))),
+        '({:a 42 "hello"})',
+        ' ^               begin (set)
+        |               ^ end (set)
+        |     ~~          expression (set/1.number)'
+      )
+    end
+
     it 'generates specialized nodes' do
       source_file = Parser::Source::Buffer.new('(spec)', source: '($_)')
       ast = parser.parse(source_file)

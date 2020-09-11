@@ -36,6 +36,11 @@ module RuboCop
             compiler.positional_parameter(node.child)
           end
 
+          def visit_set
+            set = node.children.map(&:child).to_set.freeze
+            NodePattern::Sets[set]
+          end
+
           # Assumes other types are node patterns.
           def visit_other_type
             compiler.with_temp_variables do |compare|

@@ -8,6 +8,9 @@ module RuboCop
         extend Forwardable
         include ::RuboCop::AST::Descendence
 
+        MATCHES_WITHIN_SET = %i[symbol number string].to_set.freeze
+        private_constant :MATCHES_WITHIN_SET
+
         ###
         # To be overriden by subclasses
         ###
@@ -53,6 +56,12 @@ module RuboCop
         # @return [Boolean] returns true iff matches variable number of elements
         def variadic?
           arity.is_a?(Range)
+        end
+
+        # @return [Boolean] returns true for nodes having a Ruby literal equivalent
+        # that matches withing a Set (e.g. `42`, `:sym` but not `/regexp/`)
+        def matches_within_set?
+          MATCHES_WITHIN_SET.include?(type)
         end
 
         # @return [Range] arity as a Range
