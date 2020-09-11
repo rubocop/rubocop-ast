@@ -36,4 +36,28 @@ RSpec.describe RuboCop::AST::NodePattern::Lexer do
         %i[( array sym $ int + x )]
     end
   end
+
+  [
+    /test/,
+    /[abc]+\/()?/x, # rubocop:disable Style/RegexpLiteral
+    /back\\slash/
+  ].each do |regexp|
+    context "when given a regexp #{regexp.inspect}" do
+      let(:source) { regexp.inspect }
+
+      it 'round trips' do
+        token = tokens.first
+        value = token.last.first
+        expect(value.inspect).to eq regexp.inspect
+      end
+    end
+  end
+
+  context 'when given a regexp ending with a backslash' do
+    let(:source) { '/tricky\\/' }
+
+    it 'does not lexes it properly' do
+      expect { tokens }.to raise_error(RuboCop::AST::NodePattern::LexerRex::ScanError)
+    end
+  end
 end

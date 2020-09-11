@@ -23,6 +23,7 @@ module RuboCop
           end
           alias visit_number visit_symbol
           alias visit_string visit_symbol
+          alias visit_regexp visit_symbol
 
           def visit_const
             node.child

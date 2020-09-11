@@ -194,6 +194,13 @@ Branches of the union can contain more than one term:
 If all the branches have a single term, you can omit the `|`, so `{int | float}` can be
 simplified to `{int float}`.
 
+When checking for symbols or string, you can use regexp literals for a similar effect:
+
+[source,sh]
+----
+(send _ /to_s|inspect/) # => matches calls to `to_s` or `inspect`
+----
+
 == `[]` for "AND"
 
 Imagine you want to check if the number is `odd?` and also positive numbers:

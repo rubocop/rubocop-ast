@@ -18,6 +18,14 @@ module RuboCop
       class Lexer < LexerRex
         Error = ScanError
 
+        REGEXP_OPTIONS = {
+          'i' => ::Regexp::IGNORECASE,
+          'm' => ::Regexp::MULTILINE,
+          'x' => ::Regexp::EXTENDED,
+          'o' => 0
+        }.freeze
+        private_constant :REGEXP_OPTIONS
+
         attr_reader :source_buffer, :comments, :tokens
 
         def initialize(source)
@@ -39,6 +47,13 @@ module RuboCop
 
         def emit_comment
           nil
+        end
+
+        def emit_regexp
+          body, options = ss.captures
+          flag = options.each_char.map { |c| REGEXP_OPTIONS[c] }.sum
+
+          emit(:tREGEXP) { Regexp.new(body, flag) }
         end
 
         def do_parse

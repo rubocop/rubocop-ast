@@ -8,6 +8,7 @@
 * [#109](https://github.com/rubocop-hq/rubocop-ast/pull/109): Add `NodePattern` debugging rake tasks: `test_pattern`, `compile`, `parse`. See also [this app](https://nodepattern.herokuapp.com) ([@marcandre][])
 * [#110](https://github.com/rubocop-hq/rubocop-ast/pull/110): Add `NodePattern` support for multiple terms unions. ([@marcandre][])
 * [#111](https://github.com/rubocop-hq/rubocop-ast/pull/111): Optimize some `NodePattern`s by using `Set`s. ([@marcandre][])
+* [#112](https://github.com/rubocop-hq/rubocop-ast/pull/112): Add `NodePattern` support for Regexp literals. ([@marcandre][])
 
 ## 0.6.0 (2020-09-26)
 
