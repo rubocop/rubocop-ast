@@ -1,7 +1,7 @@
 class RuboCop::AST::NodePattern::Parser
 options no_result_var
 token tSYMBOL tNUMBER tSTRING tWILDCARD tPARAM_NAMED tPARAM_CONST tPARAM_NUMBER
-      tFUNCTION_CALL tPREDICATE tNODE_TYPE tARG_LIST tUNIFY
+      tFUNCTION_CALL tPREDICATE tNODE_TYPE tARG_LIST tUNIFY tREGEXP
 rule
   node_pattern                               # @return Node
     : node_pattern_no_union
@@ -28,6 +28,7 @@ rule
     | tPARAM_CONST                           { emit_atom :const, *val }
     | tPARAM_NAMED                           { emit_atom :named_parameter, *val }
     | tPARAM_NUMBER                          { emit_atom :positional_parameter, *val }
+    | tREGEXP                                { emit_atom :regexp, *val }
     | tWILDCARD                              { emit_atom :wildcard, *val }
     | tUNIFY                                 { emit_atom :unify, *val }
     ;

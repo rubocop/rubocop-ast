@@ -1896,6 +1896,16 @@ RSpec.describe RuboCop::AST::NodePattern do
     end
   end
 
+  describe 'regexp' do
+    it 'matches symbols or strings' do
+      expect('(_ _ $/abc|def|foo/i ...)').to match_codes(
+        'Foo(42)', 'foo(42)'
+      ).and not_match_codes(
+        'bar(42)'
+      )
+    end
+  end
+
   describe 'bad syntax' do
     context 'with empty parentheses' do
       let(:pattern) { '()' }
