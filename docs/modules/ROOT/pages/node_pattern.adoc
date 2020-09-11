@@ -173,7 +173,7 @@ You can add `+...+` before the closing bracket to allow for additional parameter
 This will match both our examples, but not `sum(1.0, 2)` or `sum(2)`,
 since the first node in the brackets is found, but not the second (`int`).
 
-== `{}` for "OR"
+== `{}` for "OR" (union)
 
 Lets make it a bit more complex and introduce floats:
 
@@ -185,7 +185,14 @@ $ ruby-parse -e '1.0'
 (float 1.0)
 ----
 
-* `({int float} _)` - int or float types, no matter the value
+* `({int | float} _)` - int or float types, no matter the value
+
+Branches of the union can contain more than one term:
+
+* `(array {int int | range})` - matches an array with two integers or a single range element
+
+If all the branches have a single term, you can omit the `|`, so `{int | float}` can be
+simplified to `{int float}`.
 
 == `[]` for "AND"
 

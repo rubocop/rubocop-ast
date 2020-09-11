@@ -48,6 +48,19 @@ RSpec.describe RuboCop::AST::NodePattern::Parser do
       )
     end
 
+    it 'expands ... in sequence head deep inside unions' do
+      rest = s(:rest, :'...')
+      expect_parsing(
+        s(:sequence, s(:union,
+                       s(:node_type, :a),
+                       s(:subsequence, s(:node_type, :b), rest),
+                       s(:subsequence, s(:wildcard), rest, s(:node_type, :c)),
+                       s(:subsequence, s(:wildcard), s(:capture, rest)))),
+        '({a | b ... | ... c | $...})',
+        ''
+      )
+    end
+
     it 'generates specialized nodes' do
       source_file = Parser::Source::Buffer.new('(spec)', source: '($_)')
       ast = parser.parse(source_file)

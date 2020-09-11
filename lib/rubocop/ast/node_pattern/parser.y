@@ -4,8 +4,12 @@ token tSYMBOL tNUMBER tSTRING tWILDCARD tPARAM_NAMED tPARAM_CONST tPARAM_NUMBER
       tFUNCTION_CALL tPREDICATE tNODE_TYPE tARG_LIST tUNIFY
 rule
   node_pattern                               # @return Node
+    : node_pattern_no_union
+    | union                                  { enforce_unary(val[0]) }
+    ;
+
+  node_pattern_no_union                      # @return Node
     : '(' variadic_pattern_list ')'          { emit_list :sequence, *val }
-    | '{' node_pattern_list '}'              { emit_list :union, *val }
     | '[' node_pattern_list ']'              { emit_list :intersection, *val }
     | '!' node_pattern                       { emit_unary_op :negation, *val }
     | '^' node_pattern                       { emit_unary_op :ascend, *val }
@@ -28,8 +32,13 @@ rule
     | tUNIFY                                 { emit_atom :unify, *val }
     ;
 
+  union                                      # @return Node
+    : '{' separated_variadic_patterns '}'    { emit_union(*val) }
+    ;
+
   variadic_pattern                           # @return Node
-    : node_pattern
+    : node_pattern_no_union
+    | union
     | node_pattern repetition
       {
         main, repeat_t = val
@@ -83,5 +92,11 @@ rule
   variadic_pattern_list                      # @return Array<Node>
     : variadic_pattern                       { val }
     | variadic_pattern_list variadic_pattern { val[0] << val[1] }
+    ;
+
+  separated_variadic_patterns                # @return Array<Array<Node>>
+    :                                        { [[]] }
+    | separated_variadic_patterns variadic_pattern { val[0].last << val[1]; val[0] }
+    | separated_variadic_patterns '|'        { val[0] << [] }
     ;
 end

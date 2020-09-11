@@ -6,6 +6,7 @@
 
 * [#105](https://github.com/rubocop-hq/rubocop-ast/pull/105): `NodePattern` compiler [complete rewrite](https://docs.rubocop.org/rubocop-ast/node_pattern_compiler.html). Add support for multiple variadic terms. ([@marcandre][])
 * [#109](https://github.com/rubocop-hq/rubocop-ast/pull/109): Add `NodePattern` debugging rake tasks: `test_pattern`, `compile`, `parse`. See also [this app](https://nodepattern.herokuapp.com) ([@marcandre][])
+* [#110](https://github.com/rubocop-hq/rubocop-ast/pull/110): Add `NodePattern` support for multiple terms unions. ([@marcandre][])
 
 ## 0.6.0 (2020-09-26)
 

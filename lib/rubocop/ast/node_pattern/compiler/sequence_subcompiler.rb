@@ -16,6 +16,9 @@ module RuboCop
         # rubocop:disable Metrics/ClassLength
         class SequenceSubcompiler < Subcompiler
           DELTA = 1
+          POSITIVE = :positive?.to_proc
+          private_constant :POSITIVE
+
           # Calls `compile_sequence`; the actual `compile` method
           # will be used for the different terms of the sequence.
           # The only case of re-entrant call to `compile` is `visit_capture`
@@ -96,6 +99,21 @@ module RuboCop
                 RUBY
               end
             end
+          end
+
+          def visit_union
+            return visit_other_type if node.arity == 1
+
+            # The way we implement complex unions is by "forking", i.e.
+            # making a copy of the present subcompiler to compile each branch
+            # of the union.
+            # We then use the resulting state of the subcompilers to
+            # reset ourselves.
+            forks = compile_union_forks
+            preserve_union_start(forks)
+            merge_forks!(forks)
+            expr = forks.values.join(" || \n")
+            "(#{expr})"
           end
 
           def compile_case(when_branches, else_code)
@@ -229,6 +247,12 @@ module RuboCop
             yield code
           end
 
+          # @api private
+          attr_reader :in_sync, :cur_index
+
+          public :in_sync
+          protected :cur_index, :compile_terms, :sync
+
           # @return [Array<Range>] total arities (as Ranges) of remaining children nodes
           # E.g. For sequence `(_  _? <_ _>)`, arities are: 1, 0..1, 2
           # and remaining arities are: 3..4, 2..3, 2..2, 0..0
@@ -259,7 +283,22 @@ module RuboCop
           end
 
           def compile_remaining
-            "#{@seq_var}.children.size - #{@cur_index_var}"
+            offset = case @cur_index
+                     when :seq_head
+                       ' + 1'
+                     when :variadic_mode
+                       " - #{@cur_index_var}"
+                     when 0
+                       ''
+                     when POSITIVE
+                       " - #{@cur_index}"
+                     else
+                       # odd compiling condition, result may not be expected
+                       # E.g: `(... {a | b c})` => the b c branch can never match
+                       return - (@cur_index + DELTA)
+                     end
+
+            "#{@seq_var}.children.size #{offset}"
           end
 
           def compile_max_matched
@@ -320,15 +359,58 @@ module RuboCop
           end
 
           def compile_child_nb_guard(arity_range)
-            # The -1 are because of seq_head
             case arity_range.max
             when Float::INFINITY
-              "#{@seq_var}.children.size >= #{arity_range.begin - 1}"
+              "#{compile_remaining} >= #{arity_range.begin}"
             when arity_range.begin
-              "#{@seq_var}.children.size == #{arity_range.begin - 1}"
+              "#{compile_remaining} == #{arity_range.begin}"
             else
-              "(#{arity_range.begin - 1}..#{arity_range.max - 1}).cover?(#{@seq_var}.children.size)"
+              "(#{arity_range.begin}..#{arity_range.max}).cover?(#{compile_remaining})"
             end
+          end
+
+          # @return [Hash] of {subcompiler => code}
+          def compile_union_forks
+            compiler.each_union(node.children).map do |child|
+              subsequence_terms = child.is_a?(Node::Subsequence) ? child.children : [child]
+              fork = dup
+              code = fork.compile_terms(subsequence_terms, @remaining_arity)
+              @in_sync = false if @cur_index != :variadic_mode
+              [fork, code]
+            end.to_h # we could avoid map if RUBY_VERSION >= 2.6...
+          end
+
+          # Modifies in place `forks` to insure that `cur_{child|index}_var` are ok
+          def preserve_union_start(forks)
+            return if @cur_index != :variadic_mode || forks.size <= 1
+
+            compiler.with_temp_variables do |union_reset|
+              cur = "(#{union_reset} = [#{@cur_child_var}, #{@cur_index_var}]) && "
+              reset = "(#{@cur_child_var}, #{@cur_index_var} = #{union_reset}) && "
+              forks.transform_values! do |code|
+                code = "#{cur}#{code}"
+                cur = reset
+                code
+              end
+            end
+          end
+
+          # Modifies in place `forks`
+          # Syncs our state
+          def merge_forks!(forks)
+            sub_compilers = forks.keys
+            if !node.variadic? # e.g {a b | c d}
+              @cur_index = sub_compilers.first.cur_index # all cur_index should be equivalent
+            elsif use_index_from_end
+              # nothing to do
+            else
+              # can't use index from end, so we must sync all forks
+              @cur_index = :variadic_mode
+              forks.each do |sub, code|
+                sub.sync { |sync_code| forks[sub] = "#{code} && #{sync_code}" }
+              end
+            end
+            @in_sync = sub_compilers.all?(&:in_sync)
           end
         end
         # rubocop:enable Metrics/ClassLength
