@@ -1647,14 +1647,22 @@ RSpec.describe RuboCop::AST::NodePattern do
 
       context 'with an ellipsis inside and outside' do
         let(:pattern) { '(array <(str $_) (sym $_) ...> ...)' }
+        let(:captured_vals) { ['world', :hello] }
 
-        it_behaves_like 'invalid'
+        it_behaves_like 'multiple capture'
       end
 
       context 'doubled with ellipsis' do
-        let(:pattern) { '(array <(str $_) ...> <(str $_) ...>)' }
+        let(:pattern) { '(array <(sym $_) ...> <(int $_) ...>)' }
+        let(:captured_vals) { [:hello, 3] }
 
-        it_behaves_like 'invalid'
+        it_behaves_like 'multiple capture'
+      end
+
+      context 'doubled with ellipsis in wrong order' do
+        let(:pattern) { '(array <(int $_) ...> <(sym $_) ...>)' }
+
+        it_behaves_like 'nonmatching'
       end
 
       context 'nested' do
@@ -1684,9 +1692,9 @@ RSpec.describe RuboCop::AST::NodePattern do
       end
 
       context 'with an ellipsis in the same sequence' do
-        let(:pattern) { "(array int #{symbol} ...)" }
+        let(:pattern) { "(array sym #{symbol} ...)" }
 
-        it_behaves_like 'invalid'
+        it { expect(pattern).to match_code(ruby) }
       end
     end
 
@@ -1892,9 +1900,10 @@ RSpec.describe RuboCop::AST::NodePattern do
     end
 
     context 'with doubled ellipsis' do
+      let(:ruby) { 'foo' }
       let(:pattern) { '(send ... ...)' }
 
-      it_behaves_like 'invalid'
+      it { expect(pattern).to match_code(ruby) } # yet silly
     end
 
     context 'with doubled comma in arg list' do

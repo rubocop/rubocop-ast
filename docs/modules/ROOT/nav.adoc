@@ -2,3 +2,4 @@
 * xref:installation.adoc[Installation]
 * xref:node_types.adoc[Node Types]
 * xref:node_pattern.adoc[Node Pattern]
+* xref:node_pattern_compiler.adoc[Node Pattern Compiler]

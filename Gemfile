@@ -5,8 +5,10 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'bump', require: false
+gem 'oedipus_lex', require: false
 gem 'pry'
-gem 'rake', '~> 12.0'
+gem 'racc'
+gem 'rake', '~> 13.0'
 gem 'rspec', '~> 3.7'
 local_ast = File.expand_path('../rubocop', __dir__)
 if Dir.exist? local_ast
