@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#105](https://github.com/rubocop-hq/rubocop-ast/pull/105): `NodePattern` compiler [complete rewrite](https://docs.rubocop.org/rubocop-ast/node_pattern_compiler.html). Add support for multiple variadic terms. ([@marcandre][])
+
 ## 0.6.0 (2020-09-26)
 
 ### New features
