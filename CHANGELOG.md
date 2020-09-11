@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.4.0 (2020-09-11)
+
 ### New features
 
 * [#92](https://github.com/rubocop-hq/rubocop-ast/pull/92): Add `ProcessedSource#tokens_within`, `ProcessedSource#first_token_of` and `ProcessedSource#last_token_of`. ([@fatkodima][])
