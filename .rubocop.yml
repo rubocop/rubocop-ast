@@ -13,6 +13,9 @@ AllCops:
     - 'spec/fixtures/**/*'
     - 'tmp/**/*'
     - '.git/**/*'
+    - 'lib/rubocop/ast/node_pattern/parser.racc.rb'
+    - 'lib/rubocop/ast/node_pattern/lexer.rex.rb'
+    - 'spec/rubocop/ast/node_pattern/parse_helper.rb'
   TargetRubyVersion: 2.4
 
 Naming/PredicateName:
