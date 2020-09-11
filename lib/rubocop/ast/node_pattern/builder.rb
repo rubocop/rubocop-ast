@@ -34,7 +34,8 @@ module RuboCop
         def emit_union(begin_t, pattern_lists, end_t)
           children = union_children(pattern_lists)
 
-          emit_list(:union, begin_t, children, end_t)
+          type = optimizable_as_set?(children) ? :set : :union
+          emit_list(type, begin_t, children, end_t)
         end
 
         def emit_subsequence(node_list)
@@ -44,6 +45,10 @@ module RuboCop
         end
 
         private
+
+        def optimizable_as_set?(children)
+          children.all?(&:matches_within_set?)
+        end
 
         def n(type, *args)
           Node::MAP[type].new(type, *args)
