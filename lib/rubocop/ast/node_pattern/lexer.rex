@@ -20,7 +20,7 @@ rules
         /[-+]?\d+\.\d+/           { emit :tNUMBER, &:to_f }
         /[-+]?\d+/                { emit :tNUMBER, &:to_i }
         /#{Regexp.union(
-          %w"( ) { } [ ] < > $ ! ^ ` ... + * ? ,"
+          %w"( ) { | } [ ] < > $ ! ^ ` ... + * ? ,"
         )}/o                      { emit ss.matched, &:to_sym }
         /%([A-Z:][a-zA-Z_:]+)/    { emit :tPARAM_CONST }
         /%([a-z_]+)/              { emit :tPARAM_NAMED }

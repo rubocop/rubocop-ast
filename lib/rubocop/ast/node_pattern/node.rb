@@ -61,6 +61,10 @@ module RuboCop
           a.is_a?(Range) ? a : INT_TO_RANGE[a]
         end
 
+        def with(type: @type, children: @children, location: @location)
+          self.class.new(type, children, { location: location })
+        end
+
         INT_TO_RANGE = Hash.new { |h, k| h[k] = k..k }
         private_constant :INT_TO_RANGE
 
@@ -184,6 +188,66 @@ module RuboCop
           end
         end
 
+        # Circumvent broken `Range#minmax` for infinity ranges in 2.6-
+        module MapMinMax
+          if RUBY_VERSION >= '2.7'
+            def map_min_max(enum)
+              enum.map(&:minmax)
+            end
+          else
+            def map_min_max(enum)
+              enum.map { |r| [r.min, r.max] } # rubocop:disable Style/MinMax
+            end
+          end
+        end
+
+        # A list (potentially empty) of nodes; part of a Union
+        class Subsequence < Node
+          include ForbidInSeqHead
+          include MapMinMax
+
+          def arity
+            min, max = map_min_max(children.map(&:arity_range)).transpose.map(&:sum)
+            min == max ? min || 0 : min..max # Note: || 0 for empty case, where min == max == nil.
+          end
+
+          def in_sequence_head
+            super if children.empty?
+
+            return unless (replace = children.first.in_sequence_head)
+
+            [with(children: [*replace, *children[1..-1]])]
+          end
+        end
+
+        # Node class for `{ ... }`
+        class Union < Node
+          include MapMinMax
+
+          def arity
+            minima, maxima = map_min_max(children.map(&:arity_range)).transpose
+            min = minima.min
+            max = maxima.max
+            min == max ? min : min..max
+          end
+
+          def in_sequence_head
+            return unless children.any?(&:in_sequence_head)
+
+            new_children = children.map do |child|
+              next child unless (replace = child.in_sequence_head)
+
+              if replace.size > 1
+                Subsequence.new(:subsequence, replace, loc: child.loc)
+              else
+                replace.first
+              end
+            end
+
+            [with(children: new_children)]
+          end
+        end
+
         # Registry
         MAP = Hash.new(Node).merge!(
           sequence: Sequence,
@@ -192,7 +256,9 @@ module RuboCop
           capture: Capture,
           predicate: Predicate,
           any_order: AnyOrder,
-          function_call: FunctionCall
+          function_call: FunctionCall,
+          subsequence: Subsequence,
+          union: Union
         ).freeze
       end
     end

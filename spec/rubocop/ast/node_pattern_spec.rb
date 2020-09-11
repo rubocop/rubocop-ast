@@ -663,6 +663,70 @@ RSpec.describe RuboCop::AST::NodePattern do
 
       it { expect(pattern).to match_code(node) }
     end
+
+    context 'variadic' do
+      context 'with fixed terms' do
+        it 'works for cases with fixed arity before and after union' do
+          expect('(_ { int | sym _ str | } const)').to match_codes(
+            '[X]', '[42, X]', '[:foo, //, "bar", X]'
+          ).and not_match_codes(
+            '[42]', '[4.2, X]', '["bar", //, :foo, X]'
+          )
+        end
+
+        it 'works for cases with variadic terms after union' do
+          expect('(_ { int | sym _ str | } const+)').to match_codes(
+            '[X]', '[42, X, Y, Z]', '[:foo, //, "bar", X]'
+          ).and not_match_codes(
+            '[42]', '[4.2, X]', '["bar", //, :foo, X]'
+          )
+        end
+
+        it 'works for cases with variadic terms before and after union' do
+          expect('(_ const ? { int | sym _ str | } const+)').to match_codes(
+            '[X]', '[FOO, 42, X, Y, Z]', '[:foo, //, "bar", X]', '[X, Y, Z]'
+          ).and not_match_codes(
+            '[42]', '[4.2, X]', '["bar", //, :foo, X]', '[FOO BAR, 42]'
+          )
+        end
+      end
+
+      context 'with variadic terms' do
+        it 'works for cases with fixed arity before and after union' do
+          expect('(_ { sym+ _ str | int* } const)').to match_codes(
+            '[X]', '[42, 666, X]', '[:foo, :foo2, //, "bar", X]'
+          ).and not_match_codes(
+            '[42]', '[4.2, X]', '["bar", //, :foo, X]'
+          )
+        end
+
+        it 'works for cases with variadic terms after union' do
+          expect('(_ { sym+ _ str | int* } const+)').to match_codes(
+            '[X]', '[42, 666, X, Y, Z]', '[:foo, :foo2, //, "bar", X]'
+          ).and not_match_codes(
+            '[42]', '[4.2, X]', '["bar", //, :foo, X]'
+          )
+        end
+
+        it 'works for cases with variadic terms before and after union' do
+          expect('(_ const ? { sym+ _ str | int* } const+)').to match_codes(
+            '[X]', '[FOO, 42, 666, X, Y, Z]', '[:foo, :foo2, //, "bar", X]', '[X, Y, Z]'
+          ).and not_match_codes(
+            '[42]', '[4.2, X]', '["bar", //, :foo, X]', '[FOO BAR, 42]'
+          )
+        end
+      end
+
+      context 'multiple' do
+        it 'works for complex cases' do
+          expect('(_ const ? { sym+ int+ | int+ sym+ } { str+ | regexp+ } ... )').to match_codes(
+            '[X, :foo, :bar, 42, "a", Y]', '[42, 666, :foo, //]'
+          ).and not_match_codes(
+            '[42, :almost, X]', '[X, 42, :foo, 42, //]', '[X, :foo, //, :foo, X]'
+          )
+        end
+      end
+    end
   end
 
   describe 'captures on a wildcard' do
@@ -1841,6 +1905,24 @@ RSpec.describe RuboCop::AST::NodePattern do
 
     context 'with empty union' do
       let(:pattern) { '{}' }
+
+      it_behaves_like 'invalid'
+    end
+
+    context 'with empty union subsequence in seq head' do
+      let(:pattern) { '({foo|})' }
+
+      it_behaves_like 'invalid'
+    end
+
+    context 'with unsupported subsequence in seq head within union' do
+      let(:pattern) { '({foo bar+})' }
+
+      it_behaves_like 'invalid'
+    end
+
+    context 'with variadic unions where not supported' do
+      let(:pattern) { '(_ [_ {foo | ...}])' }
 
       it_behaves_like 'invalid'
     end

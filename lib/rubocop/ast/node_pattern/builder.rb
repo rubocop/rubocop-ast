@@ -31,10 +31,35 @@ module RuboCop
           n(type, [selector, *arg_nodes])
         end
 
+        def emit_union(begin_t, pattern_lists, end_t)
+          children = union_children(pattern_lists)
+
+          emit_list(:union, begin_t, children, end_t)
+        end
+
+        def emit_subsequence(node_list)
+          return node_list.first if node_list.size == 1 # Don't put a single child in a subsequence
+
+          emit_list(:subsequence, nil, node_list, nil)
+        end
+
         private
 
         def n(type, *args)
           Node::MAP[type].new(type, *args)
+        end
+
+        def union_children(pattern_lists)
+          if pattern_lists.size == 1 # {a b c} => [[a, b, c]] => [a, b, c]
+            children = pattern_lists.first
+            raise NodePattern::Invalid, 'A union can not be empty' if children.empty?
+
+            children
+          else # { a b | c } => [[a, b], [c]] => [s(:subsequence, a, b), c]
+            pattern_lists.map do |list|
+              emit_subsequence(list)
+            end
+          end
         end
       end
     end

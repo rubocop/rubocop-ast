@@ -43,8 +43,17 @@ module RuboCop
 
         private
 
-        def_delegators :@builder, :emit_list, :emit_unary_op, :emit_atom, :emit_capture, :emit_call
+        def_delegators :@builder, :emit_list, :emit_unary_op, :emit_atom, :emit_capture,
+                       :emit_call, :emit_union
         def_delegators :@lexer, :next_token
+
+        def enforce_unary(node)
+          return node if node.arity == 1
+
+          detail = node.loc&.expression&.source || node.to_s
+          raise NodePattern::Invalid, 'parse error, expected unary node pattern ' \
+            "but got expression matching multiple elements: #{detail}"
+        end
 
         # Overrides Racc::Parser's method:
         def on_error(token, val, _vstack)
