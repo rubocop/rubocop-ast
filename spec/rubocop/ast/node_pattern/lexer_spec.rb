@@ -2,7 +2,7 @@
 
 RSpec.describe RuboCop::AST::NodePattern::Lexer do
   let(:source) { '(send nil? #func(:foo) #func (bar))' }
-  let(:lexer) { RuboCop::AST::NodePattern::Parser::Lexer.new(source) }
+  let(:lexer) { RuboCop::AST::NodePattern::Parser::WithMeta::Lexer.new(source) }
   let(:tokens) do
     tokens = []
     while (token = lexer.next_token)
@@ -12,9 +12,10 @@ RSpec.describe RuboCop::AST::NodePattern::Lexer do
   end
 
   it 'provides tokens via next_token' do # rubocop:disable RSpec/ExampleLength
-    type, (text, _range) = tokens[3]
+    type, (text, range) = tokens[3]
     expect(type).to eq :tFUNCTION_CALL
     expect(text).to eq :func
+    expect(range.to_range).to eq 11...16
 
     expect(tokens.map(&:first)).to eq [
       '(',
@@ -31,7 +32,7 @@ RSpec.describe RuboCop::AST::NodePattern::Lexer do
     let(:source) { '(array sym $int+ x)' }
 
     it 'works' do
-      expect(tokens.map(&:last)).to eq \
+      expect(tokens.map(&:last).map(&:first)).to eq \
         %i[( array sym $ int + x )]
     end
   end

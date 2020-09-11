@@ -70,7 +70,7 @@ The `Lexer` emits tokens with types that are:
 * symbols of the form `:tTOKEN_TYPE` for the rest (e.g.
 `:tPREDICATE`)
 
-Tokens are stored as `[type, value]`.
+Tokens are stored as `[type, value]`, or `[type, [value, location]]` if locations are emitted.
 
 [discrete]
 ==== Generation
@@ -238,3 +238,15 @@ see `Node#in_sequence_head`)
 ==== Precedence
 
 Like the node pattern subcompiler, it generates code that has higher or equal precedence to `&&`, so as to make chaining convenient.
+
+== Variant: WithMeta
+
+These variants of the Parser / Builder / Lexer generate `location` information (exactly like the `parser` gem) for AST nodes as well as comments with their locations (like the `parser` gem).
+
+Since this information is not typically used when one ony wants to define methods, it is not loaded by default.
+
+== Variant: Debug
+
+These variants of the Compiler / Subcompilers works by adding tracing code before and after each compilation of `NodePatternSubcompiler` and `SequenceSubcompiler`.
+A unique ID is assigned to each node and the tracing code flips a corresponding switch when the expression is about to be evaluated, and after (joined with `&&` so it only flips the switch if the node was a match).
+Atoms are not compiled differently as they are not really matchable (when not compiled as a node pattern)
