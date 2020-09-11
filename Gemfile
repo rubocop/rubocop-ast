@@ -12,7 +12,7 @@ local_ast = File.expand_path('../rubocop', __dir__)
 if Dir.exist? local_ast
   gem 'rubocop', path: local_ast
 else
-  gem 'rubocop', '~> 0.89' # rubocop:disable Bundler/DuplicatedGem
+  gem 'rubocop', '~> 0.89'
 end
 gem 'rubocop-performance', '~> 1.0'
 gem 'rubocop-rspec', '~> 1.0'
