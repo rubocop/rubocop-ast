@@ -5,6 +5,7 @@ module RuboCop
     # Common functionality for primitive numeric nodes: `int`, `float`, ...
     module NumericNode
       SIGN_REGEX = /\A[+-]/.freeze
+      private_constant :SIGN_REGEX
 
       # Checks whether this is literal has a sign.
       #

@@ -11,17 +11,23 @@ module RuboCop
                               find find_all find_index inject loop map!
                               map reduce reject reject! reverse_each select
                               select! times upto].to_set.freeze
+      private_constant :ENUMERATOR_METHODS
 
       ENUMERABLE_METHODS = (Enumerable.instance_methods + [:each]).to_set.freeze
+      private_constant :ENUMERABLE_METHODS
 
       # http://phrogz.net/programmingruby/language.html#table_18.4
       OPERATOR_METHODS = %i[| ^ & <=> == === =~ > >= < <= << >> + - * /
                             % ** ~ +@ -@ !@ ~@ [] []= ! != !~ `].to_set.freeze
+      private_constant :OPERATOR_METHODS
 
       NONMUTATING_BINARY_OPERATOR_METHODS = %i[* / % + - == === != < > <= >= <=>].to_set.freeze
+      private_constant :NONMUTATING_BINARY_OPERATOR_METHODS
       NONMUTATING_UNARY_OPERATOR_METHODS = %i[+@ -@ ~ !].to_set.freeze
+      private_constant :NONMUTATING_UNARY_OPERATOR_METHODS
       NONMUTATING_OPERATOR_METHODS = (NONMUTATING_BINARY_OPERATOR_METHODS +
         NONMUTATING_UNARY_OPERATOR_METHODS).freeze
+      private_constant :NONMUTATING_OPERATOR_METHODS
 
       NONMUTATING_ARRAY_METHODS = %i[
         all? any? assoc at bsearch bsearch_index collect
@@ -37,6 +43,7 @@ module RuboCop
         to_a to_ary to_h to_s transpose union uniq
         values_at zip |
       ].to_set.freeze
+      private_constant :NONMUTATING_ARRAY_METHODS
 
       NONMUTATING_HASH_METHODS = %i[
         any? assoc compact dig each each_key each_pair
@@ -47,6 +54,7 @@ module RuboCop
         to_proc to_s transform_keys transform_values value?
         values values_at
       ].to_set.freeze
+      private_constant :NONMUTATING_HASH_METHODS
 
       NONMUTATING_STRING_METHODS = %i[
         ascii_only? b bytes bytesize byteslice capitalize
@@ -62,6 +70,7 @@ module RuboCop
         to_str to_sym tr tr_s unicode_normalize unicode_normalized?
         unpack unpack1 upcase upto valid_encoding?
       ].to_set.freeze
+      private_constant :NONMUTATING_STRING_METHODS
 
       # Checks whether the method name matches the argument.
       #

@@ -10,6 +10,7 @@ module RuboCop
         string: /^%[wW]/,
         symbol: /^%[iI]/
       }.freeze
+      private_constant :PERCENT_LITERAL_TYPES
 
       # Returns an array of all value nodes in the `array` literal.
       #
