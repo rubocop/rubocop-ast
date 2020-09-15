@@ -6,7 +6,7 @@ RSpec.describe RuboCop::AST::Node do
 
   describe '#value_used?' do
     before :all do
-      module RuboCop
+      module RuboCop # rubocop:disable Lint/ConstantDefinitionInBlock
         module AST
           # Patch Node
           class Node

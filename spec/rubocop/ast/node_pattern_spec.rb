@@ -1487,7 +1487,7 @@ RSpec.describe RuboCop::AST::NodePattern do
   end
 
   describe 'funcalls' do
-    module RuboCop
+    module RuboCop # rubocop:disable Lint/ConstantDefinitionInBlock
       module AST
         # Add test function calls
         class NodePattern
