@@ -38,6 +38,7 @@ module RuboCop
                              index indexasgn].freeze
       SECOND_CHILD_ONLY = %i[lvasgn ivasgn cvasgn gvasgn optarg kwarg
                              kwoptarg].freeze
+      private_constant :NO_CHILD_NODES, :ONE_CHILD_NODE, :MANY_CHILD_NODES, :SECOND_CHILD_ONLY
 
       NO_CHILD_NODES.each do |type|
         module_eval("def on_#{type}(node); end", __FILE__, __LINE__)

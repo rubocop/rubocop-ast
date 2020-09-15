@@ -9,9 +9,13 @@ module RuboCop
       include HashElementNode
 
       HASH_ROCKET = '=>'
+      private_constant :HASH_ROCKET
       SPACED_HASH_ROCKET = ' => '
+      private_constant :SPACED_HASH_ROCKET
       COLON = ':'
+      private_constant :COLON
       SPACED_COLON = ': '
+      private_constant :SPACED_COLON
 
       # Checks whether the `pair` uses a hash rocket delimiter.
       #

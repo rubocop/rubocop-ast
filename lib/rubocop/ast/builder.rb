@@ -16,6 +16,7 @@ module RuboCop
     class Builder < Parser::Builders::Default
       self.emit_forward_arg = true
 
+      # @api private
       NODE_MAP = {
         and:          AndNode,
         alias:        AliasNode,

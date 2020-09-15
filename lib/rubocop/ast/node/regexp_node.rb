@@ -13,6 +13,7 @@ module RuboCop
         n: Regexp::NOENCODING,
         o: 0
       }.freeze
+      private_constant :OPTIONS
 
       # @return [Regexp] a regexp of this node
       def to_regexp

@@ -10,7 +10,9 @@ module RuboCop
       include MethodIdentifierPredicates
 
       ARITHMETIC_OPERATORS = %i[+ - * / % **].freeze
+      private_constant :ARITHMETIC_OPERATORS
       SPECIAL_MODIFIERS = %w[private protected].freeze
+      private_constant :SPECIAL_MODIFIERS
 
       # The receiving node of the method dispatch.
       #

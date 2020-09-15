@@ -12,6 +12,7 @@ module RuboCop
       include MethodIdentifierPredicates
 
       VOID_CONTEXT_METHODS = %i[each tap].freeze
+      private_constant :VOID_CONTEXT_METHODS
 
       # The `send` node associated with this block.
       #

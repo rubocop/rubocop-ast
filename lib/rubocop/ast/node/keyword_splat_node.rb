@@ -9,6 +9,7 @@ module RuboCop
       include HashElementNode
 
       DOUBLE_SPLAT = '**'
+      private_constant :DOUBLE_SPLAT
 
       # This is used for duck typing with `pair` nodes which also appear as
       # `hash` elements.
