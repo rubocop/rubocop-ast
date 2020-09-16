@@ -28,6 +28,8 @@ module RuboCop
 
       # @return [Boolean] if the constant starts with `::` (aka s(:cbase))
       def absolute?
+        return false unless namespace
+
         each_path.first.cbase_type?
       end
 
