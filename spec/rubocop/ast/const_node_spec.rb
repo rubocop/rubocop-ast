@@ -31,6 +31,20 @@ RSpec.describe RuboCop::AST::ConstNode do
 
       it { expect(const_node.absolute?).to eq false }
     end
+
+    context 'with a non-namespaced constant' do
+      let(:source) { 'Foo' }
+
+      it { expect(const_node.absolute?).to eq false }
+    end
+  end
+
+  describe '#relative?' do
+    context 'with a non-namespaced constant' do
+      let(:source) { 'Foo' }
+
+      it { expect(const_node.relative?).to eq true }
+    end
   end
 
   describe '#each_path' do
