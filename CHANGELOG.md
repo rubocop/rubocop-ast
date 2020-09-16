@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.4.1 (2020-09-16)
+
 ### Bug fixes
 * [#115](https://github.com/rubocop-hq/rubocop-ast/pull/115): Fix `ConstNode#absolute?` when the constant is not namespaced. ([@dvandersluis][])
 
