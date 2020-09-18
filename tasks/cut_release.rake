@@ -55,7 +55,7 @@ end
 
 desc 'and restore docs/antora'
 task :release do
-  udpate_file 'docs/antora.yml' do |s|
+  update_file 'docs/antora.yml' do |s|
     s.gsub!(/version: .*/, 'version: master')
   end
   cmd = "git commit -am 'Restore docs/antora.yml'"
