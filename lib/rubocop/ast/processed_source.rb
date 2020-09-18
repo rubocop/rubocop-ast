@@ -269,7 +269,8 @@ module RuboCop
       # is passed as a method argument. In this case tokens are interleaved by
       # heredoc contents' tokens.
       def sorted_tokens
-        @sorted_tokens ||= tokens.sort_by(&:begin_pos)
+        # Use stable sort.
+        @sorted_tokens ||= tokens.sort_by.with_index { |token, i| [token.begin_pos, i] }
       end
 
       def source_range(range_or_node)
