@@ -2,6 +2,11 @@
 
 require 'bump'
 
+def update_file(path)
+  content = File.read(path)
+  File.write(path, yield(content))
+end
+
 namespace :cut_release do
   %w[major minor patch pre].each do |release_type|
     desc "Cut a new #{release_type} release, create release notes " \
@@ -13,11 +18,6 @@ namespace :cut_release do
 
   def version_sans_patch(version)
     version.split('.').take(2).join('.')
-  end
-
-  def update_file(path)
-    content = File.read(path)
-    File.write(path, yield(content))
   end
 
   def update_antora(version)
@@ -48,4 +48,14 @@ namespace :cut_release do
 
     puts "Changed version from #{old_version} to #{new_version}."
   end
+end
+
+desc 'and restore docs/antora'
+task :release do
+  udpate_file 'docs/antora.yml' do |s|
+    s.gsub!(/version: .*/, 'version: master')
+  end
+  cmd = "git commit -am 'Restore docs/antora.yml'"
+  puts cmd
+  system cmd
 end
