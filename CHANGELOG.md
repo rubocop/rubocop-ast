@@ -2,6 +2,9 @@
 
 ## master (unreleased)
 
+### Bug fixes
+* [#116](https://github.com/rubocop-hq/rubocop-ast/pull/116): Fix issues with tokens being sometimes misordered. ([@fatkodima][])
+
 ## 0.4.1 (2020-09-16)
 
 ### Bug fixes
