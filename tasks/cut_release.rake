@@ -47,6 +47,9 @@ namespace :cut_release do
     update_antora(new_version)
 
     puts "Changed version from #{old_version} to #{new_version}."
+    cmd = "git commit -am 'Cut #{new_version}'"
+    puts cmd
+    system cmd
   end
 end
 
