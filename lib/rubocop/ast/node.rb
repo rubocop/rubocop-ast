@@ -79,6 +79,10 @@ module RuboCop
       # @api private
       ARGUMENT_TYPES = %i[arg optarg restarg kwarg kwoptarg kwrestarg blockarg].to_set.freeze
 
+      LITERAL_RECURSIVE_METHODS = (COMPARISON_OPERATORS + %i[* ! <=>]).freeze
+      LITERAL_RECURSIVE_TYPES = (OPERATOR_KEYWORDS + COMPOSITE_LITERALS + %i[begin pair]).freeze
+      private_constant :LITERAL_RECURSIVE_METHODS, :LITERAL_RECURSIVE_TYPES
+
       # @see https://www.rubydoc.info/gems/ast/AST/Node:initialize
       def initialize(type, children = [], properties = {})
         @mutable_attributes = {}
@@ -363,10 +367,10 @@ module RuboCop
         define_method(recursive_kind) do
           case type
           when :send
-            [*COMPARISON_OPERATORS, :!, :<=>].include?(method_name) &&
+            LITERAL_RECURSIVE_METHODS.include?(method_name) &&
               receiver.send(recursive_kind) &&
               arguments.all?(&recursive_kind)
-          when :begin, :pair, *OPERATOR_KEYWORDS, *COMPOSITE_LITERALS
+          when LITERAL_RECURSIVE_TYPES
             children.compact.all?(&recursive_kind)
           else
             send(kind_filter)
