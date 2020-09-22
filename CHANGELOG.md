@@ -10,6 +10,10 @@
 * [#111](https://github.com/rubocop-hq/rubocop-ast/pull/111): Optimize some `NodePattern`s by using `Set`s. ([@marcandre][])
 * [#112](https://github.com/rubocop-hq/rubocop-ast/pull/112): Add `NodePattern` support for Regexp literals. ([@marcandre][])
 
+### Changes
+
+* [#22](https://github.com/rubocop-hq/rubocop-ast/issues/22): **(Potentially breaking)** Most constants are now private, the rest are converted to Sets and meant to be private. ([@marcandre][])
+
 ## 0.6.0 (2020-09-26)
 
 ### New features
