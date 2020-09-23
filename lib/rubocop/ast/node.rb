@@ -299,8 +299,10 @@ module RuboCop
         self
       end
 
+      # Note: Some rare nodes may have no source, like `s(:args)` in `foo {}`
+      # @return [String, nil]
       def source
-        loc.expression.source
+        loc.expression&.source
       end
 
       def source_range
