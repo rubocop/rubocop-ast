@@ -120,78 +120,6 @@ RSpec.describe RuboCop::AST::SendNode do
       it { expect(send_node.access_modifier?).to be_truthy }
     end
 
-    context 'when node is a bare `private`' do
-      let(:source) do
-        <<~RUBY
-          module Foo
-            private
-          end
-        RUBY
-      end
-
-      it { expect(send_node.access_modifier?).to be_truthy }
-    end
-
-    context 'when node is a non-bare `private`' do
-      let(:source) do
-        <<~RUBY
-          module Foo
-            private :foo
-          end
-        RUBY
-      end
-
-      it { expect(send_node.access_modifier?).to be_truthy }
-    end
-
-    context 'when node is a bare `protected`' do
-      let(:source) do
-        <<~RUBY
-          module Foo
-            protected
-          end
-        RUBY
-      end
-
-      it { expect(send_node.access_modifier?).to be_truthy }
-    end
-
-    context 'when node is a non-bare `protected`' do
-      let(:source) do
-        <<~RUBY
-          module Foo
-            protected :foo
-          end
-        RUBY
-      end
-
-      it { expect(send_node.access_modifier?).to be_truthy }
-    end
-
-    context 'when node is a bare `public`' do
-      let(:source) do
-        <<~RUBY
-          module Foo
-            public
-          end
-        RUBY
-      end
-
-      it { expect(send_node.access_modifier?).to be_truthy }
-    end
-
-    context 'when node is a non-bare `public`' do
-      let(:source) do
-        <<~RUBY
-          module Foo
-            public :foo
-          end
-        RUBY
-      end
-
-      it { expect(send_node.access_modifier?).to be_truthy }
-    end
-
     context 'when node is not an access modifier' do
       let(:source) do
         <<~RUBY
@@ -213,42 +141,6 @@ RSpec.describe RuboCop::AST::SendNode do
         <<~RUBY
           module Foo
             module_function
-          end
-        RUBY
-      end
-
-      it { expect(send_node.bare_access_modifier?).to be_truthy }
-    end
-
-    context 'when node is a bare `private`' do
-      let(:source) do
-        <<~RUBY
-          module Foo
-            private
-          end
-        RUBY
-      end
-
-      it { expect(send_node.bare_access_modifier?).to be_truthy }
-    end
-
-    context 'when node is a bare `protected`' do
-      let(:source) do
-        <<~RUBY
-          module Foo
-            protected
-          end
-        RUBY
-      end
-
-      it { expect(send_node.bare_access_modifier?).to be_truthy }
-    end
-
-    context 'when node is a bare `public`' do
-      let(:source) do
-        <<~RUBY
-          module Foo
-            public
           end
         RUBY
       end
@@ -289,42 +181,6 @@ RSpec.describe RuboCop::AST::SendNode do
         <<~RUBY
           module Foo
             module_function :foo
-          end
-        RUBY
-      end
-
-      it { expect(send_node.non_bare_access_modifier?).to be_truthy }
-    end
-
-    context 'when node is a non-bare `private`' do
-      let(:source) do
-        <<~RUBY
-          module Foo
-            private :foo
-          end
-        RUBY
-      end
-
-      it { expect(send_node.non_bare_access_modifier?).to be_truthy }
-    end
-
-    context 'when node is a non-bare `protected`' do
-      let(:source) do
-        <<~RUBY
-          module Foo
-            protected :foo
-          end
-        RUBY
-      end
-
-      it { expect(send_node.non_bare_access_modifier?).to be_truthy }
-    end
-
-    context 'when node is a non-bare `public`' do
-      let(:source) do
-        <<~RUBY
-          module Foo
-            public :foo
           end
         RUBY
       end
