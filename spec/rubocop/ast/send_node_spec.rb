@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::SendNode do
-  let(:send_node) { parse_source(source).ast }
+  let(:send_node) { parse_source(source).node }
 
   describe '.new' do
     context 'with a regular method send' do
@@ -94,13 +94,11 @@ RSpec.describe RuboCop::AST::SendNode do
   end
 
   describe '#access_modifier?' do
-    let(:send_node) { parse_source(source).ast.children[1] }
-
     context 'when node is a bare `module_function`' do
       let(:source) do
         <<~RUBY
           module Foo
-            module_function
+          >> module_function <<
           end
         RUBY
       end
@@ -112,7 +110,7 @@ RSpec.describe RuboCop::AST::SendNode do
       let(:source) do
         <<~RUBY
           module Foo
-            module_function :foo
+          >> module_function :foo <<
           end
         RUBY
       end
@@ -124,7 +122,7 @@ RSpec.describe RuboCop::AST::SendNode do
       let(:source) do
         <<~RUBY
           module Foo
-            some_command
+            >> some_command <<
           end
         RUBY
       end
@@ -134,13 +132,11 @@ RSpec.describe RuboCop::AST::SendNode do
   end
 
   describe '#bare_access_modifier?' do
-    let(:send_node) { parse_source(source).ast.children[1] }
-
     context 'when node is a bare `module_function`' do
       let(:source) do
         <<~RUBY
           module Foo
-            module_function
+          >> module_function <<
           end
         RUBY
       end
@@ -152,7 +148,7 @@ RSpec.describe RuboCop::AST::SendNode do
       let(:source) do
         <<~RUBY
           module Foo
-            private :foo
+          >> private :foo <<
           end
         RUBY
       end
@@ -164,7 +160,7 @@ RSpec.describe RuboCop::AST::SendNode do
       let(:source) do
         <<~RUBY
           module Foo
-            some_command
+          >> some_command <<
           end
         RUBY
       end
@@ -174,13 +170,11 @@ RSpec.describe RuboCop::AST::SendNode do
   end
 
   describe '#non_bare_access_modifier?' do
-    let(:send_node) { parse_source(source).ast.children[1] }
-
     context 'when node is a non-bare `module_function`' do
       let(:source) do
         <<~RUBY
           module Foo
-            module_function :foo
+          >> module_function :foo <<
           end
         RUBY
       end
@@ -192,7 +186,7 @@ RSpec.describe RuboCop::AST::SendNode do
       let(:source) do
         <<~RUBY
           module Foo
-            private
+          >> private <<
           end
         RUBY
       end
@@ -204,7 +198,7 @@ RSpec.describe RuboCop::AST::SendNode do
       let(:source) do
         <<~RUBY
           module Foo
-            some_command
+          >> some_command <<
           end
         RUBY
       end
@@ -216,11 +210,9 @@ RSpec.describe RuboCop::AST::SendNode do
   describe '#macro?' do
     context 'without a receiver' do
       context 'when parent is a class' do
-        let(:send_node) { parse_source(source).ast.children[2].children[0] }
-
         let(:source) do
           ['class Foo',
-           '  bar :baz',
+           '>>bar :baz<<',
            '  bar :qux',
            'end'].join("\n")
         end
@@ -229,11 +221,9 @@ RSpec.describe RuboCop::AST::SendNode do
       end
 
       context 'when parent is a module' do
-        let(:send_node) { parse_source(source).ast.children[1].children[0] }
-
         let(:source) do
           ['module Foo',
-           '  bar :baz',
+           '>>bar :baz<<',
            '  bar :qux',
            'end'].join("\n")
         end
@@ -242,11 +232,9 @@ RSpec.describe RuboCop::AST::SendNode do
       end
 
       context 'when parent is a class constructor' do
-        let(:send_node) { parse_source(source).ast.children[2].children[0] }
-
         let(:source) do
           ['Module.new do',
-           '  bar :baz',
+           '>>bar :baz<<',
            '  bar :qux',
            'end'].join("\n")
         end
@@ -255,11 +243,9 @@ RSpec.describe RuboCop::AST::SendNode do
       end
 
       context 'when parent is a singleton class' do
-        let(:send_node) { parse_source(source).ast.children[1].children[0] }
-
         let(:source) do
           ['class << self',
-           '  bar :baz',
+           '>>bar :baz<<',
            '  bar :qux',
            'end'].join("\n")
         end
@@ -268,11 +254,9 @@ RSpec.describe RuboCop::AST::SendNode do
       end
 
       context 'when parent is a block' do
-        let(:send_node) { parse_source(source).ast.children[2].children[0] }
-
         let(:source) do
           ['concern :Auth do',
-           '  bar :baz',
+           '>>bar :baz<<',
            '  bar :qux',
            'end'].join("\n")
         end
@@ -281,12 +265,10 @@ RSpec.describe RuboCop::AST::SendNode do
       end
 
       context 'when parent is a keyword begin inside of an class' do
-        let(:send_node) { parse_source(source).ast.children[2].children[0] }
-
         let(:source) do
           ['class Foo',
            '  begin',
-           '    bar :qux',
+           '>>  bar :qux <<',
            '  end',
            'end'].join("\n")
         end
@@ -301,11 +283,9 @@ RSpec.describe RuboCop::AST::SendNode do
       end
 
       context 'when parent is a begin without a parent' do
-        let(:send_node) { parse_source(source).ast.children[0] }
-
         let(:source) do
           ['begin',
-           '  bar :qux',
+           '>>bar :qux<<',
            'end'].join("\n")
         end
 
@@ -313,11 +293,9 @@ RSpec.describe RuboCop::AST::SendNode do
       end
 
       context 'when parent is a method definition' do
-        let(:send_node) { parse_source(source).ast.children[2] }
-
         let(:source) do
           ['def foo',
-           '  bar :baz',
+           '>>bar :baz<<',
            'end'].join("\n")
         end
 
@@ -327,11 +305,9 @@ RSpec.describe RuboCop::AST::SendNode do
 
     context 'with a receiver' do
       context 'when parent is a class' do
-        let(:send_node) { parse_source(source).ast.children[2] }
-
         let(:source) do
           ['class Foo',
-           '  qux.bar :baz',
+           '  >> qux.bar :baz <<',
            'end'].join("\n")
         end
 
@@ -339,11 +315,9 @@ RSpec.describe RuboCop::AST::SendNode do
       end
 
       context 'when parent is a module' do
-        let(:send_node) { parse_source(source).ast.children[1] }
-
         let(:source) do
           ['module Foo',
-           '  qux.bar :baz',
+           '  >> qux.bar :baz << ',
            'end'].join("\n")
         end
 
@@ -760,8 +734,7 @@ RSpec.describe RuboCop::AST::SendNode do
 
   describe '#enumerable_method?' do
     context 'with an enumerable method' do
-      let(:send_node) { parse_source(source).ast.send_node }
-      let(:source) { 'foo.all? { |e| bar?(e) }' }
+      let(:source) { '>> foo.all? << { |e| bar?(e) }' }
 
       it { expect(send_node.enumerable_method?).to be_truthy }
     end
@@ -992,9 +965,7 @@ RSpec.describe RuboCop::AST::SendNode do
 
   describe '#block_literal?' do
     context 'with a block literal' do
-      let(:send_node) { parse_source(source).ast.children[0] }
-
-      let(:source) { 'foo.bar { |q| baz(q) }' }
+      let(:source) { '>> foo.bar << { |q| baz(q) }' }
 
       it { expect(send_node.block_literal?).to be_truthy }
     end
@@ -1034,9 +1005,7 @@ RSpec.describe RuboCop::AST::SendNode do
 
   describe '#block_node' do
     context 'with a block literal' do
-      let(:send_node) { parse_source(source).ast.children[0] }
-
-      let(:source) { 'foo.bar { |q| baz(q) }' }
+      let(:source) { '>>foo.bar<< { |q| baz(q) }' }
 
       it { expect(send_node.block_node.block_type?).to be(true) }
     end
@@ -1162,22 +1131,19 @@ RSpec.describe RuboCop::AST::SendNode do
 
   describe '#lambda?' do
     context 'with a lambda method' do
-      let(:source) { 'lambda { |foo| bar(foo) }' }
-      let(:send_node) { parse_source(source).ast.send_node }
+      let(:source) { '>> lambda << { |foo| bar(foo) }' }
 
       it { expect(send_node.lambda?).to be_truthy }
     end
 
     context 'with a method named lambda in a class' do
-      let(:source) { 'foo.lambda { |bar| baz }' }
-      let(:send_node) { parse_source(source).ast.send_node }
+      let(:source) { '>> foo.lambda << { |bar| baz }' }
 
       it { expect(send_node.lambda?).to be_falsey }
     end
 
     context 'with a stabby lambda method' do
-      let(:source) { '-> (foo) { do_something(foo) }' }
-      let(:send_node) { parse_source(source).ast.send_node }
+      let(:source) { '>> -> << (foo) { do_something(foo) }' }
 
       it { expect(send_node.lambda?).to be_truthy }
     end
@@ -1191,15 +1157,13 @@ RSpec.describe RuboCop::AST::SendNode do
 
   describe '#lambda_literal?' do
     context 'with a stabby lambda' do
-      let(:send_node) { parse_source(source).ast.send_node }
-      let(:source) { '-> (foo) { do_something(foo) }' }
+      let(:source) { '>> -> << (foo) { do_something(foo) }' }
 
       it { expect(send_node.lambda_literal?).to be(true) }
     end
 
     context 'with a lambda method' do
-      let(:send_node) { parse_source(source).ast.send_node }
-      let(:source) { 'lambda { |foo| bar(foo) }' }
+      let(:source) { '>> lambda << { |foo| bar(foo) }' }
 
       it { expect(send_node.lambda_literal?).to be(false) }
     end
@@ -1212,8 +1176,7 @@ RSpec.describe RuboCop::AST::SendNode do
 
     # Regression test https://github.com/rubocop-hq/rubocop/pull/5194
     context 'with `a.() {}` style method' do
-      let(:send_node) { parse_source(source).ast.send_node }
-      let(:source) { 'a.() {}' }
+      let(:source) { '>>a.()<< {}' }
 
       it { expect(send_node.lambda?).to be_falsey }
     end

@@ -41,10 +41,29 @@ module DefaultRubyVersion
   let(:ruby_version) { 2.4 }
 end
 
+module RuboCop
+  module AST
+    # patch class
+    class ProcessedSource
+      attr_accessor :node
+    end
+  end
+end
+
 # ...
 module ParseSourceHelper
   def parse_source(source)
-    RuboCop::AST::ProcessedSource.new(source, ruby_version, nil)
+    lookup = nil
+    ruby = source.gsub(/>>(.*)<</) { lookup = Regexp.last_match(1).strip }
+    source = RuboCop::AST::ProcessedSource.new(ruby, ruby_version, nil)
+    source.node = if lookup
+                    source.ast.each_node.find(
+                      -> { raise "No node corresponds to source '#{lookup}'" }
+                    ) { |node| node.source == lookup }
+                  else
+                    source.ast
+                  end
+    source
   end
 end
 
