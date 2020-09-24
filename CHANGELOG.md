@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Changes
+
+* [#121](https://github.com/rubocop-hq/rubocop-ast/pull/121): Update from `Parser::Ruby28` to `Parser::Ruby30` for Ruby 3.0 parser (experimental). ([@koic][])
+
 ## 0.4.2 (2020-09-18)
 
 ### Bug fixes
