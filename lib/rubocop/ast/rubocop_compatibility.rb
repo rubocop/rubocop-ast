@@ -7,7 +7,8 @@ module RuboCop
     # @api private
     module RuboCopCompatibility
       INCOMPATIBLE_COPS = {
-        '0.89.0' => 'Layout/LineLength'
+        '0.89.0' => 'Layout/LineLength',
+        '0.92.0' => 'Style/MixinUsage'
       }.freeze
       def rubocop_loaded
         loaded = Gem::Version.new(RuboCop::Version::STRING)

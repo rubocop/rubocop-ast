@@ -42,7 +42,7 @@ module RuboCop
       #
       # @return [Boolean] whether the dispatched method is a macro method
       def macro?
-        !receiver && macro_scope?
+        !receiver && in_macro_scope?
       end
 
       # Checks whether the dispatched method is an access modifier.
@@ -222,30 +222,20 @@ module RuboCop
 
       private
 
-      def_node_matcher :macro_scope?, <<~PATTERN
-        {^{({sclass class module block} ...) class_constructor?}
-         ^^{({sclass class module block} ... ({begin if} ...)) class_constructor?}
-         ^#macro_kwbegin_wrapper?
-         #root_node?}
+      def_node_matcher :in_macro_scope?, <<~PATTERN
+        {
+          root?                                    # Either a root node,
+          ^{                                       # or the parent is...
+            sclass class module class_constructor? # a class-like node
+            [ {                                    # or some "wrapper"
+                kwbegin begin block
+                (if _condition <%0 _>)  # note: we're excluding the condition of `if` nodes
+              }
+              #in_macro_scope?                     # that is itself in a macro scope
+            ]
+          }
+        }
       PATTERN
-
-      # Check if a node's parent is a kwbegin wrapper within a macro scope
-      #
-      # @param parent [Node] parent of the node being checked
-      #
-      # @return [Boolean] true if the parent is a kwbegin in a macro scope
-      def macro_kwbegin_wrapper?(parent)
-        parent.kwbegin_type? && macro_scope?(parent)
-      end
-
-      # Check if a node does not have a parent
-      #
-      # @param node [Node]
-      #
-      # @return [Boolean] if the parent is nil
-      def root_node?(node)
-        node.parent.nil?
-      end
 
       def_node_matcher :adjacent_def_modifier?, <<~PATTERN
         (send nil? _ ({def defs} ...))

@@ -253,13 +253,37 @@ RSpec.describe RuboCop::AST::SendNode do
         it { expect(send_node.macro?).to be_truthy }
       end
 
-      context 'when parent is a block' do
+      context 'when parent is a block in a macro scope' do
         let(:source) do
           ['concern :Auth do',
            '>>bar :baz<<',
            '  bar :qux',
            'end'].join("\n")
         end
+
+        it { expect(send_node.macro?).to be_truthy }
+      end
+
+      context 'when parent is a block not in a macro scope' do
+        let(:source) { <<~RUBY }
+          class Foo
+            def bar
+              3.times do
+                >>something :baz<<
+                other
+              end
+            end
+          end
+        RUBY
+
+        it { expect(send_node.macro?).to be_falsey }
+      end
+
+      context 'when in the global scope' do
+        let(:source) { <<~RUBY }
+          >>something :baz<<
+          other
+        RUBY
 
         it { expect(send_node.macro?).to be_truthy }
       end
@@ -298,6 +322,24 @@ RSpec.describe RuboCop::AST::SendNode do
            '>>bar :baz<<',
            'end'].join("\n")
         end
+
+        it { expect(send_node.macro?).to be_falsey }
+      end
+
+      context 'when in an if' do
+        let(:source) { <<~RUBY }
+          >>bar :baz<< if qux
+          other
+        RUBY
+
+        it { expect(send_node.macro?).to be_truthy }
+      end
+
+      context 'when the condition of an if' do
+        let(:source) { <<~RUBY }
+          qux if >>bar :baz<<
+          other
+        RUBY
 
         it { expect(send_node.macro?).to be_falsey }
       end

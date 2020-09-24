@@ -16,7 +16,7 @@ RSpec.describe RuboCop::AST::RuboCopCompatibility do # rubocop:disable RSpec/Fil
   end
 
   context 'when ran from a compatible version of Rubocop' do
-    let(:rubocop_version) { '0.89.0' }
+    let(:rubocop_version) { '0.92.0' }
 
     it 'issues a warning' do
       expect { callback }.not_to output.to_stderr
