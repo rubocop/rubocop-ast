@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#122](https://github.com/rubocop-hq/rubocop-ast/pull/122): Add `Node#parent?` and `Node#root?`. ([@marcandre][])
+
 ### Changes
 
 * [#121](https://github.com/rubocop-hq/rubocop-ast/pull/121): Update from `Parser::Ruby28` to `Parser::Ruby30` for Ruby 3.0 parser (experimental). ([@koic][])

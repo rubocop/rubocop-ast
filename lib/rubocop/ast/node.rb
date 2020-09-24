@@ -92,6 +92,16 @@ module RuboCop
         @mutable_attributes[:parent] = node
       end
 
+      # @return [Boolean]
+      def parent?
+        !!parent
+      end
+
+      # @return [Boolean]
+      def root?
+        !parent
+      end
+
       def complete!
         @mutable_attributes.freeze
         each_child_node(&:complete!)
