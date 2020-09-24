@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.5.0 (2020-09-24)
+
 ### New features
 
 * [#122](https://github.com/rubocop-hq/rubocop-ast/pull/122): Add `Node#parent?` and `Node#root?`. ([@marcandre][])
