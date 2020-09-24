@@ -25,9 +25,9 @@ jobs:
         title: [ null ]
         include:
           - { os: windows, rubocop: master, ruby: mingw }
-          - { rubocop: '0.89.0', ruby: 2.4, os: ubuntu }
-          - { rubocop: '0.89.0', ruby: head, os: ubuntu }
-          - { rubocop: '0.89.0', ruby: 2.4, os: ubuntu, coverage: true, title: 'Coverage' }
+          - { rubocop: '0.92.0', ruby: 2.4, os: ubuntu }
+          - { rubocop: '0.92.0', ruby: head, os: ubuntu }
+          - { rubocop: '0.92.0', ruby: 2.4, os: ubuntu, coverage: true, title: 'Coverage' }
           - { rubocop: master, ruby: 2.7, os: ubuntu, modern: true, title: 'Specs "modern"' }
           - { rubocop: master, ruby: 2.7, os: ubuntu, internal_investigation: true, modern: true, title: 'Coding Style' }
 
@@ -87,7 +87,7 @@ jobs:
       matrix:
         os: [ ubuntu ]
         ruby: [ 2.4, 2.7 ]
-        rubocop: [ '0.89.0', master ]
+        rubocop: [ '0.92.0', master ]
 
     steps:
       - name: checkout
