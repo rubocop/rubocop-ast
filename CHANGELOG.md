@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.5.1 (2020-09-25)
+
 ### Bug fixes
 
 * [#120](https://github.com/rubocop-hq/rubocop-ast/pull/120): **(Potentially breaking)** Fix false positives and negatives for `SendNode#macro?`. This impacts `{non_}bare_access_modifier?` and `special_access_modifier?`. ([@marcandre][])
