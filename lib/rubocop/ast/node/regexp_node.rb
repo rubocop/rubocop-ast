@@ -14,17 +14,21 @@ module RuboCop
         o: 0
       }.freeze
 
-      # Note: The 'o' option is ignored.
-      #
       # @return [Regexp] a regexp of this node
       def to_regexp
-        option = regopt.children.map { |opt| OPTIONS.fetch(opt) }.inject(:|)
-        Regexp.new(content, option)
+        Regexp.new(content, options)
       end
 
       # @return [RuboCop::AST::Node] a regopt node
       def regopt
         children.last
+      end
+
+      # Note: The 'o' option is ignored.
+      #
+      # @return [Integer] the Regexp option bits as returned by Regexp#options
+      def options
+        regopt.children.map { |opt| OPTIONS.fetch(opt) }.inject(0, :|)
       end
 
       # @return [String] a string of regexp content
