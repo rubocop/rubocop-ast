@@ -101,6 +101,43 @@ RSpec.describe RuboCop::AST::RegexpNode do
     end
   end
 
+  describe '#options' do
+    let(:actual_options) { regexp_node.options }
+    # rubocop:disable Security/Eval
+    let(:expected_options) { eval(source).options }
+    # rubocop:enable Security/Eval
+
+    context 'with an empty regexp' do
+      let(:source) { '//' }
+
+      it { expect(actual_options).to eq(expected_options) }
+    end
+
+    context 'with a regexp without option' do
+      let(:source) { '/.+/' }
+
+      it { expect(actual_options).to eq(expected_options) }
+    end
+
+    context 'with a regexp with single option' do
+      let(:source) { '/.+/i' }
+
+      it { expect(actual_options).to eq(expected_options) }
+    end
+
+    context 'with a regexp with multiple options' do
+      let(:source) { '/.+/ix' }
+
+      it { expect(actual_options).to eq(expected_options) }
+    end
+
+    context 'with a regexp with "o" option' do
+      let(:source) { '/.+/o' }
+
+      it { expect(actual_options).to eq(expected_options) }
+    end
+  end
+
   describe '#content' do
     let(:content) { regexp_node.content }
 
