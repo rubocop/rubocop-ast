@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.6.0 (2020-09-26)
+
 ### New features
 
 * [#124](https://github.com/rubocop-hq/rubocop-ast/pull/124): Add `RegexpNode#options`. ([@owst][])
