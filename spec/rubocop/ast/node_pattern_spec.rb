@@ -2062,6 +2062,14 @@ RSpec.describe RuboCop::AST::NodePattern do
     let(:ruby) { ':hello' }
     let(:instance) { defined_class.new }
 
+    let(:raise_argument_error) do
+      raise_error do |err|
+        expect(err.is_a?(ArgumentError)).to be(true)
+        expect(err.message).to include('wrong number of arguments')
+        expect(err.backtrace_locations.first.lineno).to be(line_no)
+      end
+    end
+
     context 'with a pattern without captures' do
       let(:pattern) { '(sym _)' }
 
@@ -2082,11 +2090,7 @@ RSpec.describe RuboCop::AST::NodePattern do
           let(:params) { [:extra] }
 
           it 'raises an error with the right location' do
-            expect { result }.to(raise_error do |err|
-              expect(err.is_a?(ArgumentError)).to be(true)
-              expect(err.message).to include('wrong number of arguments')
-              expect(err.backtrace_locations.first.lineno).to be(line_no)
-            end)
+            expect { result }.to(raise_argument_error)
           end
         end
       end
@@ -2116,11 +2120,7 @@ RSpec.describe RuboCop::AST::NodePattern do
             let(:params) { [:extra] }
 
             it 'raises an error with the right location' do
-              expect { result }.to(raise_error do |err|
-                expect(err.is_a?(ArgumentError)).to be(true)
-                expect(err.message).to include('wrong number of arguments')
-                expect(err.backtrace_locations.first.lineno).to be(line_no)
-              end)
+              expect { result }.to(raise_argument_error)
             end
           end
         end
@@ -2142,11 +2142,7 @@ RSpec.describe RuboCop::AST::NodePattern do
             let(:params) { [:extra] }
 
             it 'raises an error with the right location' do
-              expect { result }.to(raise_error do |err|
-                expect(err.is_a?(ArgumentError)).to be(true)
-                expect(err.message).to include('wrong number of arguments')
-                expect(err.backtrace_locations.first.lineno).to be(line_no)
-              end)
+              expect { result }.to(raise_argument_error)
             end
           end
         end
@@ -2173,11 +2169,7 @@ RSpec.describe RuboCop::AST::NodePattern do
           let(:params) { [:extra] }
 
           it 'raises an error with the right location' do
-            expect { result }.to(raise_error do |err|
-              expect(err.is_a?(ArgumentError)).to be(true)
-              expect(err.message).to include('wrong number of arguments')
-              expect(err.backtrace_locations.first.lineno).to be(line_no)
-            end)
+            expect { result }.to(raise_argument_error)
           end
         end
       end
@@ -2245,11 +2237,7 @@ RSpec.describe RuboCop::AST::NodePattern do
             let(:params) { [:extra] }
 
             it 'raises an error with the right location' do
-              expect { result }.to(raise_error do |err|
-                expect(err.is_a?(ArgumentError)).to be(true)
-                expect(err.message).to include('wrong number of arguments')
-                expect(err.backtrace_locations.first.lineno).to be(line_no)
-              end)
+              expect { result }.to(raise_argument_error)
             end
           end
         end
@@ -2271,11 +2259,7 @@ RSpec.describe RuboCop::AST::NodePattern do
             let(:params) { [:extra] }
 
             it 'raises an error with the right location' do
-              expect { result }.to(raise_error do |err|
-                expect(err.is_a?(ArgumentError)).to be(true)
-                expect(err.message).to include('wrong number of arguments')
-                expect(err.backtrace_locations.first.lineno).to be(line_no)
-              end)
+              expect { result }.to(raise_argument_error)
             end
           end
         end
