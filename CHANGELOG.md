@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.7.1 (2020-09-28)
+
 ## 0.7.0 (2020-09-27)
 
 ### New features
