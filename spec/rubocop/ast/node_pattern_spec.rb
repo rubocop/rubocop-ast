@@ -2062,12 +2062,6 @@ RSpec.describe RuboCop::AST::NodePattern do
     let(:ruby) { ':hello' }
     let(:instance) { defined_class.new }
 
-    if Set[1] === 1 # rubocop:disable Style/CaseEquality
-      let(:hello_matcher) { Set[:hello, :foo] }
-    else
-      let(:hello_matcher) { Set[:hello, :foo].method(:include?).to_proc }
-    end
-
     context 'with a pattern without captures' do
       let(:pattern) { '(sym _)' }
 
@@ -2201,7 +2195,7 @@ RSpec.describe RuboCop::AST::NodePattern do
 
             context 'when the pattern contains keyword_params' do
               let(:pattern) { '(sym $%foo)' }
-              let(:keyword_params) { { foo: hello_matcher } }
+              let(:keyword_params) { { foo: Set[:hello, :foo] } }
 
               it 'returns an enumerator yielding the captures' do
                 expect(result.is_a?(Enumerator)).to be(true)
@@ -2292,7 +2286,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:pattern) { '(sym %TEST)' }
       let(:helper_name) { :def_node_matcher }
 
-      before { defined_class::TEST = hello_matcher }
+      before { defined_class::TEST = Set[:hello, :foo] }
 
       it { expect(instance).to match_code(node) }
 
