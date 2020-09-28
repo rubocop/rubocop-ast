@@ -30,6 +30,11 @@ jobs:
           - { rubocop: '0.92.0', ruby: 2.4, os: ubuntu, coverage: true, title: 'Coverage' }
           - { rubocop: master, ruby: 2.7, os: ubuntu, modern: true, title: 'Specs "modern"' }
           - { rubocop: master, ruby: 2.7, os: ubuntu, internal_investigation: true, modern: true, title: 'Coding Style' }
+          - { ruby: jruby, rubocop: master, os: ubuntu }
+          # jruby-head disabled because of: https://github.com/jruby/jruby/issues/6416
+          # - { ruby: jruby-head, rubocop: master, os: ubuntu }
+          - { ruby: truffleruby, rubocop: master, os: ubuntu }
+          - { ruby: truffleruby-head, rubocop: master, os: ubuntu }
 
     steps:
       - name: windows misc
