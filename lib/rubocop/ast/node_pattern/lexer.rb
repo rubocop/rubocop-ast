@@ -38,7 +38,7 @@ module RuboCop
 
         # @return [token]
         def emit(type)
-          value = ss.captures.first || ss.matched
+          value = ss[1] || ss.matched
           value = yield value if block_given?
           token = token(type, value)
           @tokens << token
@@ -50,7 +50,8 @@ module RuboCop
         end
 
         def emit_regexp
-          body, options = ss.captures
+          body = ss[1]
+          options = ss[2]
           flag = options.each_char.map { |c| REGEXP_OPTIONS[c] }.sum
 
           emit(:tREGEXP) { Regexp.new(body, flag) }
