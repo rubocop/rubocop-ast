@@ -4,6 +4,8 @@ source 'https://rubygems.org'
 
 # This Gemfile is not required from the main Gemfile by design
 
+gem 'oedipus_lex', require: false
+gem 'racc'
 gem 'rubocop-performance'
 gem 'rubocop-rspec'
 version = ENV['RUBOCOP_VERSION']
