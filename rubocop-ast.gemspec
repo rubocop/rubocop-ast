@@ -34,8 +34,6 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency('parser', '>= 2.7.1.5')
 
-  s.add_runtime_dependency('strscan', '>= 1.0.0') # Ruby 2.4 doesn't provide `captures`
-
   s.add_development_dependency('bundler', '>= 1.15.0', '< 3.0')
 
   # #### Do NOT add `rubocop` (or anything depending on `rubocop`), even as a
