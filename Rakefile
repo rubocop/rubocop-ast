@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+task build: :generate
+
 require 'bundler'
 require 'bundler/gem_tasks'
 
