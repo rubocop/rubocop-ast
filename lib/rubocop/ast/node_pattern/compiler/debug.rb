@@ -43,7 +43,7 @@ module RuboCop
 
             # Result of a NodePattern run against a particular AST
             # Consider constructor is private
-            Result = Struct.new(:colorizer, :trace, :returned, :ruby_ast) do # rubocop:disable Metrics/BlockLength
+            Result = Struct.new(:colorizer, :trace, :returned, :ruby_ast) do
               # @return [String] a Rainbow colorized version of ruby
               def colorize(color_scheme = COLOR_SCHEME)
                 map = color_map(color_scheme)
