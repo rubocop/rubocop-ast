@@ -11,7 +11,7 @@ namespace :cut_release do
   %w[major minor patch pre].each do |release_type|
     desc "Cut a new #{release_type} release, create release notes " \
          'and update documents.'
-    task release_type do
+    task release_type => 'changelog:check_clean' do
       run(release_type)
     end
   end
@@ -54,7 +54,7 @@ namespace :cut_release do
 end
 
 desc 'and restore docs/antora'
-task :release do
+task release: 'changelog:check_clean' do
   update_file 'docs/antora.yml' do |s|
     s.gsub!(/version: .*/, 'version: master')
   end
