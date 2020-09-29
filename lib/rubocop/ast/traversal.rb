@@ -195,6 +195,7 @@ module RuboCop
         children = node.children
         child = children[0]
         send(:"on_#{child.type}", child)
+        on_args(node.arguments)
         return unless (child = children[2])
 
         send(:"on_#{child.type}", child)

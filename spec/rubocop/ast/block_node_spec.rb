@@ -36,9 +36,9 @@ RSpec.describe RuboCop::AST::BlockNode do
 
     context '>= Ruby 2.7', :ruby27 do
       context 'using numbered parameters' do
-        let(:source) { 'foo { _1 }' }
+        let(:source) { 'foo { _1 + _3 }' }
 
-        it { expect(block_node.arguments.empty?).to be(true) }
+        it { expect(block_node.arguments.size).to eq(3) }
       end
     end
   end
@@ -72,7 +72,7 @@ RSpec.describe RuboCop::AST::BlockNode do
       context 'using numbered parameters' do
         let(:source) { 'foo { _1 }' }
 
-        it { expect(block_node.arguments?).to be false }
+        it { expect(block_node.arguments?).to eq(true) }
       end
     end
   end

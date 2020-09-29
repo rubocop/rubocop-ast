@@ -83,6 +83,20 @@ module RuboCop
         value(token)
       end
 
+      # @api private
+      # @return [Node] A node corresponding to the equivalent block `:args` node
+      def self.numblock_arguments(numblock)
+        nb = numblock.children[1]
+        type = nb == 1 && emit_procarg0 ? :procarg0 : :arg
+        args = 1.upto(nb).map do |i|
+          Node.new(type, [:"_#{i}"])
+        end
+        node = ArgsNode.new(:args, args)
+        node.send :parent=, numblock
+        node.complete!
+        node
+      end
+
       private
 
       def node_klass(type)

@@ -14,21 +14,27 @@ module RuboCop
       VOID_CONTEXT_METHODS = %i[each tap].freeze
       private_constant :VOID_CONTEXT_METHODS
 
+      def complete!
+        @mutable_attributes[:arguments] = Builder.numblock_arguments(self) if numblock_type?
+        super
+      end
+
       # The `send` node associated with this block.
       #
       # @return [SendNode] the `send` node associated with the `block` node
       def send_node
-        node_parts[0]
+        children[0]
       end
 
       # The arguments of this block.
+      # For `:numblock` type, simili arguments are returned
       #
       # @return [Array<Node>]
       def arguments
         if numblock_type?
-          [].freeze # Numbered parameters have no block arguments.
+          @mutable_attributes[:arguments]
         else
-          node_parts[1]
+          children[1]
         end
       end
 
@@ -36,7 +42,7 @@ module RuboCop
       #
       # @return [Node, nil] the body of the `block` node or `nil`
       def body
-        node_parts[2]
+        children[2]
       end
 
       # The name of the dispatched method as a symbol.
@@ -48,9 +54,16 @@ module RuboCop
 
       # Checks whether this block takes any arguments.
       #
+      # @return [Integer, nil] number of arguments, or `nil` if not a `numblock`.
+      def numbered_arguments
+        children[1] if numblock_type?
+      end
+
+      # Checks whether this block takes any arguments.
+      #
       # @return [Boolean] whether this `block` node takes any arguments
       def arguments?
-        !arguments.empty?
+        numblock_type? || !arguments.empty?
       end
 
       # Checks whether the `block` literal is delimited by curly braces.
