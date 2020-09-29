@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#49](https://github.com/rubocop-hq/rubocop-ast/pull/49): Add `DefNode#endless?` (Ruby 3.0). ([@marcandre][])
+
 ## 0.7.1 (2020-09-28)
 
 ### Bug fixes

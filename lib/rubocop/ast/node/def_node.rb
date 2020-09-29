@@ -58,6 +58,11 @@ module RuboCop
       def receiver
         children[-4]
       end
+
+      # @return [Boolean] if the definition is without an `end` or not.
+      def endless?
+        !loc.end
+      end
     end
   end
 end

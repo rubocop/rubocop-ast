@@ -516,4 +516,18 @@ RSpec.describe RuboCop::AST::DefNode do
       it { expect(def_node.body.begin_type?).to be(true) }
     end
   end
+
+  describe '#endless?' do
+    context 'with standard method definition' do
+      let(:source) { 'def foo; 42; end' }
+
+      it { expect(def_node.endless?).to be(false) }
+    end
+
+    context 'with endless method definition', :ruby30 do
+      let(:source) { 'def foo() = 42' }
+
+      it { expect(def_node.endless?).to be(true) }
+    end
+  end
 end
