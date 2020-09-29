@@ -34,6 +34,10 @@ RSpec.shared_context 'ruby 2.7', :ruby27 do
   let(:ruby_version) { 2.7 }
 end
 
+RSpec.shared_context 'ruby 3.0', :ruby30 do
+  let(:ruby_version) { 3.0 }
+end
+
 # ...
 module DefaultRubyVersion
   extend RSpec::SharedContext
