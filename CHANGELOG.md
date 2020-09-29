@@ -4,6 +4,10 @@
 
 ## 0.7.1 (2020-09-28)
 
+### Bug fixes
+
+* [#127](https://github.com/rubocop-hq/rubocop-ast/pull/127): Fix dependency issue for JRuby. ([@marcandre][])
+
 ## 0.7.0 (2020-09-27)
 
 ### New features
