@@ -2066,7 +2066,7 @@ RSpec.describe RuboCop::AST::NodePattern do
       raise_error do |err|
         expect(err.is_a?(ArgumentError)).to be(true)
         expect(err.message).to include('wrong number of arguments')
-        expect(err.backtrace_locations.first.lineno).to be(line_no) unless RUBY_PLATFORM == 'java'
+        expect(err.backtrace_locations.first.lineno).to be(line_no) if RUBY_ENGINE == 'ruby'
       end
     end
 
