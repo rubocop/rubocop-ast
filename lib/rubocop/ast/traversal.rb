@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ModuleLength
 module RuboCop
   module AST
     # Provides methods for traversing an AST.
@@ -8,6 +7,11 @@ module RuboCop
     # Override methods to perform custom processing. Remember to call `super`
     # if you want to recursively process descendant nodes.
     module Traversal
+      # Only for debugging.
+      # @api private
+      class DebugError < RuntimeError
+      end
+
       TYPE_TO_METHOD = Hash.new { |h, type| h[type] = :"on_#{type}" }
 
       def walk(node)
@@ -17,191 +21,145 @@ module RuboCop
         nil
       end
 
-      NO_CHILD_NODES    = %i[true false nil int float complex
-                             rational str sym regopt self lvar
-                             ivar cvar gvar nth_ref back_ref cbase
-                             arg restarg blockarg shadowarg
-                             kwrestarg zsuper redo retry
-                             forward_args forwarded_args
-                             match_var match_nil_pattern empty_else
-                             forward_arg lambda procarg0 __ENCODING__].freeze
-      ONE_CHILD_NODE    = %i[splat kwsplat block_pass not break next
-                             preexe postexe match_current_line defined?
-                             arg_expr pin match_rest if_guard unless_guard
-                             match_with_trailing_comma].freeze
-      MANY_CHILD_NODES  = %i[dstr dsym xstr regexp array hash pair
-                             mlhs masgn or_asgn and_asgn rasgn mrasgn
-                             undef alias args super yield or and
-                             while_post until_post iflipflop eflipflop
-                             match_with_lvasgn begin kwbegin return
-                             in_match match_alt
-                             match_as array_pattern array_pattern_with_tail
-                             hash_pattern const_pattern find_pattern
-                             index indexasgn].freeze
-      SECOND_CHILD_ONLY = %i[lvasgn ivasgn cvasgn gvasgn optarg kwarg
-                             kwoptarg].freeze
-      private_constant :NO_CHILD_NODES, :ONE_CHILD_NODE, :MANY_CHILD_NODES, :SECOND_CHILD_ONLY
+      # @api private
+      module CallbackCompiler
+        SEND = 'send(TYPE_TO_METHOD[child.type], child)'
+        assign_code = 'child = node.children[%<index>i]'
+        code = "#{assign_code}\n#{SEND}"
+        TEMPLATE = {
+          skip: '',
+          always: code,
+          nil?: "#{code} if child"
+        }.freeze
 
-      NO_CHILD_NODES.each do |type|
-        module_eval("def on_#{type}(node); end", __FILE__, __LINE__)
-      end
-
-      ONE_CHILD_NODE.each do |type|
-        module_eval(<<~RUBY, __FILE__, __LINE__ + 1)
-          def on_#{type}(node)
-            if (child = node.children[0])
-              send(TYPE_TO_METHOD[child.type], child)
+        def def_callback(type, *signature,
+                         arity: signature.size..signature.size,
+                         arity_check: ENV['RUBOCOP_DEBUG'] && self.arity_check(arity),
+                         body: self.body(signature, arity_check))
+          type, *aliases = type
+          lineno = caller_locations(1, 1).first.lineno
+          module_eval(<<~RUBY, __FILE__, lineno) # rubocop:disable Style/EvalWithLocation
+            def on_#{type}(node)
+              #{body}
+              nil
             end
+          RUBY
+          aliases.each do |m|
+            alias_method "on_#{m}", "on_#{type}"
           end
-        RUBY
-      end
+        end
 
-      MANY_CHILD_NODES.each do |type|
-        module_eval(<<~RUBY, __FILE__, __LINE__ + 1)
-          def on_#{type}(node)
-            node.children.each { |child| send(TYPE_TO_METHOD[child.type], child) }
-            nil
-          end
-        RUBY
-      end
-
-      SECOND_CHILD_ONLY.each do |type|
-        # Guard clause is for nodes nested within mlhs
-        module_eval(<<~RUBY, __FILE__, __LINE__ + 1)
-          def on_#{type}(node)
-            if (child = node.children[1])
-              send(TYPE_TO_METHOD[child.type], child)
+        def body(signature, prelude)
+          signature
+            .map.with_index do |arg, i|
+              TEMPLATE[arg].gsub('%<index>i', i.to_s)
             end
-          end
-        RUBY
-      end
-
-      def on_const(node)
-        return unless (child = node.children[0])
-
-        send(TYPE_TO_METHOD[child.type], child)
-      end
-
-      def on_casgn(node)
-        children = node.children
-        if (child = children[0]) # always const???
-          send(TYPE_TO_METHOD[child.type], child)
+            .unshift(prelude)
+            .join("\n")
         end
-        return unless (child = children[2])
 
-        send(TYPE_TO_METHOD[child.type], child)
-      end
-
-      def on_class(node)
-        children = node.children
-        child = children[0] # always const???
-        send(TYPE_TO_METHOD[child.type], child)
-        if (child = children[1])
-          send(TYPE_TO_METHOD[child.type], child)
+        def arity_check(range)
+          <<~RUBY
+            n = node.children.size
+            raise DebugError, [
+              'Expected #{range} children, got',
+              n, 'for', node.inspect
+            ].join(' ') unless (#{range}).cover?(node.children.size)
+          RUBY
         end
-        return unless (child = children[2])
-
-        send(TYPE_TO_METHOD[child.type], child)
       end
+      private_constant :CallbackCompiler
+      extend CallbackCompiler
+      send_code = CallbackCompiler::SEND
 
-      def on_def(node)
-        children = node.children
-        on_args(children[1])
-        return unless (child = children[2])
+      ### arity == 0
+      no_children = %i[true false nil self cbase zsuper redo retry
+                       forward_args forwarded_args match_nil_pattern
+                       forward_arg lambda empty_else kwnilarg
+                       __FILE__ __LINE__ __ENCODING__]
 
-        send(TYPE_TO_METHOD[child.type], child)
-      end
+      ### arity == 0..1
+      opt_symbol_child = %i[restarg kwrestarg]
+      opt_node_child = %i[splat kwsplat match_rest]
 
-      def on_send(node)
+      ### arity == 1
+      literal_child = %i[int float complex
+                         rational str sym lvar
+                         ivar cvar gvar nth_ref back_ref
+                         arg blockarg shadowarg
+                         kwarg match_var]
+
+      many_symbol_children = %i[regopt]
+
+      node_child = %i[block_pass not
+                      match_current_line defined?
+                      arg_expr pin if_guard unless_guard
+                      match_with_trailing_comma]
+      node_or_nil_child = %i[preexe postexe]
+
+      NO_CHILD_NODES = (no_children + opt_symbol_child + literal_child).to_set.freeze
+      private_constant :NO_CHILD_NODES # Used by Commissioner
+
+      ### arity > 1
+      symbol_then_opt_node = %i[lvasgn ivasgn cvasgn gvasgn]
+      symbol_then_node_or_nil = %i[optarg kwoptarg]
+      node_then_opt_node = %i[while until module sclass]
+
+      ### variable arity
+      many_node_children = %i[dstr dsym xstr regexp array hash pair
+                              mlhs masgn or_asgn and_asgn rasgn mrasgn
+                              undef alias args super yield or and
+                              while_post until_post iflipflop eflipflop
+                              match_with_lvasgn begin kwbegin return
+                              in_match match_alt break next
+                              match_as array_pattern array_pattern_with_tail
+                              hash_pattern const_pattern find_pattern
+                              index indexasgn procarg0]
+      many_opt_node_children = %i[case rescue resbody ensure for when
+                                  case_match in_pattern irange erange]
+
+      ### Callbacks for above
+      def_callback no_children
+      def_callback opt_symbol_child, :skip, arity: 0..1
+      def_callback opt_node_child, :nil?, arity: 0..1
+
+      def_callback literal_child, :skip
+      def_callback node_child, :always
+      def_callback node_or_nil_child, :nil?
+
+      def_callback symbol_then_opt_node, :skip, :nil?, arity: 1..2
+      def_callback symbol_then_node_or_nil, :skip, :nil?
+      def_callback node_then_opt_node, :always, :nil?
+
+      def_callback many_symbol_children, :skip, arity_check: nil
+      def_callback many_node_children, body: <<~RUBY
+        node.children.each { |child| #{send_code} }
+      RUBY
+      def_callback many_opt_node_children,
+                   body: <<~RUBY
+                     node.children.each { |child| #{send_code} if child }
+                   RUBY
+
+      ### Other particular cases
+      def_callback :const, :nil?, :skip
+      def_callback :casgn, :nil?, :skip, :nil?, arity: 2..3
+      def_callback :class, :always, :nil?, :nil?
+      def_callback :def, :skip, :always, :nil?
+      def_callback :op_asgn, :always, :skip, :always
+      def_callback :if, :always, :nil?, :nil?
+      def_callback :block, :always, :always, :nil?
+      def_callback :numblock, :always, :skip, :nil?
+      def_callback :defs, :always, :skip, :always, :nil?
+
+      def_callback %i[send csend], body: <<~RUBY
         node.children.each_with_index do |child, i|
           next if i == 1
 
-          send(TYPE_TO_METHOD[child.type], child) if child
+          #{send_code} if child
         end
-        nil
-      end
+      RUBY
 
-      alias on_csend on_send
-
-      def on_op_asgn(node)
-        children = node.children
-        child = children[0]
-        send(TYPE_TO_METHOD[child.type], child)
-        child = children[2]
-        send(TYPE_TO_METHOD[child.type], child)
-      end
-
-      def on_defs(node)
-        children = node.children
-        child = children[0]
-        send(TYPE_TO_METHOD[child.type], child)
-        on_args(children[2])
-        return unless (child = children[3])
-
-        send(TYPE_TO_METHOD[child.type], child)
-      end
-
-      def on_if(node)
-        children = node.children
-        child = children[0]
-        send(TYPE_TO_METHOD[child.type], child)
-        if (child = children[1])
-          send(TYPE_TO_METHOD[child.type], child)
-        end
-        return unless (child = children[2])
-
-        send(TYPE_TO_METHOD[child.type], child)
-      end
-
-      def on_while(node)
-        children = node.children
-        child = children[0]
-        send(TYPE_TO_METHOD[child.type], child)
-        return unless (child = children[1])
-
-        send(TYPE_TO_METHOD[child.type], child)
-      end
-
-      alias on_until  on_while
-      alias on_module on_while
-      alias on_sclass on_while
-
-      def on_block(node)
-        children = node.children
-        child = children[0]
-        send(TYPE_TO_METHOD[child.type], child) # can be send, zsuper...
-        on_args(children[1])
-        return unless (child = children[2])
-
-        send(TYPE_TO_METHOD[child.type], child)
-      end
-
-      def on_case(node)
-        node.children.each do |child|
-          send(TYPE_TO_METHOD[child.type], child) if child
-        end
-        nil
-      end
-
-      alias on_rescue     on_case
-      alias on_resbody    on_case
-      alias on_ensure     on_case
-      alias on_for        on_case
-      alias on_when       on_case
-      alias on_case_match on_case
-      alias on_in_pattern on_case
-      alias on_irange     on_case
-      alias on_erange     on_case
-
-      def on_numblock(node)
-        children = node.children
-        child = children[0]
-        send(TYPE_TO_METHOD[child.type], child)
-        return unless (child = children[2])
-
-        send(TYPE_TO_METHOD[child.type], child)
-      end
-
+      ### generic processing of any other node (forward compatibility)
       defined = instance_methods(false)
                 .grep(/^on_/)
                 .map { |s| s.to_s[3..-1].to_sym } # :on_foo => :foo
@@ -211,18 +169,13 @@ module RuboCop
       to_define -= %i[numargs ident] # transient
       to_define -= %i[blockarg_expr restarg_expr] # obsolete
       to_define -= %i[objc_kwarg objc_restarg objc_varargs] # mac_ruby
-      to_define.each do |type|
-        module_eval(<<~RUBY, __FILE__, __LINE__ + 1)
-          def on_#{type}(node)
-            node.children.each do |child|
-              next unless child.class == Node
-              send(TYPE_TO_METHOD[child.type], child)
-            end
-            nil
-          end
-        RUBY
-      end
+      def_callback to_define, body: <<~RUBY
+        node.children.each do |child|
+          next unless child.class == Node
+          #{send_code}
+        end
+      RUBY
+      MISSING = to_define if ENV['RUBOCOP_DEBUG']
     end
   end
 end
-# rubocop:enable Metrics/ModuleLength

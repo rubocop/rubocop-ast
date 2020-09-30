@@ -36,6 +36,7 @@ task :internal_investigation do
           else
             'rubocop'
           end
+    ENV['RUBOCOP_DEBUG'] = 't'
     sh exe
   end
 end

@@ -8,6 +8,8 @@ if ENV.fetch('COVERAGE', 'f').start_with? 't'
   SimpleCov.start
 end
 
+ENV['RUBOCOP_DEBUG'] = 't'
+
 require 'rubocop-ast'
 if ENV['MODERNIZE']
   RuboCop::AST::Builder.modernize
