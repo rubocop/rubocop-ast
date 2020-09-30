@@ -201,6 +201,27 @@ module RuboCop
 
         send(TYPE_TO_METHOD[child.type], child)
       end
+
+      defined = instance_methods(false)
+                .grep(/^on_/)
+                .map { |s| s.to_s[3..-1].to_sym } # :on_foo => :foo
+
+      to_define = ::Parser::Meta::NODE_TYPES.to_a
+      to_define -= defined
+      to_define -= %i[numargs ident] # transient
+      to_define -= %i[blockarg_expr restarg_expr] # obsolete
+      to_define -= %i[objc_kwarg objc_restarg objc_varargs] # mac_ruby
+      to_define.each do |type|
+        module_eval(<<~RUBY, __FILE__, __LINE__ + 1)
+          def on_#{type}(node)
+            node.children.each do |child|
+              next unless child.class == Node
+              send(TYPE_TO_METHOD[child.type], child)
+            end
+            nil
+          end
+        RUBY
+      end
     end
   end
 end
