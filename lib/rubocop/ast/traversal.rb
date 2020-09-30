@@ -8,10 +8,12 @@ module RuboCop
     # Override methods to perform custom processing. Remember to call `super`
     # if you want to recursively process descendant nodes.
     module Traversal
+      TYPE_TO_METHOD = Hash.new { |h, type| h[type] = :"on_#{type}" }
+
       def walk(node)
         return if node.nil?
 
-        send(:"on_#{node.type}", node)
+        send(TYPE_TO_METHOD[node.type], node)
         nil
       end
 
@@ -48,7 +50,7 @@ module RuboCop
         module_eval(<<~RUBY, __FILE__, __LINE__ + 1)
           def on_#{type}(node)
             if (child = node.children[0])
-              send(:"on_\#{child.type}", child)
+              send(TYPE_TO_METHOD[child.type], child)
             end
           end
         RUBY
@@ -57,7 +59,7 @@ module RuboCop
       MANY_CHILD_NODES.each do |type|
         module_eval(<<~RUBY, __FILE__, __LINE__ + 1)
           def on_#{type}(node)
-            node.children.each { |child| send(:"on_\#{child.type}", child) }
+            node.children.each { |child| send(TYPE_TO_METHOD[child.type], child) }
             nil
           end
         RUBY
@@ -68,7 +70,7 @@ module RuboCop
         module_eval(<<~RUBY, __FILE__, __LINE__ + 1)
           def on_#{type}(node)
             if (child = node.children[1])
-              send(:"on_\#{child.type}", child)
+              send(TYPE_TO_METHOD[child.type], child)
             end
           end
         RUBY
@@ -77,29 +79,29 @@ module RuboCop
       def on_const(node)
         return unless (child = node.children[0])
 
-        send(:"on_#{child.type}", child)
+        send(TYPE_TO_METHOD[child.type], child)
       end
 
       def on_casgn(node)
         children = node.children
         if (child = children[0]) # always const???
-          send(:"on_#{child.type}", child)
+          send(TYPE_TO_METHOD[child.type], child)
         end
         return unless (child = children[2])
 
-        send(:"on_#{child.type}", child)
+        send(TYPE_TO_METHOD[child.type], child)
       end
 
       def on_class(node)
         children = node.children
         child = children[0] # always const???
-        send(:"on_#{child.type}", child)
+        send(TYPE_TO_METHOD[child.type], child)
         if (child = children[1])
-          send(:"on_#{child.type}", child)
+          send(TYPE_TO_METHOD[child.type], child)
         end
         return unless (child = children[2])
 
-        send(:"on_#{child.type}", child)
+        send(TYPE_TO_METHOD[child.type], child)
       end
 
       def on_def(node)
@@ -107,14 +109,14 @@ module RuboCop
         on_args(children[1])
         return unless (child = children[2])
 
-        send(:"on_#{child.type}", child)
+        send(TYPE_TO_METHOD[child.type], child)
       end
 
       def on_send(node)
         node.children.each_with_index do |child, i|
           next if i == 1
 
-          send(:"on_#{child.type}", child) if child
+          send(TYPE_TO_METHOD[child.type], child) if child
         end
         nil
       end
@@ -124,40 +126,40 @@ module RuboCop
       def on_op_asgn(node)
         children = node.children
         child = children[0]
-        send(:"on_#{child.type}", child)
+        send(TYPE_TO_METHOD[child.type], child)
         child = children[2]
-        send(:"on_#{child.type}", child)
+        send(TYPE_TO_METHOD[child.type], child)
       end
 
       def on_defs(node)
         children = node.children
         child = children[0]
-        send(:"on_#{child.type}", child)
+        send(TYPE_TO_METHOD[child.type], child)
         on_args(children[2])
         return unless (child = children[3])
 
-        send(:"on_#{child.type}", child)
+        send(TYPE_TO_METHOD[child.type], child)
       end
 
       def on_if(node)
         children = node.children
         child = children[0]
-        send(:"on_#{child.type}", child)
+        send(TYPE_TO_METHOD[child.type], child)
         if (child = children[1])
-          send(:"on_#{child.type}", child)
+          send(TYPE_TO_METHOD[child.type], child)
         end
         return unless (child = children[2])
 
-        send(:"on_#{child.type}", child)
+        send(TYPE_TO_METHOD[child.type], child)
       end
 
       def on_while(node)
         children = node.children
         child = children[0]
-        send(:"on_#{child.type}", child)
+        send(TYPE_TO_METHOD[child.type], child)
         return unless (child = children[1])
 
-        send(:"on_#{child.type}", child)
+        send(TYPE_TO_METHOD[child.type], child)
       end
 
       alias on_until  on_while
@@ -167,16 +169,16 @@ module RuboCop
       def on_block(node)
         children = node.children
         child = children[0]
-        send(:"on_#{child.type}", child) # can be send, zsuper...
+        send(TYPE_TO_METHOD[child.type], child) # can be send, zsuper...
         on_args(children[1])
         return unless (child = children[2])
 
-        send(:"on_#{child.type}", child)
+        send(TYPE_TO_METHOD[child.type], child)
       end
 
       def on_case(node)
         node.children.each do |child|
-          send(:"on_#{child.type}", child) if child
+          send(TYPE_TO_METHOD[child.type], child) if child
         end
         nil
       end
@@ -194,10 +196,10 @@ module RuboCop
       def on_numblock(node)
         children = node.children
         child = children[0]
-        send(:"on_#{child.type}", child)
+        send(TYPE_TO_METHOD[child.type], child)
         return unless (child = children[2])
 
-        send(:"on_#{child.type}", child)
+        send(TYPE_TO_METHOD[child.type], child)
       end
     end
   end
