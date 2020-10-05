@@ -358,8 +358,8 @@ def_node_matcher :class_creator, '(send #global_const?({:Class :Module}) :new ..
 
 The RuboCop base includes two useful methods to use the node pattern with Ruby in a
 simple way. You can use the macros to define methods. The basics are
-https://www.rubydoc.info/gems/rubocop/RuboCop/NodePattern/Macros#def_node_matcher-instance_method[def_node_matcher]
-and https://www.rubydoc.info/gems/rubocop/RuboCop/NodePattern/Macros#def_node_search-instance_method[def_node_search].
+https://www.rubydoc.info/gems/rubocop-ast/RuboCop/AST/NodePattern/Macros#def_node_matcher-instance_method[def_node_matcher]
+and https://www.rubydoc.info/gems/rubocop-ast/RuboCop/AST/NodePattern/Macros#def_node_search-instance_method[def_node_search].
 
 When you define a pattern, it creates a method that accepts a node and tries to match.
 
