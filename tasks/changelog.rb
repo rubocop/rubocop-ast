@@ -58,7 +58,7 @@ class Changelog # rubocop:disable Metrics/ClassLength
       str
         .downcase
         .split
-        .each { |s| s.gsub(/\W/, '') }
+        .each { |s| s.gsub!(/\W/, '') }
         .reject(&:empty?)
         .inject do |result, word|
           s = "#{result}_#{word}"
