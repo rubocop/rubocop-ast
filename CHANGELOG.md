@@ -5,6 +5,12 @@
 ### New features
 
 * [#49](https://github.com/rubocop-hq/rubocop-ast/pull/49): Add `DefNode#endless?` (Ruby 3.0). ([@marcandre][])
+* [#117](https://github.com/rubocop-hq/rubocop-ast/pull/117): Future-proof `AST::Traversal` by detecting unknown `Node` types. ([@marcandre][])
+* [#131](https://github.com/rubocop-hq/rubocop-ast/pull/131): Add rake tasks to merge and create Changelog entries. ([@marcandre][])
+
+### Bug fixes
+
+* [#117](https://github.com/rubocop-hq/rubocop-ast/pull/117): All nodes of `break` and `next` are now traversed. ([@marcandre][])
 
 ## 0.7.1 (2020-09-28)
 
