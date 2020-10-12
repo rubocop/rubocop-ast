@@ -24,7 +24,7 @@ namespace :changelog do
   end
 
   task :check_clean do
-    return unless Changelog.pending?
+    next unless Changelog.pending?
 
     puts '*** Pending changelog entries!'
     puts 'Do `bundle exec rake changelog:merge`'

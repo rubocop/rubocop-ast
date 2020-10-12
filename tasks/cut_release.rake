@@ -54,7 +54,7 @@ namespace :cut_release do
 end
 
 desc 'and restore docs/antora'
-task release: 'changelog:check_clean' do
+task :release do
   update_file 'docs/antora.yml' do |s|
     s.gsub!(/version: .*/, 'version: master')
   end

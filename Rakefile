@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 task build: :generate
+task release: 'changelog:check_clean'
 
 require 'bundler'
 require 'bundler/gem_tasks'
