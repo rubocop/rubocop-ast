@@ -92,7 +92,10 @@ Metrics/ModuleLength:
     - 'spec/**/*.rb'
 
 RSpec/PredicateMatcher:
-  EnforcedStyle: explicit
+  Strict: false
+
+RSpec/ImplicitSubject:
+  Enabled: false
 
 RSpec/MessageSpies:
   EnforcedStyle: receive

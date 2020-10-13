@@ -6,14 +6,14 @@ RSpec.describe RuboCop::AST::ArrayNode do
   describe '.new' do
     let(:source) { '[]' }
 
-    it { expect(array_node.is_a?(described_class)).to be(true) }
+    it { expect(array_node).to be_a(described_class) }
   end
 
   describe '#values' do
     context 'with an empty array' do
       let(:source) { '[]' }
 
-      it { expect(array_node.values.empty?).to be(true) }
+      it { expect(array_node.values).to be_empty }
     end
 
     context 'with an array of literals' do
@@ -35,7 +35,7 @@ RSpec.describe RuboCop::AST::ArrayNode do
     let(:source) { '[1, 2, 3]' }
 
     context 'with block' do
-      it { expect(array_node.each_value {}.is_a?(described_class)).to be(true) }
+      it { expect(array_node.each_value {}).to be_a(described_class) }
 
       it do
         ret = []
@@ -46,7 +46,7 @@ RSpec.describe RuboCop::AST::ArrayNode do
     end
 
     context 'without block' do
-      it { expect(array_node.each_value.is_a?(Enumerator)).to be(true) }
+      it { expect(array_node.each_value).to be_a(Enumerator) }
     end
   end
 
@@ -54,13 +54,13 @@ RSpec.describe RuboCop::AST::ArrayNode do
     context 'with square brackets' do
       let(:source) { '[1, 2, 3]' }
 
-      it { expect(array_node.square_brackets?).to be_truthy }
+      it { expect(array_node).to be_square_brackets }
     end
 
     context 'with a percent literal' do
       let(:source) { '%w(foo bar)' }
 
-      it { expect(array_node.square_brackets?).to be_falsey }
+      it { expect(array_node).not_to be_square_brackets }
     end
   end
 
@@ -68,25 +68,25 @@ RSpec.describe RuboCop::AST::ArrayNode do
     context 'with square brackets' do
       let(:source) { '[1, 2, 3]' }
 
-      it { expect(array_node.percent_literal?).to be_falsey }
-      it { expect(array_node.percent_literal?(:string)).to be_falsey }
-      it { expect(array_node.percent_literal?(:symbol)).to be_falsey }
+      it { expect(array_node).not_to be_percent_literal }
+      it { expect(array_node).not_to be_percent_literal(:string) }
+      it { expect(array_node).not_to be_percent_literal(:symbol) }
     end
 
     context 'with a string percent literal' do
       let(:source) { '%w(foo bar)' }
 
-      it { expect(array_node.percent_literal?).to be_truthy }
-      it { expect(array_node.percent_literal?(:string)).to be_truthy }
-      it { expect(array_node.percent_literal?(:symbol)).to be_falsey }
+      it { expect(array_node).to be_percent_literal }
+      it { expect(array_node).to be_percent_literal(:string) }
+      it { expect(array_node).not_to be_percent_literal(:symbol) }
     end
 
     context 'with a symbol percent literal' do
       let(:source) { '%i(foo bar)' }
 
-      it { expect(array_node.percent_literal?).to be_truthy }
-      it { expect(array_node.percent_literal?(:string)).to be_falsey }
-      it { expect(array_node.percent_literal?(:symbol)).to be_truthy }
+      it { expect(array_node).to be_percent_literal }
+      it { expect(array_node).not_to be_percent_literal(:string) }
+      it { expect(array_node).to be_percent_literal(:symbol) }
     end
   end
 
@@ -94,13 +94,13 @@ RSpec.describe RuboCop::AST::ArrayNode do
     context 'with square brackets' do
       let(:source) { '[1, 2, 3]' }
 
-      it { expect(array_node.bracketed?).to be(true) }
+      it { expect(array_node).to be_bracketed }
     end
 
     context 'with a percent literal' do
       let(:source) { '%w(foo bar)' }
 
-      it { expect(array_node.bracketed?).to be(true) }
+      it { expect(array_node).to be_bracketed }
     end
 
     context 'unbracketed' do

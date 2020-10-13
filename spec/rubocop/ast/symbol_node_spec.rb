@@ -9,7 +9,7 @@ RSpec.describe RuboCop::AST::SymbolNode do
         ':foo'
       end
 
-      it { expect(sym_node.is_a?(described_class)).to be(true) }
+      it { expect(sym_node).to be_a(described_class) }
     end
   end
 

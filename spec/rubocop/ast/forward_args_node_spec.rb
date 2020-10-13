@@ -11,7 +11,7 @@ RSpec.describe RuboCop::AST::ForwardArgsNode do
       end
     else
       describe '.new' do
-        it { expect(args_node.is_a?(described_class)).to be(true) }
+        it { expect(args_node).to be_a(described_class) }
       end
 
       describe '#to_a' do

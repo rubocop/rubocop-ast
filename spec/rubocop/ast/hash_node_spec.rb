@@ -6,14 +6,14 @@ RSpec.describe RuboCop::AST::HashNode do
   describe '.new' do
     let(:source) { '{}' }
 
-    it { expect(hash_node.is_a?(described_class)).to be(true) }
+    it { expect(hash_node).to be_a(described_class) }
   end
 
   describe '#pairs' do
     context 'with an empty hash' do
       let(:source) { '{}' }
 
-      it { expect(hash_node.pairs.empty?).to be(true) }
+      it { expect(hash_node.pairs).to be_empty }
     end
 
     context 'with a hash of literals' do
@@ -35,19 +35,19 @@ RSpec.describe RuboCop::AST::HashNode do
     context 'with an empty hash' do
       let(:source) { '{}' }
 
-      it { expect(hash_node.empty?).to be(true) }
+      it { expect(hash_node).to be_empty }
     end
 
     context 'with a hash containing pairs' do
       let(:source) { '{ a: 1, b: 2 }' }
 
-      it { expect(hash_node.empty?).to be(false) }
+      it { expect(hash_node).not_to be_empty }
     end
 
     context 'with a hash containing a keyword splat' do
       let(:source) { '{ **foo }' }
 
-      it { expect(hash_node.empty?).to be(false) }
+      it { expect(hash_node).not_to be_empty }
     end
   end
 
@@ -55,7 +55,7 @@ RSpec.describe RuboCop::AST::HashNode do
     context 'with an empty hash' do
       let(:source) { '{}' }
 
-      it { expect(hash_node.keys.empty?).to be(true) }
+      it { expect(hash_node.keys).to be_empty }
     end
 
     context 'with a hash with symbol keys' do
@@ -77,7 +77,7 @@ RSpec.describe RuboCop::AST::HashNode do
     let(:source) { '{ a: 1, b: 2, c: 3 }' }
 
     context 'when not passed a block' do
-      it { expect(hash_node.each_key.is_a?(Enumerator)).to be(true) }
+      it { expect(hash_node.each_key).to be_a(Enumerator) }
     end
 
     context 'when passed a block' do
@@ -100,7 +100,7 @@ RSpec.describe RuboCop::AST::HashNode do
     context 'with an empty hash' do
       let(:source) { '{}' }
 
-      it { expect(hash_node.values.empty?).to be(true) }
+      it { expect(hash_node.values).to be_empty }
     end
 
     context 'with a hash with literal values' do
@@ -122,7 +122,7 @@ RSpec.describe RuboCop::AST::HashNode do
     let(:source) { '{ a: 1, b: 2, c: 3 }' }
 
     context 'when not passed a block' do
-      it { expect(hash_node.each_value.is_a?(Enumerator)).to be(true) }
+      it { expect(hash_node.each_value).to be_a(Enumerator) }
     end
 
     context 'when passed a block' do
@@ -145,7 +145,7 @@ RSpec.describe RuboCop::AST::HashNode do
     let(:source) { '{ a: 1, b: 2, c: 3 }' }
 
     context 'when not passed a block' do
-      it { expect(hash_node.each_pair.is_a?(Enumerator)).to be(true) }
+      it { expect(hash_node.each_pair).to be_a(Enumerator) }
     end
 
     context 'when passed a block' do
@@ -164,7 +164,7 @@ RSpec.describe RuboCop::AST::HashNode do
     context 'with all pairs on the same line' do
       let(:source) { '{ a: 1, b: 2 }' }
 
-      it { expect(hash_node.pairs_on_same_line?).to be_truthy }
+      it { expect(hash_node).to be_pairs_on_same_line }
     end
 
     context 'with no pairs on the same line' do
@@ -173,7 +173,7 @@ RSpec.describe RuboCop::AST::HashNode do
          ' b: 2 }'].join("\n")
       end
 
-      it { expect(hash_node.pairs_on_same_line?).to be_falsey }
+      it { expect(hash_node).not_to be_pairs_on_same_line }
     end
 
     context 'with some pairs on the same line' do
@@ -182,7 +182,7 @@ RSpec.describe RuboCop::AST::HashNode do
          ' b: 2, c: 3 }'].join("\n")
       end
 
-      it { expect(hash_node.pairs_on_same_line?).to be_truthy }
+      it { expect(hash_node).to be_pairs_on_same_line }
     end
   end
 
@@ -190,19 +190,19 @@ RSpec.describe RuboCop::AST::HashNode do
     context 'when all pairs are using a colon delimiter' do
       let(:source) { '{ a: 1, b: 2 }' }
 
-      it { expect(hash_node.mixed_delimiters?).to be_falsey }
+      it { expect(hash_node).not_to be_mixed_delimiters }
     end
 
     context 'when all pairs are using a hash rocket delimiter' do
       let(:source) { '{ :a => 1, :b => 2 }' }
 
-      it { expect(hash_node.mixed_delimiters?).to be_falsey }
+      it { expect(hash_node).not_to be_mixed_delimiters }
     end
 
     context 'when pairs are using different delimiters' do
       let(:source) { '{ :a => 1, b: 2 }' }
 
-      it { expect(hash_node.mixed_delimiters?).to be_truthy }
+      it { expect(hash_node).to be_mixed_delimiters }
     end
   end
 
@@ -210,7 +210,7 @@ RSpec.describe RuboCop::AST::HashNode do
     context 'with braces' do
       let(:source) { '{ a: 1, b: 2 }' }
 
-      it { expect(hash_node.braces?).to be_truthy }
+      it { expect(hash_node).to be_braces }
     end
 
     context 'as an argument with no braces' do
@@ -218,7 +218,7 @@ RSpec.describe RuboCop::AST::HashNode do
 
       let(:hash_argument) { hash_node.children.last }
 
-      it { expect(hash_argument.braces?).to be_falsey }
+      it { expect(hash_argument).not_to be_braces }
     end
 
     context 'as an argument with braces' do
@@ -226,7 +226,7 @@ RSpec.describe RuboCop::AST::HashNode do
 
       let(:hash_argument) { hash_node.children.last }
 
-      it { expect(hash_argument.braces?).to be_truthy }
+      it { expect(hash_argument).to be_braces }
     end
   end
 end

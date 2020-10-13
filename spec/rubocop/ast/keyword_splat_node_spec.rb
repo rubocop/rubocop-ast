@@ -6,19 +6,19 @@ RSpec.describe RuboCop::AST::KeywordSplatNode do
   describe '.new' do
     let(:source) { '{ a: 1, **foo }' }
 
-    it { expect(kwsplat_node.is_a?(described_class)).to be(true) }
+    it { expect(kwsplat_node).to be_a(described_class) }
   end
 
   describe '#hash_rocket?' do
     let(:source) { '{ a: 1, **foo }' }
 
-    it { expect(kwsplat_node.hash_rocket?).to be_falsey }
+    it { expect(kwsplat_node).not_to be_hash_rocket }
   end
 
   describe '#colon?' do
     let(:source) { '{ a: 1, **foo }' }
 
-    it { expect(kwsplat_node.colon?).to be_falsey }
+    it { expect(kwsplat_node).not_to be_colon }
   end
 
   describe '#key' do
@@ -50,7 +50,7 @@ RSpec.describe RuboCop::AST::KeywordSplatNode do
          '}'].join("\n")
       end
 
-      it { expect(first_pair.same_line?(second_pair)).to be_truthy }
+      it { expect(first_pair).to be_same_line(second_pair) }
     end
 
     context 'when a multiline pair shares the same line' do
@@ -61,8 +61,8 @@ RSpec.describe RuboCop::AST::KeywordSplatNode do
          '}'].join("\n")
       end
 
-      it { expect(first_pair.same_line?(second_pair)).to be_truthy }
-      it { expect(second_pair.same_line?(first_pair)).to be_truthy }
+      it { expect(first_pair).to be_same_line(second_pair) }
+      it { expect(second_pair).to be_same_line(first_pair) }
     end
 
     context 'when pairs are on separate lines' do
@@ -73,7 +73,7 @@ RSpec.describe RuboCop::AST::KeywordSplatNode do
          '}'].join("\n")
       end
 
-      it { expect(first_pair.same_line?(second_pair)).to be_falsey }
+      it { expect(first_pair).not_to be_same_line(second_pair) }
     end
   end
 

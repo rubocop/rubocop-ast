@@ -99,11 +99,11 @@ RSpec.describe RuboCop::AST::Token do
 
   describe '#space_after' do
     it 'returns truthy MatchData when there is a space after token' do
-      expect(left_array_bracket_token.space_after?.is_a?(MatchData)).to be true
-      expect(right_ref_bracket_token.space_after?.is_a?(MatchData)).to be true
+      expect(left_array_bracket_token.space_after?).to be_a(MatchData)
+      expect(right_ref_bracket_token.space_after?).to be_a(MatchData)
 
-      expect(left_array_bracket_token.space_after?).to be_truthy
-      expect(right_ref_bracket_token.space_after?).to be_truthy
+      expect(left_array_bracket_token).to be_space_after
+      expect(right_ref_bracket_token).to be_space_after
     end
 
     it 'returns nil when there is not a space after token' do
@@ -123,11 +123,11 @@ RSpec.describe RuboCop::AST::Token do
 
   describe '#space_before' do
     it 'returns truthy MatchData when there is a space before token' do
-      expect(left_array_bracket_token.space_before?.is_a?(MatchData)).to be true
-      expect(equals_token.space_before?.is_a?(MatchData)).to be true
+      expect(left_array_bracket_token.space_before?).to be_a(MatchData)
+      expect(equals_token.space_before?).to be_a(MatchData)
 
-      expect(left_array_bracket_token.space_before?).to be_truthy
-      expect(equals_token.space_before?).to be_truthy
+      expect(left_array_bracket_token).to be_space_before
+      expect(equals_token).to be_space_before
     end
 
     it 'returns nil when there is not a space before token' do
@@ -143,92 +143,92 @@ RSpec.describe RuboCop::AST::Token do
   context 'type predicates' do
     describe '#comment?' do
       it 'returns true for comment tokens' do
-        expect(comment_token.comment?).to be true
+        expect(comment_token).to be_comment
       end
 
       it 'returns false for non comment tokens' do
-        expect(zero_token.comment?).to be false
-        expect(semicolon_token.comment?).to be false
+        expect(zero_token).not_to be_comment
+        expect(semicolon_token).not_to be_comment
       end
     end
 
     describe '#semicolon?' do
       it 'returns true for semicolon tokens' do
-        expect(semicolon_token.semicolon?).to be true
+        expect(semicolon_token).to be_semicolon
       end
 
       it 'returns false for non semicolon tokens' do
-        expect(comment_token.semicolon?).to be false
-        expect(comma_token.semicolon?).to be false
+        expect(comment_token).not_to be_semicolon
+        expect(comma_token).not_to be_semicolon
       end
     end
 
     describe '#left_array_bracket?' do
       it 'returns true for left_array_bracket tokens' do
-        expect(left_array_bracket_token.left_array_bracket?).to be true
+        expect(left_array_bracket_token).to be_left_array_bracket
       end
 
       it 'returns false for non left_array_bracket tokens' do
-        expect(left_ref_bracket_token.left_array_bracket?).to be false
-        expect(right_array_bracket_token.left_array_bracket?).to be false
+        expect(left_ref_bracket_token).not_to be_left_array_bracket
+        expect(right_array_bracket_token).not_to be_left_array_bracket
       end
     end
 
     describe '#left_ref_bracket?' do
       it 'returns true for left_ref_bracket tokens' do
-        expect(left_ref_bracket_token.left_ref_bracket?).to be true
+        expect(left_ref_bracket_token).to be_left_ref_bracket
       end
 
       it 'returns false for non left_ref_bracket tokens' do
-        expect(left_array_bracket_token.left_ref_bracket?).to be false
-        expect(right_ref_bracket_token.left_ref_bracket?).to be false
+        expect(left_array_bracket_token).not_to be_left_ref_bracket
+        expect(right_ref_bracket_token).not_to be_left_ref_bracket
       end
     end
 
     describe '#left_bracket?' do
       it 'returns true for all left_bracket tokens' do
-        expect(left_ref_bracket_token.left_bracket?).to be true
-        expect(left_array_bracket_token.left_bracket?).to be true
+        expect(left_ref_bracket_token).to be_left_bracket
+        expect(left_array_bracket_token).to be_left_bracket
       end
 
       it 'returns false for non left_bracket tokens' do
-        expect(right_ref_bracket_token.left_bracket?).to be false
-        expect(right_array_bracket_token.left_bracket?).to be false
+        expect(right_ref_bracket_token).not_to be_left_bracket
+        expect(right_array_bracket_token).not_to be_left_bracket
       end
     end
 
     describe '#right_bracket?' do
       it 'returns true for all right_bracket tokens' do
-        expect(right_ref_bracket_token.right_bracket?).to be true
-        expect(right_array_bracket_token.right_bracket?).to be true
+        expect(right_ref_bracket_token).to be_right_bracket
+        expect(right_array_bracket_token).to be_right_bracket
       end
 
       it 'returns false for non right_bracket tokens' do
-        expect(left_ref_bracket_token.right_bracket?).to be false
-        expect(left_array_bracket_token.right_bracket?).to be false
+        expect(left_ref_bracket_token).not_to be_right_bracket
+        expect(left_array_bracket_token).not_to be_right_bracket
       end
     end
 
     describe '#left_brace?' do
       it 'returns true for right_bracket tokens' do
-        expect(right_ref_bracket_token.right_bracket?).to be true
-        expect(right_array_bracket_token.right_bracket?).to be true
+        expect(right_ref_bracket_token).to be_right_bracket
+        expect(right_array_bracket_token).to be_right_bracket
       end
 
       it 'returns false for non right_bracket tokens' do
-        expect(left_ref_bracket_token.right_bracket?).to be false
-        expect(left_array_bracket_token.right_bracket?).to be false
+        expect(left_ref_bracket_token).not_to be_right_bracket
+        expect(left_array_bracket_token).not_to be_right_bracket
       end
     end
 
     describe '#comma?' do
       it 'returns true for comma tokens' do
-        expect(comma_token.comma?).to be true
+        expect(comma_token).to be_comma
       end
 
       it 'returns false for non comma tokens' do
-        expect(semicolon_token.comma?).to be false
-        expect(right_ref_bracket_token.comma?).to be false
+        expect(semicolon_token).not_to be_comma
+        expect(right_ref_bracket_token).not_to be_comma
       end
     end
 
@@ -244,34 +244,34 @@ RSpec.describe RuboCop::AST::Token do
       end
 
       it 'returns true for rescue modifier tokens' do
-        expect(rescue_modifier_token.rescue_modifier?).to be true
+        expect(rescue_modifier_token).to be_rescue_modifier
       end
 
       it 'returns false for non rescue modifier tokens' do
-        expect(first_token.rescue_modifier?).to be false
-        expect(end_token.rescue_modifier?).to be false
+        expect(first_token).not_to be_rescue_modifier
+        expect(end_token).not_to be_rescue_modifier
       end
     end
 
     describe '#end?' do
       it 'returns true for end tokens' do
-        expect(end_token.end?).to be true
+        expect(end_token).to be_end
       end
 
       it 'returns false for non end tokens' do
-        expect(semicolon_token.end?).to be false
-        expect(comment_token.end?).to be false
+        expect(semicolon_token).not_to be_end
+        expect(comment_token).not_to be_end
       end
     end
 
     describe '#equals_sign?' do
       it 'returns true for equals sign tokens' do
-        expect(equals_token.equal_sign?).to be true
+        expect(equals_token).to be_equal_sign
       end
 
       it 'returns false for non equals sign tokens' do
-        expect(semicolon_token.equal_sign?).to be false
-        expect(comma_token.equal_sign?).to be false
+        expect(semicolon_token).not_to be_equal_sign
+        expect(comma_token).not_to be_equal_sign
       end
     end
 
@@ -303,57 +303,57 @@ RSpec.describe RuboCop::AST::Token do
 
       describe '#left_brace?' do
         it 'returns true for left hash brace tokens' do
-          expect(left_hash_brace_token.left_brace?).to be true
+          expect(left_hash_brace_token).to be_left_brace
         end
 
         it 'returns false for non left hash brace tokens' do
-          expect(left_block_brace_token.left_brace?).to be false
-          expect(right_hash_brace_token.left_brace?).to be false
+          expect(left_block_brace_token).not_to be_left_brace
+          expect(right_hash_brace_token).not_to be_left_brace
         end
       end
 
       describe '#left_curly_brace?' do
         it 'returns true for left block brace tokens' do
-          expect(left_block_brace_token.left_curly_brace?).to be true
+          expect(left_block_brace_token).to be_left_curly_brace
         end
 
         it 'returns false for non left block brace tokens' do
-          expect(left_hash_brace_token.left_curly_brace?).to be false
-          expect(right_block_brace_token.left_curly_brace?).to be false
+          expect(left_hash_brace_token).not_to be_left_curly_brace
+          expect(right_block_brace_token).not_to be_left_curly_brace
         end
       end
 
       describe '#right_curly_brace?' do
         it 'returns true for all right brace tokens' do
-          expect(right_hash_brace_token.right_curly_brace?).to be true
-          expect(right_block_brace_token.right_curly_brace?).to be true
+          expect(right_hash_brace_token).to be_right_curly_brace
+          expect(right_block_brace_token).to be_right_curly_brace
         end
 
         it 'returns false for non right brace tokens' do
-          expect(left_hash_brace_token.right_curly_brace?).to be false
-          expect(left_parens_token.right_curly_brace?).to be false
+          expect(left_hash_brace_token).not_to be_right_curly_brace
+          expect(left_parens_token).not_to be_right_curly_brace
         end
       end
 
       describe '#left_parens?' do
         it 'returns true for left parens tokens' do
-          expect(left_parens_token.left_parens?).to be true
+          expect(left_parens_token).to be_left_parens
         end
 
         it 'returns false for non left parens tokens' do
-          expect(left_hash_brace_token.left_parens?).to be false
-          expect(right_parens_token.left_parens?).to be false
+          expect(left_hash_brace_token).not_to be_left_parens
+          expect(right_parens_token).not_to be_left_parens
         end
       end
 
       describe '#right_parens?' do
         it 'returns true for right parens tokens' do
-          expect(right_parens_token.right_parens?).to be true
+          expect(right_parens_token).to be_right_parens
         end
 
         it 'returns false for non right parens tokens' do
-          expect(right_hash_brace_token.right_parens?).to be false
-          expect(left_parens_token.right_parens?).to be false
+          expect(right_hash_brace_token).not_to be_right_parens
+          expect(left_parens_token).not_to be_right_parens
         end
       end
     end

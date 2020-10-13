@@ -8,7 +8,7 @@ RSpec.describe RuboCop::AST::ModuleNode do
       'module Foo; end'
     end
 
-    it { expect(module_node.is_a?(described_class)).to be(true) }
+    it { expect(module_node).to be_a(described_class) }
   end
 
   describe '#identifier' do
@@ -16,7 +16,7 @@ RSpec.describe RuboCop::AST::ModuleNode do
       'module Foo; end'
     end
 
-    it { expect(module_node.identifier.const_type?).to be(true) }
+    it { expect(module_node.identifier).to be_const_type }
   end
 
   describe '#body' do
@@ -25,7 +25,7 @@ RSpec.describe RuboCop::AST::ModuleNode do
         'module Foo; bar; end'
       end
 
-      it { expect(module_node.body.send_type?).to be(true) }
+      it { expect(module_node.body).to be_send_type }
     end
 
     context 'with a multi-expression body' do
@@ -33,7 +33,7 @@ RSpec.describe RuboCop::AST::ModuleNode do
         'module Foo; bar; baz; end'
       end
 
-      it { expect(module_node.body.begin_type?).to be(true) }
+      it { expect(module_node.body).to be_begin_type }
     end
 
     context 'with an empty body' do

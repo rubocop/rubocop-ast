@@ -29,7 +29,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       let(:processed_source) { described_class.from_file(path, ruby_version) }
 
       it 'returns an instance of ProcessedSource' do
-        expect(processed_source.is_a?(described_class)).to be(true)
+        expect(processed_source).to be_a(described_class)
       end
 
       it "sets the file path to the instance's #path" do
@@ -52,22 +52,22 @@ RSpec.describe RuboCop::AST::ProcessedSource do
 
   describe '#buffer' do
     it 'is a source buffer' do
-      expect(processed_source.buffer.is_a?(Parser::Source::Buffer)).to be(true)
+      expect(processed_source.buffer).to be_a(Parser::Source::Buffer)
     end
   end
 
   describe '#ast' do
     it 'is the root node of AST' do
-      expect(processed_source.ast.is_a?(RuboCop::AST::Node)).to be(true)
+      expect(processed_source.ast).to be_a(RuboCop::AST::Node)
     end
   end
 
   describe '#comments' do
     it 'is an array of comments' do
-      expect(processed_source.comments.is_a?(Array)).to be(true)
+      expect(processed_source.comments).to be_a(Array)
       expect(
-        processed_source.comments.first.is_a?(Parser::Source::Comment)
-      ).to be(true)
+        processed_source.comments.first
+      ).to be_a(Parser::Source::Comment)
     end
 
     context 'when the source is invalid' do
@@ -81,15 +81,15 @@ RSpec.describe RuboCop::AST::ProcessedSource do
 
   describe '#tokens' do
     it 'has an array of tokens' do
-      expect(processed_source.tokens.is_a?(Array)).to be(true)
-      expect(processed_source.tokens.first.is_a?(RuboCop::AST::Token)).to be(true)
+      expect(processed_source.tokens).to be_a(Array)
+      expect(processed_source.tokens.first).to be_a(RuboCop::AST::Token)
     end
   end
 
   describe '#parser_error' do
     context 'when the source was properly parsed' do
       it 'is nil' do
-        expect(processed_source.parser_error.nil?).to be(true)
+        expect(processed_source.parser_error).to be_nil
       end
     end
 
@@ -105,7 +105,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
 
       it 'is nil' do
         # ProcessedSource#parse sets UTF-8 as default encoding, so no error.
-        expect(processed_source.parser_error.nil?).to be(true)
+        expect(processed_source.parser_error).to be_nil
       end
     end
 
@@ -113,7 +113,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       include_context 'invalid encoding source'
 
       it 'returns the error' do
-        expect(processed_source.parser_error.is_a?(Exception)).to be(true)
+        expect(processed_source.parser_error).to be_a(Exception)
         expect(processed_source.parser_error.message)
           .to include('invalid byte sequence')
       end
@@ -122,7 +122,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
 
   describe '#lines' do
     it 'is an array' do
-      expect(processed_source.lines.is_a?(Array)).to be(true)
+      expect(processed_source.lines).to be_a(Array)
     end
 
     it 'has same number of elements as line count' do
@@ -163,8 +163,8 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       let(:source) { 'def valid_code; end' }
 
       it 'returns true' do
-        expect(processed_source.diagnostics.empty?).to be(true)
-        expect(processed_source.valid_syntax?).to be(true)
+        expect(processed_source.diagnostics).to be_empty
+        expect(processed_source).to be_valid_syntax
       end
     end
 
@@ -172,7 +172,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       let(:source) { 'def invalid_code; en' }
 
       it 'returns false' do
-        expect(processed_source.valid_syntax?).to be(false)
+        expect(processed_source).not_to be_valid_syntax
       end
     end
 
@@ -180,9 +180,9 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       let(:source) { 'do_something *array' }
 
       it 'returns true' do
-        expect(processed_source.diagnostics.empty?).to be(false)
+        expect(processed_source.diagnostics).not_to be_empty
         expect(processed_source.diagnostics.first.level).to eq(:warning)
-        expect(processed_source.valid_syntax?).to be(true)
+        expect(processed_source).to be_valid_syntax
       end
     end
 
@@ -190,7 +190,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       include_context 'invalid encoding source'
 
       it 'returns false' do
-        expect(processed_source.valid_syntax?).to be(false)
+        expect(processed_source).not_to be_valid_syntax
       end
     end
 
@@ -202,8 +202,8 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
 
       it 'returns true' do
-        expect(processed_source.diagnostics.empty?).to be(true)
-        expect(processed_source.valid_syntax?).to be(true)
+        expect(processed_source.diagnostics).to be_empty
+        expect(processed_source).to be_valid_syntax
       end
     end
 
@@ -232,7 +232,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
         comments = []
 
         processed_source.each_comment do |item|
-          expect(item.is_a?(Parser::Source::Comment)).to be true
+          expect(item).to be_a(Parser::Source::Comment)
           comments << item
         end
 
@@ -272,7 +272,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
     describe '#each_comment_in_lines' do
       it 'yields the comments' do
         enum = processed_source.each_comment_in_lines(1..4)
-        expect(enum.is_a?(Enumerable)).to be(true)
+        expect(enum).to be_a(Enumerable)
         expect(enum.to_a).to eq processed_source.comments
         expect(processed_source.each_comment_in_lines(2..5).map(&:text)).to eq ['# comment two']
       end
@@ -280,13 +280,13 @@ RSpec.describe RuboCop::AST::ProcessedSource do
 
     describe '#line_with_comment?' do
       it 'returns true for lines with comments' do
-        expect(processed_source.line_with_comment?(1)).to be true
-        expect(processed_source.line_with_comment?(4)).to be true
+        expect(processed_source).to be_line_with_comment(1)
+        expect(processed_source).to be_line_with_comment(4)
       end
 
       it 'returns false for lines without comments' do
-        expect(processed_source.line_with_comment?(2)).to be false
-        expect(processed_source.line_with_comment?(5)).to be false
+        expect(processed_source).not_to be_line_with_comment(2)
+        expect(processed_source).not_to be_line_with_comment(5)
       end
     end
 
@@ -336,8 +336,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
         expect(processed_source.comments_before_line(4).size).to eq 3
 
         expect(processed_source.comments_before_line(1)
-                               .first
-                               .is_a?(Parser::Source::Comment)).to be true
+                               .first).to be_a(Parser::Source::Comment)
       end
     end
   end
@@ -352,7 +351,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
         tokens = []
 
         processed_source.each_token do |item|
-          expect(item.is_a?(RuboCop::AST::Token)).to be true
+          expect(item).to be_a(RuboCop::AST::Token)
           tokens << item
         end
 
@@ -387,7 +386,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       RUBY
 
       it 'returns true' do
-        expect(processed_source.blank?).to eq true
+        expect(processed_source).to be_blank
       end
     end
 
@@ -397,7 +396,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       RUBY
 
       it 'returns false' do
-        expect(processed_source.blank?).to eq false
+        expect(processed_source).not_to be_blank
       end
     end
   end
@@ -408,9 +407,9 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       RUBY
 
       it 'returns false' do
-        expect(processed_source.start_with?('start')).to eq false
-        expect(processed_source.start_with?('#')).to eq false
-        expect(processed_source.start_with?('')).to eq false
+        expect(processed_source).not_to be_start_with('start')
+        expect(processed_source).not_to be_start_with('#')
+        expect(processed_source).not_to be_start_with('')
       end
     end
 
@@ -420,15 +419,15 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       RUBY
 
       it 'returns true when passed string that starts source' do
-        expect(processed_source.start_with?('foo')).to eq true
-        expect(processed_source.start_with?('f')).to eq true
-        expect(processed_source.start_with?('')).to eq true
+        expect(processed_source).to be_start_with('foo')
+        expect(processed_source).to be_start_with('f')
+        expect(processed_source).to be_start_with('')
       end
 
       it 'returns false when passed string that does not start source' do
-        expect(processed_source.start_with?('bar')).to eq false
-        expect(processed_source.start_with?('qux')).to eq false
-        expect(processed_source.start_with?('1')).to eq false
+        expect(processed_source).not_to be_start_with('bar')
+        expect(processed_source).not_to be_start_with('qux')
+        expect(processed_source).not_to be_start_with('1')
       end
     end
   end

@@ -14,28 +14,28 @@ RSpec.describe RuboCop::AST::ConstNode do
   end
 
   describe '#module_name?' do
-    it { expect(const_node.module_name?).to eq false }
+    it { expect(const_node).not_to be_module_name }
 
     context 'with a constant with a lowercase letter' do
       let(:source) { '::Foo::Bar' }
 
-      it { expect(const_node.module_name?).to eq true }
+      it { expect(const_node).to be_module_name }
     end
   end
 
   describe '#absolute?' do
-    it { expect(const_node.absolute?).to eq true }
+    it { expect(const_node).to be_absolute }
 
     context 'with a constant not starting with ::' do
       let(:source) { 'Foo::Bar::BAZ' }
 
-      it { expect(const_node.absolute?).to eq false }
+      it { expect(const_node).not_to be_absolute }
     end
 
     context 'with a non-namespaced constant' do
       let(:source) { 'Foo' }
 
-      it { expect(const_node.absolute?).to eq false }
+      it { expect(const_node).not_to be_absolute }
     end
   end
 
@@ -43,7 +43,7 @@ RSpec.describe RuboCop::AST::ConstNode do
     context 'with a non-namespaced constant' do
       let(:source) { 'Foo' }
 
-      it { expect(const_node.relative?).to eq true }
+      it { expect(const_node).to be_relative }
     end
   end
 

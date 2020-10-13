@@ -8,7 +8,7 @@ RSpec.describe RuboCop::AST::ClassNode do
       'class Foo; end'
     end
 
-    it { expect(class_node.is_a?(described_class)).to be(true) }
+    it { expect(class_node).to be_a(described_class) }
   end
 
   describe '#identifier' do
@@ -16,7 +16,7 @@ RSpec.describe RuboCop::AST::ClassNode do
       'class Foo; end'
     end
 
-    it { expect(class_node.identifier.const_type?).to be(true) }
+    it { expect(class_node.identifier).to be_const_type }
   end
 
   describe '#parent_class' do
@@ -25,7 +25,7 @@ RSpec.describe RuboCop::AST::ClassNode do
         'class Foo < Bar; end'
       end
 
-      it { expect(class_node.parent_class.const_type?).to be(true) }
+      it { expect(class_node.parent_class).to be_const_type }
     end
 
     context 'when no parent class is specified' do
@@ -43,7 +43,7 @@ RSpec.describe RuboCop::AST::ClassNode do
         'class Foo; bar; end'
       end
 
-      it { expect(class_node.body.send_type?).to be(true) }
+      it { expect(class_node.body).to be_send_type }
     end
 
     context 'with a multi-expression body' do
@@ -51,7 +51,7 @@ RSpec.describe RuboCop::AST::ClassNode do
         'class Foo; bar; baz; end'
       end
 
-      it { expect(class_node.body.begin_type?).to be(true) }
+      it { expect(class_node.body).to be_begin_type }
     end
 
     context 'with an empty body' do

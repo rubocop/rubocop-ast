@@ -11,7 +11,7 @@ RSpec.describe RuboCop::AST::RescueNode do
       end
     RUBY
 
-    it { expect(rescue_node.is_a?(described_class)).to be(true) }
+    it { expect(rescue_node).to be_a(described_class) }
   end
 
   describe '#body' do
@@ -22,7 +22,7 @@ RSpec.describe RuboCop::AST::RescueNode do
       end
     RUBY
 
-    it { expect(rescue_node.body.send_type?).to be(true) }
+    it { expect(rescue_node.body).to be_send_type }
   end
 
   describe '#resbody_branches' do
@@ -88,7 +88,7 @@ RSpec.describe RuboCop::AST::RescueNode do
         end
       RUBY
 
-      it { expect(rescue_node.else_branch.nil?).to be(true) }
+      it { expect(rescue_node.else_branch).to be_nil }
     end
 
     context 'with an else statement' do
@@ -99,7 +99,7 @@ RSpec.describe RuboCop::AST::RescueNode do
         end
       RUBY
 
-      it { expect(rescue_node.else_branch.send_type?).to be(true) }
+      it { expect(rescue_node.else_branch).to be_send_type }
     end
   end
 
@@ -111,7 +111,7 @@ RSpec.describe RuboCop::AST::RescueNode do
         end
       RUBY
 
-      it { expect(rescue_node.else?).to be_falsey }
+      it { expect(rescue_node).not_to be_else }
     end
 
     context 'with an else statement' do
@@ -122,7 +122,7 @@ RSpec.describe RuboCop::AST::RescueNode do
         end
       RUBY
 
-      it { expect(rescue_node.else?).to be_truthy }
+      it { expect(rescue_node).to be_else }
     end
   end
 end

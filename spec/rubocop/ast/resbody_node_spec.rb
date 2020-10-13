@@ -10,7 +10,7 @@ RSpec.describe RuboCop::AST::ResbodyNode do
   describe '.new' do
     let(:source) { 'begin; beginbody; rescue; rescuebody; end' }
 
-    it { expect(resbody_node.is_a?(described_class)).to be(true) }
+    it { expect(resbody_node).to be_a(described_class) }
   end
 
   describe '#exceptions' do
@@ -70,7 +70,7 @@ RSpec.describe RuboCop::AST::ResbodyNode do
   describe '#body' do
     let(:source) { 'begin; beginbody; rescue Error => ex; :rescuebody; end' }
 
-    it { expect(resbody_node.body.sym_type?).to be(true) }
+    it { expect(resbody_node.body).to be_sym_type }
   end
 
   describe '#branch_index' do

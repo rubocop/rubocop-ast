@@ -10,7 +10,7 @@ RSpec.describe RuboCop::AST::WhenNode do
        'end'].join("\n")
     end
 
-    it { expect(when_node.is_a?(described_class)).to be(true) }
+    it { expect(when_node).to be_a(described_class) }
   end
 
   describe '#conditions' do
@@ -45,7 +45,7 @@ RSpec.describe RuboCop::AST::WhenNode do
     end
 
     context 'when not passed a block' do
-      it { expect(when_node.each_condition.is_a?(Enumerator)).to be(true) }
+      it { expect(when_node.each_condition).to be_a(Enumerator) }
     end
 
     context 'when passed a block' do
@@ -64,7 +64,7 @@ RSpec.describe RuboCop::AST::WhenNode do
          'end'].join("\n")
       end
 
-      it { expect(when_node.then?).to be_truthy }
+      it { expect(when_node).to be_then }
     end
 
     context 'without a then keyword' do
@@ -75,7 +75,7 @@ RSpec.describe RuboCop::AST::WhenNode do
          'end'].join("\n")
       end
 
-      it { expect(when_node.then?).to be_falsey }
+      it { expect(when_node).not_to be_then }
     end
   end
 
@@ -87,7 +87,7 @@ RSpec.describe RuboCop::AST::WhenNode do
          'end'].join("\n")
       end
 
-      it { expect(when_node.body.sym_type?).to be(true) }
+      it { expect(when_node.body).to be_sym_type }
     end
 
     context 'without a then keyword' do
@@ -98,7 +98,7 @@ RSpec.describe RuboCop::AST::WhenNode do
          'end'].join("\n")
       end
 
-      it { expect(when_node.body.array_type?).to be(true) }
+      it { expect(when_node.body).to be_array_type }
     end
   end
 
