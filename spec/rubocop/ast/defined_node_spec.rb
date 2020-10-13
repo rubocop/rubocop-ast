@@ -7,7 +7,7 @@ RSpec.describe RuboCop::AST::DefinedNode do
     context 'with a defined? node' do
       let(:source) { 'defined? :foo' }
 
-      it { expect(defined_node).to be_a(described_class) }
+      it { is_expected.to be_a(described_class) }
     end
   end
 

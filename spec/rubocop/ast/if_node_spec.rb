@@ -7,19 +7,19 @@ RSpec.describe RuboCop::AST::IfNode do
     context 'with a regular if statement' do
       let(:source) { 'if foo?; :bar; end' }
 
-      it { expect(if_node).to be_a(described_class) }
+      it { is_expected.to be_a(described_class) }
     end
 
     context 'with a ternary operator' do
       let(:source) { 'foo? ? :bar : :baz' }
 
-      it { expect(if_node).to be_a(described_class) }
+      it { is_expected.to be_a(described_class) }
     end
 
     context 'with a modifier statement' do
       let(:source) { ':foo if bar?' }
 
-      it { expect(if_node).to be_a(described_class) }
+      it { is_expected.to be_a(described_class) }
     end
   end
 
@@ -67,19 +67,19 @@ RSpec.describe RuboCop::AST::IfNode do
     context 'with an if statement' do
       let(:source) { 'if foo?; :bar; end' }
 
-      it { expect(if_node).to be_if }
+      it { is_expected.to be_if }
     end
 
     context 'with an unless statement' do
       let(:source) { 'unless foo?; :bar; end' }
 
-      it { expect(if_node).not_to be_if }
+      it { is_expected.not_to be_if }
     end
 
     context 'with a ternary operator' do
       let(:source) { 'foo? ? :bar : :baz' }
 
-      it { expect(if_node).not_to be_if }
+      it { is_expected.not_to be_if }
     end
   end
 
@@ -87,19 +87,19 @@ RSpec.describe RuboCop::AST::IfNode do
     context 'with an if statement' do
       let(:source) { 'if foo?; :bar; end' }
 
-      it { expect(if_node).not_to be_unless }
+      it { is_expected.not_to be_unless }
     end
 
     context 'with an unless statement' do
       let(:source) { 'unless foo?; :bar; end' }
 
-      it { expect(if_node).to be_unless }
+      it { is_expected.to be_unless }
     end
 
     context 'with a ternary operator' do
       let(:source) { 'foo? ? :bar : :baz' }
 
-      it { expect(if_node).not_to be_unless }
+      it { is_expected.not_to be_unless }
     end
   end
 
@@ -107,19 +107,19 @@ RSpec.describe RuboCop::AST::IfNode do
     context 'with an if statement' do
       let(:source) { 'if foo?; :bar; end' }
 
-      it { expect(if_node).not_to be_ternary }
+      it { is_expected.not_to be_ternary }
     end
 
     context 'with an unless statement' do
       let(:source) { 'unless foo?; :bar; end' }
 
-      it { expect(if_node).not_to be_ternary }
+      it { is_expected.not_to be_ternary }
     end
 
     context 'with a ternary operator' do
       let(:source) { 'foo? ? :bar : :baz' }
 
-      it { expect(if_node).to be_ternary }
+      it { is_expected.to be_ternary }
     end
   end
 
@@ -147,7 +147,7 @@ RSpec.describe RuboCop::AST::IfNode do
          'end'].join("\n")
       end
 
-      it { expect(if_node).not_to be_elsif }
+      it { is_expected.not_to be_elsif }
     end
 
     context 'without an elsif statement' do
@@ -157,7 +157,7 @@ RSpec.describe RuboCop::AST::IfNode do
          'end'].join("\n")
       end
 
-      it { expect(if_node).not_to be_elsif }
+      it { is_expected.not_to be_elsif }
     end
   end
 
@@ -172,7 +172,7 @@ RSpec.describe RuboCop::AST::IfNode do
       end
 
       # Note: This is a legacy behavior.
-      it { expect(if_node).to be_else }
+      it { is_expected.to be_else }
     end
 
     context 'without an else statement' do
@@ -184,7 +184,7 @@ RSpec.describe RuboCop::AST::IfNode do
          'end'].join("\n")
       end
 
-      it { expect(if_node).not_to be_elsif }
+      it { is_expected.not_to be_elsif }
     end
   end
 
@@ -192,31 +192,31 @@ RSpec.describe RuboCop::AST::IfNode do
     context 'with a non-modifier if statement' do
       let(:source) { 'if foo?; :bar; end' }
 
-      it { expect(if_node).not_to be_modifier_form }
+      it { is_expected.not_to be_modifier_form }
     end
 
     context 'with a non-modifier unless statement' do
       let(:source) { 'unless foo?; :bar; end' }
 
-      it { expect(if_node).not_to be_modifier_form }
+      it { is_expected.not_to be_modifier_form }
     end
 
     context 'with a ternary operator' do
       let(:source) { 'foo? ? :bar : :baz' }
 
-      it { expect(if_node).not_to be_modifier_form }
+      it { is_expected.not_to be_modifier_form }
     end
 
     context 'with a modifier if statement' do
       let(:source) { ':bar if foo?' }
 
-      it { expect(if_node).to be_modifier_form }
+      it { is_expected.to be_modifier_form }
     end
 
     context 'with a modifier unless statement' do
       let(:source) { ':bar unless foo?' }
 
-      it { expect(if_node).to be_modifier_form }
+      it { is_expected.to be_modifier_form }
     end
   end
 
@@ -232,7 +232,7 @@ RSpec.describe RuboCop::AST::IfNode do
          'end'].join("\n")
       end
 
-      it { expect(if_node).not_to be_nested_conditional }
+      it { is_expected.not_to be_nested_conditional }
     end
 
     context 'with nested conditionals in if clause' do
@@ -246,7 +246,7 @@ RSpec.describe RuboCop::AST::IfNode do
          'end'].join("\n")
       end
 
-      it { expect(if_node).to be_nested_conditional }
+      it { is_expected.to be_nested_conditional }
     end
 
     context 'with nested conditionals in elsif clause' do
@@ -260,7 +260,7 @@ RSpec.describe RuboCop::AST::IfNode do
          'end'].join("\n")
       end
 
-      it { expect(if_node).to be_nested_conditional }
+      it { is_expected.to be_nested_conditional }
     end
 
     context 'with nested conditionals in else clause' do
@@ -274,20 +274,20 @@ RSpec.describe RuboCop::AST::IfNode do
          'end'].join("\n")
       end
 
-      it { expect(if_node).to be_nested_conditional }
+      it { is_expected.to be_nested_conditional }
     end
 
     context 'with nested ternary operators' do
       context 'when nested in the truthy branch' do
         let(:source) { 'foo? ? bar? ? 1 : 2 : 3' }
 
-        it { expect(if_node).to be_nested_conditional }
+        it { is_expected.to be_nested_conditional }
       end
 
       context 'when nested in the falsey branch' do
         let(:source) { 'foo? ? 3 : bar? ? 1 : 2' }
 
-        it { expect(if_node).to be_nested_conditional }
+        it { is_expected.to be_nested_conditional }
       end
     end
   end
@@ -304,7 +304,7 @@ RSpec.describe RuboCop::AST::IfNode do
          'end'].join("\n")
       end
 
-      it { expect(if_node).to be_elsif_conditional }
+      it { is_expected.to be_elsif_conditional }
     end
 
     context 'with multiple elsif conditionals' do
@@ -320,7 +320,7 @@ RSpec.describe RuboCop::AST::IfNode do
          'end'].join("\n")
       end
 
-      it { expect(if_node).to be_elsif_conditional }
+      it { is_expected.to be_elsif_conditional }
     end
 
     context 'with nested conditionals in if clause' do
@@ -332,7 +332,7 @@ RSpec.describe RuboCop::AST::IfNode do
          'end'].join("\n")
       end
 
-      it { expect(if_node).not_to be_elsif_conditional }
+      it { is_expected.not_to be_elsif_conditional }
     end
 
     context 'with nested conditionals in else clause' do
@@ -344,20 +344,20 @@ RSpec.describe RuboCop::AST::IfNode do
          'end'].join("\n")
       end
 
-      it { expect(if_node).not_to be_elsif_conditional }
+      it { is_expected.not_to be_elsif_conditional }
     end
 
     context 'with nested ternary operators' do
       context 'when nested in the truthy branch' do
         let(:source) { 'foo? ? bar? ? 1 : 2 : 3' }
 
-        it { expect(if_node).not_to be_elsif_conditional }
+        it { is_expected.not_to be_elsif_conditional }
       end
 
       context 'when nested in the falsey branch' do
         let(:source) { 'foo? ? 3 : bar? ? 1 : 2' }
 
-        it { expect(if_node).not_to be_elsif_conditional }
+        it { is_expected.not_to be_elsif_conditional }
       end
     end
   end

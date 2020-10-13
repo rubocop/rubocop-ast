@@ -9,8 +9,8 @@ RSpec.describe RuboCop::AST::RangeNode do
         '1..2'
       end
 
-      it { expect(range_node).to be_a(described_class) }
-      it { expect(range_node).to be_range_type }
+      it { is_expected.to be_a(described_class) }
+      it { is_expected.to be_range_type }
     end
 
     context 'with an exclusive range' do
@@ -18,8 +18,8 @@ RSpec.describe RuboCop::AST::RangeNode do
         '1...2'
       end
 
-      it { expect(range_node).to be_a(described_class) }
-      it { expect(range_node).to be_range_type }
+      it { is_expected.to be_a(described_class) }
+      it { is_expected.to be_range_type }
     end
 
     context 'with an infinite range' do
@@ -28,8 +28,8 @@ RSpec.describe RuboCop::AST::RangeNode do
         '1..'
       end
 
-      it { expect(range_node).to be_a(described_class) }
-      it { expect(range_node).to be_range_type }
+      it { is_expected.to be_a(described_class) }
+      it { is_expected.to be_range_type }
     end
 
     context 'with a beignless range' do
@@ -38,8 +38,8 @@ RSpec.describe RuboCop::AST::RangeNode do
         '..42'
       end
 
-      it { expect(range_node).to be_a(described_class) }
-      it { expect(range_node).to be_range_type }
+      it { is_expected.to be_a(described_class) }
+      it { is_expected.to be_range_type }
     end
   end
 end

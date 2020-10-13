@@ -7,13 +7,13 @@ RSpec.describe RuboCop::AST::DefNode do
     context 'with a def node' do
       let(:source) { 'def foo(bar); end' }
 
-      it { expect(def_node).to be_a(described_class) }
+      it { is_expected.to be_a(described_class) }
     end
 
     context 'with a defs node' do
       let(:source) { 'def self.foo(bar); end' }
 
-      it { expect(def_node).to be_a(described_class) }
+      it { is_expected.to be_a(described_class) }
     end
   end
 
@@ -48,13 +48,13 @@ RSpec.describe RuboCop::AST::DefNode do
       context 'when argument is a symbol' do
         let(:source) { 'bar(:baz)' }
 
-        it { expect(def_node).to be_method(:bar) }
+        it { is_expected.to be_method(:bar) }
       end
 
       context 'when argument is a string' do
         let(:source) { 'bar(:baz)' }
 
-        it { expect(def_node).to be_method('bar') }
+        it { is_expected.to be_method('bar') }
       end
     end
 
@@ -62,13 +62,13 @@ RSpec.describe RuboCop::AST::DefNode do
       context 'when argument is a symbol' do
         let(:source) { 'bar(:baz)' }
 
-        it { expect(def_node).not_to be_method(:foo) }
+        it { is_expected.not_to be_method(:foo) }
       end
 
       context 'when argument is a string' do
         let(:source) { 'bar(:baz)' }
 
-        it { expect(def_node).not_to be_method('foo') }
+        it { is_expected.not_to be_method('foo') }
       end
     end
   end
@@ -191,37 +191,37 @@ RSpec.describe RuboCop::AST::DefNode do
     context 'with no arguments' do
       let(:source) { 'def foo; end' }
 
-      it { expect(def_node).not_to be_arguments }
+      it { is_expected.not_to be_arguments }
     end
 
     context 'with a single regular argument' do
       let(:source) { 'def foo(bar); end' }
 
-      it { expect(def_node).to be_arguments }
+      it { is_expected.to be_arguments }
     end
 
     context 'with a single rest argument' do
       let(:source) { 'def foo(*bar); end' }
 
-      it { expect(def_node).to be_arguments }
+      it { is_expected.to be_arguments }
     end
 
     context 'with a single keyword argument' do
       let(:source) { 'def foo(bar: :baz); end' }
 
-      it { expect(def_node).to be_arguments }
+      it { is_expected.to be_arguments }
     end
 
     context 'with multiple regular arguments' do
       let(:source) { 'def foo(bar, baz); end' }
 
-      it { expect(def_node).to be_arguments }
+      it { is_expected.to be_arguments }
     end
 
     context 'with multiple mixed arguments' do
       let(:source) { 'def foo(bar, *baz); end' }
 
-      it { expect(def_node).to be_arguments }
+      it { is_expected.to be_arguments }
     end
   end
 
@@ -229,25 +229,25 @@ RSpec.describe RuboCop::AST::DefNode do
     context 'with a rest argument' do
       let(:source) { 'def foo(*bar); end' }
 
-      it { expect(def_node).to be_rest_argument }
+      it { is_expected.to be_rest_argument }
     end
 
     context 'with no arguments' do
       let(:source) { 'def foo; end' }
 
-      it { expect(def_node).not_to be_rest_argument }
+      it { is_expected.not_to be_rest_argument }
     end
 
     context 'with regular arguments' do
       let(:source) { 'def foo(bar); end' }
 
-      it { expect(def_node).not_to be_rest_argument }
+      it { is_expected.not_to be_rest_argument }
     end
 
     context 'with mixed arguments' do
       let(:source) { 'def foo(bar, *baz); end' }
 
-      it { expect(def_node).to be_rest_argument }
+      it { is_expected.to be_rest_argument }
     end
   end
 
@@ -255,25 +255,25 @@ RSpec.describe RuboCop::AST::DefNode do
     context 'with a binary operator method' do
       let(:source) { 'def ==(bar); end' }
 
-      it { expect(def_node).to be_operator_method }
+      it { is_expected.to be_operator_method }
     end
 
     context 'with a unary operator method' do
       let(:source) { 'def -@; end' }
 
-      it { expect(def_node).to be_operator_method }
+      it { is_expected.to be_operator_method }
     end
 
     context 'with a setter method' do
       let(:source) { 'def foo=(bar); end' }
 
-      it { expect(def_node).not_to be_operator_method }
+      it { is_expected.not_to be_operator_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'def foo(bar); end' }
 
-      it { expect(def_node).not_to be_operator_method }
+      it { is_expected.not_to be_operator_method }
     end
   end
 
@@ -281,13 +281,13 @@ RSpec.describe RuboCop::AST::DefNode do
     context 'with a comparison method' do
       let(:source) { 'def <=(bar); end' }
 
-      it { expect(def_node).to be_comparison_method }
+      it { is_expected.to be_comparison_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'def foo(bar); end' }
 
-      it { expect(def_node).not_to be_comparison_method }
+      it { is_expected.not_to be_comparison_method }
     end
   end
 
@@ -295,25 +295,25 @@ RSpec.describe RuboCop::AST::DefNode do
     context 'with an assignment method' do
       let(:source) { 'def foo=(bar); end' }
 
-      it { expect(def_node).to be_assignment_method }
+      it { is_expected.to be_assignment_method }
     end
 
     context 'with a bracket assignment method' do
       let(:source) { 'def []=(bar); end' }
 
-      it { expect(def_node).to be_assignment_method }
+      it { is_expected.to be_assignment_method }
     end
 
     context 'with a comparison method' do
       let(:source) { 'def ==(bar); end' }
 
-      it { expect(def_node).not_to be_assignment_method }
+      it { is_expected.not_to be_assignment_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'def foo(bar); end' }
 
-      it { expect(def_node).not_to be_assignment_method }
+      it { is_expected.not_to be_assignment_method }
     end
   end
 
@@ -321,31 +321,31 @@ RSpec.describe RuboCop::AST::DefNode do
     context 'with an initializer method' do
       let(:source) { 'def initialize(bar); end' }
 
-      it { expect(def_node).to be_void_context }
+      it { is_expected.to be_void_context }
     end
 
     context 'with a regular assignment method' do
       let(:source) { 'def foo=(bar); end' }
 
-      it { expect(def_node).to be_void_context }
+      it { is_expected.to be_void_context }
     end
 
     context 'with a bracket assignment method' do
       let(:source) { 'def []=(bar); end' }
 
-      it { expect(def_node).to be_void_context }
+      it { is_expected.to be_void_context }
     end
 
     context 'with a comparison method' do
       let(:source) { 'def ==(bar); end' }
 
-      it { expect(def_node).not_to be_void_context }
+      it { is_expected.not_to be_void_context }
     end
 
     context 'with a regular method' do
       let(:source) { 'def foo(bar); end' }
 
-      it { expect(def_node).not_to be_void_context }
+      it { is_expected.not_to be_void_context }
     end
   end
 
@@ -353,7 +353,7 @@ RSpec.describe RuboCop::AST::DefNode do
     describe '#argument_forwarding?' do
       let(:source) { 'def foo(...); end' }
 
-      it { expect(def_node).to be_argument_forwarding }
+      it { is_expected.to be_argument_forwarding }
     end
   end
 
@@ -381,19 +381,19 @@ RSpec.describe RuboCop::AST::DefNode do
     context 'with an instance method definition' do
       let(:source) { 'def foo(bar); end' }
 
-      it { expect(def_node).not_to be_self_receiver }
+      it { is_expected.not_to be_self_receiver }
     end
 
     context 'with a class method definition' do
       let(:source) { 'def self.foo(bar); end' }
 
-      it { expect(def_node).to be_self_receiver }
+      it { is_expected.to be_self_receiver }
     end
 
     context 'with a singleton method definition' do
       let(:source) { 'def Foo.bar(baz); end' }
 
-      it { expect(def_node).not_to be_self_receiver }
+      it { is_expected.not_to be_self_receiver }
     end
   end
 
@@ -401,19 +401,19 @@ RSpec.describe RuboCop::AST::DefNode do
     context 'with an instance method definition' do
       let(:source) { 'def foo(bar); end' }
 
-      it { expect(def_node).not_to be_const_receiver }
+      it { is_expected.not_to be_const_receiver }
     end
 
     context 'with a class method definition' do
       let(:source) { 'def self.foo(bar); end' }
 
-      it { expect(def_node).not_to be_const_receiver }
+      it { is_expected.not_to be_const_receiver }
     end
 
     context 'with a singleton method definition' do
       let(:source) { 'def Foo.bar(baz); end' }
 
-      it { expect(def_node).to be_const_receiver }
+      it { is_expected.to be_const_receiver }
     end
   end
 
@@ -421,19 +421,19 @@ RSpec.describe RuboCop::AST::DefNode do
     context 'with a predicate method' do
       let(:source) { 'def foo?(bar); end' }
 
-      it { expect(def_node).to be_predicate_method }
+      it { is_expected.to be_predicate_method }
     end
 
     context 'with a bang method' do
       let(:source) { 'def foo!(bar); end' }
 
-      it { expect(def_node).not_to be_predicate_method }
+      it { is_expected.not_to be_predicate_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'def foo(bar); end' }
 
-      it { expect(def_node).not_to be_predicate_method }
+      it { is_expected.not_to be_predicate_method }
     end
   end
 
@@ -441,19 +441,19 @@ RSpec.describe RuboCop::AST::DefNode do
     context 'with a bang method' do
       let(:source) { 'def foo!(bar); end' }
 
-      it { expect(def_node).to be_bang_method }
+      it { is_expected.to be_bang_method }
     end
 
     context 'with a predicate method' do
       let(:source) { 'def foo?(bar); end' }
 
-      it { expect(def_node).not_to be_bang_method }
+      it { is_expected.not_to be_bang_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'def foo(bar); end' }
 
-      it { expect(def_node).not_to be_bang_method }
+      it { is_expected.not_to be_bang_method }
     end
   end
 
@@ -461,13 +461,13 @@ RSpec.describe RuboCop::AST::DefNode do
     context 'with a camel case method' do
       let(:source) { 'def Foo(bar); end' }
 
-      it { expect(def_node).to be_camel_case_method }
+      it { is_expected.to be_camel_case_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'def foo(bar); end' }
 
-      it { expect(def_node).not_to be_camel_case_method }
+      it { is_expected.not_to be_camel_case_method }
     end
   end
 
@@ -475,25 +475,25 @@ RSpec.describe RuboCop::AST::DefNode do
     context 'with a block argument' do
       let(:source) { 'def foo(&bar); end' }
 
-      it { expect(def_node).to be_block_argument }
+      it { is_expected.to be_block_argument }
     end
 
     context 'with no arguments' do
       let(:source) { 'def foo; end' }
 
-      it { expect(def_node).not_to be_block_argument }
+      it { is_expected.not_to be_block_argument }
     end
 
     context 'with regular arguments' do
       let(:source) { 'def foo(bar); end' }
 
-      it { expect(def_node).not_to be_block_argument }
+      it { is_expected.not_to be_block_argument }
     end
 
     context 'with mixed arguments' do
       let(:source) { 'def foo(bar, &baz); end' }
 
-      it { expect(def_node).to be_block_argument }
+      it { is_expected.to be_block_argument }
     end
   end
 
@@ -521,13 +521,13 @@ RSpec.describe RuboCop::AST::DefNode do
     context 'with standard method definition' do
       let(:source) { 'def foo; 42; end' }
 
-      it { expect(def_node).not_to be_endless }
+      it { is_expected.not_to be_endless }
     end
 
     context 'with endless method definition', :ruby30 do
       let(:source) { 'def foo() = 42' }
 
-      it { expect(def_node).to be_endless }
+      it { is_expected.to be_endless }
     end
   end
 end

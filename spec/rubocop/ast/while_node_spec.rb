@@ -7,13 +7,13 @@ RSpec.describe RuboCop::AST::WhileNode do
     context 'with a statement while' do
       let(:source) { 'while foo; bar; end' }
 
-      it { expect(while_node).to be_a(described_class) }
+      it { is_expected.to be_a(described_class) }
     end
 
     context 'with a modifier while' do
       let(:source) { 'begin foo; end while bar' }
 
-      it { expect(while_node).to be_a(described_class) }
+      it { is_expected.to be_a(described_class) }
     end
   end
 
@@ -33,13 +33,13 @@ RSpec.describe RuboCop::AST::WhileNode do
     context 'with a do keyword' do
       let(:source) { 'while foo do; bar; end' }
 
-      it { expect(while_node).to be_do }
+      it { is_expected.to be_do }
     end
 
     context 'without a do keyword' do
       let(:source) { 'while foo; bar; end' }
 
-      it { expect(while_node).not_to be_do }
+      it { is_expected.not_to be_do }
     end
   end
 
@@ -47,13 +47,13 @@ RSpec.describe RuboCop::AST::WhileNode do
     context 'with a statement while' do
       let(:source) { 'while foo; bar; end' }
 
-      it { expect(while_node).not_to be_post_condition_loop }
+      it { is_expected.not_to be_post_condition_loop }
     end
 
     context 'with a modifier while' do
       let(:source) { 'begin foo; end while bar' }
 
-      it { expect(while_node).to be_post_condition_loop }
+      it { is_expected.to be_post_condition_loop }
     end
   end
 
@@ -61,13 +61,13 @@ RSpec.describe RuboCop::AST::WhileNode do
     context 'with a statement while' do
       let(:source) { 'while foo; bar; end' }
 
-      it { expect(while_node).to be_loop_keyword }
+      it { is_expected.to be_loop_keyword }
     end
 
     context 'with a modifier while' do
       let(:source) { 'begin foo; end while bar' }
 
-      it { expect(while_node).to be_loop_keyword }
+      it { is_expected.to be_loop_keyword }
     end
   end
 end

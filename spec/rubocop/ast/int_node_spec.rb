@@ -6,20 +6,20 @@ RSpec.describe RuboCop::AST::IntNode do
   describe '.new' do
     let(:source) { '42' }
 
-    it { expect(int_node).to be_a(described_class) }
+    it { is_expected.to be_a(described_class) }
   end
 
   describe '#sign?' do
     context 'explicit positive int' do
       let(:source) { '+42' }
 
-      it { expect(int_node).to be_sign }
+      it { is_expected.to be_sign }
     end
 
     context 'explicit negative int' do
       let(:source) { '-42' }
 
-      it { expect(int_node).to be_sign }
+      it { is_expected.to be_sign }
     end
   end
 

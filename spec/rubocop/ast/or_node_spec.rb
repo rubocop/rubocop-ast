@@ -9,7 +9,7 @@ RSpec.describe RuboCop::AST::OrNode do
         ':foo || :bar'
       end
 
-      it { expect(or_node).to be_a(described_class) }
+      it { is_expected.to be_a(described_class) }
     end
 
     context 'with a semantic or node' do
@@ -17,7 +17,7 @@ RSpec.describe RuboCop::AST::OrNode do
         ':foo or :bar'
       end
 
-      it { expect(or_node).to be_a(described_class) }
+      it { is_expected.to be_a(described_class) }
     end
   end
 
@@ -27,7 +27,7 @@ RSpec.describe RuboCop::AST::OrNode do
         ':foo || :bar'
       end
 
-      it { expect(or_node).to be_logical_operator }
+      it { is_expected.to be_logical_operator }
     end
 
     context 'with a semantic or node' do
@@ -35,7 +35,7 @@ RSpec.describe RuboCop::AST::OrNode do
         ':foo or :bar'
       end
 
-      it { expect(or_node).not_to be_logical_operator }
+      it { is_expected.not_to be_logical_operator }
     end
   end
 
@@ -45,7 +45,7 @@ RSpec.describe RuboCop::AST::OrNode do
         ':foo || :bar'
       end
 
-      it { expect(or_node).not_to be_semantic_operator }
+      it { is_expected.not_to be_semantic_operator }
     end
 
     context 'with a semantic or node' do
@@ -53,7 +53,7 @@ RSpec.describe RuboCop::AST::OrNode do
         ':foo or :bar'
       end
 
-      it { expect(or_node).to be_semantic_operator }
+      it { is_expected.to be_semantic_operator }
     end
   end
 
