@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::DefinedNode do
-  let(:defined_node) { parse_source(source).ast }
+  subject(:defined_node) { parse_source(source).ast }
 
   describe '.new' do
     context 'with a defined? node' do

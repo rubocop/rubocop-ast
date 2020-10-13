@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::ConstNode do
-  let(:ast) { parse_source(source).ast }
+  subject(:ast) { parse_source(source).ast }
+
   let(:const_node) { ast }
   let(:source) { '::Foo::Bar::BAZ' }
 

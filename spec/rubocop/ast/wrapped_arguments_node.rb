@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples 'wrapped arguments node' do |keyword|
-  let(:return_node) { parse_source(source).ast }
+  subject(:return_node) { parse_source(source).ast }
 
   describe '.new' do
     context 'without arguments' do

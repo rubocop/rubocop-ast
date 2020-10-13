@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::SuperNode do
-  let(:super_node) { parse_source(source).ast }
+  subject(:super_node) { ast }
+
+  let(:ast) { parse_source(source).ast }
 
   describe '.new' do
     context 'with a super node' do
@@ -60,7 +62,7 @@ RSpec.describe RuboCop::AST::SuperNode do
   end
 
   describe '#macro?' do
-    let(:super_node) { parse_source(source).ast.children[2] }
+    subject(:super_node) { ast.children[2] }
 
     let(:source) do
       ['def initialize',
@@ -215,7 +217,7 @@ RSpec.describe RuboCop::AST::SuperNode do
 
   describe '#block_literal?' do
     context 'with a block literal' do
-      let(:super_node) { parse_source(source).ast.children[0] }
+      subject(:super_node) { ast.children[0] }
 
       let(:source) { 'super { |q| baz(q) }' }
 
@@ -237,7 +239,7 @@ RSpec.describe RuboCop::AST::SuperNode do
 
   describe '#block_node' do
     context 'with a block literal' do
-      let(:super_node) { parse_source(source).ast.children[0] }
+      subject(:super_node) { ast.children[0] }
 
       let(:source) { 'super { |q| baz(q) }' }
 

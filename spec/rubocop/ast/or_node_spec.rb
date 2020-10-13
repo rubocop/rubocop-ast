@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::OrNode do
-  let(:or_node) { parse_source(source).ast }
+  subject(:or_node) { parse_source(source).ast }
 
   describe '.new' do
     context 'with a logical or node' do

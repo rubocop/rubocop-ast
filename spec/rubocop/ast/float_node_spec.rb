@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::FloatNode do
-  let(:float_node) { parse_source(source).ast }
+  subject(:float_node) { parse_source(source).ast }
 
   describe '.new' do
     let(:source) { '42.0' }

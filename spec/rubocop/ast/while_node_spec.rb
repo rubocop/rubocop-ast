@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::WhileNode do
-  let(:while_node) { parse_source(source).ast }
+  subject(:while_node) { parse_source(source).ast }
 
   describe '.new' do
     context 'with a statement while' do

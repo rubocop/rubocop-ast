@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::ModuleNode do
-  let(:module_node) { parse_source(source).ast }
+  subject(:module_node) { parse_source(source).ast }
 
   describe '.new' do
     let(:source) do
