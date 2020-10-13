@@ -66,7 +66,7 @@ RSpec.describe RuboCop::AST::Traversal do
   end
 
   it 'knows all current node types' do
-    expect(RuboCop::AST::Traversal::MISSING).to eq []
+    expect(RuboCop::AST::Traversal::MISSING).to be_empty
   end
 
   # Sanity checking the debugging checks
