@@ -6,20 +6,20 @@ RSpec.describe RuboCop::AST::FloatNode do
   describe '.new' do
     let(:source) { '42.0' }
 
-    it { expect(float_node.is_a?(described_class)).to be_truthy }
+    it { expect(float_node).to be_a(described_class) }
   end
 
   describe '#sign?' do
     context 'explicit positive float' do
       let(:source) { '+42.0' }
 
-      it { expect(float_node.sign?).to be_truthy }
+      it { expect(float_node).to be_sign }
     end
 
     context 'explicit negative float' do
       let(:source) { '-42.0' }
 
-      it { expect(float_node.sign?).to be_truthy }
+      it { expect(float_node).to be_sign }
     end
   end
 

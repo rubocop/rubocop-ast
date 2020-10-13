@@ -8,7 +8,7 @@ RSpec.describe RuboCop::AST::SelfClassNode do
       'class << self; end'
     end
 
-    it { expect(self_class_node.is_a?(described_class)).to be(true) }
+    it { expect(self_class_node).to be_a(described_class) }
   end
 
   describe '#identifier' do
@@ -16,7 +16,7 @@ RSpec.describe RuboCop::AST::SelfClassNode do
       'class << self; end'
     end
 
-    it { expect(self_class_node.identifier.self_type?).to be(true) }
+    it { expect(self_class_node.identifier).to be_self_type }
   end
 
   describe '#body' do
@@ -25,7 +25,7 @@ RSpec.describe RuboCop::AST::SelfClassNode do
         'class << self; bar; end'
       end
 
-      it { expect(self_class_node.body.send_type?).to be(true) }
+      it { expect(self_class_node.body).to be_send_type }
     end
 
     context 'with a multi-expression body' do
@@ -33,7 +33,7 @@ RSpec.describe RuboCop::AST::SelfClassNode do
         'class << self; bar; baz; end'
       end
 
-      it { expect(self_class_node.body.begin_type?).to be(true) }
+      it { expect(self_class_node.body).to be_begin_type }
     end
 
     context 'with an empty body' do

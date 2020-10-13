@@ -6,14 +6,14 @@ RSpec.describe RuboCop::AST::BlockNode do
   describe '.new' do
     let(:source) { 'foo { |q| bar(q) }' }
 
-    it { expect(block_node.is_a?(described_class)).to be(true) }
+    it { expect(block_node).to be_a(described_class) }
   end
 
   describe '#arguments' do
     context 'with no arguments' do
       let(:source) { 'foo { bar }' }
 
-      it { expect(block_node.arguments.empty?).to be(true) }
+      it { expect(block_node.arguments).to be_empty }
     end
 
     context 'with a single literal argument' do
@@ -38,7 +38,7 @@ RSpec.describe RuboCop::AST::BlockNode do
       context 'using numbered parameters' do
         let(:source) { 'foo { _1 }' }
 
-        it { expect(block_node.arguments.empty?).to be(true) }
+        it { expect(block_node.arguments).to be_empty }
       end
     end
   end
@@ -47,32 +47,32 @@ RSpec.describe RuboCop::AST::BlockNode do
     context 'with no arguments' do
       let(:source) { 'foo { bar }' }
 
-      it { expect(block_node.arguments?).to be_falsey }
+      it { expect(block_node).not_to be_arguments }
     end
 
     context 'with a single argument' do
       let(:source) { 'foo { |q| bar(q) }' }
 
-      it { expect(block_node.arguments?).to be_truthy }
+      it { expect(block_node).to be_arguments }
     end
 
     context 'with a single splat argument' do
       let(:source) { 'foo { |*q| bar(q) }' }
 
-      it { expect(block_node.arguments?).to be_truthy }
+      it { expect(block_node).to be_arguments }
     end
 
     context 'with multiple mixed arguments' do
       let(:source) { 'foo { |q, *z| bar(q, z) }' }
 
-      it { expect(block_node.arguments?).to be_truthy }
+      it { expect(block_node).to be_arguments }
     end
 
     context '>= Ruby 2.7', :ruby27 do
       context 'using numbered parameters' do
         let(:source) { 'foo { _1 }' }
 
-        it { expect(block_node.arguments?).to be false }
+        it { expect(block_node).not_to be_arguments }
       end
     end
   end
@@ -81,7 +81,7 @@ RSpec.describe RuboCop::AST::BlockNode do
     context 'when enclosed in braces' do
       let(:source) { 'foo { bar }' }
 
-      it { expect(block_node.braces?).to be_truthy }
+      it { expect(block_node).to be_braces }
     end
 
     context 'when enclosed in do-end keywords' do
@@ -91,7 +91,7 @@ RSpec.describe RuboCop::AST::BlockNode do
          'end'].join("\n")
       end
 
-      it { expect(block_node.braces?).to be_falsey }
+      it { expect(block_node).not_to be_braces }
     end
   end
 
@@ -99,7 +99,7 @@ RSpec.describe RuboCop::AST::BlockNode do
     context 'when enclosed in braces' do
       let(:source) { 'foo { bar }' }
 
-      it { expect(block_node.keywords?).to be_falsey }
+      it { expect(block_node).not_to be_keywords }
     end
 
     context 'when enclosed in do-end keywords' do
@@ -109,7 +109,7 @@ RSpec.describe RuboCop::AST::BlockNode do
          'end'].join("\n")
       end
 
-      it { expect(block_node.keywords?).to be_truthy }
+      it { expect(block_node).to be_keywords }
     end
   end
 
@@ -117,19 +117,19 @@ RSpec.describe RuboCop::AST::BlockNode do
     context 'when block belongs to a stabby lambda' do
       let(:source) { '-> { bar }' }
 
-      it { expect(block_node.lambda?).to be_truthy }
+      it { expect(block_node).to be_lambda }
     end
 
     context 'when block belongs to a method lambda' do
       let(:source) { 'lambda { bar }' }
 
-      it { expect(block_node.lambda?).to be_truthy }
+      it { expect(block_node).to be_lambda }
     end
 
     context 'when block belongs to a non-lambda method' do
       let(:source) { 'foo { bar }' }
 
-      it { expect(block_node.lambda?).to be_falsey }
+      it { expect(block_node).not_to be_lambda }
     end
   end
 
@@ -191,7 +191,7 @@ RSpec.describe RuboCop::AST::BlockNode do
     context 'when block is on a single line' do
       let(:source) { 'foo { bar }' }
 
-      it { expect(block_node.single_line?).to be_truthy }
+      it { expect(block_node).to be_single_line }
     end
 
     context 'when block is on several lines' do
@@ -201,7 +201,7 @@ RSpec.describe RuboCop::AST::BlockNode do
          'end'].join("\n")
       end
 
-      it { expect(block_node.single_line?).to be_falsey }
+      it { expect(block_node).not_to be_single_line }
     end
   end
 
@@ -209,7 +209,7 @@ RSpec.describe RuboCop::AST::BlockNode do
     context 'when block is on a single line' do
       let(:source) { 'foo { bar }' }
 
-      it { expect(block_node.multiline?).to be_falsey }
+      it { expect(block_node).not_to be_multiline }
     end
 
     context 'when block is on several lines' do
@@ -219,7 +219,7 @@ RSpec.describe RuboCop::AST::BlockNode do
          'end'].join("\n")
       end
 
-      it { expect(block_node.multiline?).to be_truthy }
+      it { expect(block_node).to be_multiline }
     end
   end
 
@@ -227,19 +227,19 @@ RSpec.describe RuboCop::AST::BlockNode do
     context 'when block method is each' do
       let(:source) { 'each { bar }' }
 
-      it { expect(block_node.void_context?).to be_truthy }
+      it { expect(block_node).to be_void_context }
     end
 
     context 'when block method is tap' do
       let(:source) { 'tap { bar }' }
 
-      it { expect(block_node.void_context?).to be_truthy }
+      it { expect(block_node).to be_void_context }
     end
 
     context 'when block method is not each' do
       let(:source) { 'map { bar }' }
 
-      it { expect(block_node.void_context?).to be_falsey }
+      it { expect(block_node).not_to be_void_context }
     end
   end
 end

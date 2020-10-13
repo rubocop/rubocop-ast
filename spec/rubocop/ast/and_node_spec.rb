@@ -9,7 +9,7 @@ RSpec.describe RuboCop::AST::AndNode do
         ':foo && :bar'
       end
 
-      it { expect(and_node.is_a?(described_class)).to be(true) }
+      it { expect(and_node).to be_a(described_class) }
     end
 
     context 'with a semantic and node' do
@@ -17,7 +17,7 @@ RSpec.describe RuboCop::AST::AndNode do
         ':foo and :bar'
       end
 
-      it { expect(and_node.is_a?(described_class)).to be(true) }
+      it { expect(and_node).to be_a(described_class) }
     end
   end
 
@@ -27,7 +27,7 @@ RSpec.describe RuboCop::AST::AndNode do
         ':foo && :bar'
       end
 
-      it { expect(and_node.logical_operator?).to be(true) }
+      it { expect(and_node).to be_logical_operator }
     end
 
     context 'with a semantic and node' do
@@ -35,7 +35,7 @@ RSpec.describe RuboCop::AST::AndNode do
         ':foo and :bar'
       end
 
-      it { expect(and_node.logical_operator?).to be(false) }
+      it { expect(and_node).not_to be_logical_operator }
     end
   end
 
@@ -45,7 +45,7 @@ RSpec.describe RuboCop::AST::AndNode do
         ':foo && :bar'
       end
 
-      it { expect(and_node.semantic_operator?).to be(false) }
+      it { expect(and_node).not_to be_semantic_operator }
     end
 
     context 'with a semantic and node' do
@@ -53,7 +53,7 @@ RSpec.describe RuboCop::AST::AndNode do
         ':foo and :bar'
       end
 
-      it { expect(and_node.semantic_operator?).to be(true) }
+      it { expect(and_node).to be_semantic_operator }
     end
   end
 
@@ -117,7 +117,7 @@ RSpec.describe RuboCop::AST::AndNode do
         ':foo && 42'
       end
 
-      it { expect(and_node.lhs.sym_type?).to be(true) }
+      it { expect(and_node.lhs).to be_sym_type }
     end
 
     context 'with a semantic and node' do
@@ -125,7 +125,7 @@ RSpec.describe RuboCop::AST::AndNode do
         ':foo and 42'
       end
 
-      it { expect(and_node.lhs.sym_type?).to be(true) }
+      it { expect(and_node.lhs).to be_sym_type }
     end
   end
 
@@ -135,7 +135,7 @@ RSpec.describe RuboCop::AST::AndNode do
         ':foo && 42'
       end
 
-      it { expect(and_node.rhs.int_type?).to be(true) }
+      it { expect(and_node.rhs).to be_int_type }
     end
 
     context 'with a semantic and node' do
@@ -143,7 +143,7 @@ RSpec.describe RuboCop::AST::AndNode do
         ':foo and 42'
       end
 
-      it { expect(and_node.rhs.int_type?).to be(true) }
+      it { expect(and_node.rhs).to be_int_type }
     end
   end
 end

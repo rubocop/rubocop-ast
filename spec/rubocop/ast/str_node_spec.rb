@@ -7,13 +7,13 @@ RSpec.describe RuboCop::AST::StrNode do
     context 'with a normal string' do
       let(:source) { "'foo'" }
 
-      it { expect(str_node.is_a?(described_class)).to be(true) }
+      it { expect(str_node).to be_a(described_class) }
     end
 
     context 'with a string with interpolation' do
       let(:source) { '"#{foo}"' }
 
-      it { expect(str_node.is_a?(described_class)).to be(true) }
+      it { expect(str_node).to be_a(described_class) }
     end
 
     context 'with a heredoc' do
@@ -26,7 +26,7 @@ RSpec.describe RuboCop::AST::StrNode do
         RUBY
       end
 
-      it { expect(str_node.is_a?(described_class)).to be(true) }
+      it { expect(str_node).to be_a(described_class) }
     end
   end
 
@@ -34,13 +34,13 @@ RSpec.describe RuboCop::AST::StrNode do
     context 'with a normal string' do
       let(:source) { "'foo'" }
 
-      it { expect(str_node.heredoc?).to be(false) }
+      it { expect(str_node).not_to be_heredoc }
     end
 
     context 'with a string with interpolation' do
       let(:source) { '"#{foo}"' }
 
-      it { expect(str_node.heredoc?).to be(false) }
+      it { expect(str_node).not_to be_heredoc }
     end
 
     context 'with a heredoc' do
@@ -53,7 +53,7 @@ RSpec.describe RuboCop::AST::StrNode do
         RUBY
       end
 
-      it { expect(str_node.heredoc?).to be(true) }
+      it { expect(str_node).to be_heredoc }
     end
   end
 end

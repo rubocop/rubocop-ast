@@ -13,7 +13,7 @@ RSpec.describe RuboCop::AST::CaseMatchNode do
         RUBY
       end
 
-      it { expect(case_match_node.is_a?(described_class)).to be(true) }
+      it { expect(case_match_node).to be_a(described_class) }
     end
 
     describe '#keyword' do
@@ -59,7 +59,7 @@ RSpec.describe RuboCop::AST::CaseMatchNode do
 
       context 'when not passed a block' do
         it {
-          expect(case_match_node.each_in_pattern.is_a?(Enumerator)).to be(true)
+          expect(case_match_node.each_in_pattern).to be_a(Enumerator)
         }
       end
 
@@ -81,7 +81,7 @@ RSpec.describe RuboCop::AST::CaseMatchNode do
           RUBY
         end
 
-        it { expect(case_match_node.else?).to be(false) }
+        it { expect(case_match_node).not_to be_else }
       end
 
       context 'with an else statement' do
@@ -94,7 +94,7 @@ RSpec.describe RuboCop::AST::CaseMatchNode do
           RUBY
         end
 
-        it { expect(case_match_node.else?).to be(true) }
+        it { expect(case_match_node).to be_else }
       end
     end
 
@@ -109,7 +109,7 @@ RSpec.describe RuboCop::AST::CaseMatchNode do
             RUBY
           end
 
-          it { expect(case_match_node.else_branch.nil?).to be(true) }
+          it { expect(case_match_node.else_branch).to be_nil }
         end
 
         context 'with an else statement' do
@@ -123,7 +123,7 @@ RSpec.describe RuboCop::AST::CaseMatchNode do
             RUBY
           end
 
-          it { expect(case_match_node.else_branch.sym_type?).to be(true) }
+          it { expect(case_match_node.else_branch).to be_sym_type }
         end
       end
     end

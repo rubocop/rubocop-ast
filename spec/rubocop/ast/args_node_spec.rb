@@ -7,19 +7,19 @@ RSpec.describe RuboCop::AST::ArgsNode do
     context 'with a method definition' do
       let(:source) { 'def foo(x) end' }
 
-      it { expect(args_node.is_a?(described_class)).to be(true) }
+      it { expect(args_node).to be_a(described_class) }
     end
 
     context 'with a block' do
       let(:source) { 'foo { |x| bar }' }
 
-      it { expect(args_node.is_a?(described_class)).to be(true) }
+      it { expect(args_node).to be_a(described_class) }
     end
 
     context 'with a lambda literal' do
       let(:source) { '-> (x) { bar }' }
 
-      it { expect(args_node.is_a?(described_class)).to be(true) }
+      it { expect(args_node).to be_a(described_class) }
     end
   end
 

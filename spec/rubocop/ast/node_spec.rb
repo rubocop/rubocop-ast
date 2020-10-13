@@ -23,7 +23,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { 'expr' }
 
       it 'is false' do
-        expect(node.used?).to be(false)
+        expect(node).not_to be_used
       end
     end
 
@@ -39,7 +39,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { 'obj.method { blah; expr }' }
 
       it 'is always true' do
-        expect(node.children.last.used?).to be(true)
+        expect(node.children.last).to be_used
       end
     end
 
@@ -81,9 +81,9 @@ RSpec.describe RuboCop::AST::Node do
         let(:src) { 'if a then b else c end' }
 
         it 'is true only for the condition' do
-          expect(node.condition.used?).to be(true)
-          expect(node.if_branch.used?).to be(false)
-          expect(node.else_branch.used?).to be(false)
+          expect(node.condition).to be_used
+          expect(node.if_branch).not_to be_used
+          expect(node.else_branch).not_to be_used
         end
       end
     end
@@ -111,8 +111,8 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { 'while a; b; end' }
 
       it 'is true only for the condition' do
-        expect(node.condition.used?).to be(true)
-        expect(node.body.used?).to be(false)
+        expect(node.condition).to be_used
+        expect(node.body).not_to be_used
       end
     end
   end
@@ -122,7 +122,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { source }
 
       it "returns true for `#{source}`" do
-        expect(node.recursive_literal?).to be(true)
+        expect(node).to be_recursive_literal
       end
     end
 
@@ -147,7 +147,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { source }
 
       it "returns false for `#{source}`" do
-        expect(node.recursive_literal?).to be(false)
+        expect(node).not_to be_recursive_literal
       end
     end
 
@@ -168,7 +168,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { 'obj.method(arg1, arg2)' }
 
       it 'returns false' do
-        expect(node.pure?).to be(false)
+        expect(node).not_to be_pure
       end
     end
 
@@ -176,7 +176,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { '100' }
 
       it 'returns true' do
-        expect(node.pure?).to be(true)
+        expect(node).to be_pure
       end
     end
 
@@ -185,7 +185,7 @@ RSpec.describe RuboCop::AST::Node do
         let(:src) { '[1..100, false, :symbol, "string", 1.0]' }
 
         it 'returns true' do
-          expect(node.pure?).to be(true)
+          expect(node).to be_pure
         end
       end
 
@@ -193,7 +193,7 @@ RSpec.describe RuboCop::AST::Node do
         let(:src) { '[1, 2, 3, 3 + 4]' }
 
         it 'returns false' do
-          expect(node.pure?).to be(false)
+          expect(node).not_to be_pure
         end
       end
     end
@@ -203,7 +203,7 @@ RSpec.describe RuboCop::AST::Node do
         let(:src) { '{range: 1..100, bool: false, str: "string", float: 1.0}' }
 
         it 'returns true' do
-          expect(node.pure?).to be(true)
+          expect(node).to be_pure
         end
       end
 
@@ -211,7 +211,7 @@ RSpec.describe RuboCop::AST::Node do
         let(:src) { '{a: 1, b: 2, c: Kernel.exit}' }
 
         it 'returns false' do
-          expect(node.pure?).to be(false)
+          expect(node).not_to be_pure
         end
       end
     end
@@ -234,7 +234,7 @@ RSpec.describe RuboCop::AST::Node do
         it 'returns true' do
           if_node = node.children[1]
           expect(if_node.type).to be :if
-          expect(if_node.pure?).to be(true)
+          expect(if_node).to be_pure
         end
       end
 
@@ -242,7 +242,7 @@ RSpec.describe RuboCop::AST::Node do
         let(:src) { 'if $DEBUG then puts "hello" else nil end' }
 
         it 'returns false' do
-          expect(node.pure?).to be(false)
+          expect(node).not_to be_pure
         end
       end
 
@@ -250,7 +250,7 @@ RSpec.describe RuboCop::AST::Node do
         let(:src) { 'if @a then 1 else $global = "str" end' }
 
         it 'returns false' do
-          expect(node.pure?).to be(false)
+          expect(node).not_to be_pure
         end
       end
     end
@@ -259,7 +259,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { '@var = 1' }
 
       it 'returns false' do
-        expect(node.pure?).to be(false)
+        expect(node).not_to be_pure
       end
     end
 
@@ -267,7 +267,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { '$var = 1' }
 
       it 'returns false' do
-        expect(node.pure?).to be(false)
+        expect(node).not_to be_pure
       end
     end
 
@@ -275,7 +275,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { '@@var = 1' }
 
       it 'returns false' do
-        expect(node.pure?).to be(false)
+        expect(node).not_to be_pure
       end
     end
 
@@ -283,7 +283,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { 'var = 1' }
 
       it 'returns false' do
-        expect(node.pure?).to be(false)
+        expect(node).not_to be_pure
       end
     end
 
@@ -291,7 +291,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { 'class C < Super; def method; end end' }
 
       it 'returns false' do
-        expect(node.pure?).to be(false)
+        expect(node).not_to be_pure
       end
     end
 
@@ -299,7 +299,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { 'module M; def method; end end' }
 
       it 'returns false' do
-        expect(node.pure?).to be(false)
+        expect(node).not_to be_pure
       end
     end
 
@@ -312,7 +312,7 @@ RSpec.describe RuboCop::AST::Node do
         let(:body) { '#{x}' }
 
         it 'returns false' do
-          expect(node.pure?).to be(false)
+          expect(node).not_to be_pure
         end
       end
 
@@ -320,7 +320,7 @@ RSpec.describe RuboCop::AST::Node do
         let(:src) { URI::DEFAULT_PARSER.make_regexp.inspect }
 
         it 'returns true' do
-          expect(node.pure?).to be(true)
+          expect(node).to be_pure
         end
       end
 
@@ -328,7 +328,7 @@ RSpec.describe RuboCop::AST::Node do
         let(:opts) { 'oix' }
 
         it 'returns true' do
-          expect(node.pure?).to be(true)
+          expect(node).to be_pure
         end
       end
     end
@@ -376,11 +376,8 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { 'bar { |a, b = 42, *c, d: 42, **e| nil }' }
 
       it 'returns true for all argument types' do
-        node.arguments.children.each do |arg|
-          expect(arg.argument_type?).to eq(true)
-        end
-
-        expect(node.arguments.argument_type?).to eq(false)
+        expect(node.arguments.children).to all be_argument_type
+        expect(node.arguments).not_to be_argument_type
       end
     end
 
@@ -388,11 +385,8 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { 'def method_name(a = 0, *b, c: 42, **d); end' }
 
       it 'returns true for all argument types' do
-        node.arguments.children.each do |arg|
-          expect(arg.argument_type?).to eq(true)
-        end
-
-        expect(node.arguments.argument_type?).to eq(false)
+        expect(node.arguments.children).to all be_argument_type
+        expect(node.arguments).not_to be_argument_type
       end
     end
   end
@@ -402,7 +396,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { 'Class.new { a = 42 }' }
 
       it 'matches' do
-        expect(node.class_constructor?).to eq(true)
+        expect(node).to be_class_constructor
       end
     end
 
@@ -410,7 +404,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { 'Module.new { a = 42 }' }
 
       it 'matches' do
-        expect(node.class_constructor?).to eq(true)
+        expect(node).to be_class_constructor
       end
     end
 
@@ -426,7 +420,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { '::Class.new { a = 42 }' }
 
       it 'matches' do
-        expect(node.class_constructor?).to eq(true)
+        expect(node).to be_class_constructor
       end
     end
   end

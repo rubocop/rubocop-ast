@@ -6,20 +6,20 @@ RSpec.describe RuboCop::AST::PairNode do
   describe '.new' do
     let(:source) { '{ a: 1 }' }
 
-    it { expect(pair_node.is_a?(described_class)).to be(true) }
+    it { expect(pair_node).to be_a(described_class) }
   end
 
   describe '#hash_rocket?' do
     context 'when using a hash rocket delimiter' do
       let(:source) { '{ a => 1 }' }
 
-      it { expect(pair_node.hash_rocket?).to be_truthy }
+      it { expect(pair_node).to be_hash_rocket }
     end
 
     context 'when using a colon delimiter' do
       let(:source) { '{ a: 1 }' }
 
-      it { expect(pair_node.hash_rocket?).to be_falsey }
+      it { expect(pair_node).not_to be_hash_rocket }
     end
   end
 
@@ -27,13 +27,13 @@ RSpec.describe RuboCop::AST::PairNode do
     context 'when using a hash rocket delimiter' do
       let(:source) { '{ a => 1 }' }
 
-      it { expect(pair_node.colon?).to be_falsey }
+      it { expect(pair_node).not_to be_colon }
     end
 
     context 'when using a colon delimiter' do
       let(:source) { '{ a: 1 }' }
 
-      it { expect(pair_node.colon?).to be_truthy }
+      it { expect(pair_node).to be_colon }
     end
   end
 
@@ -73,20 +73,20 @@ RSpec.describe RuboCop::AST::PairNode do
     context 'when using a symbol key' do
       let(:source) { '{ a: 1 }' }
 
-      it { expect(pair_node.key.sym_type?).to be(true) }
+      it { expect(pair_node.key).to be_sym_type }
     end
 
     context 'when using a string key' do
       let(:source) { "{ 'a' => 1 }" }
 
-      it { expect(pair_node.key.str_type?).to be(true) }
+      it { expect(pair_node.key).to be_str_type }
     end
   end
 
   describe '#value' do
     let(:source) { '{ a: 1 }' }
 
-    it { expect(pair_node.value.int_type?).to be(true) }
+    it { expect(pair_node.value).to be_int_type }
   end
 
   describe '#value_on_new_line?' do
@@ -100,7 +100,7 @@ RSpec.describe RuboCop::AST::PairNode do
          '}'].join("\n")
       end
 
-      it { expect(pair.value_on_new_line?).to be_truthy }
+      it { expect(pair).to be_value_on_new_line }
     end
 
     context 'when value spans multiple lines' do
@@ -111,13 +111,13 @@ RSpec.describe RuboCop::AST::PairNode do
          '}'].join("\n")
       end
 
-      it { expect(pair.value_on_new_line?).to be_falsey }
+      it { expect(pair).not_to be_value_on_new_line }
     end
 
     context 'when pair is on a single line' do
       let(:source) { "{ 'a' => 1 }" }
 
-      it { expect(pair.value_on_new_line?).to be_falsey }
+      it { expect(pair).not_to be_value_on_new_line }
     end
   end
 
@@ -133,7 +133,7 @@ RSpec.describe RuboCop::AST::PairNode do
            '}'].join("\n")
         end
 
-        it { expect(first_pair.same_line?(second_pair)).to be_truthy }
+        it { expect(first_pair).to be_same_line(second_pair) }
       end
 
       context 'when both pair is a keyword splat' do
@@ -143,7 +143,7 @@ RSpec.describe RuboCop::AST::PairNode do
            '}'].join("\n")
         end
 
-        it { expect(first_pair.same_line?(second_pair)).to be_truthy }
+        it { expect(first_pair).to be_same_line(second_pair) }
       end
     end
 
@@ -156,8 +156,8 @@ RSpec.describe RuboCop::AST::PairNode do
            '}'].join("\n")
         end
 
-        it { expect(first_pair.same_line?(second_pair)).to be_truthy }
-        it { expect(second_pair.same_line?(first_pair)).to be_truthy }
+        it { expect(first_pair).to be_same_line(second_pair) }
+        it { expect(second_pair).to be_same_line(first_pair) }
       end
 
       context 'when last pair is a keyword splat' do
@@ -168,8 +168,8 @@ RSpec.describe RuboCop::AST::PairNode do
            '}'].join("\n")
         end
 
-        it { expect(first_pair.same_line?(second_pair)).to be_truthy }
-        it { expect(second_pair.same_line?(first_pair)).to be_truthy }
+        it { expect(first_pair).to be_same_line(second_pair) }
+        it { expect(second_pair).to be_same_line(first_pair) }
       end
     end
 
@@ -182,7 +182,7 @@ RSpec.describe RuboCop::AST::PairNode do
            '}'].join("\n")
         end
 
-        it { expect(first_pair.same_line?(second_pair)).to be_falsey }
+        it { expect(first_pair).not_to be_same_line(second_pair) }
       end
 
       context 'when last pair is a keyword splat' do
@@ -193,7 +193,7 @@ RSpec.describe RuboCop::AST::PairNode do
            '}'].join("\n")
         end
 
-        it { expect(first_pair.same_line?(second_pair)).to be_falsey }
+        it { expect(first_pair).not_to be_same_line(second_pair) }
       end
     end
   end

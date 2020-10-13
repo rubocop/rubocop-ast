@@ -7,13 +7,13 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a regular method send' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.is_a?(described_class)).to be(true) }
+      it { expect(send_node).to be_a(described_class) }
     end
 
     context 'with a safe navigation method send' do
       let(:source) { 'foo&.bar(:baz)' }
 
-      it { expect(send_node.is_a?(described_class)).to be(true) }
+      it { expect(send_node).to be_a(described_class) }
     end
   end
 
@@ -21,19 +21,19 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with no receiver' do
       let(:source) { 'bar(:baz)' }
 
-      it { expect(send_node.receiver.nil?).to be(true) }
+      it { expect(send_node.receiver).to be_nil }
     end
 
     context 'with a literal receiver' do
       let(:source) { "'foo'.bar(:baz)" }
 
-      it { expect(send_node.receiver.str_type?).to be(true) }
+      it { expect(send_node.receiver).to be_str_type }
     end
 
     context 'with a variable receiver' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.receiver.send_type?).to be(true) }
+      it { expect(send_node.receiver).to be_send_type }
     end
   end
 
@@ -68,13 +68,13 @@ RSpec.describe RuboCop::AST::SendNode do
       context 'when argument is a symbol' do
         let(:source) { 'bar(:baz)' }
 
-        it { expect(send_node.method?(:bar)).to be_truthy }
+        it { expect(send_node).to be_method(:bar) }
       end
 
       context 'when argument is a string' do
         let(:source) { 'bar(:baz)' }
 
-        it { expect(send_node.method?('bar')).to be_truthy }
+        it { expect(send_node).to be_method('bar') }
       end
     end
 
@@ -82,13 +82,13 @@ RSpec.describe RuboCop::AST::SendNode do
       context 'when argument is a symbol' do
         let(:source) { 'bar(:baz)' }
 
-        it { expect(send_node.method?(:foo)).to be_falsey }
+        it { expect(send_node).not_to be_method(:foo) }
       end
 
       context 'when argument is a string' do
         let(:source) { 'bar(:baz)' }
 
-        it { expect(send_node.method?('foo')).to be_falsey }
+        it { expect(send_node).not_to be_method('foo') }
       end
     end
   end
@@ -103,7 +103,7 @@ RSpec.describe RuboCop::AST::SendNode do
         RUBY
       end
 
-      it { expect(send_node.access_modifier?).to be_truthy }
+      it { expect(send_node).to be_access_modifier }
     end
 
     context 'when node is a non-bare `module_function`' do
@@ -115,7 +115,7 @@ RSpec.describe RuboCop::AST::SendNode do
         RUBY
       end
 
-      it { expect(send_node.access_modifier?).to be_truthy }
+      it { expect(send_node).to be_access_modifier }
     end
 
     context 'when node is not an access modifier' do
@@ -127,7 +127,7 @@ RSpec.describe RuboCop::AST::SendNode do
         RUBY
       end
 
-      it { expect(send_node.bare_access_modifier?).to be_falsey }
+      it { expect(send_node).not_to be_bare_access_modifier }
     end
   end
 
@@ -141,7 +141,7 @@ RSpec.describe RuboCop::AST::SendNode do
         RUBY
       end
 
-      it { expect(send_node.bare_access_modifier?).to be_truthy }
+      it { expect(send_node).to be_bare_access_modifier }
     end
 
     context 'when node has an argument' do
@@ -153,7 +153,7 @@ RSpec.describe RuboCop::AST::SendNode do
         RUBY
       end
 
-      it { expect(send_node.bare_access_modifier?).to be_falsey }
+      it { expect(send_node).not_to be_bare_access_modifier }
     end
 
     context 'when node is not an access modifier' do
@@ -165,7 +165,7 @@ RSpec.describe RuboCop::AST::SendNode do
         RUBY
       end
 
-      it { expect(send_node.bare_access_modifier?).to be_falsey }
+      it { expect(send_node).not_to be_bare_access_modifier }
     end
   end
 
@@ -179,7 +179,7 @@ RSpec.describe RuboCop::AST::SendNode do
         RUBY
       end
 
-      it { expect(send_node.non_bare_access_modifier?).to be_truthy }
+      it { expect(send_node).to be_non_bare_access_modifier }
     end
 
     context 'when node does not have an argument' do
@@ -191,7 +191,7 @@ RSpec.describe RuboCop::AST::SendNode do
         RUBY
       end
 
-      it { expect(send_node.non_bare_access_modifier?).to be_falsey }
+      it { expect(send_node).not_to be_non_bare_access_modifier }
     end
 
     context 'when node is not an access modifier' do
@@ -203,7 +203,7 @@ RSpec.describe RuboCop::AST::SendNode do
         RUBY
       end
 
-      it { expect(send_node.non_bare_access_modifier?).to be_falsey }
+      it { expect(send_node).not_to be_non_bare_access_modifier }
     end
   end
 
@@ -217,7 +217,7 @@ RSpec.describe RuboCop::AST::SendNode do
            'end'].join("\n")
         end
 
-        it { expect(send_node.macro?).to be_truthy }
+        it { expect(send_node).to be_macro }
       end
 
       context 'when parent is a module' do
@@ -228,7 +228,7 @@ RSpec.describe RuboCop::AST::SendNode do
            'end'].join("\n")
         end
 
-        it { expect(send_node.macro?).to be_truthy }
+        it { expect(send_node).to be_macro }
       end
 
       context 'when parent is a class constructor' do
@@ -239,7 +239,7 @@ RSpec.describe RuboCop::AST::SendNode do
            'end'].join("\n")
         end
 
-        it { expect(send_node.macro?).to be_truthy }
+        it { expect(send_node).to be_macro }
       end
 
       context 'when parent is a singleton class' do
@@ -250,7 +250,7 @@ RSpec.describe RuboCop::AST::SendNode do
            'end'].join("\n")
         end
 
-        it { expect(send_node.macro?).to be_truthy }
+        it { expect(send_node).to be_macro }
       end
 
       context 'when parent is a block in a macro scope' do
@@ -261,7 +261,7 @@ RSpec.describe RuboCop::AST::SendNode do
            'end'].join("\n")
         end
 
-        it { expect(send_node.macro?).to be_truthy }
+        it { expect(send_node).to be_macro }
       end
 
       context 'when parent is a block not in a macro scope' do
@@ -276,7 +276,7 @@ RSpec.describe RuboCop::AST::SendNode do
           end
         RUBY
 
-        it { expect(send_node.macro?).to be_falsey }
+        it { expect(send_node).not_to be_macro }
       end
 
       context 'when in the global scope' do
@@ -285,7 +285,7 @@ RSpec.describe RuboCop::AST::SendNode do
           other
         RUBY
 
-        it { expect(send_node.macro?).to be_truthy }
+        it { expect(send_node).to be_macro }
       end
 
       context 'when parent is a keyword begin inside of an class' do
@@ -297,13 +297,13 @@ RSpec.describe RuboCop::AST::SendNode do
            'end'].join("\n")
         end
 
-        it { expect(send_node.macro?).to be_truthy }
+        it { expect(send_node).to be_macro }
       end
 
       context 'without a parent' do
         let(:source) { 'bar :baz' }
 
-        it { expect(send_node.macro?).to be_truthy }
+        it { expect(send_node).to be_macro }
       end
 
       context 'when parent is a begin without a parent' do
@@ -313,7 +313,7 @@ RSpec.describe RuboCop::AST::SendNode do
            'end'].join("\n")
         end
 
-        it { expect(send_node.macro?).to be_truthy }
+        it { expect(send_node).to be_macro }
       end
 
       context 'when parent is a method definition' do
@@ -323,7 +323,7 @@ RSpec.describe RuboCop::AST::SendNode do
            'end'].join("\n")
         end
 
-        it { expect(send_node.macro?).to be_falsey }
+        it { expect(send_node).not_to be_macro }
       end
 
       context 'when in an if' do
@@ -332,7 +332,7 @@ RSpec.describe RuboCop::AST::SendNode do
           other
         RUBY
 
-        it { expect(send_node.macro?).to be_truthy }
+        it { expect(send_node).to be_macro }
       end
 
       context 'when the condition of an if' do
@@ -341,7 +341,7 @@ RSpec.describe RuboCop::AST::SendNode do
           other
         RUBY
 
-        it { expect(send_node.macro?).to be_falsey }
+        it { expect(send_node).not_to be_macro }
       end
     end
 
@@ -353,7 +353,7 @@ RSpec.describe RuboCop::AST::SendNode do
            'end'].join("\n")
         end
 
-        it { expect(send_node.macro?).to be_falsey }
+        it { expect(send_node).not_to be_macro }
       end
 
       context 'when parent is a module' do
@@ -363,7 +363,7 @@ RSpec.describe RuboCop::AST::SendNode do
            'end'].join("\n")
         end
 
-        it { expect(send_node.macro?).to be_falsey }
+        it { expect(send_node).not_to be_macro }
       end
     end
   end
@@ -373,13 +373,13 @@ RSpec.describe RuboCop::AST::SendNode do
       context 'with an explicit receiver' do
         let(:source) { 'foo.bar(:baz)' }
 
-        it { expect(send_node.command?(:bar)).to be_falsey }
+        it { expect(send_node).not_to be_command(:bar) }
       end
 
       context 'with an implicit receiver' do
         let(:source) { 'bar(:baz)' }
 
-        it { expect(send_node.command?(:bar)).to be_truthy }
+        it { expect(send_node).to be_command(:bar) }
       end
     end
 
@@ -387,13 +387,13 @@ RSpec.describe RuboCop::AST::SendNode do
       context 'with an explicit receiver' do
         let(:source) { 'foo.bar(:baz)' }
 
-        it { expect(send_node.command?('bar')).to be_falsey }
+        it { expect(send_node).not_to be_command('bar') }
       end
 
       context 'with an implicit receiver' do
         let(:source) { 'bar(:baz)' }
 
-        it { expect(send_node.command?('bar')).to be_truthy }
+        it { expect(send_node).to be_command('bar') }
       end
     end
   end
@@ -402,7 +402,7 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with no arguments' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.arguments.empty?).to be(true) }
+      it { expect(send_node.arguments).to be_empty }
     end
 
     context 'with a single literal argument' do
@@ -434,31 +434,31 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with no arguments' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.first_argument.nil?).to be(true) }
+      it { expect(send_node.first_argument).to be_nil }
     end
 
     context 'with a single literal argument' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.first_argument.sym_type?).to be(true) }
+      it { expect(send_node.first_argument).to be_sym_type }
     end
 
     context 'with a single splat argument' do
       let(:source) { 'foo.bar(*baz)' }
 
-      it { expect(send_node.first_argument.splat_type?).to be(true) }
+      it { expect(send_node.first_argument).to be_splat_type }
     end
 
     context 'with multiple literal arguments' do
       let(:source) { 'foo.bar(:baz, :qux)' }
 
-      it { expect(send_node.first_argument.sym_type?).to be(true) }
+      it { expect(send_node.first_argument).to be_sym_type }
     end
 
     context 'with multiple mixed arguments' do
       let(:source) { 'foo.bar(:baz, *qux)' }
 
-      it { expect(send_node.first_argument.sym_type?).to be(true) }
+      it { expect(send_node.first_argument).to be_sym_type }
     end
   end
 
@@ -466,31 +466,31 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with no arguments' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.last_argument.nil?).to be(true) }
+      it { expect(send_node.last_argument).to be_nil }
     end
 
     context 'with a single literal argument' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.last_argument.sym_type?).to be(true) }
+      it { expect(send_node.last_argument).to be_sym_type }
     end
 
     context 'with a single splat argument' do
       let(:source) { 'foo.bar(*baz)' }
 
-      it { expect(send_node.last_argument.splat_type?).to be(true) }
+      it { expect(send_node.last_argument).to be_splat_type }
     end
 
     context 'with multiple literal arguments' do
       let(:source) { 'foo.bar(:baz, :qux)' }
 
-      it { expect(send_node.last_argument.sym_type?).to be(true) }
+      it { expect(send_node.last_argument).to be_sym_type }
     end
 
     context 'with multiple mixed arguments' do
       let(:source) { 'foo.bar(:baz, *qux)' }
 
-      it { expect(send_node.last_argument.splat_type?).to be(true) }
+      it { expect(send_node.last_argument).to be_splat_type }
     end
   end
 
@@ -498,31 +498,31 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with no arguments' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.arguments?).to be_falsey }
+      it { expect(send_node).not_to be_arguments }
     end
 
     context 'with a single literal argument' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.arguments?).to be_truthy }
+      it { expect(send_node).to be_arguments }
     end
 
     context 'with a single splat argument' do
       let(:source) { 'foo.bar(*baz)' }
 
-      it { expect(send_node.arguments?).to be_truthy }
+      it { expect(send_node).to be_arguments }
     end
 
     context 'with multiple literal arguments' do
       let(:source) { 'foo.bar(:baz, :qux)' }
 
-      it { expect(send_node.arguments?).to be_truthy }
+      it { expect(send_node).to be_arguments }
     end
 
     context 'with multiple mixed arguments' do
       let(:source) { 'foo.bar(:baz, *qux)' }
 
-      it { expect(send_node.arguments?).to be_truthy }
+      it { expect(send_node).to be_arguments }
     end
   end
 
@@ -531,13 +531,13 @@ RSpec.describe RuboCop::AST::SendNode do
       context 'when not using parentheses' do
         let(:source) { 'foo.bar' }
 
-        it { expect(send_node.parenthesized?).to be_falsey }
+        it { expect(send_node).not_to be_parenthesized }
       end
 
       context 'when using parentheses' do
         let(:source) { 'foo.bar()' }
 
-        it { expect(send_node.parenthesized?).to be_truthy }
+        it { expect(send_node).to be_parenthesized }
       end
     end
 
@@ -545,13 +545,13 @@ RSpec.describe RuboCop::AST::SendNode do
       context 'when not using parentheses' do
         let(:source) { 'foo.bar :baz' }
 
-        it { expect(send_node.parenthesized?).to be_falsey }
+        it { expect(send_node).not_to be_parenthesized }
       end
 
       context 'when using parentheses' do
         let(:source) { 'foo.bar(:baz)' }
 
-        it { expect(send_node.parenthesized?).to be_truthy }
+        it { expect(send_node).to be_parenthesized }
       end
     end
   end
@@ -560,25 +560,25 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a setter method' do
       let(:source) { 'foo.bar = :baz' }
 
-      it { expect(send_node.setter_method?).to be_truthy }
+      it { expect(send_node).to be_setter_method }
     end
 
     context 'with an indexed setter method' do
       let(:source) { 'foo.bar[:baz] = :qux' }
 
-      it { expect(send_node.setter_method?).to be_truthy }
+      it { expect(send_node).to be_setter_method }
     end
 
     context 'with an operator method' do
       let(:source) { 'foo.bar + 1' }
 
-      it { expect(send_node.setter_method?).to be_falsey }
+      it { expect(send_node).not_to be_setter_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.setter_method?).to be_falsey }
+      it { expect(send_node).not_to be_setter_method }
     end
   end
 
@@ -586,25 +586,25 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a binary operator method' do
       let(:source) { 'foo.bar + :baz' }
 
-      it { expect(send_node.operator_method?).to be_truthy }
+      it { expect(send_node).to be_operator_method }
     end
 
     context 'with a unary operator method' do
       let(:source) { '!foo.bar' }
 
-      it { expect(send_node.operator_method?).to be_truthy }
+      it { expect(send_node).to be_operator_method }
     end
 
     context 'with a setter method' do
       let(:source) { 'foo.bar = :baz' }
 
-      it { expect(send_node.operator_method?).to be_falsey }
+      it { expect(send_node).not_to be_operator_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.operator_method?).to be_falsey }
+      it { expect(send_node).not_to be_operator_method }
     end
   end
 
@@ -612,19 +612,19 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a nonmutating binary operator method' do
       let(:source) { 'foo + bar' }
 
-      it { expect(send_node.nonmutating_binary_operator_method?).to be_truthy }
+      it { expect(send_node).to be_nonmutating_binary_operator_method }
     end
 
     context 'with a mutating binary operator method' do
       let(:source) { 'foo << bar' }
 
-      it { expect(send_node.nonmutating_binary_operator_method?).to be_falsey }
+      it { expect(send_node).not_to be_nonmutating_binary_operator_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.nonmutating_binary_operator_method?).to be_falsey }
+      it { expect(send_node).not_to be_nonmutating_binary_operator_method }
     end
   end
 
@@ -632,13 +632,13 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a nonmutating unary operator method' do
       let(:source) { '!foo' }
 
-      it { expect(send_node.nonmutating_unary_operator_method?).to be_truthy }
+      it { expect(send_node).to be_nonmutating_unary_operator_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.nonmutating_unary_operator_method?).to be_falsey }
+      it { expect(send_node).not_to be_nonmutating_unary_operator_method }
     end
   end
 
@@ -646,25 +646,25 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a nonmutating binary operator method' do
       let(:source) { 'foo + bar' }
 
-      it { expect(send_node.nonmutating_operator_method?).to be_truthy }
+      it { expect(send_node).to be_nonmutating_operator_method }
     end
 
     context 'with a nonmutating unary operator method' do
       let(:source) { '!foo' }
 
-      it { expect(send_node.nonmutating_operator_method?).to be_truthy }
+      it { expect(send_node).to be_nonmutating_operator_method }
     end
 
     context 'with a mutating binary operator method' do
       let(:source) { 'foo << bar' }
 
-      it { expect(send_node.nonmutating_operator_method?).to be_falsey }
+      it { expect(send_node).not_to be_nonmutating_operator_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.nonmutating_operator_method?).to be_falsey }
+      it { expect(send_node).not_to be_nonmutating_operator_method }
     end
   end
 
@@ -672,19 +672,19 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a nonmutating Array method' do
       let(:source) { 'array.reverse' }
 
-      it { expect(send_node.nonmutating_array_method?).to be_truthy }
+      it { expect(send_node).to be_nonmutating_array_method }
     end
 
     context 'with a mutating Array method' do
       let(:source) { 'array.push(foo)' }
 
-      it { expect(send_node.nonmutating_array_method?).to be_falsey }
+      it { expect(send_node).not_to be_nonmutating_array_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.nonmutating_array_method?).to be_falsey }
+      it { expect(send_node).not_to be_nonmutating_array_method }
     end
   end
 
@@ -692,19 +692,19 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a nonmutating Hash method' do
       let(:source) { 'hash.slice(:foo, :bar)' }
 
-      it { expect(send_node.nonmutating_hash_method?).to be_truthy }
+      it { expect(send_node).to be_nonmutating_hash_method }
     end
 
     context 'with a mutating Hash method' do
       let(:source) { 'hash.delete(:foo)' }
 
-      it { expect(send_node.nonmutating_hash_method?).to be_falsey }
+      it { expect(send_node).not_to be_nonmutating_hash_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.nonmutating_hash_method?).to be_falsey }
+      it { expect(send_node).not_to be_nonmutating_hash_method }
     end
   end
 
@@ -712,19 +712,19 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a nonmutating String method' do
       let(:source) { 'string.squeeze' }
 
-      it { expect(send_node.nonmutating_string_method?).to be_truthy }
+      it { expect(send_node).to be_nonmutating_string_method }
     end
 
     context 'with a mutating String method' do
       let(:source) { 'string.lstrip!' }
 
-      it { expect(send_node.nonmutating_string_method?).to be_falsey }
+      it { expect(send_node).not_to be_nonmutating_string_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.nonmutating_string_method?).to be_falsey }
+      it { expect(send_node).not_to be_nonmutating_string_method }
     end
   end
 
@@ -732,19 +732,19 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a comparison method' do
       let(:source) { 'foo.bar >= :baz' }
 
-      it { expect(send_node.comparison_method?).to be_truthy }
+      it { expect(send_node).to be_comparison_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.comparison_method?).to be_falsey }
+      it { expect(send_node).not_to be_comparison_method }
     end
 
     context 'with a negation method' do
       let(:source) { '!foo' }
 
-      it { expect(send_node.comparison_method?).to be_falsey }
+      it { expect(send_node).not_to be_comparison_method }
     end
   end
 
@@ -752,25 +752,25 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with an assignment method' do
       let(:source) { 'foo.bar = :baz' }
 
-      it { expect(send_node.assignment_method?).to be_truthy }
+      it { expect(send_node).to be_assignment_method }
     end
 
     context 'with a bracket assignment method' do
       let(:source) { 'foo.bar[:baz] = :qux' }
 
-      it { expect(send_node.assignment_method?).to be_truthy }
+      it { expect(send_node).to be_assignment_method }
     end
 
     context 'with a comparison method' do
       let(:source) { 'foo.bar == :qux' }
 
-      it { expect(send_node.assignment_method?).to be_falsey }
+      it { expect(send_node).not_to be_assignment_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.assignment_method?).to be_falsey }
+      it { expect(send_node).not_to be_assignment_method }
     end
   end
 
@@ -778,13 +778,13 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with an enumerable method' do
       let(:source) { '>> foo.all? << { |e| bar?(e) }' }
 
-      it { expect(send_node.enumerable_method?).to be_truthy }
+      it { expect(send_node).to be_enumerable_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.enumerable_method?).to be_falsey }
+      it { expect(send_node).not_to be_enumerable_method }
     end
   end
 
@@ -817,25 +817,25 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a dot' do
       let(:source) { 'foo.+ 1' }
 
-      it { expect(send_node.dot?).to be_truthy }
+      it { expect(send_node).to be_dot }
     end
 
     context 'without a dot' do
       let(:source) { 'foo + 1' }
 
-      it { expect(send_node.dot?).to be_falsey }
+      it { expect(send_node).not_to be_dot }
     end
 
     context 'with a double colon' do
       let(:source) { 'Foo::bar' }
 
-      it { expect(send_node.dot?).to be_falsey }
+      it { expect(send_node).not_to be_dot }
     end
 
     context 'with a unary method' do
       let(:source) { '!foo.bar' }
 
-      it { expect(send_node.dot?).to be_falsey }
+      it { expect(send_node).not_to be_dot }
     end
   end
 
@@ -843,25 +843,25 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a double colon' do
       let(:source) { 'Foo::bar' }
 
-      it { expect(send_node.double_colon?).to be_truthy }
+      it { expect(send_node).to be_double_colon }
     end
 
     context 'with a dot' do
       let(:source) { 'foo.+ 1' }
 
-      it { expect(send_node.double_colon?).to be_falsey }
+      it { expect(send_node).not_to be_double_colon }
     end
 
     context 'without a dot' do
       let(:source) { 'foo + 1' }
 
-      it { expect(send_node.double_colon?).to be_falsey }
+      it { expect(send_node).not_to be_double_colon }
     end
 
     context 'with a unary method' do
       let(:source) { '!foo.bar' }
 
-      it { expect(send_node.double_colon?).to be_falsey }
+      it { expect(send_node).not_to be_double_colon }
     end
   end
 
@@ -869,19 +869,19 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a self receiver' do
       let(:source) { 'self.bar' }
 
-      it { expect(send_node.self_receiver?).to be_truthy }
+      it { expect(send_node).to be_self_receiver }
     end
 
     context 'with a non-self receiver' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.self_receiver?).to be_falsey }
+      it { expect(send_node).not_to be_self_receiver }
     end
 
     context 'with an implicit receiver' do
       let(:source) { 'bar' }
 
-      it { expect(send_node.self_receiver?).to be_falsey }
+      it { expect(send_node).not_to be_self_receiver }
     end
   end
 
@@ -889,19 +889,19 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a self receiver' do
       let(:source) { 'self.bar' }
 
-      it { expect(send_node.const_receiver?).to be_falsey }
+      it { expect(send_node).not_to be_const_receiver }
     end
 
     context 'with a non-constant receiver' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.const_receiver?).to be_falsey }
+      it { expect(send_node).not_to be_const_receiver }
     end
 
     context 'with a constant receiver' do
       let(:source) { 'Foo.bar' }
 
-      it { expect(send_node.const_receiver?).to be_truthy }
+      it { expect(send_node).to be_const_receiver }
     end
   end
 
@@ -909,19 +909,19 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with an implicit call method' do
       let(:source) { 'foo.(:bar)' }
 
-      it { expect(send_node.implicit_call?).to be_truthy }
+      it { expect(send_node).to be_implicit_call }
     end
 
     context 'with an explicit call method' do
       let(:source) { 'foo.call(:bar)' }
 
-      it { expect(send_node.implicit_call?).to be_falsey }
+      it { expect(send_node).not_to be_implicit_call }
     end
 
     context 'with a regular method' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.implicit_call?).to be_falsey }
+      it { expect(send_node).not_to be_implicit_call }
     end
   end
 
@@ -929,19 +929,19 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a predicate method' do
       let(:source) { 'foo.bar?' }
 
-      it { expect(send_node.predicate_method?).to be_truthy }
+      it { expect(send_node).to be_predicate_method }
     end
 
     context 'with a bang method' do
       let(:source) { 'foo.bar!' }
 
-      it { expect(send_node.predicate_method?).to be_falsey }
+      it { expect(send_node).not_to be_predicate_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.predicate_method?).to be_falsey }
+      it { expect(send_node).not_to be_predicate_method }
     end
   end
 
@@ -949,19 +949,19 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a bang method' do
       let(:source) { 'foo.bar!' }
 
-      it { expect(send_node.bang_method?).to be_truthy }
+      it { expect(send_node).to be_bang_method }
     end
 
     context 'with a predicate method' do
       let(:source) { 'foo.bar?' }
 
-      it { expect(send_node.bang_method?).to be_falsey }
+      it { expect(send_node).not_to be_bang_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.bang_method?).to be_falsey }
+      it { expect(send_node).not_to be_bang_method }
     end
   end
 
@@ -969,13 +969,13 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a camel case method' do
       let(:source) { 'Integer(1.0)' }
 
-      it { expect(send_node.camel_case_method?).to be_truthy }
+      it { expect(send_node).to be_camel_case_method }
     end
 
     context 'with a regular method' do
       let(:source) { 'integer(1.0)' }
 
-      it { expect(send_node.camel_case_method?).to be_falsey }
+      it { expect(send_node).not_to be_camel_case_method }
     end
   end
 
@@ -983,25 +983,25 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a block argument' do
       let(:source) { 'foo.bar(&baz)' }
 
-      it { expect(send_node.block_argument?).to be_truthy }
+      it { expect(send_node).to be_block_argument }
     end
 
     context 'with no arguments' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.block_argument?).to be_falsey }
+      it { expect(send_node).not_to be_block_argument }
     end
 
     context 'with regular arguments' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.block_argument?).to be_falsey }
+      it { expect(send_node).not_to be_block_argument }
     end
 
     context 'with mixed arguments' do
       let(:source) { 'foo.bar(:baz, &qux)' }
 
-      it { expect(send_node.block_argument?).to be_truthy }
+      it { expect(send_node).to be_block_argument }
     end
   end
 
@@ -1009,19 +1009,19 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a block literal' do
       let(:source) { '>> foo.bar << { |q| baz(q) }' }
 
-      it { expect(send_node.block_literal?).to be_truthy }
+      it { expect(send_node).to be_block_literal }
     end
 
     context 'with a block argument' do
       let(:source) { 'foo.bar(&baz)' }
 
-      it { expect(send_node.block_literal?).to be_falsey }
+      it { expect(send_node).not_to be_block_literal }
     end
 
     context 'with no block' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.block_literal?).to be_falsey }
+      it { expect(send_node).not_to be_block_literal }
     end
   end
 
@@ -1029,19 +1029,19 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a binary arithmetic operation' do
       let(:source) { 'foo + bar' }
 
-      it { expect(send_node.arithmetic_operation?).to be_truthy }
+      it { expect(send_node).to be_arithmetic_operation }
     end
 
     context 'with a unary numeric operation' do
       let(:source) { '+foo' }
 
-      it { expect(send_node.arithmetic_operation?).to be_falsey }
+      it { expect(send_node).not_to be_arithmetic_operation }
     end
 
     context 'with a regular method call' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.arithmetic_operation?).to be_falsey }
+      it { expect(send_node).not_to be_arithmetic_operation }
     end
   end
 
@@ -1049,19 +1049,19 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a block literal' do
       let(:source) { '>>foo.bar<< { |q| baz(q) }' }
 
-      it { expect(send_node.block_node.block_type?).to be(true) }
+      it { expect(send_node.block_node).to be_block_type }
     end
 
     context 'with a block argument' do
       let(:source) { 'foo.bar(&baz)' }
 
-      it { expect(send_node.block_node.nil?).to be(true) }
+      it { expect(send_node.block_node).to be_nil }
     end
 
     context 'with no block' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.block_node.nil?).to be(true) }
+      it { expect(send_node.block_node).to be_nil }
     end
   end
 
@@ -1069,25 +1069,25 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a splat argument' do
       let(:source) { 'foo.bar(*baz)' }
 
-      it { expect(send_node.splat_argument?).to be_truthy }
+      it { expect(send_node).to be_splat_argument }
     end
 
     context 'with no arguments' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.splat_argument?).to be_falsey }
+      it { expect(send_node).not_to be_splat_argument }
     end
 
     context 'with regular arguments' do
       let(:source) { 'foo.bar(:baz)' }
 
-      it { expect(send_node.splat_argument?).to be_falsey }
+      it { expect(send_node).not_to be_splat_argument }
     end
 
     context 'with mixed arguments' do
       let(:source) { 'foo.bar(:baz, *qux)' }
 
-      it { expect(send_node.splat_argument?).to be_truthy }
+      it { expect(send_node).to be_splat_argument }
     end
   end
 
@@ -1095,13 +1095,13 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a prefixed def modifier' do
       let(:source) { 'foo def bar; end' }
 
-      it { expect(send_node.def_modifier?).to be_truthy }
+      it { expect(send_node).to be_def_modifier }
     end
 
     context 'with several prefixed def modifiers' do
       let(:source) { 'foo bar def baz; end' }
 
-      it { expect(send_node.def_modifier?).to be_truthy }
+      it { expect(send_node).to be_def_modifier }
     end
   end
 
@@ -1109,25 +1109,25 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with prefix `not`' do
       let(:source) { 'not foo' }
 
-      it { expect(send_node.negation_method?).to be_truthy }
+      it { expect(send_node).to be_negation_method }
     end
 
     context 'with suffix `not`' do
       let(:source) { 'foo.not' }
 
-      it { expect(send_node.negation_method?).to be_falsey }
+      it { expect(send_node).not_to be_negation_method }
     end
 
     context 'with prefix bang' do
       let(:source) { '!foo' }
 
-      it { expect(send_node.negation_method?).to be_truthy }
+      it { expect(send_node).to be_negation_method }
     end
 
     context 'with a non-negated method' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.negation_method?).to be_falsey }
+      it { expect(send_node).not_to be_negation_method }
     end
   end
 
@@ -1135,19 +1135,19 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with keyword `not`' do
       let(:source) { 'not foo' }
 
-      it { expect(send_node.prefix_not?).to be_truthy }
+      it { expect(send_node).to be_prefix_not }
     end
 
     context 'with a bang method' do
       let(:source) { '!foo' }
 
-      it { expect(send_node.prefix_not?).to be_falsey }
+      it { expect(send_node).not_to be_prefix_not }
     end
 
     context 'with a non-negated method' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.prefix_not?).to be_falsey }
+      it { expect(send_node).not_to be_prefix_not }
     end
   end
 
@@ -1155,19 +1155,19 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with keyword `not`' do
       let(:source) { 'not foo' }
 
-      it { expect(send_node.prefix_bang?).to be_falsey }
+      it { expect(send_node).not_to be_prefix_bang }
     end
 
     context 'with a bang method' do
       let(:source) { '!foo' }
 
-      it { expect(send_node.prefix_bang?).to be_truthy }
+      it { expect(send_node).to be_prefix_bang }
     end
 
     context 'with a non-negated method' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.prefix_bang?).to be_falsey }
+      it { expect(send_node).not_to be_prefix_bang }
     end
   end
 
@@ -1175,25 +1175,25 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a lambda method' do
       let(:source) { '>> lambda << { |foo| bar(foo) }' }
 
-      it { expect(send_node.lambda?).to be_truthy }
+      it { expect(send_node).to be_lambda }
     end
 
     context 'with a method named lambda in a class' do
       let(:source) { '>> foo.lambda << { |bar| baz }' }
 
-      it { expect(send_node.lambda?).to be_falsey }
+      it { expect(send_node).not_to be_lambda }
     end
 
     context 'with a stabby lambda method' do
       let(:source) { '>> -> << (foo) { do_something(foo) }' }
 
-      it { expect(send_node.lambda?).to be_truthy }
+      it { expect(send_node).to be_lambda }
     end
 
     context 'with a non-lambda method' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.lambda?).to be_falsey }
+      it { expect(send_node).not_to be_lambda }
     end
   end
 
@@ -1201,26 +1201,26 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a stabby lambda' do
       let(:source) { '>> -> << (foo) { do_something(foo) }' }
 
-      it { expect(send_node.lambda_literal?).to be(true) }
+      it { expect(send_node).to be_lambda_literal }
     end
 
     context 'with a lambda method' do
       let(:source) { '>> lambda << { |foo| bar(foo) }' }
 
-      it { expect(send_node.lambda_literal?).to be(false) }
+      it { expect(send_node).not_to be_lambda_literal }
     end
 
     context 'with a non-lambda method' do
       let(:source) { 'foo.bar' }
 
-      it { expect(send_node.lambda?).to be_falsey }
+      it { expect(send_node).not_to be_lambda }
     end
 
     # Regression test https://github.com/rubocop-hq/rubocop/pull/5194
     context 'with `a.() {}` style method' do
       let(:source) { '>>a.()<< {}' }
 
-      it { expect(send_node.lambda?).to be_falsey }
+      it { expect(send_node).not_to be_lambda }
     end
   end
 
@@ -1228,25 +1228,25 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a unary operation' do
       let(:source) { '-foo' }
 
-      it { expect(send_node.unary_operation?).to be(true) }
+      it { expect(send_node).to be_unary_operation }
     end
 
     context 'with a binary operation' do
       let(:source) { 'foo + bar' }
 
-      it { expect(send_node.unary_operation?).to be(false) }
+      it { expect(send_node).not_to be_unary_operation }
     end
 
     context 'with a regular method call' do
       let(:source) { 'foo(bar)' }
 
-      it { expect(send_node.unary_operation?).to be(false) }
+      it { expect(send_node).not_to be_unary_operation }
     end
 
     context 'with an implicit call method' do
       let(:source) { 'foo.(:baz)' }
 
-      it { expect(send_node.unary_operation?).to be(false) }
+      it { expect(send_node).not_to be_unary_operation }
     end
   end
 
@@ -1254,37 +1254,37 @@ RSpec.describe RuboCop::AST::SendNode do
     context 'with a unary operation' do
       let(:source) { '-foo' }
 
-      it { expect(send_node.binary_operation?).to be(false) }
+      it { expect(send_node).not_to be_binary_operation }
     end
 
     context 'with a binary operation' do
       let(:source) { 'foo + bar' }
 
-      it { expect(send_node.binary_operation?).to be(true) }
+      it { expect(send_node).to be_binary_operation }
     end
 
     context 'with a regular method call' do
       let(:source) { 'foo(bar)' }
 
-      it { expect(send_node.binary_operation?).to be(false) }
+      it { expect(send_node).not_to be_binary_operation }
     end
 
     context 'with an implicit call method' do
       let(:source) { 'foo.(:baz)' }
 
-      it { expect(send_node.binary_operation?).to be(false) }
+      it { expect(send_node).not_to be_binary_operation }
     end
   end
 
   describe '#post_condition_loop?' do
     let(:source) { 'foo(bar)' }
 
-    it { expect(send_node.post_condition_loop?).to be(false) }
+    it { expect(send_node).not_to be_post_condition_loop }
   end
 
   describe '#loop_keyword?' do
     let(:source) { 'foo(bar)' }
 
-    it { expect(send_node.loop_keyword?).to be(false) }
+    it { expect(send_node).not_to be_loop_keyword }
   end
 end
