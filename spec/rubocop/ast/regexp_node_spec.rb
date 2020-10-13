@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::RegexpNode do
-  let(:regexp_node) { parse_source(source).ast }
+  subject(:regexp_node) { parse_source(source).ast }
 
   describe '.new' do
     let(:source) { '/re/' }

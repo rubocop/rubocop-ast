@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::YieldNode do
-  let(:yield_node) { parse_source(source).ast }
+  subject(:yield_node) { ast }
+
+  let(:ast) { parse_source(source).ast }
 
   describe '.new' do
     let(:source) { 'yield :foo, :bar' }
@@ -52,7 +54,7 @@ RSpec.describe RuboCop::AST::YieldNode do
   end
 
   describe '#macro?' do
-    let(:yield_node) { parse_source(source).ast.children[2] }
+    subject(:yield_node) { ast.children[2] }
 
     let(:source) do
       ['def give_me_bar',

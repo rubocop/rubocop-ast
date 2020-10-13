@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::RescueNode do
-  let(:ast) { parse_source(source).ast }
+  subject(:ast) { parse_source(source).ast }
+
   let(:rescue_node) { ast.children.first }
 
   describe '.new' do

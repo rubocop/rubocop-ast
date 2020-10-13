@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::Ext::Range do
+  subject(:node) { parse_source(source).ast }
+
   let(:source) { <<~RUBY }
     [
       1,
       2
     ]
   RUBY
-
-  let(:node) { parse_source(source).ast }
 
   describe '#line_span' do
     it 'returns the range of lines a range occupies' do

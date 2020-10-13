@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::CaseMatchNode do
-  let(:case_match_node) { parse_source(source).ast }
+  subject(:case_match_node) { parse_source(source).ast }
 
   context 'when using Ruby 2.7 or newer', :ruby27 do
     describe '.new' do

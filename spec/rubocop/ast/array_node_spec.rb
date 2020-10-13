@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::ArrayNode do
-  let(:array_node) { parse_source(source).ast }
+  subject(:array_node) { parse_source(source).ast }
 
   describe '.new' do
     let(:source) { '[]' }

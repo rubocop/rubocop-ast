@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::IntNode do
-  let(:int_node) { parse_source(source).ast }
+  subject(:int_node) { parse_source(source).ast }
 
   describe '.new' do
     let(:source) { '42' }

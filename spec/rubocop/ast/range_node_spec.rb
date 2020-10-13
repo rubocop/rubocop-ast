@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::RangeNode do
-  let(:range_node) { parse_source(source).ast }
+  subject(:range_node) { parse_source(source).ast }
 
   describe '.new' do
     context 'with an inclusive range' do

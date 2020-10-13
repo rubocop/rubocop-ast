@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::SymbolNode do
-  let(:sym_node) { parse_source(source).ast }
+  subject(:sym_node) { parse_source(source).ast }
 
   describe '.new' do
     context 'with a symbol node' do

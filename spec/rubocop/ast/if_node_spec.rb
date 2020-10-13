@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::IfNode do
-  let(:if_node) { parse_source(source).ast }
+  subject(:if_node) { parse_source(source).ast }
 
   describe '.new' do
     context 'with a regular if statement' do

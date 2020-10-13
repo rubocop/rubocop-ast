@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::UntilNode do
-  let(:until_node) { parse_source(source).ast }
+  subject(:until_node) { parse_source(source).ast }
 
   describe '.new' do
     context 'with a statement until' do

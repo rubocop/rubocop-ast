@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::AndNode do
-  let(:and_node) { parse_source(source).ast }
+  subject(:and_node) { parse_source(source).ast }
 
   describe '.new' do
     context 'with a logical and node' do
