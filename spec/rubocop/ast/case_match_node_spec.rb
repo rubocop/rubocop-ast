@@ -13,7 +13,7 @@ RSpec.describe RuboCop::AST::CaseMatchNode do
         RUBY
       end
 
-      it { expect(case_match_node).to be_a(described_class) }
+      it { is_expected.to be_a(described_class) }
     end
 
     describe '#keyword' do
@@ -81,7 +81,7 @@ RSpec.describe RuboCop::AST::CaseMatchNode do
           RUBY
         end
 
-        it { expect(case_match_node).not_to be_else }
+        it { is_expected.not_to be_else }
       end
 
       context 'with an else statement' do
@@ -94,7 +94,7 @@ RSpec.describe RuboCop::AST::CaseMatchNode do
           RUBY
         end
 
-        it { expect(case_match_node).to be_else }
+        it { is_expected.to be_else }
       end
     end
 

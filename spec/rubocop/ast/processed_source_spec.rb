@@ -29,7 +29,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       let(:processed_source) { described_class.from_file(path, ruby_version) }
 
       it 'returns an instance of ProcessedSource' do
-        expect(processed_source).to be_a(described_class)
+        is_expected.to be_a(described_class)
       end
 
       it "sets the file path to the instance's #path" do

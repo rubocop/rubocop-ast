@@ -8,7 +8,7 @@ RSpec.describe RuboCop::AST::SelfClassNode do
       'class << self; end'
     end
 
-    it { expect(self_class_node).to be_a(described_class) }
+    it { is_expected.to be_a(described_class) }
   end
 
   describe '#identifier' do

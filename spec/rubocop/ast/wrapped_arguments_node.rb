@@ -7,13 +7,13 @@ RSpec.shared_examples 'wrapped arguments node' do |keyword|
     context 'without arguments' do
       let(:source) { keyword }
 
-      it { expect(return_node).to be_a(described_class) }
+      it { is_expected.to be_a(described_class) }
     end
 
     context 'with arguments' do
       let(:source) { "#{keyword} :foo" }
 
-      it { expect(return_node).to be_a(described_class) }
+      it { is_expected.to be_a(described_class) }
     end
   end
 

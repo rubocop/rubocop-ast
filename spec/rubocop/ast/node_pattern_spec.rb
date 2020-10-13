@@ -2102,7 +2102,7 @@ RSpec.describe RuboCop::AST::NodePattern do
         context('without a predicate name') do
           context 'when called on matching code' do
             it 'returns an enumerator yielding the matches' do
-              expect(result).to be_a(Enumerator)
+              is_expected.to be_a(Enumerator)
               expect(result.to_a).to match_array [s(:sym, :hello), s(:sym, :world)]
             end
           end
@@ -2111,7 +2111,7 @@ RSpec.describe RuboCop::AST::NodePattern do
             let(:ruby) { 'foo("hello", "world")' }
 
             it 'returns an enumerator yielding nothing' do
-              expect(result).to be_a(Enumerator)
+              is_expected.to be_a(Enumerator)
               expect(result.to_a).to eq []
             end
           end
@@ -2181,7 +2181,7 @@ RSpec.describe RuboCop::AST::NodePattern do
         context('without a predicate name') do
           context 'when called on matching code' do
             it 'returns an enumerator yielding the captures' do
-              expect(result).to be_a(Enumerator)
+              is_expected.to be_a(Enumerator)
               expect(result.to_a).to match_array %i[hello world]
             end
 
@@ -2190,7 +2190,7 @@ RSpec.describe RuboCop::AST::NodePattern do
               let(:keyword_params) { { foo: Set[:hello, :foo] } }
 
               it 'returns an enumerator yielding the captures' do
-                expect(result).to be_a(Enumerator)
+                is_expected.to be_a(Enumerator)
                 expect(result.to_a).to match_array %i[hello]
               end
 
@@ -2199,7 +2199,7 @@ RSpec.describe RuboCop::AST::NodePattern do
                 let(:keyword_defaults) { { foo: :world } }
 
                 it 'is overriden when calling the matcher' do
-                  expect(result).to be_a(Enumerator)
+                  is_expected.to be_a(Enumerator)
                   expect(result.to_a).to match_array %i[hello]
                 end
 
@@ -2207,7 +2207,7 @@ RSpec.describe RuboCop::AST::NodePattern do
                   let(:keyword_params) { {} }
 
                   it 'uses the defaults' do
-                    expect(result).to be_a(Enumerator)
+                    is_expected.to be_a(Enumerator)
                     expect(result.to_a).to match_array %i[world]
                   end
                 end
@@ -2228,7 +2228,7 @@ RSpec.describe RuboCop::AST::NodePattern do
             let(:ruby) { 'foo("hello", "world")' }
 
             it 'returns an enumerator yielding nothing' do
-              expect(result).to be_a(Enumerator)
+              is_expected.to be_a(Enumerator)
               expect(result.to_a).to eq []
             end
           end

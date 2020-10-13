@@ -6,7 +6,7 @@ RSpec.describe RuboCop::AST::RegexpNode do
   describe '.new' do
     let(:source) { '/re/' }
 
-    it { expect(regexp_node).to be_a(described_class) }
+    it { is_expected.to be_a(described_class) }
   end
 
   describe '#to_regexp' do
@@ -182,19 +182,19 @@ RSpec.describe RuboCop::AST::RegexpNode do
     context 'with /-delimiters' do
       let(:source) { '/abc/' }
 
-      it { expect(regexp_node).to be_slash_literal }
+      it { is_expected.to be_slash_literal }
     end
 
     context 'with %r/-delimiters' do
       let(:source) { '%r/abc/' }
 
-      it { expect(regexp_node).not_to be_slash_literal }
+      it { is_expected.not_to be_slash_literal }
     end
 
     context 'with %r{-delimiters' do
       let(:source) { '%r{abc}' }
 
-      it { expect(regexp_node).not_to be_slash_literal }
+      it { is_expected.not_to be_slash_literal }
     end
 
     context 'with multi-line %r{-delimiters' do
@@ -206,13 +206,13 @@ RSpec.describe RuboCop::AST::RegexpNode do
         SRC
       end
 
-      it { expect(regexp_node).not_to be_slash_literal }
+      it { is_expected.not_to be_slash_literal }
     end
 
     context 'with %r<-delimiters' do
       let(:source) { '%r<abc>x' }
 
-      it { expect(regexp_node).not_to be_slash_literal }
+      it { is_expected.not_to be_slash_literal }
     end
   end
 
@@ -220,19 +220,19 @@ RSpec.describe RuboCop::AST::RegexpNode do
     context 'with /-delimiters' do
       let(:source) { '/abc/' }
 
-      it { expect(regexp_node).not_to be_percent_r_literal }
+      it { is_expected.not_to be_percent_r_literal }
     end
 
     context 'with %r/-delimiters' do
       let(:source) { '%r/abc/' }
 
-      it { expect(regexp_node).to be_percent_r_literal }
+      it { is_expected.to be_percent_r_literal }
     end
 
     context 'with %r{-delimiters' do
       let(:source) { '%r{abc}' }
 
-      it { expect(regexp_node).to be_percent_r_literal }
+      it { is_expected.to be_percent_r_literal }
     end
 
     context 'with multi-line %r{-delimiters' do
@@ -244,13 +244,13 @@ RSpec.describe RuboCop::AST::RegexpNode do
         SRC
       end
 
-      it { expect(regexp_node).to be_percent_r_literal }
+      it { is_expected.to be_percent_r_literal }
     end
 
     context 'with %r<-delimiters' do
       let(:source) { '%r<abc>x' }
 
-      it { expect(regexp_node).to be_percent_r_literal }
+      it { is_expected.to be_percent_r_literal }
     end
   end
 
@@ -296,36 +296,36 @@ RSpec.describe RuboCop::AST::RegexpNode do
     context 'with /-delimiters' do
       let(:source) { '/abc/' }
 
-      it { expect(regexp_node).to be_delimiter('/') }
+      it { is_expected.to be_delimiter('/') }
 
-      it { expect(regexp_node).not_to be_delimiter('{') }
+      it { is_expected.not_to be_delimiter('{') }
     end
 
     context 'with %r/-delimiters' do
       let(:source) { '%r/abc/' }
 
-      it { expect(regexp_node).to be_delimiter('/') }
+      it { is_expected.to be_delimiter('/') }
 
-      it { expect(regexp_node).not_to be_delimiter('{') }
-      it { expect(regexp_node).not_to be_delimiter('}') }
-      it { expect(regexp_node).not_to be_delimiter('%') }
-      it { expect(regexp_node).not_to be_delimiter('r') }
-      it { expect(regexp_node).not_to be_delimiter('%r') }
-      it { expect(regexp_node).not_to be_delimiter('%r/') }
+      it { is_expected.not_to be_delimiter('{') }
+      it { is_expected.not_to be_delimiter('}') }
+      it { is_expected.not_to be_delimiter('%') }
+      it { is_expected.not_to be_delimiter('r') }
+      it { is_expected.not_to be_delimiter('%r') }
+      it { is_expected.not_to be_delimiter('%r/') }
     end
 
     context 'with %r{-delimiters' do
       let(:source) { '%r{abc}' }
 
-      it { expect(regexp_node).to be_delimiter('{') }
-      it { expect(regexp_node).to be_delimiter('}') }
+      it { is_expected.to be_delimiter('{') }
+      it { is_expected.to be_delimiter('}') }
 
-      it { expect(regexp_node).not_to be_delimiter('/') }
-      it { expect(regexp_node).not_to be_delimiter('%') }
-      it { expect(regexp_node).not_to be_delimiter('r') }
-      it { expect(regexp_node).not_to be_delimiter('%r') }
-      it { expect(regexp_node).not_to be_delimiter('%r/') }
-      it { expect(regexp_node).not_to be_delimiter('%r{') }
+      it { is_expected.not_to be_delimiter('/') }
+      it { is_expected.not_to be_delimiter('%') }
+      it { is_expected.not_to be_delimiter('r') }
+      it { is_expected.not_to be_delimiter('%r') }
+      it { is_expected.not_to be_delimiter('%r/') }
+      it { is_expected.not_to be_delimiter('%r{') }
     end
 
     context 'with multi-line %r{-delimiters' do
@@ -337,32 +337,32 @@ RSpec.describe RuboCop::AST::RegexpNode do
         SRC
       end
 
-      it { expect(regexp_node).to be_delimiter('{') }
-      it { expect(regexp_node).to be_delimiter('}') }
+      it { is_expected.to be_delimiter('{') }
+      it { is_expected.to be_delimiter('}') }
 
-      it { expect(regexp_node).not_to be_delimiter('/') }
-      it { expect(regexp_node).not_to be_delimiter('%') }
-      it { expect(regexp_node).not_to be_delimiter('r') }
-      it { expect(regexp_node).not_to be_delimiter('%r') }
-      it { expect(regexp_node).not_to be_delimiter('%r/') }
-      it { expect(regexp_node).not_to be_delimiter('%r{') }
+      it { is_expected.not_to be_delimiter('/') }
+      it { is_expected.not_to be_delimiter('%') }
+      it { is_expected.not_to be_delimiter('r') }
+      it { is_expected.not_to be_delimiter('%r') }
+      it { is_expected.not_to be_delimiter('%r/') }
+      it { is_expected.not_to be_delimiter('%r{') }
     end
 
     context 'with %r<-delimiters' do
       let(:source) { '%r<abc>x' }
 
-      it { expect(regexp_node).to be_delimiter('<') }
-      it { expect(regexp_node).to be_delimiter('>') }
+      it { is_expected.to be_delimiter('<') }
+      it { is_expected.to be_delimiter('>') }
 
-      it { expect(regexp_node).not_to be_delimiter('{') }
-      it { expect(regexp_node).not_to be_delimiter('}') }
-      it { expect(regexp_node).not_to be_delimiter('/') }
-      it { expect(regexp_node).not_to be_delimiter('%') }
-      it { expect(regexp_node).not_to be_delimiter('r') }
-      it { expect(regexp_node).not_to be_delimiter('%r') }
-      it { expect(regexp_node).not_to be_delimiter('%r/') }
-      it { expect(regexp_node).not_to be_delimiter('%r{') }
-      it { expect(regexp_node).not_to be_delimiter('%r<') }
+      it { is_expected.not_to be_delimiter('{') }
+      it { is_expected.not_to be_delimiter('}') }
+      it { is_expected.not_to be_delimiter('/') }
+      it { is_expected.not_to be_delimiter('%') }
+      it { is_expected.not_to be_delimiter('r') }
+      it { is_expected.not_to be_delimiter('%r') }
+      it { is_expected.not_to be_delimiter('%r/') }
+      it { is_expected.not_to be_delimiter('%r{') }
+      it { is_expected.not_to be_delimiter('%r<') }
     end
   end
 
@@ -370,19 +370,19 @@ RSpec.describe RuboCop::AST::RegexpNode do
     context 'with direct variable interpoation' do
       let(:source) { '/\n\n#{foo}(abc)+/' }
 
-      it { expect(regexp_node).to be_interpolation }
+      it { is_expected.to be_interpolation }
     end
 
     context 'with regexp quote' do
       let(:source) { '/\n\n#{Regexp.quote(foo)}(abc)+/' }
 
-      it { expect(regexp_node).to be_interpolation }
+      it { is_expected.to be_interpolation }
     end
 
     context 'with no interpolation returns false' do
       let(:source) { '/a{3,6}/' }
 
-      it { expect(regexp_node).not_to be_interpolation }
+      it { is_expected.not_to be_interpolation }
     end
   end
 
@@ -390,25 +390,25 @@ RSpec.describe RuboCop::AST::RegexpNode do
     context 'with no options' do
       let(:source) { '/x/' }
 
-      it { expect(regexp_node).not_to be_multiline_mode }
+      it { is_expected.not_to be_multiline_mode }
     end
 
     context 'with other options' do
       let(:source) { '/x/ix' }
 
-      it { expect(regexp_node).not_to be_multiline_mode }
+      it { is_expected.not_to be_multiline_mode }
     end
 
     context 'with only m option' do
       let(:source) { '/x/m' }
 
-      it { expect(regexp_node).to be_multiline_mode }
+      it { is_expected.to be_multiline_mode }
     end
 
     context 'with m and other options' do
       let(:source) { '/x/imx' }
 
-      it { expect(regexp_node).to be_multiline_mode }
+      it { is_expected.to be_multiline_mode }
     end
   end
 
@@ -416,25 +416,25 @@ RSpec.describe RuboCop::AST::RegexpNode do
     context 'with no options' do
       let(:source) { '/x/' }
 
-      it { expect(regexp_node).not_to be_extended }
+      it { is_expected.not_to be_extended }
     end
 
     context 'with other options' do
       let(:source) { '/x/im' }
 
-      it { expect(regexp_node).not_to be_extended }
+      it { is_expected.not_to be_extended }
     end
 
     context 'with only x option' do
       let(:source) { '/x/x' }
 
-      it { expect(regexp_node).to be_extended }
+      it { is_expected.to be_extended }
     end
 
     context 'with x and other options' do
       let(:source) { '/x/ixm' }
 
-      it { expect(regexp_node).to be_extended }
+      it { is_expected.to be_extended }
     end
   end
 
@@ -442,25 +442,25 @@ RSpec.describe RuboCop::AST::RegexpNode do
     context 'with no options' do
       let(:source) { '/x/' }
 
-      it { expect(regexp_node).not_to be_ignore_case }
+      it { is_expected.not_to be_ignore_case }
     end
 
     context 'with other options' do
       let(:source) { '/x/xm' }
 
-      it { expect(regexp_node).not_to be_ignore_case }
+      it { is_expected.not_to be_ignore_case }
     end
 
     context 'with only i option' do
       let(:source) { '/x/i' }
 
-      it { expect(regexp_node).to be_ignore_case }
+      it { is_expected.to be_ignore_case }
     end
 
     context 'with i and other options' do
       let(:source) { '/x/xim' }
 
-      it { expect(regexp_node).to be_ignore_case }
+      it { is_expected.to be_ignore_case }
     end
   end
 
@@ -468,25 +468,25 @@ RSpec.describe RuboCop::AST::RegexpNode do
     context 'with no options' do
       let(:source) { '/x/' }
 
-      it { expect(regexp_node).not_to be_no_encoding }
+      it { is_expected.not_to be_no_encoding }
     end
 
     context 'with other options' do
       let(:source) { '/x/xm' }
 
-      it { expect(regexp_node).not_to be_no_encoding }
+      it { is_expected.not_to be_no_encoding }
     end
 
     context 'with only n option' do
       let(:source) { '/x/n' }
 
-      it { expect(regexp_node).to be_no_encoding }
+      it { is_expected.to be_no_encoding }
     end
 
     context 'with n and other options' do
       let(:source) { '/x/xnm' }
 
-      it { expect(regexp_node).to be_no_encoding }
+      it { is_expected.to be_no_encoding }
     end
   end
 
@@ -494,25 +494,25 @@ RSpec.describe RuboCop::AST::RegexpNode do
     context 'with no options' do
       let(:source) { '/x/' }
 
-      it { expect(regexp_node).not_to be_single_interpolation }
+      it { is_expected.not_to be_single_interpolation }
     end
 
     context 'with other options' do
       let(:source) { '/x/xm' }
 
-      it { expect(regexp_node).not_to be_single_interpolation }
+      it { is_expected.not_to be_single_interpolation }
     end
 
     context 'with only o option' do
       let(:source) { '/x/o' }
 
-      it { expect(regexp_node).to be_single_interpolation }
+      it { is_expected.to be_single_interpolation }
     end
 
     context 'with o and other options' do
       let(:source) { '/x/xom' }
 
-      it { expect(regexp_node).to be_single_interpolation }
+      it { is_expected.to be_single_interpolation }
     end
   end
 end

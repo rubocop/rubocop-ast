@@ -9,13 +9,13 @@ RSpec.describe RuboCop::AST::SuperNode do
     context 'with a super node' do
       let(:source) { 'super(:baz)' }
 
-      it { expect(super_node).to be_a(described_class) }
+      it { is_expected.to be_a(described_class) }
     end
 
     context 'with a zsuper node' do
       let(:source) { 'super' }
 
-      it { expect(super_node).to be_a(described_class) }
+      it { is_expected.to be_a(described_class) }
     end
   end
 
@@ -36,13 +36,13 @@ RSpec.describe RuboCop::AST::SuperNode do
       context 'when argument is a symbol' do
         let(:source) { 'super(:baz)' }
 
-        it { expect(super_node).to be_method(:super) }
+        it { is_expected.to be_method(:super) }
       end
 
       context 'when argument is a string' do
         let(:source) { 'super(:baz)' }
 
-        it { expect(super_node).to be_method('super') }
+        it { is_expected.to be_method('super') }
       end
     end
 
@@ -50,13 +50,13 @@ RSpec.describe RuboCop::AST::SuperNode do
       context 'when argument is a symbol' do
         let(:source) { 'super(:baz)' }
 
-        it { expect(super_node).not_to be_method(:foo) }
+        it { is_expected.not_to be_method(:foo) }
       end
 
       context 'when argument is a string' do
         let(:source) { 'super(:baz)' }
 
-        it { expect(super_node).not_to be_method('foo') }
+        it { is_expected.not_to be_method('foo') }
       end
     end
   end
@@ -70,93 +70,93 @@ RSpec.describe RuboCop::AST::SuperNode do
        'end'].join("\n")
     end
 
-    it { expect(super_node).not_to be_macro }
+    it { is_expected.not_to be_macro }
   end
 
   describe '#command?' do
     context 'when argument is a symbol' do
       let(:source) { 'super(foo)' }
 
-      it { expect(super_node).to be_command(:super) }
+      it { is_expected.to be_command(:super) }
     end
 
     context 'when argument is a string' do
       let(:source) { 'super(foo)' }
 
-      it { expect(super_node).to be_command('super') }
+      it { is_expected.to be_command('super') }
     end
   end
 
   describe '#setter_method?' do
     let(:source) { 'super(foo)' }
 
-    it { expect(super_node).not_to be_setter_method }
+    it { is_expected.not_to be_setter_method }
   end
 
   describe '#operator_method?' do
     let(:source) { 'super(foo)' }
 
-    it { expect(super_node).not_to be_operator_method }
+    it { is_expected.not_to be_operator_method }
   end
 
   describe '#comparison_method?' do
     let(:source) { 'super(foo)' }
 
-    it { expect(super_node).not_to be_comparison_method }
+    it { is_expected.not_to be_comparison_method }
   end
 
   describe '#assignment_method?' do
     let(:source) { 'super(foo)' }
 
-    it { expect(super_node).not_to be_assignment_method }
+    it { is_expected.not_to be_assignment_method }
   end
 
   describe '#dot?' do
     let(:source) { 'super(foo)' }
 
-    it { expect(super_node).not_to be_dot }
+    it { is_expected.not_to be_dot }
   end
 
   describe '#double_colon?' do
     let(:source) { 'super(foo)' }
 
-    it { expect(super_node).not_to be_double_colon }
+    it { is_expected.not_to be_double_colon }
   end
 
   describe '#self_receiver?' do
     let(:source) { 'super(foo)' }
 
-    it { expect(super_node).not_to be_self_receiver }
+    it { is_expected.not_to be_self_receiver }
   end
 
   describe '#const_receiver?' do
     let(:source) { 'super(foo)' }
 
-    it { expect(super_node).not_to be_const_receiver }
+    it { is_expected.not_to be_const_receiver }
   end
 
   describe '#implicit_call?' do
     let(:source) { 'super(foo)' }
 
-    it { expect(super_node).not_to be_implicit_call }
+    it { is_expected.not_to be_implicit_call }
   end
 
   describe '#predicate_method?' do
     let(:source) { 'super(foo)' }
 
-    it { expect(super_node).not_to be_predicate_method }
+    it { is_expected.not_to be_predicate_method }
   end
 
   describe '#bang_method?' do
     let(:source) { 'super(foo)' }
 
-    it { expect(super_node).not_to be_bang_method }
+    it { is_expected.not_to be_bang_method }
   end
 
   describe '#camel_case_method?' do
     let(:source) { 'super(foo)' }
 
-    it { expect(super_node).not_to be_camel_case_method }
+    it { is_expected.not_to be_camel_case_method }
   end
 
   describe '#parenthesized?' do
@@ -164,13 +164,13 @@ RSpec.describe RuboCop::AST::SuperNode do
       context 'when not using parentheses' do
         let(:source) { 'super' }
 
-        it { expect(super_node).not_to be_parenthesized }
+        it { is_expected.not_to be_parenthesized }
       end
 
       context 'when using parentheses' do
         let(:source) { 'foo.bar()' }
 
-        it { expect(super_node).to be_parenthesized }
+        it { is_expected.to be_parenthesized }
       end
     end
 
@@ -178,13 +178,13 @@ RSpec.describe RuboCop::AST::SuperNode do
       context 'when not using parentheses' do
         let(:source) { 'foo.bar :baz' }
 
-        it { expect(super_node).not_to be_parenthesized }
+        it { is_expected.not_to be_parenthesized }
       end
 
       context 'when using parentheses' do
         let(:source) { 'foo.bar(:baz)' }
 
-        it { expect(super_node).to be_parenthesized }
+        it { is_expected.to be_parenthesized }
       end
     end
   end
@@ -193,25 +193,25 @@ RSpec.describe RuboCop::AST::SuperNode do
     context 'with a block argument' do
       let(:source) { 'super(&baz)' }
 
-      it { expect(super_node).to be_block_argument }
+      it { is_expected.to be_block_argument }
     end
 
     context 'with no arguments' do
       let(:source) { 'super' }
 
-      it { expect(super_node).not_to be_block_argument }
+      it { is_expected.not_to be_block_argument }
     end
 
     context 'with regular arguments' do
       let(:source) { 'super(:baz)' }
 
-      it { expect(super_node).not_to be_block_argument }
+      it { is_expected.not_to be_block_argument }
     end
 
     context 'with mixed arguments' do
       let(:source) { 'super(:baz, &qux)' }
 
-      it { expect(super_node).to be_block_argument }
+      it { is_expected.to be_block_argument }
     end
   end
 
@@ -221,19 +221,19 @@ RSpec.describe RuboCop::AST::SuperNode do
 
       let(:source) { 'super { |q| baz(q) }' }
 
-      it { expect(super_node).to be_block_literal }
+      it { is_expected.to be_block_literal }
     end
 
     context 'with a block argument' do
       let(:source) { 'super(&baz)' }
 
-      it { expect(super_node).not_to be_block_literal }
+      it { is_expected.not_to be_block_literal }
     end
 
     context 'with no block' do
       let(:source) { 'super' }
 
-      it { expect(super_node).not_to be_block_literal }
+      it { is_expected.not_to be_block_literal }
     end
   end
 
@@ -359,31 +359,31 @@ RSpec.describe RuboCop::AST::SuperNode do
     context 'with no arguments' do
       let(:source) { 'super' }
 
-      it { expect(super_node).not_to be_arguments }
+      it { is_expected.not_to be_arguments }
     end
 
     context 'with a single literal argument' do
       let(:source) { 'super(:baz)' }
 
-      it { expect(super_node).to be_arguments }
+      it { is_expected.to be_arguments }
     end
 
     context 'with a single splat argument' do
       let(:source) { 'super(*baz)' }
 
-      it { expect(super_node).to be_arguments }
+      it { is_expected.to be_arguments }
     end
 
     context 'with multiple literal arguments' do
       let(:source) { 'super(:baz, :qux)' }
 
-      it { expect(super_node).to be_arguments }
+      it { is_expected.to be_arguments }
     end
 
     context 'with multiple mixed arguments' do
       let(:source) { 'super(:baz, *qux)' }
 
-      it { expect(super_node).to be_arguments }
+      it { is_expected.to be_arguments }
     end
   end
 
@@ -391,25 +391,25 @@ RSpec.describe RuboCop::AST::SuperNode do
     context 'with a splat argument' do
       let(:source) { 'super(*baz)' }
 
-      it { expect(super_node).to be_splat_argument }
+      it { is_expected.to be_splat_argument }
     end
 
     context 'with no arguments' do
       let(:source) { 'super' }
 
-      it { expect(super_node).not_to be_splat_argument }
+      it { is_expected.not_to be_splat_argument }
     end
 
     context 'with regular arguments' do
       let(:source) { 'super(:baz)' }
 
-      it { expect(super_node).not_to be_splat_argument }
+      it { is_expected.not_to be_splat_argument }
     end
 
     context 'with mixed arguments' do
       let(:source) { 'super(:baz, *qux)' }
 
-      it { expect(super_node).to be_splat_argument }
+      it { is_expected.to be_splat_argument }
     end
   end
 end
