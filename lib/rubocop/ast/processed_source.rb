@@ -20,6 +20,9 @@ module RuboCop
         new(file, ruby_version, path)
       end
 
+      INVALID_LEVELS = %i[error fatal].freeze
+      private_constant :INVALID_LEVELS
+
       def initialize(source, ruby_version, path = nil)
         # Defaults source encoding to UTF-8, regardless of the encoding it has
         # been read with, which could be non-utf8 depending on the default
@@ -64,7 +67,7 @@ module RuboCop
       def valid_syntax?
         return false if @parser_error
 
-        @diagnostics.none? { |d| %i[error fatal].include?(d.level) }
+        @diagnostics.none? { |d| INVALID_LEVELS.include?(d.level) }
       end
 
       # Raw source checksum for tracking infinite loops.
