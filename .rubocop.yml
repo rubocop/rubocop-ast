@@ -102,3 +102,6 @@ RSpec/MessageSpies:
 
 RSpec/NestedGroups:
   Max: 7
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
