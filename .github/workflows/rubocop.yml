@@ -8,33 +8,29 @@ on: [push, pull_request]
 jobs:
   ast_specs:
     name: >-
-      ${{ matrix.title || 'Specs' }} | RuboCop: ${{ matrix.rubocop }} | ${{ matrix.ruby }} (${{ matrix.os }})
+      ${{ matrix.title || 'Specs' }} | ${{ matrix.ruby }} (${{ matrix.os }})
     runs-on: ${{ matrix.os }}-latest
     env:
       # See https://github.com/tmm1/test-queue#environment-variables
       TEST_QUEUE_WORKERS: 2
+      RUBOCOP_VERSION: none
     strategy:
       fail-fast: false
       matrix:
         os: [ ubuntu ]
         ruby: [ 2.4, 2.5, 2.6, 2.7, head ]
-        rubocop: [ master ]
         coverage: [ null ]
         modern: [ null ]
-        internal_investigation: [ null ]
         title: [ null ]
         include:
-          - { os: windows, rubocop: master, ruby: mingw }
-          - { rubocop: '0.92.0', ruby: 2.4, os: ubuntu }
-          - { rubocop: '0.92.0', ruby: head, os: ubuntu }
-          - { rubocop: '0.92.0', ruby: 2.4, os: ubuntu, coverage: true, title: 'Coverage' }
-          - { rubocop: master, ruby: 2.7, os: ubuntu, modern: true, title: 'Specs "modern"' }
-          - { rubocop: master, ruby: 2.7, os: ubuntu, internal_investigation: true, modern: true, title: 'Coding Style' }
-          - { ruby: jruby, rubocop: master, os: ubuntu }
+          - { os: windows, ruby: mingw }
+          - { ruby: 2.4, os: ubuntu, coverage: true, title: 'Coverage' }
+          - { ruby: 2.7, os: ubuntu, modern: true, title: 'Specs "modern"' }
+          - { ruby: jruby, os: ubuntu }
           # jruby-head disabled because of: https://github.com/jruby/jruby/issues/6416
-          # - { ruby: jruby-head, rubocop: master, os: ubuntu }
-          - { ruby: truffleruby, rubocop: master, os: ubuntu }
-          - { ruby: truffleruby-head, rubocop: master, os: ubuntu }
+          # - { ruby: jruby-head, os: ubuntu }
+          - { ruby: truffleruby, os: ubuntu }
+          - { ruby: truffleruby-head, os: ubuntu }
 
     steps:
       - name: windows misc
@@ -51,17 +47,6 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
       - name: install dependencies
         run: bundle install --jobs 3 --retry 3
-      - name: install rubocop packages for internal investigation
-        if: matrix.os != 'windows'
-        env:
-          RUBOCOP_VERSION: ${{ matrix.rubocop }}
-        run: bundle install --gemfile Gemfile.ci
-      - name: install rubocop from source for internal investigation
-        if: "matrix.os != 'windows' && matrix.rubocop == 'master'"
-        run: |
-          git clone https://github.com/rubocop-hq/rubocop.git ../rubocop
-          chmod +x ../rubocop/exe/rubocop
-          cd ../rubocop && bundle install --jobs 3 --retry 3
       - name: code coverage
         if: matrix.coverage
         uses: paambaati/codeclimate-action@v2.6.0
@@ -74,15 +59,15 @@ jobs:
       - name: set modernize mode
         if: matrix.modern == true
         run: echo '::set-env name=MODERNIZE::true'
+      - name: independence check
+        if: matrix.os != 'windows'
+        run: (! bundle exec rubocop -h 2> /dev/null) && echo 'RuboCop successfully *not* loaded for local tests'
       - name: spec
         if: "matrix.coverage != true && matrix.internal_investigation != true"
         run:  bundle exec rake spec
-      - name: internal investigation
-        if: matrix.internal_investigation
-        run:  bundle exec rake generate internal_investigation
   rubocop_specs:
     name: >-
-      Main Gem Specs | RuboCop: ${{ matrix.rubocop }} | ${{ matrix.ruby }} (${{ matrix.os }})
+      Main Gem Specs | RuboCop: ${{ matrix.rubocop }} | ${{ matrix.ruby }}
     runs-on: ${{ matrix.os }}-latest
     env:
       # See https://github.com/tmm1/test-queue#environment-variables
@@ -92,8 +77,41 @@ jobs:
       matrix:
         os: [ ubuntu ]
         ruby: [ 2.4, 2.7 ]
-        rubocop: [ '0.92.0', master ]
-
+        rubocop: [ 'v0.92.0', master ]
+        internal_investigation: [ null ]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - name: setup env
+        run: echo '::set-env name=RUBOCOP_VERSION::${{ matrix.rubocop }}'
+      - name: install rubocop from source for full specs
+        run: git clone --branch ${{ matrix.rubocop }} https://github.com/rubocop-hq/rubocop.git ../rubocop
+      - name: install rubocop dependencies
+        run: cd ../rubocop && bundle install --jobs 3 --retry 3
+      - name: install dependencies
+        run: bundle install --jobs 3 --retry 3
+      - name: generate lexer and parser
+        run: bundle exec rake generate
+      - name: spec
+        run:  cd ../rubocop && bundle exec rake spec
+  internal_investigation:
+    name: >-
+      Coding Style | ${{ matrix.ruby }}
+    runs-on: ${{ matrix.os }}-latest
+    env:
+      # See https://github.com/tmm1/test-queue#environment-variables
+      TEST_QUEUE_WORKERS: 2
+      RUBOCOP_VERSION: master
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu ]
+        ruby: [ 2.7 ]
+        rubocop: [ master ]
     steps:
       - name: checkout
         uses: actions/checkout@v2
@@ -103,15 +121,5 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
       - name: install dependencies
         run: bundle install --jobs 3 --retry 3
-      - name: generate lexer and parser
-        run: bundle exec rake generate
-      - name: clone rubocop from source for full specs -- master
-        if: matrix.rubocop == 'master'
-        run: git clone --branch ${{ matrix.rubocop }} https://github.com/rubocop-hq/rubocop.git ../rubocop
-      - name: install rubocop from source for full specs -- branch
-        if: matrix.rubocop != 'master'
-        run: git clone --branch v${{ matrix.rubocop }} https://github.com/rubocop-hq/rubocop.git ../rubocop
-      - name: install rubocop dependencies
-        run: cd ../rubocop && bundle install --jobs 3 --retry 3
-      - name: spec
-        run:  cd ../rubocop && bundle exec rake spec
+      - name: internal investigation
+        run:  bundle exec rake generate internal_investigation

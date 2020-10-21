@@ -29,17 +29,8 @@ task :coverage do
 end
 
 desc 'Run RuboCop over itself'
-task :internal_investigation do
-  Bundler.with_unbundled_env do
-    local = '../rubocop/exe/rubocop'
-    exe = if File.exist?(local)
-            "bundle exec --gemfile=../rubocop/Gemfile #{local}"
-          else
-            'rubocop'
-          end
-    ENV['RUBOCOP_DEBUG'] = 't'
-    sh exe
-  end
+task internal_investigation: :generate do
+  sh 'rubocop'
 end
 
 task default: %i[
