@@ -2,6 +2,12 @@
 
 ## master (unreleased)
 
+## 1.0.0 (2020-10-21)
+
+### Changes
+
+* None since 0.8; official 1.0 release coinciding with RuboCop 1.0 and API considered stable. ([@marcandre][])
+
 ## 0.8.0 (2020-10-12)
 
 ### New features
