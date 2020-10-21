@@ -103,5 +103,7 @@ RSpec/MessageSpies:
 RSpec/NestedGroups:
   Max: 7
 
-RSpec/MultipleMemoizedHelpers:
+# RSpec/MultipleMemoizedHelpers:
+#   Enabled: false
+RSpec/FactoryBot/CreateList:
   Enabled: false
