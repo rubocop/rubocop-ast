@@ -174,7 +174,7 @@ module RuboCop
       # @return [Boolean] whether the dispatched method is a `def` modifier
       def def_modifier?
         send_type? &&
-          [self, *each_descendant(:send)].any?(&:adjacent_def_modifier?)
+          adjacent_def_modifier? || each_child_node(:send).any?(&:def_modifier?)
       end
 
       # Checks whether this is a lambda. Some versions of parser parses

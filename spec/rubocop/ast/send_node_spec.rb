@@ -1099,9 +1099,15 @@ RSpec.describe RuboCop::AST::SendNode do
     end
 
     context 'with several prefixed def modifiers' do
-      let(:source) { 'foo bar def baz; end' }
+      let(:source) { 'foo bar baz def qux; end' }
 
       it { expect(send_node).to be_def_modifier }
+    end
+
+    context 'with a block containing a method definition' do
+      let(:source) { 'foo bar { baz def qux; end }' }
+
+      it { expect(send_node).not_to be_def_modifier }
     end
   end
 
