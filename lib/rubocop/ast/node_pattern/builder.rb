@@ -6,7 +6,7 @@ module RuboCop
       # Responsible to build the AST nodes for `NodePattern`
       #
       # Doc on how this fits in the compiling process:
-      #   /doc/modules/ROOT/pages/node_pattern.md
+      #   /docs/modules/ROOT/pages/node_pattern.adoc
       class Builder
         def emit_capture(capture_token, node)
           return node if capture_token.nil?

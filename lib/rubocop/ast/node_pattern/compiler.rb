@@ -7,7 +7,7 @@ module RuboCop
       # Defers work to its subcompilers
       #
       # Doc on how this fits in the compiling process:
-      #   /doc/modules/ROOT/pages/node_pattern.md
+      #   /docs/modules/ROOT/pages/node_pattern.adoc
       class Compiler
         extend Forwardable
         attr_reader :captures, :named_parameters, :positional_parameters, :binding

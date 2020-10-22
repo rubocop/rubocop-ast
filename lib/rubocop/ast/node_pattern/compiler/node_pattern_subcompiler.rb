@@ -9,7 +9,7 @@ module RuboCop
         # or it's `node.type` if `seq_head` is true
         #
         # Doc on how this fits in the compiling process:
-        #   /doc/modules/ROOT/pages/node_pattern.md
+        #   /docs/modules/ROOT/pages/node_pattern.adoc
         class NodePatternSubcompiler < Subcompiler
           attr_reader :access, :seq_head
 
