@@ -484,10 +484,11 @@ module RuboCop
       def_node_matcher :global_const?, '(const {nil? cbase} %1)'
 
       def_node_matcher :class_constructor?, <<~PATTERN
-        {       (send #global_const?({:Class :Module}) :new ...)
-         (block (send #global_const?({:Class :Module}) :new ...) ...)}
+        {       (send #global_const?({:Class :Module :Struct}) :new ...)
+         (block (send #global_const?({:Class :Module :Struct}) :new ...) ...)}
       PATTERN
 
+      # @deprecated Use `:class_constructor?`
       def_node_matcher :struct_constructor?, <<~PATTERN
         (block (send #global_const?(:Struct) :new ...) _ $_)
       PATTERN
