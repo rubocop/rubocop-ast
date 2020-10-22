@@ -35,7 +35,7 @@ RSpec.describe RuboCop::AST::ArrayNode do
     let(:source) { '[1, 2, 3]' }
 
     context 'with block' do
-      it { expect(array_node.each_value {}).to be_a(described_class) }
+      it { expect(array_node.each_value { nil }).to be_a(described_class) }
 
       it do
         ret = []
