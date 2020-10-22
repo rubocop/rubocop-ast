@@ -242,6 +242,17 @@ RSpec.describe RuboCop::AST::SendNode do
         it { expect(send_node).to be_macro }
       end
 
+      context 'when parent is a struct constructor' do
+        let(:source) do
+          ['Foo = Struct.new do',
+           '>>bar :baz<<',
+           '  bar :qux',
+           'end'].join("\n")
+        end
+
+        it { expect(send_node).to be_macro }
+      end
+
       context 'when parent is a singleton class' do
         let(:source) do
           ['class << self',
