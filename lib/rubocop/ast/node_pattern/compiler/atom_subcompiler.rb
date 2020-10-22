@@ -8,7 +8,7 @@ module RuboCop
         # This value responds to `===`.
         #
         # Doc on how this fits in the compiling process:
-        #   /doc/modules/ROOT/pages/node_pattern.md
+        #   /docs/modules/ROOT/pages/node_pattern.adoc
         class AtomSubcompiler < Subcompiler
           private
 

@@ -9,7 +9,7 @@ module RuboCop
       # Note: class reopened in `parser.racc`
       #
       # Doc on how this fits in the compiling process:
-      #   /doc/modules/ROOT/pages/node_pattern.md
+      #   /docs/modules/ROOT/pages/node_pattern.adoc
       class Parser < Racc::Parser
         extend Forwardable
 

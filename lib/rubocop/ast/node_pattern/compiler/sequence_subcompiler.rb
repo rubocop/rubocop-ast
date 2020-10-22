@@ -11,7 +11,7 @@ module RuboCop
         # Assumes the given `var` is a `::RuboCop::AST::Node`
         #
         # Doc on how this fits in the compiling process:
-        #   /doc/modules/ROOT/pages/node_pattern.md
+        #   /docs/modules/ROOT/pages/node_pattern.adoc
         #
         # rubocop:disable Metrics/ClassLength
         class SequenceSubcompiler < Subcompiler

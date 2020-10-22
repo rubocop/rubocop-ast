@@ -6,7 +6,7 @@ module RuboCop
   module AST
     # This class performs a pattern-matching operation on an AST node.
     #
-    # Detailed syntax: /doc/modules/ROOT/pages/node_pattern.md
+    # Detailed syntax: /docs/modules/ROOT/pages/node_pattern.adoc
     #
     # Initialize a new `NodePattern` with `NodePattern.new(pattern_string)`, then
     # pass an AST node to `NodePattern#match`. Alternatively, use one of the class

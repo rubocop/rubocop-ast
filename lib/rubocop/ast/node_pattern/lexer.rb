@@ -14,7 +14,7 @@ module RuboCop
       # Lexer class for `NodePattern`
       #
       # Doc on how this fits in the compiling process:
-      #   /doc/modules/ROOT/pages/node_pattern.md
+      #   /docs/modules/ROOT/pages/node_pattern.adoc
       class Lexer < LexerRex
         Error = ScanError
 
