@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.0.1 (2020-10-23)
+
 ### Bug fixes
 
 * [#141](https://github.com/rubocop-hq/rubocop-ast/pull/141): Make `SendNode#macro?` and `RuboCop::AST::Node#class_constructor?` aware of struct constructor and `RuboCop::AST::Node#struct_constructor?` is deprecated. ([@koic][])
