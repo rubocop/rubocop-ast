@@ -5,6 +5,7 @@
 ### Bug fixes
 
 * [#141](https://github.com/rubocop-hq/rubocop-ast/pull/141): Make `SendNode#macro?` and `RuboCop::AST::Node#class_constructor?` aware of struct constructor and `RuboCop::AST::Node#struct_constructor?` is deprecated. ([@koic][])
+* [#142](https://github.com/rubocop-hq/rubocop-ast/pull/142): Only traverse send nodes in `MethodDispatchNode#def_modifier?`. ([@eugeneius][])
 
 ## 1.0.0 (2020-10-21)
 
