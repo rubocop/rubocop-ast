@@ -330,6 +330,22 @@ We can use the `#prime?` function directly in the expression:
 (int #prime?)
 ----
 
+You may call a method on a constant too. Let's say you define:
+
+source,ruby]
+----
+module Util
+  def self.palindrome?(str)
+    str == str.reverse
+  end
+end
+----
+
+You can refer to it like this:
+----
+(str #Util.palindrome?)
+----
+
 == Arguments for predicate and function calls
 
 Arguments can be passed to predicates and function calls, like literals, parameters:

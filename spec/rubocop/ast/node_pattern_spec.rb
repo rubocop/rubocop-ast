@@ -2280,5 +2280,29 @@ RSpec.describe RuboCop::AST::NodePattern do
         it_behaves_like 'nonmatching'
       end
     end
+
+    context 'with a pattern with a namespaced call' do
+      let(:pattern) { '(sym #MyMod.foo)' }
+      let(:helper_name) { :def_node_matcher }
+
+      before do
+        mod = Module.new
+        mod::MyMod = Module.new
+        mod::MyMod.module_eval do
+          def self.foo(val)
+            val == :hello
+          end
+        end
+        defined_class.include mod
+      end
+
+      it { expect(instance).to match_code(node) }
+
+      context 'when the value is not in the set' do
+        let(:ruby) { ':world' }
+
+        it_behaves_like 'nonmatching'
+      end
+    end
   end
 end
