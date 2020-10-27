@@ -24,7 +24,6 @@ if ENV['RUBOCOP_VERSION'] == 'none'
   puts 'Running specs independently of RuboCop'
 else
   local_ast = File.expand_path('../rubocop', __dir__)
-  # rubocop:disable Bundler/DuplicatedGem
   if File.exist?(local_ast)
     gem 'rubocop', path: local_ast
   elsif ENV['RUBOCOP_VERSION'] == 'master'
@@ -32,7 +31,6 @@ else
   else
     gem 'rubocop', '>= 1.0'
   end
-  # rubocop:enable Bundler/DuplicatedGem
   gem 'rubocop-performance'
   gem 'rubocop-rspec'
 end
