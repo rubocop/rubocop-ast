@@ -11,6 +11,7 @@
 class RuboCop::AST::NodePattern::LexerRex
 
 macros
+        CONST_NAME                /[A-Z:][a-zA-Z_:]+/
         SYMBOL_NAME               /[\w+@*\/?!<>=~|%^-]+|\[\]=?/
         IDENTIFIER                /[a-zA-Z_][a-zA-Z0-9_-]*/
         REGEXP_BODY               /(?:[^\/]|\\\/)*/
@@ -25,7 +26,7 @@ rules
           %w"( ) { | } [ ] < > $ ! ^ ` ... + * ? ,"
         )}/o                      { emit ss.matched, &:to_sym }
         /#{REGEXP}/o              { emit_regexp }
-        /%([A-Z:][a-zA-Z_:]+)/    { emit :tPARAM_CONST }
+        /%(#{CONST_NAME})/o       { emit :tPARAM_CONST }
         /%([a-z_]+)/              { emit :tPARAM_NAMED }
         /%(\d*)/                  { emit(:tPARAM_NUMBER) { |s| s.empty? ? 1 : s.to_i } } # Map `%` to `%1`
         /_(#{IDENTIFIER})/o       { emit :tUNIFY }
