@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.1.0 (2020-10-26)
+
 ### New features
 
 * [#144](https://github.com/rubocop-hq/rubocop-ast/pull/144): NodePattern: allow method calls on constants. ([@marcandre][])
