@@ -8,24 +8,22 @@ pull_request_rules:
       - label=auto-merge
       - "#review-requested=0"
       - "#changes-requested-reviews-by=0"
-      - 'status-success=Specs | RuboCop: master | 2.4 (ubuntu)'
-      - 'status-success=Specs | RuboCop: master | 2.5 (ubuntu)'
-      - 'status-success=Specs | RuboCop: master | 2.6 (ubuntu)'
-      - 'status-success=Specs | RuboCop: master | 2.7 (ubuntu)'
-      - 'status-success=Specs | RuboCop: master | head (ubuntu)'
-      - 'status-success=Specs | RuboCop: master | mingw (windows)'
-      - 'status-success=Specs | RuboCop: 0.92.0 | 2.4 (ubuntu)'
-      - 'status-success=Specs | RuboCop: 0.92.0 | head (ubuntu)'
-      - 'status-success=Coverage | RuboCop: 0.92.0 | 2.4 (ubuntu)'
-      - 'status-success=Specs "modern" | RuboCop: master | 2.7 (ubuntu)'
-      - 'status-success=Coding Style | RuboCop: master | 2.7 (ubuntu)'
+      - 'status-success=Specs | 2.4 (ubuntu)'
+      - 'status-success=Specs | 2.5 (ubuntu)'
+      - 'status-success=Specs | 2.6 (ubuntu)'
+      - 'status-success=Specs | 2.7 (ubuntu)'
+      - 'status-success=Specs | head (ubuntu)'
+      - 'status-success=Specs | mingw (windows)'
+      - 'status-success=Coverage | 2.4 (ubuntu)'
+      - 'status-success=Specs "modern" | 2.7 (ubuntu)'
+      - 'status-success=Specs | jruby (ubuntu)'
+      - 'status-success=Specs | truffleruby (ubuntu)'
+      - 'status-success=Specs | truffleruby-head (ubuntu)'
       - 'status-success=Main Gem Specs | RuboCop: 0.92.0 | 2.4 (ubuntu)'
       - 'status-success=Main Gem Specs | RuboCop: master | 2.4 (ubuntu)'
       - 'status-success=Main Gem Specs | RuboCop: 0.92.0 | 2.7 (ubuntu)'
       - 'status-success=Main Gem Specs | RuboCop: master | 2.7 (ubuntu)'
-      - 'status-success=Specs | RuboCop: master | jruby (ubuntu)'
-      - 'status-success=Specs | RuboCop: master | truffleruby (ubuntu)'
-      - 'status-success=Specs | RuboCop: master | truffleruby-head (ubuntu)'
+      - 'status-success=Coding Style | 2.7 (ubuntu)'
 
   - name: delete head branch after auto-merge
     conditions:
