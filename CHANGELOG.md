@@ -2,15 +2,17 @@
 
 ## master (unreleased)
 
+## 1.1.1 (2020-11-04)
+
+### Bug fixes
+
+* [#146](https://github.com/rubocop-hq/rubocop-ast/pull/146): Fix `IfNode#branches` to return both branches when called on ternary conditional. ([@fatkodima][])
+
 ## 1.1.0 (2020-10-26)
 
 ### New features
 
 * [#144](https://github.com/rubocop-hq/rubocop-ast/pull/144): NodePattern: allow method calls on constants. ([@marcandre][])
-
-### Bug fixes
-
-* [#146](https://github.com/rubocop-hq/rubocop-ast/pull/146): Fix `IfNode#branches` to return both branches when called on ternary conditional. ([@fatkodima][])
 
 ## 1.0.1 (2020-10-23)
 
