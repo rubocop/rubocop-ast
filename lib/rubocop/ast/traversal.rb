@@ -39,10 +39,10 @@ module RuboCop
           type, *aliases = type
           lineno = caller_locations(1, 1).first.lineno
           module_eval(<<~RUBY, __FILE__, lineno) # rubocop:disable Style/EvalWithLocation
-            def on_#{type}(node)
-              #{body}
-              nil
-            end
+            def on_#{type}(node)        # def on_send(node)
+              #{body}                   #   # body ...
+              nil                       #   nil
+            end                         # end
           RUBY
           aliases.each do |m|
             alias_method "on_#{m}", "on_#{type}"
