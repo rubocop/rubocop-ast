@@ -145,16 +145,19 @@ module RuboCop
       #
       # @return [Array<Node>] an array of branch nodes
       def branches
-        branches = [if_branch]
-
-        return branches unless else?
-
-        other_branches = if elsif_conditional?
-                           else_branch.branches
-                         else
-                           [else_branch]
-                         end
-        branches.concat(other_branches)
+        if ternary?
+          [if_branch, else_branch]
+        elsif !else?
+          [if_branch]
+        else
+          branches = [if_branch]
+          other_branches = if elsif_conditional?
+                             else_branch.branches
+                           else
+                             [else_branch]
+                           end
+          branches.concat(other_branches)
+        end
       end
 
       # @deprecated Use `branches.each`

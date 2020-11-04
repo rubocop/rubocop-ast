@@ -434,6 +434,13 @@ RSpec.describe RuboCop::AST::IfNode do
       it { expect(if_node.branches).to all(be_literal) }
     end
 
+    context 'with a ternary operator' do
+      let(:source) { 'foo? ? :foo : 42' }
+
+      it { expect(if_node.branches.size).to eq(2) }
+      it { expect(if_node.branches).to all(be_literal) }
+    end
+
     context 'with an unless statement' do
       let(:source) { 'unless foo?; :bar; end' }
 
