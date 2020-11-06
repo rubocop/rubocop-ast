@@ -108,3 +108,6 @@ RSpec/MultipleMemoizedHelpers:
 
 RSpec/FactoryBot/CreateList:
   Enabled: false
+
+RSpec/StubbedMock:
+  Enabled: false
