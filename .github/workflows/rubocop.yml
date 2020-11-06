@@ -8,7 +8,7 @@ on: [push, pull_request]
 jobs:
   ast_specs:
     name: >-
-      ${{ matrix.title || 'Specs' }} | ${{ matrix.ruby }} (${{ matrix.os }})
+      ${{ matrix.title || 'Specs' }} | ${{ matrix.ruby }}
     runs-on: ${{ matrix.os }}-latest
     env:
       # See https://github.com/tmm1/test-queue#environment-variables
