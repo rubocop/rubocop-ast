@@ -56,6 +56,8 @@ module RuboCop
           end
           src = yield method_name
           base.class_eval(src, location.path, location.lineno)
+
+          method_name
         end
 
         def emit_node_search(method_name)

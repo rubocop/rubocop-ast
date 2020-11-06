@@ -2054,9 +2054,10 @@ RSpec.describe RuboCop::AST::NodePattern do
 
     let(:keyword_defaults) { {} }
     let(:method_name) { :my_matcher }
-    let(:line_no) { __LINE__ + 2 }
+    let(:line_no) { __LINE__ + 1 }
+    let(:call_helper) { MyClass.public_send helper_name, method_name, pattern, **keyword_defaults }
     let(:defined_class) do
-      MyClass.public_send helper_name, method_name, pattern, **keyword_defaults
+      call_helper
       MyClass
     end
     let(:ruby) { ':hello' }
@@ -2075,6 +2076,10 @@ RSpec.describe RuboCop::AST::NodePattern do
 
       context 'def_node_matcher' do
         let(:helper_name) { :def_node_matcher }
+
+        it 'returns the method name' do
+          expect(call_helper).to eq method_name
+        end
 
         context 'when called on matching code' do
           it { expect(instance).to match_code(node) }
@@ -2098,6 +2103,10 @@ RSpec.describe RuboCop::AST::NodePattern do
       context 'def_node_search' do
         let(:helper_name) { :def_node_search }
         let(:ruby) { 'foo(:hello, :world)' }
+
+        it 'returns the method name' do
+          expect(call_helper).to eq method_name
+        end
 
         context('without a predicate name') do
           context 'when called on matching code' do
