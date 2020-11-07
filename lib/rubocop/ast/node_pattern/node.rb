@@ -13,7 +13,7 @@ module RuboCop
         private_constant :MATCHES_WITHIN_SET
 
         ###
-        # To be overriden by subclasses
+        # To be overridden by subclasses
         ###
 
         def rest?
@@ -60,7 +60,7 @@ module RuboCop
         end
 
         # @return [Boolean] returns true for nodes having a Ruby literal equivalent
-        # that matches withing a Set (e.g. `42`, `:sym` but not `/regexp/`)
+        # that matches within a Set (e.g. `42`, `:sym` but not `/regexp/`)
         def matches_within_set?
           MATCHES_WITHIN_SET.include?(type)
         end

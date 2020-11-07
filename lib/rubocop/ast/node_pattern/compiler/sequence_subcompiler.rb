@@ -40,7 +40,7 @@ module RuboCop
                                                 #             sequence head
                                                 # :variadic_mode : child index held by @cur_index_var
                                                 # >= 0 : when the current child index is known
-                                                #        (from the begining)
+                                                #        (from the beginning)
                                                 # < 0 :  when the index is known from the end,
                                                 #        where -1 is *past the end*,
                                                 #        -2 is the last child, etc...
