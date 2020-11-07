@@ -19,9 +19,9 @@ pull_request_rules:
       - 'status-success=Specs | jruby'
       - 'status-success=Specs | truffleruby'
       - 'status-success=Specs | truffleruby-head'
-      - 'status-success=Main Gem Specs | RuboCop: 0.92.0 | 2.4'
+      - 'status-success=Main Gem Specs | RuboCop: v0.92.0 | 2.4'
       - 'status-success=Main Gem Specs | RuboCop: master | 2.4'
-      - 'status-success=Main Gem Specs | RuboCop: 0.92.0 | 2.7'
+      - 'status-success=Main Gem Specs | RuboCop: v0.92.0 | 2.7'
       - 'status-success=Main Gem Specs | RuboCop: master | 2.7'
       - 'status-success=Coding Style | 2.7'
 
