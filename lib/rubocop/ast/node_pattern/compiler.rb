@@ -33,7 +33,7 @@ module RuboCop
           name
         end
 
-        # Enumerates `enum` while keeping track of state accross
+        # Enumerates `enum` while keeping track of state across
         # union branches (captures and unification).
         def each_union(enum, &block)
           enforce_same_captures(binding.union_bind(enum), &block)

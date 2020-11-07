@@ -510,7 +510,7 @@ Constants as arguments to custom methods are also supported.
 == Comments
 
 You may have comments in node patterns at the end of lines
-by preceeding them with `'# '`:
+by preceding them with `'# '`:
 
 [source,ruby]
 ----

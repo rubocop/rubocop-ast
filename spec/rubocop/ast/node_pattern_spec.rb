@@ -2207,7 +2207,7 @@ RSpec.describe RuboCop::AST::NodePattern do
               context 'when helper is called with default keyword_params' do
                 let(:keyword_defaults) { { foo: :world } }
 
-                it 'is overriden when calling the matcher' do
+                it 'is overridden when calling the matcher' do
                   is_expected.to be_a(Enumerator)
                   expect(result.to_a).to match_array %i[hello]
                 end
