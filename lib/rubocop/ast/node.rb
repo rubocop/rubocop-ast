@@ -48,7 +48,7 @@ module RuboCop
 
       # @api private
       EQUALS_ASSIGNMENTS = %i[lvasgn ivasgn cvasgn gvasgn
-                              casgn masgn rasgn mrasgn].to_set.freeze
+                              casgn masgn].to_set.freeze
       # @api private
       SHORTHAND_ASSIGNMENTS = %i[op_asgn or_asgn and_asgn].to_set.freeze
       # @api private
