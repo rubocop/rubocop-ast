@@ -176,8 +176,6 @@ The following fields are given when relevant to nodes in the source code:
 
 |pair|One entry in a hash. |Two children, the key and value nodes.|1 => 2|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/PairNode[PairNode]
 
-|rasgn|Right-hand assignment|Two children, the node representing the value to assign and the assignment node.|1 => a |
-
 |rational|Rational literal|One child, the Rational value|2.0r|N/A
 
 |redo|Redo command|None|redo|N/A
