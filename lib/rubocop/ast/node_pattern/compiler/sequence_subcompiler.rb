@@ -328,7 +328,7 @@ module RuboCop
             "#{@seq_var}.children.size - #{-(cur + DELTA)}"
           end
 
-          # Note: assumes `@cur_index != :seq_head`. Node types using `within_loop` must
+          # NOTE: assumes `@cur_index != :seq_head`. Node types using `within_loop` must
           # have `def in_sequence_head; :raise; end`
           def within_loop
             sync do |sync_code|
