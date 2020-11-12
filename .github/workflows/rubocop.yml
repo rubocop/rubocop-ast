@@ -3,7 +3,11 @@
 # NOTE: When changing minimal version of Ruby or Rubocop, change all of them
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
   ast_specs:
