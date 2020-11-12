@@ -25,7 +25,7 @@ module RuboCop
         children.last
       end
 
-      # Note: The 'o' option is ignored.
+      # NOTE: The 'o' option is ignored.
       #
       # @return [Integer] the Regexp option bits as returned by Regexp#options
       def options

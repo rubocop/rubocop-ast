@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Note: specs for `lambda?` and `lambda_literal?` in `send_node_spec`
+# NOTE: specs for `lambda?` and `lambda_literal?` in `send_node_spec`
 RSpec.describe RuboCop::AST::LambdaNode do
   subject(:lambda_node) { parse_source(source).ast }
 

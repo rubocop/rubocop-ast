@@ -171,7 +171,7 @@ RSpec.describe RuboCop::AST::IfNode do
          'end'].join("\n")
       end
 
-      # Note: This is a legacy behavior.
+      # NOTE: This is a legacy behavior.
       it { is_expected.to be_else }
     end
 

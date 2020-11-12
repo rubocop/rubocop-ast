@@ -217,7 +217,7 @@ module RuboCop
 
           def arity
             min, max = map_min_max(children.map(&:arity_range)).transpose.map(&:sum)
-            min == max ? min || 0 : min..max # Note: || 0 for empty case, where min == max == nil.
+            min == max ? min || 0 : min..max # NOTE: || 0 for empty case, where min == max == nil.
           end
 
           def in_sequence_head

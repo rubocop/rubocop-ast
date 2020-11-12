@@ -237,7 +237,7 @@ module RuboCop
         each_ancestor.to_a
       end
 
-      # Note: Some rare nodes may have no source, like `s(:args)` in `foo {}`
+      # NOTE: Some rare nodes may have no source, like `s(:args)` in `foo {}`
       # @return [String, nil]
       def source
         loc.expression&.source
@@ -410,7 +410,7 @@ module RuboCop
         POST_CONDITION_LOOP_TYPES.include?(type)
       end
 
-      # Note: `loop { }` is a normal method call and thus not a loop keyword.
+      # NOTE: `loop { }` is a normal method call and thus not a loop keyword.
       def loop_keyword?
         LOOP_TYPES.include?(type)
       end
