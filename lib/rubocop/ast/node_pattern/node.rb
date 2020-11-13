@@ -7,6 +7,7 @@ module RuboCop
       class Node < ::Parser::AST::Node
         extend Forwardable
         include ::RuboCop::AST::Descendence
+        using Ext::RangeMinMax
 
         MATCHES_WITHIN_SET = %i[symbol number string].to_set.freeze
         private_constant :MATCHES_WITHIN_SET
@@ -197,26 +198,12 @@ module RuboCop
           end
         end
 
-        # Circumvent broken `Range#minmax` for infinity ranges in 2.6-
-        module MapMinMax
-          if RUBY_VERSION >= '2.7'
-            def map_min_max(enum)
-              enum.map(&:minmax)
-            end
-          else
-            def map_min_max(enum)
-              enum.map { |r| [r.min, r.max] } # rubocop:disable Style/MinMax
-            end
-          end
-        end
-
         # A list (potentially empty) of nodes; part of a Union
         class Subsequence < Node
           include ForbidInSeqHead
-          include MapMinMax
 
           def arity
-            min, max = map_min_max(children.map(&:arity_range)).transpose.map(&:sum)
+            min, max = children.map(&:arity_range).map(&:minmax).transpose.map(&:sum)
             min == max ? min || 0 : min..max # NOTE: || 0 for empty case, where min == max == nil.
           end
 
@@ -231,10 +218,8 @@ module RuboCop
 
         # Node class for `{ ... }`
         class Union < Node
-          include MapMinMax
-
           def arity
-            minima, maxima = map_min_max(children.map(&:arity_range)).transpose
+            minima, maxima = children.map(&:arity_range).map(&:minmax).transpose
             min = minima.min
             max = maxima.max
             min == max ? min : min..max
