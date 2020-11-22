@@ -15,7 +15,7 @@ module RuboCop
 
       # @deprecated Use `conditions.each`
       def each_condition(&block)
-        return conditions.to_enum(__method__) unless block_given?
+        return conditions.to_enum(__method__) unless block
 
         conditions.each(&block)
 

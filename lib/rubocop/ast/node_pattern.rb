@@ -103,7 +103,7 @@ module RuboCop
       # Yields its argument and any descendants, depth-first.
       #
       def self.descend(element, &block)
-        return to_enum(__method__, element) unless block_given?
+        return to_enum(__method__, element) unless block
 
         yield element
 

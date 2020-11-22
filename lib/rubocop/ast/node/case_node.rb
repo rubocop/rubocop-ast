@@ -17,7 +17,7 @@ module RuboCop
 
       # @deprecated Use `when_branches.each`
       def each_when(&block)
-        return when_branches.to_enum(__method__) unless block_given?
+        return when_branches.to_enum(__method__) unless block
 
         when_branches.each(&block)
 

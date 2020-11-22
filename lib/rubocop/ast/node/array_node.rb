@@ -19,7 +19,7 @@ module RuboCop
 
       # @deprecated Use `values.each` (a.k.a. `children.each`)
       def each_value(&block)
-        return to_enum(__method__) unless block_given?
+        return to_enum(__method__) unless block
 
         values.each(&block)
 

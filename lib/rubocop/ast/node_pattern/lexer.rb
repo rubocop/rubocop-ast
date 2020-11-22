@@ -52,7 +52,7 @@ module RuboCop
         def emit_regexp
           body = ss[1]
           options = ss[2]
-          flag = options.each_char.map { |c| REGEXP_OPTIONS[c] }.sum
+          flag = options.each_char.sum { |c| REGEXP_OPTIONS[c] }
 
           emit(:tREGEXP) { Regexp.new(body, flag) }
         end
