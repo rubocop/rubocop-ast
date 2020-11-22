@@ -17,7 +17,7 @@ module RuboCop
 
       # @deprecated Use `in_pattern_branches.each`
       def each_in_pattern(&block)
-        return in_pattern_branches.to_enum(__method__) unless block_given?
+        return in_pattern_branches.to_enum(__method__) unless block
 
         in_pattern_branches.each(&block)
 

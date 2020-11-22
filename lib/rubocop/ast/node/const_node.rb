@@ -45,7 +45,7 @@ module RuboCop
       #      s(:const, :Foo), then
       #      s(:const, s(:const, :Foo), :Bar)
       def each_path(&block)
-        return to_enum(__method__) unless block_given?
+        return to_enum(__method__) unless block
 
         descendants = []
         last = self

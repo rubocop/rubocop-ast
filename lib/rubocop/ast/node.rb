@@ -222,7 +222,7 @@ module RuboCop
       # @return [self] if a block is given
       # @return [Enumerator] if no block is given
       def each_ancestor(*types, &block)
-        return to_enum(__method__, *types) unless block_given?
+        return to_enum(__method__, *types) unless block
 
         visit_ancestors(types, &block)
 
