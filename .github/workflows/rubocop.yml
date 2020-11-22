@@ -42,7 +42,7 @@ jobs:
         if: matrix.os == 'windows'
         run: |
           # set TMPDIR, git core.autocrlf
-          echo "::set-env name=TMPDIR::$env:RUNNER_TEMP"
+          echo "TMPDIR=$env:RUNNER_TEMP" >> $GITHUB_ENV
           git config --system core.autocrlf false
       - name: checkout
         uses: actions/checkout@v2
@@ -63,7 +63,7 @@ jobs:
           debug: true
       - name: set modernize mode
         if: matrix.modern == true
-        run: echo '::set-env name=MODERNIZE::true'
+        run: echo 'MODERNIZE=true' >> $GITHUB_ENV
       - name: independence check
         if: matrix.os != 'windows'
         run: (! bundle exec rubocop -h 2> /dev/null) && echo 'RuboCop successfully *not* loaded for local tests'
@@ -92,7 +92,7 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
       - name: setup env
-        run: echo '::set-env name=RUBOCOP_VERSION::${{ matrix.rubocop }}'
+        run: echo 'RUBOCOP_VERSION=${{ matrix.rubocop }}' >> $GITHUB_ENV
       - name: install rubocop from source for full specs
         run: git clone --branch ${{ matrix.rubocop }} https://github.com/rubocop-hq/rubocop.git ../rubocop
       - name: install rubocop dependencies
