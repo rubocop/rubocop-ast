@@ -58,7 +58,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |and_asgn|And-assignment (AND the receiver with the argument and assign it back to receiver).|First child must be an assignment node, second child is the expression node.|a &&= b |N/A
 
-|arg|Required positional argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar)|N/A
+|arg|Required positional argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
 |args|Argument list. Must come inside a `def`, `defs`, `def_e`, `defs_e` or `block` node.|Children must be `arg`, `optarg`, `restarg`, `blockarg`, `kwarg`, `kwoptarg`, `kwrestarg`, `kwnilarg`, or `forwardarg`.|def whatever(foo, bar=1, baz: 5)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgsNode[ArgsNode]
 
@@ -70,7 +70,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |block_pass|Used when passing a block as an argument.|One child, an expression node representing the block to pass.|foo(a, &my_block)|N/A
 
-|blockarg|Reference to block argument from a function definition. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(&bar)|N/A
+|blockarg|Reference to block argument from a function definition. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(&bar)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
 |break|break keyword|One child with an expression node for the results to be passed through the break.|break 1|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/BreakNode[BreakNode]
 
@@ -114,7 +114,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |for|for..in looping condition|Three children. First child is a `lvasgn` or `mlhs` node with the variable(s), second child is an expression node with the array/range to loop over, third child is a body statement.|for a in arr do foo; end|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ForNode[ForNode]
 
-|forward_arg|Forwarding argument, for Ruby 2.8 (when `emit_forward_arg` is true). Must come inside an `args` node.|None|def whatever(foo, ...)|N/A
+|forward_arg|Forwarding argument, for Ruby 2.8 (when `emit_forward_arg` is true). Must come inside an `args` node.|None|def whatever(foo, ...)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
 |forward_args|Forwarding argument list, for Ruby 2.7 (when `emit_forward_arg` is false). Must come inside a `def`, `defs`, `def_e`, or `defs_e` node.|None|def (foo(...)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ForwardArgsNode[ForwardArgsNode]
 
@@ -136,17 +136,17 @@ The following fields are given when relevant to nodes in the source code:
 
 |irange|Inclusive range literal.|Two children, the start and end nodes (including `nil` for beginless/endless)|1..2|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/RangeNode[RangeNode]
 
-|kwarg|Required keyword argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar:)|N/A
+|kwarg|Required keyword argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar:)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
 |kwbegin|Explicit `begin` block.|Child nodes are body statements.|begin,end|N/A
 
 |kwnilarg|Double splat with nil in function definition, used to specify that the function does not accept keyword args. Must come inside an `args`.|None|def foo(**nil)|N/A
 
-|kwoptarg|Optional keyword argument. Must come inside an `args`.|Two children - a symbol, representing the argument name, and an expression node for the value.|def foo(bar: 5)|N/A
+|kwoptarg|Optional keyword argument. Must come inside an `args`.|Two children - a symbol, representing the argument name, and an expression node for the value.|def foo(bar: 5)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
 |kwsplat|Double splat used for keyword arguments inside a function call (as opposed to a function definition).|One child, an expression.|foo(bar, **kwargs)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/KeywordSplatNode[KeywordSplatNode]
 
-|kwrestargs|Double splat used for keyword arguments inside a function definition (as opposed to a function call). Must come inside an `args`.|One child - a symbol, representing the argument name, if a name is given. If no name given, it has no children..|def foo(**kwargs)|N/A
+|kwrestargs|Double splat used for keyword arguments inside a function definition (as opposed to a function call). Must come inside an `args`.|One child - a symbol, representing the argument name, if a name is given. If no name given, it has no children..|def foo(**kwargs)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
 |lvar|Local variable access|One child, the variable name|foo|N/A
 
@@ -154,7 +154,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |masgn|Multiple assigment.|First set of children are all `mlhs` nodes, and the rest of the children must be expression nodes corresponding to the values in the `mlhs` nodes.|a, b, = [1, 2]|N/A
 
-|mlhs|Multiple left-hand side. Only used inside a `masgn`.|Children must all be assignment nodes. Represents the left side of a multiple assignment (`a, b` in the example).|a, b = 5, 6|N/A
+|mlhs|Multiple left-hand side. Used inside a `masgn` and block argument destructuring.|Children must all be assignment nodes. Represents the left side of a multiple assignment (`a, b` in the example).|a, b = 5, 6|N/A
 
 |module|Module definition|Two children. First child is a `const` node for the module name. Second child is a body statement.|module Foo < Bar; end|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ModuleNode[ModuleNode]
 
@@ -168,7 +168,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |op_asgn|Operator-assignment - perform an operation and assign the value.|Three children. First child must be an assignment node, second child is the operator (e.g. `:+`) and the third child is the expression node.|a += b|N/A
 
-|opt_arg|Optional positional argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar=1)|N/A
+|optarg|Optional positional argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar=1)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
 |or|Or operator|Two children are both expression nodes representing the operands.|a or b|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/OrNode[OrNode]
 
@@ -189,7 +189,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |rescue|A rescue statement.May be "top-level" or may be nested inside an `ensure` block (if both rescue and ensure are in the block).|First node is a body statement. Last child is the "else" body statement, or `nil`. Remaining children are `resbody` nodes.|begin; rescue Exception, A => bar; 1; end|
 
-|restarg|Positional splat argument. Must come inside an `args`.|One child - a symbol, representing the argument name (if given). If no name given, there are no children.|def foo(*rest)|N/A
+|restarg|Positional splat argument. Must come inside an `args`.|One child - a symbol, representing the argument name (if given). If no name given, there are no children.|def foo(*rest)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
 |return|Return statement|Zero or one child, an expression node for the value to return.|return|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ReturnNode[ReturnNode]
 
@@ -199,6 +199,8 @@ The following fields are given when relevant to nodes in the source code:
 
 |send|Non-safe method invocation (i.e. top-level or using a dot)|First child is the receiver node (e.g. `self`), second child is the method name (e.g. `:foo=`)  and the remaining children (if any) are the arguments (expression nodes).
 a|`foo` or `foo.bar`|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/SendNode[SendNode]
+
+|shadowarg|Shadow argument, aka block-local variable. Must come inside an `args`.|One child - a symbol, representing the argument name.|foo { \|a; b\| b }|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
 |splat|Array or function argument * operator|One child, an expression.|*foo|N/A
 

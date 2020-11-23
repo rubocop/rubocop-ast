@@ -34,11 +34,41 @@ RSpec.describe RuboCop::AST::BlockNode do
       it { expect(block_node.arguments.size).to eq(2) }
     end
 
+    context 'with destructured arguments' do
+      let(:source) { 'foo { |q, (r, s)| bar(q, r, s) }' }
+
+      it { expect(block_node.arguments.size).to eq(2) }
+    end
+
     context '>= Ruby 2.7', :ruby27 do
       context 'using numbered parameters' do
         let(:source) { 'foo { _1 }' }
 
         it { expect(block_node.arguments).to be_empty }
+      end
+    end
+  end
+
+  describe '#argument_list' do
+    subject(:argument_list) { block_node.argument_list }
+
+    context 'with no arguments' do
+      let(:source) { 'foo { bar }' }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'all argument types' do
+      let(:source) { 'foo { |a, b = 42, (c, *d), e:, f: 42, **g, &h| nil }' }
+
+      it { expect(argument_list.size).to eq(8) }
+    end
+
+    context '>= Ruby 2.7', :ruby27 do
+      context 'using numbered parameters' do
+        let(:source) { 'foo { _1 }' }
+
+        it { is_expected.to be_empty }
       end
     end
   end
@@ -64,6 +94,12 @@ RSpec.describe RuboCop::AST::BlockNode do
 
     context 'with multiple mixed arguments' do
       let(:source) { 'foo { |q, *z| bar(q, z) }' }
+
+      it { is_expected.to be_arguments }
+    end
+
+    context 'with destructuring arguments' do
+      let(:source) { 'foo { |(q, r)| bar(q, r) }' }
 
       it { is_expected.to be_arguments }
     end

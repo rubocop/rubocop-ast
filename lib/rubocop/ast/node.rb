@@ -77,7 +77,8 @@ module RuboCop
       # @api private
       SPECIAL_KEYWORDS = %w[__FILE__ __LINE__ __ENCODING__].to_set.freeze
       # @api private
-      ARGUMENT_TYPES = %i[arg optarg restarg kwarg kwoptarg kwrestarg blockarg].to_set.freeze
+      ARGUMENT_TYPES = %i[arg optarg restarg kwarg kwoptarg kwrestarg
+                          blockarg forward_arg shadowarg].to_set.freeze
 
       LITERAL_RECURSIVE_METHODS = (COMPARISON_OPERATORS + %i[* ! <=>]).freeze
       LITERAL_RECURSIVE_TYPES = (OPERATOR_KEYWORDS + COMPOSITE_LITERALS + %i[begin pair]).freeze

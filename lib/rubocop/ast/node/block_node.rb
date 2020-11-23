@@ -22,6 +22,9 @@ module RuboCop
       end
 
       # The arguments of this block.
+      # Note that if the block has destructured arguments, `arguments` will
+      # return a `mlhs` node, whereas `argument_list` will return only
+      # actual argument nodes.
       #
       # @return [Array<Node>]
       def arguments
@@ -30,6 +33,16 @@ module RuboCop
         else
           node_parts[1]
         end
+      end
+
+      # Returns a collection of all descendants of this node that are
+      # argument type nodes. See `ArgsNode#argument_list` for details.
+      #
+      # @return [Array<Node>]
+      def argument_list
+        return [].freeze unless arguments?
+
+        arguments.argument_list
       end
 
       # The body of this block.
