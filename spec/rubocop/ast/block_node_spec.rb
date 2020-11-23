@@ -52,6 +52,8 @@ RSpec.describe RuboCop::AST::BlockNode do
   describe '#argument_list' do
     subject(:argument_list) { block_node.argument_list }
 
+    let(:names) { argument_list.map(&:name) }
+
     context 'with no arguments' do
       let(:source) { 'foo { bar }' }
 
@@ -59,18 +61,28 @@ RSpec.describe RuboCop::AST::BlockNode do
     end
 
     context 'all argument types' do
-      let(:source) { 'foo { |a, b = 42, (c, *d), e:, f: 42, **g, &h| nil }' }
+      let(:source) { 'foo { |a, b = 42, (c, *d), e:, f: 42, **g, &h; i| nil }' }
 
-      it { expect(argument_list.size).to eq(8) }
+      it { expect(names).to eq(%i[a b c d e f g h i]) }
     end
 
+    # rubocop:disable Naming/VariableNumber
     context '>= Ruby 2.7', :ruby27 do
       context 'using numbered parameters' do
-        let(:source) { 'foo { _1 }' }
+        context 'with skipped params' do
+          let(:source) { 'foo { _7 }' }
 
-        it { is_expected.to be_empty }
+          it { expect(names).to eq(%i[_1 _2 _3 _4 _5 _6 _7]) }
+        end
+
+        context 'with sequential params' do
+          let(:source) { 'foo { _1 + _2 }' }
+
+          it { expect(names).to eq(%i[_1 _2]) }
+        end
       end
     end
+    # rubocop:enable Naming/VariableNumber
   end
 
   describe '#arguments?' do
