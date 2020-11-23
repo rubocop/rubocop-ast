@@ -80,4 +80,36 @@ RSpec.describe RuboCop::AST::ArgsNode do
       end
     end
   end
+
+  describe '#argument_list' do
+    include AST::Sexp
+
+    subject { args_node.argument_list }
+
+    let(:source) { 'foo { |a, b = 42, (c, *d), e:, f: 42, **g, &h; i| nil }' }
+    let(:arguments) do
+      [
+        s(:arg, :a),
+        s(:optarg, :b, s(:int, 42)),
+        s(:arg, :c),
+        s(:restarg, :d),
+        s(:kwarg, :e),
+        s(:kwoptarg, :f, s(:int, 42)),
+        s(:kwrestarg, :g),
+        s(:blockarg, :h),
+        s(:shadowarg, :i)
+      ]
+    end
+
+    it { is_expected.to eq(arguments) }
+
+    context 'when using Ruby 2.7 or newer', :ruby27 do
+      context 'with argument forwarding' do
+        let(:source) { 'def foo(...); end' }
+        let(:arguments) { [s(:forward_arg)] }
+
+        it { is_expected.to eq(arguments) } if RuboCop::AST::Builder.emit_forward_arg
+      end
+    end
+  end
 end
