@@ -40,9 +40,11 @@ module RuboCop
       #
       # @return [Array<Node>]
       def argument_list
-        return [].freeze unless arguments?
-
-        arguments.argument_list
+        if numblock_type?
+          numbered_arguments
+        else
+          arguments.argument_list
+        end
       end
 
       # The body of this block.
@@ -129,6 +131,18 @@ module RuboCop
       # @return [Boolean] whether the `block` node body is a void context
       def void_context?
         VOID_CONTEXT_METHODS.include?(method_name)
+      end
+
+      private
+
+      # Numbered arguments of this `numblock`.
+      def numbered_arguments
+        return [].freeze unless numblock_type?
+
+        max_param = children[1]
+        1.upto(max_param).map do |i|
+          ArgNode.new(:arg, [:"_#{i}"])
+        end.freeze
       end
     end
   end
