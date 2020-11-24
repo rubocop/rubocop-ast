@@ -2,6 +2,17 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#154](https://github.com/rubocop-hq/rubocop-ast/pull/154): Add `ArgNode` and `Procarg0Node` ("modern" mode), and add `ArgsNode#argument_list` to get only argument type nodes. ([@dvandersluis][])
+
+
+### Changes
+
+* [#155](https://github.com/rubocop-hq/rubocop-ast/pull/155): Enable `BlockNode#argument_list` for `numblock`s. ([@dvandersluis][])
+* [#154](https://github.com/rubocop-hq/rubocop-ast/pull/154): Add `BlockNode#argument_list` and `BlockNode#argument_names`. ([@dvandersluis][])
+* [#147](https://github.com/rubocop-hq/rubocop-ast/pull/147): `def_node_pattern` and `def_node_search` now return the method name. ([@marcandre][])
+
 ## 1.1.1 (2020-11-04)
 
 ### Bug fixes
