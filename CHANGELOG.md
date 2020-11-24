@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.2.0 (2020-11-24)
+
 ### New features
 
 * [#154](https://github.com/rubocop-hq/rubocop-ast/pull/154): Add `ArgNode` and `Procarg0Node` ("modern" mode), and add `ArgsNode#argument_list` to get only argument type nodes. ([@dvandersluis][])
