@@ -66,7 +66,6 @@ RSpec.describe RuboCop::AST::BlockNode do
       it { expect(names).to eq(%i[a b c d e f g h i]) }
     end
 
-    # rubocop:disable Naming/VariableNumber
     context '>= Ruby 2.7', :ruby27 do
       context 'using numbered parameters' do
         context 'with skipped params' do
@@ -82,7 +81,6 @@ RSpec.describe RuboCop::AST::BlockNode do
         end
       end
     end
-    # rubocop:enable Naming/VariableNumber
   end
 
   describe '#arguments?' do

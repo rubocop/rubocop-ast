@@ -13,7 +13,8 @@ class RuboCop::AST::NodePattern::LexerRex
 macros
         CONST_NAME                /[A-Z:][a-zA-Z_:]+/
         SYMBOL_NAME               /[\w+@*\/?!<>=~|%^-]+|\[\]=?/
-        IDENTIFIER                /[a-zA-Z_][a-zA-Z0-9_-]*/
+        IDENTIFIER                /[a-z][a-zA-Z0-9_]*/
+        NODE_TYPE                 /[a-z][a-zA-Z0-9_-]*/  # Same as identifier but allows '-'
         CALL                      /(?:#{CONST_NAME}\.)?#{IDENTIFIER}[!?]?/
         REGEXP_BODY               /(?:[^\/]|\\\/)*/
         REGEXP                    /\/(#{REGEXP_BODY})(?<!\\)\/([imxo]*)/
@@ -27,14 +28,14 @@ rules
           %w"( ) { | } [ ] < > $ ! ^ ` ... + * ? ,"
         )}/o                      { emit ss.matched, &:to_sym }
         /#{REGEXP}/o              { emit_regexp }
-        /%(#{CONST_NAME})/o       { emit :tPARAM_CONST }
+        /%?(#{CONST_NAME})/o      { emit :tPARAM_CONST }
         /%([a-z_]+)/              { emit :tPARAM_NAMED }
         /%(\d*)/                  { emit(:tPARAM_NUMBER) { |s| s.empty? ? 1 : s.to_i } } # Map `%` to `%1`
         /_(#{IDENTIFIER})/o       { emit :tUNIFY }
         /_/o                      { emit :tWILDCARD }
         /\#(#{CALL})/o            { @state = :ARG; emit :tFUNCTION_CALL, &:to_sym }
         /#{IDENTIFIER}\?/o        { @state = :ARG; emit :tPREDICATE, &:to_sym }
-        /#{IDENTIFIER}/o          { emit :tNODE_TYPE, &:to_sym }
+        /#{NODE_TYPE}/o           { emit :tNODE_TYPE, &:to_sym }
   :ARG  /\(/                      { @state = nil; emit :tARG_LIST }
   :ARG  //                        { @state = nil }
         /\#.*/                    { emit_comment }

@@ -60,4 +60,17 @@ RSpec.describe RuboCop::AST::NodePattern::Lexer do
       expect { tokens }.to raise_error(RuboCop::AST::NodePattern::LexerRex::ScanError)
     end
   end
+
+  context 'when given node types and constants' do
+    let(:source) { '(aa bb Cc DD ::Ee Ff::GG %::Hh Zz %Zz)' }
+    let(:tokens) { super()[1...-1] }
+
+    it 'distinguishes them' do
+      types = tokens.map(&:first)
+      expect(types).to eq [:tNODE_TYPE] * 2 + [:tPARAM_CONST] * 7
+      zz, percent_zz = tokens.last(2).map(&:last).map(&:first)
+      expect(zz).to eq 'Zz'
+      expect(percent_zz).to eq 'Zz'
+    end
+  end
 end
