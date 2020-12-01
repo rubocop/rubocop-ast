@@ -2,12 +2,15 @@
 
 ## master (unreleased)
 
+### Changes
+
+* [#156](https://github.com/rubocop-hq/rubocop-ast/issues/156): NodePattern now considers constant names to refer to constants (instead of predicate `#Example_type?`). ([@marcandre][])
+
 ## 1.2.0 (2020-11-24)
 
 ### New features
 
 * [#154](https://github.com/rubocop-hq/rubocop-ast/pull/154): Add `ArgNode` and `Procarg0Node` ("modern" mode), and add `ArgsNode#argument_list` to get only argument type nodes. ([@dvandersluis][])
-
 
 ### Changes
 
