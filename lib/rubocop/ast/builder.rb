@@ -52,6 +52,7 @@ module RuboCop
         indexasgn:    IndexasgnNode,
         irange:       RangeNode,
         erange:       RangeNode,
+        kwargs:       HashNode,
         kwsplat:      KeywordSplatNode,
         lambda:       LambdaNode,
         module:       ModuleNode,
