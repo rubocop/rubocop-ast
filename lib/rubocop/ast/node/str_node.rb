@@ -11,6 +11,18 @@ module RuboCop
       def heredoc?
         loc.is_a?(Parser::Source::Map::Heredoc)
       end
+
+      def last_line
+        if heredoc?
+          loc.heredoc_end.line
+        else
+          super
+        end
+      end
+
+      def line_count
+        last_line - first_line + 1
+      end
     end
   end
 end

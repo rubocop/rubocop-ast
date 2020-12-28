@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Bug fixes
+
+* [#40](https://github.com/rubocop-hq/rubocop-ast/pull/40): Fix `StrNode#last_line` and `StrNode#line_count` for heredocs. ([@fatkodima][])
+
 ## 1.3.0 (2020-11-30)
 
 ### Changes
