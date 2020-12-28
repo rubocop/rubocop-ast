@@ -14,6 +14,9 @@ require 'rubocop-ast'
 if ENV['MODERNIZE']
   RuboCop::AST::Builder.modernize
   RuboCop::AST::Builder.emit_forward_arg = false # inverse of default
+  if RuboCop::AST::Builder.respond_to?(:emit_match_pattern=)
+    RuboCop::AST::Builder.emit_match_pattern = false # inverse of default
+  end
 end
 
 RSpec.shared_context 'ruby 2.3', :ruby23 do
