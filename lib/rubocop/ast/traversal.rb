@@ -114,9 +114,10 @@ module RuboCop
                               in_match match_alt break next
                               match_as array_pattern array_pattern_with_tail
                               hash_pattern const_pattern find_pattern
-                              index indexasgn procarg0]
+                              index indexasgn procarg0 kwargs]
       many_opt_node_children = %i[case rescue resbody ensure for when
-                                  case_match in_pattern irange erange]
+                                  case_match in_pattern irange erange
+                                  match_pattern match_pattern_p]
 
       ### Callbacks for above
       def_callback no_children
