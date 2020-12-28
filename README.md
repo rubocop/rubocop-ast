@@ -35,7 +35,9 @@ See the [docs site](https://docs.rubocop.org/rubocop-ast) for more details.
 
 ### Parser compatibility switches
 
-This gem, by default, uses most [legacy AST output from parser](https://github.com/whitequark/parser/#usage), except for `emit_forward_arg` which is set to `true`.
+This gem, by default, uses most [legacy AST output from parser](https://github.com/whitequark/parser/#usage), except for the following which are set to `true`:
+* `emit_forward_arg`
+* `emit_match_pattern`
 
 The main `RuboCop` gem uses these defaults (and is currently only compatible with these), but this gem can be used separately from `RuboCop` and is meant to be compatible with all settings. For example, to have `-> { ... }` emitted
 as `LambdaNode` instead of `SendNode`:
