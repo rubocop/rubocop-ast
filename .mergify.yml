@@ -12,17 +12,18 @@ pull_request_rules:
       - 'status-success=Specs | 2.5'
       - 'status-success=Specs | 2.6'
       - 'status-success=Specs | 2.7'
+      - 'status-success=Specs | 3.0'
       - 'status-success=Specs | head'
       - 'status-success=Specs | mingw'
       - 'status-success=Coverage | 2.4'
-      - 'status-success=Specs "modern" | 2.7'
+      - 'status-success=Specs "modern" | 3.0'
       - 'status-success=Specs | jruby'
       - 'status-success=Specs | truffleruby'
       - 'status-success=Specs | truffleruby-head'
       - 'status-success=Main Gem Specs | RuboCop: v0.92.0 | 2.4'
       - 'status-success=Main Gem Specs | RuboCop: master | 2.4'
-      - 'status-success=Main Gem Specs | RuboCop: v0.92.0 | 2.7'
-      - 'status-success=Main Gem Specs | RuboCop: master | 2.7'
+      - 'status-success=Main Gem Specs | RuboCop: v0.92.0 | 3.0'
+      - 'status-success=Main Gem Specs | RuboCop: master | 3.0'
       - 'status-success=Coding Style | 2.7'
 
   - name: delete head branch after auto-merge
@@ -31,4 +32,3 @@ pull_request_rules:
       - label=auto-merge
     actions:
       delete_head_branch: {}
-
