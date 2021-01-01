@@ -14,7 +14,7 @@ module RuboCop
     #   parser = Parser::Ruby25.new(builder)
     #   root_node = parser.parse(buffer)
     class Builder < Parser::Builders::Default
-      self.emit_forward_arg = true
+      self.emit_forward_arg = true if respond_to?(:emit_forward_arg=)
       self.emit_match_pattern = true if respond_to?(:emit_match_pattern=)
 
       # @api private
