@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'oedipus_lex'
 Rake.application.rake_require 'oedipus_lex'
 
 # Patch gem, see https://github.com/seattlerb/oedipus_lex/pull/15
