@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Changes
+
+* [#162](https://github.com/rubocop-hq/rubocop-ast/pull/162): Improve compatibility with `parser` 3.0. Turn on `emit_match_pattern` switch. ([@marcandre][])
+
 ## 1.3.0 (2020-11-30)
 
 ### Changes
