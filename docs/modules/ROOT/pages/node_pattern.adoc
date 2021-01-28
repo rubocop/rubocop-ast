@@ -454,13 +454,13 @@ def_node_matcher :has_sensitive_data?, '(hash <(pair (_ %1) $_) ...>)'
 
 # ...
 
-has_user_data?(node, :password) # => true if node is a hash with a key +:password+
+has_sensitive_data?(node, :password) # => true if node is a hash with a key +:password+
 
 # matching uses ===, so to match strings or symbols, 'pass' or 'password' one can:
-has_user_data?(node, /^pass(word)?$/i)
+has_sensitive_data?(node, /^pass(word)?$/i)
 
 # one can also pass lambdas...
-has_user_data?(node, ->(key) { # return true or false depending on key })
+has_sensitive_data?(node, ->(key) { # return true or false depending on key })
 ----
 
 NOTE: `Array#===` will never match a single node element (so don't pass arrays),
