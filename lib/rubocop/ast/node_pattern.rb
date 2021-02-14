@@ -28,7 +28,7 @@ module RuboCop
       module Macros
         # Define a method which applies a pattern to an AST node
         #
-        # The new method will return nil if the node does not match
+        # The new method will return nil if the node does not match.
         # If the node matches, and a block is provided, the new method will
         # yield to the block (passing any captures as block arguments).
         # If the node matches, and no block is provided, the new method will
