@@ -272,10 +272,12 @@ module RuboCop
 
       ## Destructuring
 
+      # @!method receiver(node = self)
       def_node_matcher :receiver, <<~PATTERN
         {(send $_ ...) ({block numblock} (send $_ ...) ...)}
       PATTERN
 
+      # @!method str_content(node = self)
       def_node_matcher :str_content, '(str $_)'
 
       def const_name
@@ -289,6 +291,7 @@ module RuboCop
         end
       end
 
+      # @!method defined_module0(node = self)
       def_node_matcher :defined_module0, <<~PATTERN
         {(class (const $_ $_) ...)
          (module (const $_ $_) ...)
@@ -334,6 +337,7 @@ module RuboCop
       end
 
       # Some cops treat the shovel operator as a kind of assignment.
+      # @!method assignment_or_similar?(node = self)
       def_node_matcher :assignment_or_similar?, <<~PATTERN
         {assignment? (send _recv :<< ...)}
       PATTERN
@@ -469,37 +473,47 @@ module RuboCop
         node.match_guard_clause?
       end
 
+      # @!method match_guard_clause?(node = self)
       def_node_matcher :match_guard_clause?, <<~PATTERN
         [${(send nil? {:raise :fail} ...) return break next} single_line?]
       PATTERN
 
+      # @!method proc?(node = self)
       def_node_matcher :proc?, <<~PATTERN
         {(block (send nil? :proc) ...)
          (block (send #global_const?(:Proc) :new) ...)
          (send #global_const?(:Proc) :new)}
       PATTERN
 
+      # @!method lambda?(node = self)
       def_node_matcher :lambda?, '({block numblock} (send nil? :lambda) ...)'
+
+      # @!method lambda_or_proc?(node = self)
       def_node_matcher :lambda_or_proc?, '{lambda? proc?}'
 
+      # @!method global_const?(node = self, name)
       def_node_matcher :global_const?, '(const {nil? cbase} %1)'
 
+      # @!method class_constructor?(node = self)
       def_node_matcher :class_constructor?, <<~PATTERN
         {       (send #global_const?({:Class :Module :Struct}) :new ...)
          (block (send #global_const?({:Class :Module :Struct}) :new ...) ...)}
       PATTERN
 
       # @deprecated Use `:class_constructor?`
+      # @!method struct_constructor?(node = self)
       def_node_matcher :struct_constructor?, <<~PATTERN
         (block (send #global_const?(:Struct) :new ...) _ $_)
       PATTERN
 
+      # @!method class_definition?(node = self)
       def_node_matcher :class_definition?, <<~PATTERN
         {(class _ _ $_)
          (sclass _ $_)
          (block (send #global_const?({:Struct :Class}) :new ...) _ $_)}
       PATTERN
 
+      # @!method module_definition?(node = self)
       def_node_matcher :module_definition?, <<~PATTERN
         {(module _ $_)
          (block (send #global_const?(:Module) :new ...) _ $_)}
@@ -633,6 +647,7 @@ module RuboCop
         end
       end
 
+      # @!method new_class_or_module_block?(node = self)
       def_node_matcher :new_class_or_module_block?, <<~PATTERN
         ^(casgn _ _ (block (send (const _ {:Class :Module}) :new) ...))
       PATTERN

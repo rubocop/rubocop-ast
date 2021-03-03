@@ -19,6 +19,10 @@ AllCops:
     - 'spec/rubocop/ast/fixtures/*'
   TargetRubyVersion: 2.4
 
+InternalAffairs/NodeMatcherDirective:
+  Exclude:
+    - 'spec/rubocop/ast/node_pattern_spec.rb'
+
 Naming/PredicateName:
   # Method define macros for dynamically generated method.
   MethodDefinitionMacros:

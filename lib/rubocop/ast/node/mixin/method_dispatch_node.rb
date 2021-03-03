@@ -224,6 +224,7 @@ module RuboCop
 
       private
 
+      # @!method in_macro_scope?(node = self)
       def_node_matcher :in_macro_scope?, <<~PATTERN
         {
           root?                                    # Either a root node,
@@ -239,14 +240,17 @@ module RuboCop
         }
       PATTERN
 
+      # @!method adjacent_def_modifier?(node = self)
       def_node_matcher :adjacent_def_modifier?, <<~PATTERN
         (send nil? _ ({def defs} ...))
       PATTERN
 
+      # @!method bare_access_modifier_declaration?(node = self)
       def_node_matcher :bare_access_modifier_declaration?, <<~PATTERN
         (send nil? {:public :protected :private :module_function})
       PATTERN
 
+      # @!method non_bare_access_modifier_declaration?(node = self)
       def_node_matcher :non_bare_access_modifier_declaration?, <<~PATTERN
         (send nil? {:public :protected :private :module_function} _)
       PATTERN
