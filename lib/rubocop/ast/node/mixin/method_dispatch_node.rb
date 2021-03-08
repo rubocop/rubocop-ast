@@ -165,16 +165,34 @@ module RuboCop
         ARITHMETIC_OPERATORS.include?(method_name)
       end
 
-      # Checks if this node is part of a chain of `def` modifiers.
+      # Checks if this node is part of a chain of `def` or `defs` modifiers.
       #
       # @example
       #
       #   private def foo; end
       #
-      # @return [Boolean] whether the dispatched method is a `def` modifier
-      def def_modifier?
-        send_type? &&
-          adjacent_def_modifier? || each_child_node(:send).any?(&:def_modifier?)
+      # @return wether the `def|defs` node is a modifier or not.
+      # See also `def_modifier` that returns the node or `nil`
+      def def_modifier?(node = self)
+        !!def_modifier(node)
+      end
+
+      # Checks if this node is part of a chain of `def` or `defs` modifiers.
+      #
+      # @example
+      #
+      #   private def foo; end
+      #
+      # @return [Node | nil] returns the `def|defs` node this is a modifier for,
+      # or `nil` if it isn't a def modifier
+      def def_modifier(node = self)
+        arg = node.children[2]
+
+        return unless node.send_type? && node.receiver.nil? && arg.is_a?(::AST::Node)
+
+        return arg if arg.def_type? || arg.defs_type?
+
+        def_modifier(arg)
       end
 
       # Checks whether this is a lambda. Some versions of parser parses

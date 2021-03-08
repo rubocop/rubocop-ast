@@ -1122,6 +1122,32 @@ RSpec.describe RuboCop::AST::SendNode do
     end
   end
 
+  describe '#def_modifier' do
+    context 'with a prefixed def modifier' do
+      let(:source) { 'foo def bar; end' }
+
+      it { expect(send_node.def_modifier.method_name).to eq(:bar) }
+    end
+
+    context 'with several prefixed def modifiers' do
+      let(:source) { 'foo bar baz def qux; end' }
+
+      it { expect(send_node.def_modifier.method_name).to eq(:qux) }
+    end
+
+    context 'with a block containing a method definition' do
+      let(:source) { 'foo bar { baz def qux; end }' }
+
+      it { expect(send_node.def_modifier).to be_nil }
+    end
+
+    context 'with call with no argument' do
+      let(:source) { 'foo' }
+
+      it { expect(send_node.def_modifier).to be_nil }
+    end
+  end
+
   describe '#negation_method?' do
     context 'with prefix `not`' do
       let(:source) { 'not foo' }
