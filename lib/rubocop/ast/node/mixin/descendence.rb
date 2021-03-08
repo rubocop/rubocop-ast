@@ -13,13 +13,9 @@ module RuboCop
       #
       # @overload each_child_node
       #   Yield all nodes.
-      # @overload each_child_node(type)
-      #   Yield only nodes matching the type.
-      #   @param [Symbol] type a node type
-      # @overload each_child_node(type_a, type_b, ...)
+      # @overload each_child_node(type, ...)
       #   Yield only nodes matching any of the types.
-      #   @param [Symbol] type_a a node type
-      #   @param [Symbol] type_b a node type
+      #   @param [Symbol] type a node type
       # @yieldparam [Node] node each child node
       # @return [self] if a block is given
       # @return [Enumerator] if no block is given
