@@ -10,7 +10,6 @@ gemspec
 
 gem 'bump', require: false
 gem 'oedipus_lex', require: false
-gem 'pry'
 gem 'racc'
 gem 'rake', '~> 13.0'
 gem 'rspec', '~> 3.7'
