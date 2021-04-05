@@ -317,7 +317,7 @@ module RuboCop
         # returns nil if answer cannot be determined
         ancestors = each_ancestor(:class, :module, :sclass, :casgn, :block)
         result    = ancestors.map do |ancestor|
-          parent_module_name_part(ancestor) { |full_name| break full_name }
+          parent_module_name_part(ancestor) { |full_name| return full_name }
         end.compact.reverse.join('::')
         result.empty? ? 'Object' : result
       end
@@ -612,19 +612,17 @@ module RuboCop
       def parent_module_name_part(node)
         case node.type
         when :class, :module, :casgn
-          # TODO: if constant name has cbase (leading ::), then we don't need
-          # to keep traversing up through nested classes/modules
+          # TODO: if constant name has cbase (leading ::), then we must not
+          # keep traversing up through nested classes/modules
           node.defined_module_name
         when :sclass
-          yield parent_module_name_for_sclass(node)
+          parent_module_name_for_sclass(node)
         else # block
           parent_module_name_for_block(node) { yield nil }
         end
       end
 
       def parent_module_name_for_sclass(sclass_node)
-        # TODO: look for constant definition and see if it is nested
-        # inside a class or module
         subject = sclass_node.children[0]
 
         if subject.const_type?

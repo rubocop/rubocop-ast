@@ -708,7 +708,22 @@ RSpec.describe RuboCop::AST::Node do
       end
 
       it { is_expected.to eq 'Foo::#<Class:Foo>::Bar' }
+    end
+
+    context 'when node nested in an unknown block' do
+      let(:src) do
+        <<~RUBY
+          module Foo
+            foo do
+              class Bar
+                >>attr_reader :config<<
+              end
+            end
+          end
+        RUBY
       end
+
+      it { is_expected.to eq nil }
     end
   end
 end
