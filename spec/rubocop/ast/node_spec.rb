@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::Node do
-  let(:ast) { RuboCop::AST::ProcessedSource.new(src, ruby_version).ast }
+  let(:ast) { parse_source(src).node }
   let(:node) { ast }
 
   describe '#value_used?' do
@@ -661,27 +661,23 @@ RSpec.describe RuboCop::AST::Node do
   end
 
   describe '#parent_module_name' do
+    subject(:parent_module_name) { node.parent_module_name }
     context 'when node on top level' do
       let(:src) { 'def config; end' }
 
-      it 'returns "Object"' do
-        expect(node.parent_module_name).to eq 'Object'
-      end
+      it { is_expected.to eq 'Object' }
     end
 
     context 'when node on module' do
       let(:src) do
         <<~RUBY
           module Foo
-            attr_reader :config
+            >>attr_reader :config<<
           end
         RUBY
       end
 
-      it 'returns parent module name with namespaces' do
-        method_defined_node = node.children.last
-        expect(method_defined_node.parent_module_name).to eq 'Foo'
-      end
+      it { is_expected.to eq 'Foo' }
     end
 
     context 'when node on singleton class' do
@@ -689,16 +685,13 @@ RSpec.describe RuboCop::AST::Node do
         <<~RUBY
           module Foo
             class << self
-              attr_reader :config
+              >>attr_reader :config<<
             end
           end
         RUBY
       end
 
-      it 'returns parent module name with namespaces' do
-        method_defined_node = node.children.last.children.last.children.last
-        expect(method_defined_node.parent_module_name).to eq 'Foo::#<Class:Foo>'
-      end
+      it { is_expected.to eq 'Foo::#<Class:Foo>' }
     end
 
     context 'when node on class in singleton class' do
@@ -707,16 +700,14 @@ RSpec.describe RuboCop::AST::Node do
           module Foo
             class << self
               class Bar
-                attr_reader :config
+                >>attr_reader :config<<
               end
             end
           end
         RUBY
       end
 
-      it 'returns parent module name with namespaces' do
-        method_defined_node = node.children.last.children.last.children.last
-        expect(method_defined_node.parent_module_name).to eq 'Foo::#<Class:Foo>::Bar'
+      it { is_expected.to eq 'Foo::#<Class:Foo>::Bar' }
       end
     end
   end
