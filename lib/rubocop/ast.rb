@@ -6,7 +6,6 @@ require 'set'
 
 require_relative 'ast/ext/range'
 require_relative 'ast/ext/range_min_max'
-require_relative 'ast/ext/set'
 require_relative 'ast/node_pattern/method_definer'
 require_relative 'ast/node_pattern'
 require_relative 'ast/node/mixin/descendence'
