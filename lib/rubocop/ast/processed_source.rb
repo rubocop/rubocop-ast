@@ -236,6 +236,9 @@ module RuboCop
         when 2.8, 3.0
           require 'parser/ruby30'
           Parser::Ruby30
+        when 3.1
+          require 'parser/ruby31'
+          Parser::Ruby31
         else
           raise ArgumentError,
                 "RuboCop found unknown Ruby version: #{ruby_version.inspect}"
