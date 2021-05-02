@@ -24,13 +24,13 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu ]
-        ruby: [ 2.4, 2.5, 2.6, 2.7, '3.0', head ]
+        ruby: [ 2.5, 2.6, 2.7, '3.0', head ]
         coverage: [ null ]
         modern: [ null ]
         title: [ null ]
         include:
           - { os: windows, ruby: mingw }
-          - { ruby: 2.4, os: ubuntu, coverage: true, title: 'Coverage' }
+          - { ruby: 2.5, os: ubuntu, coverage: true, title: 'Coverage' }
           - { ruby: '3.0', os: ubuntu, modern: true, title: 'Specs "modern"' }
           # jruby disabled because of: https://github.com/jruby/jruby/issues/6416
           # - { ruby: jruby, os: ubuntu }
@@ -82,7 +82,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu ]
-        ruby: [ 2.4, 2.7 ]
+        ruby: [ 2.5, 2.7 ]
         rubocop: [ 'v0.92.0', master ]
         internal_investigation: [ null ]
         include:
