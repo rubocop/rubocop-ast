@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#182](https://github.com/rubocop-hq/rubocop-ast/pull/182): Support `Parser::Ruby31` for Ruby 3.1 parser (experimental). ([@koic][])
+
 ## 1.4.2 (2021-05-02)
 
 ### Bug fixes
