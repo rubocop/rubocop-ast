@@ -41,7 +41,7 @@ module RuboCop
       def ast_with_comments
         return if !ast || !comments
 
-        @ast_with_comments ||= Parser::Source::Comment.associate(ast, comments)
+        @ast_with_comments ||= Parser::Source::Comment.associate_by_identity(ast, comments)
       end
 
       # Returns the source lines, line break characters removed, excluding a
