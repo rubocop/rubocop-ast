@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Bug fixes
+
+* [#179](https://github.com/rubocop-hq/rubocop-ast/pull/179): Have `ast_with_comments` distinguish nodes with same content. ([@marcandre][])
+
 ## 1.4.1 (2021-01-23)
 
 ### Changes
