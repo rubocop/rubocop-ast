@@ -49,6 +49,7 @@ module RuboCop
         float:        FloatNode,
         hash:         HashNode,
         if:           IfNode,
+        in_pattern:   InPatternNode,
         int:          IntNode,
         index:        IndexNode,
         indexasgn:    IndexasgnNode,
