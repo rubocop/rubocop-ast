@@ -24,9 +24,9 @@ module RuboCop
         self
       end
 
-      # Returns an array of all the when branches in the `case` statement.
+      # Returns an array of all the `in` pattern branches in the `case` statement.
       #
-      # @return [Array<Node>] an array of `in_pattern` nodes
+      # @return [Array<InPatternNode>] an array of `in_pattern` nodes
       def in_pattern_branches
         node_parts[1...-1]
       end
