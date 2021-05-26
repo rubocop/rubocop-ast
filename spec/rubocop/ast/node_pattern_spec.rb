@@ -10,7 +10,6 @@ RSpec.describe RuboCop::AST::NodePattern do
     builder = RuboCop::AST::Builder.new
     Parser::CurrentRuby.new(builder).parse(buffer)
   end
-
   let(:root_node) { parse(ruby) }
   let(:node) { root_node }
   let(:params) { [] }
