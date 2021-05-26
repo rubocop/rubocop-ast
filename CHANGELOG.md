@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#183](https://github.com/rubocop-hq/rubocop-ast/pull/183): Add `AST::InPatternNode` node. ([@koic][])
+
 ## 1.5.0 (2021-05-02)
 
 ### New features
