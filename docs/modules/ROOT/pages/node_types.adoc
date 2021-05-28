@@ -2,7 +2,7 @@
 
 This is a partial list of the node types parsed by the AST and corresponding methods and information associated with them.
 
-`RuboCop::AST::Node` defines some additional methods on certain node types by giving them a separate class. You can see the method definitions in the https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/Node[API documentation].
+`RuboCop::AST::Node` defines some additional methods on certain node types by giving them a separate class. You can see the method definitions in the https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/Node[API documentation].
 
 For full information, please see the https://github.com/whitequark/parser/blob/master/doc/AST_FORMAT.md[parser documentation]. This page will act as a quick index to that page, which has more examples and fuller explanation of the different location pieces. You can also see a full AST for yourself by running `ruby-parse --legacy -L -e "ruby(code: 'here')"`.
 
@@ -52,29 +52,29 @@ The following fields are given when relevant to nodes in the source code:
 |=============================================
 |Type|Description|Children|Example|Node Class
 
-|alias|Method alias|Two children - both are `sym`, `dsym` or `gvar` nodes.|alias :foo :bar|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/AliasNode[AliasNode]
+|alias|Method alias|Two children - both are `sym`, `dsym` or `gvar` nodes.|alias :foo :bar|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/AliasNode[AliasNode]
 
-|and|And operator|Two children are both expression nodes representing the operands.|a and b && c |https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/AndNode[AndNode]
+|and|And operator|Two children are both expression nodes representing the operands.|a and b && c |https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/AndNode[AndNode]
 
 |and_asgn|And-assignment (AND the receiver with the argument and assign it back to receiver).|First child must be an assignment node, second child is the expression node.|a &&= b |N/A
 
-|arg|Required positional argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
+|arg|Required positional argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
-|args|Argument list. Must come inside a `def`, `defs`, `def_e`, `defs_e` or `block` node.|Children must be `arg`, `optarg`, `restarg`, `blockarg`, `kwarg`, `kwoptarg`, `kwrestarg`, `kwnilarg`, or `forwardarg`.|def whatever(foo, bar=1, baz: 5)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgsNode[ArgsNode]
+|args|Argument list. Must come inside a `def`, `defs`, `def_e`, `defs_e` or `block` node.|Children must be `arg`, `optarg`, `restarg`, `blockarg`, `kwarg`, `kwoptarg`, `kwrestarg`, `kwnilarg`, or `forwardarg`.|def whatever(foo, bar=1, baz: 5)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgsNode[ArgsNode]
 
-|array|Array literal.|The values in the array, including a possible `splat`.|[1, 2, 3]|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArrayNode[ArrayNode]
+|array|Array literal.|The values in the array, including a possible `splat`.|[1, 2, 3]|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArrayNode[ArrayNode]
 
 |back-ref|Regular expression back-reference, e.g. $&.|One child (symbol) representing the reference name, e.g. `:$&`.|re = /foo(abc)/; $&|N/A
 
-|block|Block execution.|Three children. First child is the receiver *or* a `lambda` node; second child is `args` or `forward_args` (only if `emit_forward` is false; it's true by default); third child is a body statement.|foo.bar do \|a, b\|; puts a; end|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/BlockNode[BlockNode]
+|block|Block execution.|Three children. First child is the receiver *or* a `lambda` node; second child is `args` or `forward_args` (only if `emit_forward` is false; it's true by default); third child is a body statement.|foo.bar do \|a, b\|; puts a; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/BlockNode[BlockNode]
 
 |block_pass|Used when passing a block as an argument.|One child, an expression node representing the block to pass.|foo(a, &my_block)|N/A
 
-|blockarg|Reference to block argument from a function definition. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(&bar)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
+|blockarg|Reference to block argument from a function definition. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(&bar)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
-|break|break keyword|One child with an expression node for the results to be passed through the break.|break 1|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/BreakNode[BreakNode]
+|break|break keyword|One child with an expression node for the results to be passed through the break.|break 1|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/BreakNode[BreakNode]
 
-|case|Case statement.|First child is an expression node for the condition to check. Last child is an expression node for the "else" condition. All middle nodes are `when` nodes.|case a; when 1; b; when 2; c; else d; end|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/CaseNode[CaseNode]
+|case|Case statement.|First child is an expression node for the condition to check. Last child is an expression node for the "else" condition. All middle nodes are `when` nodes.|case a; when 1; b; when 2; c; else d; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/CaseNode[CaseNode]
 
 |casgn|Constant assignment|Three children: the parent object (either an expression, `nil` or `cbase`), the constant name (a symbol), and the expression being assigned.|Foo::Bar = 5|N/A
 
@@ -84,39 +84,39 @@ The following fields are given when relevant to nodes in the source code:
 
 |const|Constant reference.|Two children, the parent object (either an expression, `nil` or `cbase`) and the constant name (a symbol). |AModule::AClass|N/A
 
-|class|Class definition|Three children. First child is a `const` node for the class name, second child is a `const` node for the parent name, or `nil`, third child is a body statement.|class Foo < Bar; end|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ClassNode[ClassNode]
+|class|Class definition|Three children. First child is a `const` node for the class name, second child is a `const` node for the parent name, or `nil`, third child is a body statement.|class Foo < Bar; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ClassNode[ClassNode]
 
-|csend|Null-safe method invocation, i.e. using `&.`|First child is the receiver node (e.g. `self`), second child is the method name (e.g. `:foo=`) and the remaining children (if any) are nodes representing arguments.|foo&.bar|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/SendNode[SendNode]
+|csend|Null-safe method invocation, i.e. using `&.`|First child is the receiver node (e.g. `self`), second child is the method name (e.g. `:foo=`) and the remaining children (if any) are nodes representing arguments.|foo&.bar|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/SendNode[SendNode]
 
 |cvar|Class variable access|One child, the variable name `:@@cfoo`|@@cfoo|N/A
 
 |cvasgn|Class variable assignment|Two children: the variable name `:@@foo` and the expression being assigned|@@foo = 5|N/A
 
-|def|Instance method definition (full format)|Three children. First child is the name of the method (symbol); second child is `args` or `forward_args` (only if `emit_forward` is false, and it's true by default), and the last child is a body statement.|def foo(some_arg, kwarg: 1); end|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/DefNode[DefNode]
+|def|Instance method definition (full format)|Three children. First child is the name of the method (symbol); second child is `args` or `forward_args` (only if `emit_forward` is false, and it's true by default), and the last child is a body statement.|def foo(some_arg, kwarg: 1); end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/DefNode[DefNode]
 
 |defined?|`defined?` keyword.|One child, an expression.|defined?(foo)|N/A
 
-|defs|Singleton method definition (full format) - i.e. defining a method on a single object.|Four children. First child is the receiver; second child is the name of the method (symbol); third child is `args` or `forward_args` (only if `emit_forward` is false, and it's true by default), and the fourth child is a body statement.|def some_obj.foo(some_arg, kwarg: 1); end|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/DefNode[DefNode]
+|defs|Singleton method definition (full format) - i.e. defining a method on a single object.|Four children. First child is the receiver; second child is the name of the method (symbol); third child is `args` or `forward_args` (only if `emit_forward` is false, and it's true by default), and the fourth child is a body statement.|def some_obj.foo(some_arg, kwarg: 1); end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/DefNode[DefNode]
 
 |dstr|Interpolated string literal.|Children are split into `str` nodes, with interpolation represented by separate expression nodes.
-|`"foo#{bar}baz"`|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/StrNode[StrNode]
+|`"foo#{bar}baz"`|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/StrNode[StrNode]
 
 |dsym|Interpolated symbol literal.|Children are split into `str` nodes, with interpolation represented by separate expression nodes.
 |`:"foo#{bar}baz"`|N/A
 
-|ensure|Block that contains an `ensure` along with possible `rescue`s. Must be inside a `def`, `defs`, `block` or `begin`.|The last child is the body statement of the `ensure` block. If there is a `rescue`, it is the first child (and contains the body statement of the top block); otherwise, the first child is the body statement of the top block.|begin; foo; rescue Exception; bar; ensure; baz; end|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/EnsureNode[EnsureNode]
+|ensure|Block that contains an `ensure` along with possible `rescue`s. Must be inside a `def`, `defs`, `block` or `begin`.|The last child is the body statement of the `ensure` block. If there is a `rescue`, it is the first child (and contains the body statement of the top block); otherwise, the first child is the body statement of the top block.|begin; foo; rescue Exception; bar; ensure; baz; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/EnsureNode[EnsureNode]
 
-|erange|Exclusive range literal|Two children, the start and end nodes (including `nil` for beginless/endless)|1...2|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/RangeNode[RangeNode]
+|erange|Exclusive range literal|Two children, the start and end nodes (including `nil` for beginless/endless)|1...2|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/RangeNode[RangeNode]
 
 |false|False literal|None|false|N/A
 
-|float|Floating point literal|One child, the Float value|-123.5|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/FloatNode[FloatNode]
+|float|Floating point literal|One child, the Float value|-123.5|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/FloatNode[FloatNode]
 
-|for|for..in looping condition|Three children. First child is a `lvasgn` or `mlhs` node with the variable(s), second child is an expression node with the array/range to loop over, third child is a body statement.|for a in arr do foo; end|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ForNode[ForNode]
+|for|for..in looping condition|Three children. First child is a `lvasgn` or `mlhs` node with the variable(s), second child is an expression node with the array/range to loop over, third child is a body statement.|for a in arr do foo; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ForNode[ForNode]
 
-|forward_arg|Forwarding argument, for Ruby 2.8 (when `emit_forward_arg` is true). Must come inside an `args` node.|None|def whatever(foo, ...)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
+|forward_arg|Forwarding argument, for Ruby 2.8 (when `emit_forward_arg` is true). Must come inside an `args` node.|None|def whatever(foo, ...)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
-|forward_args|Forwarding argument list, for Ruby 2.7 (when `emit_forward_arg` is false). Must come inside a `def`, `defs`, `def_e`, or `defs_e` node.|None|def (foo(...)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ForwardArgsNode[ForwardArgsNode]
+|forward_args|Forwarding argument list, for Ruby 2.7 (when `emit_forward_arg` is false). Must come inside a `def`, `defs`, `def_e`, or `defs_e` node.|None|def (foo(...)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ForwardArgsNode[ForwardArgsNode]
 
 |forwarded-args|Forwarding arguments into a method call|None|foo(...)|N/A
 
@@ -124,29 +124,29 @@ The following fields are given when relevant to nodes in the source code:
 
 |gvasgn|Global variable assignment|Two children, the variable name `:$foo` and the expression being assigned|$foo = 5|N/A
 
-|hash|Hash literal.|`pair` s and/or  `kwsplat` s.|{ foo: 'bar' }|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/HashNode[HashNode]
+|hash|Hash literal.|`pair` s and/or  `kwsplat` s.|{ foo: 'bar' }|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/HashNode[HashNode]
 
-|if|If, else, elif, unless and ternary conditions|Three children. First child is the expression node representing the condition; second child is an expression node representing the true condition; third child is an expression, node representing the false condition. `elif` will nest another `if` node as the third child. `question` and `colon` location keys will only exist for ternaries.|if foo; bar; else; baz; end|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/IfNode[IfNode]
+|if|If, else, elif, unless and ternary conditions|Three children. First child is the expression node representing the condition; second child is an expression node representing the true condition; third child is an expression, node representing the false condition. `elif` will nest another `if` node as the third child. `question` and `colon` location keys will only exist for ternaries.|if foo; bar; else; baz; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/IfNode[IfNode]
 
-|int|Integer literal|1, the integer value|-123|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/IntNode[IntNode]
+|int|Integer literal|1, the integer value|-123|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/IntNode[IntNode]
 
 |ivar|Instance variable access|One child, the variable name `:@foo`|@foo|N/A
 
 |ivasgn|Instance variable assignment|Two children, the variable name `:@foo` and the expression being assigned|@foo = 5|N/A
 
-|irange|Inclusive range literal.|Two children, the start and end nodes (including `nil` for beginless/endless)|1..2|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/RangeNode[RangeNode]
+|irange|Inclusive range literal.|Two children, the start and end nodes (including `nil` for beginless/endless)|1..2|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/RangeNode[RangeNode]
 
-|kwarg|Required keyword argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar:)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
+|kwarg|Required keyword argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar:)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
 |kwbegin|Explicit `begin` block.|Child nodes are body statements.|begin,end|N/A
 
 |kwnilarg|Double splat with nil in function definition, used to specify that the function does not accept keyword args. Must come inside an `args`.|None|def foo(**nil)|N/A
 
-|kwoptarg|Optional keyword argument. Must come inside an `args`.|Two children - a symbol, representing the argument name, and an expression node for the value.|def foo(bar: 5)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
+|kwoptarg|Optional keyword argument. Must come inside an `args`.|Two children - a symbol, representing the argument name, and an expression node for the value.|def foo(bar: 5)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
-|kwsplat|Double splat used for keyword arguments inside a function call (as opposed to a function definition).|One child, an expression.|foo(bar, **kwargs)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/KeywordSplatNode[KeywordSplatNode]
+|kwsplat|Double splat used for keyword arguments inside a function call (as opposed to a function definition).|One child, an expression.|foo(bar, **kwargs)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/KeywordSplatNode[KeywordSplatNode]
 
-|kwrestargs|Double splat used for keyword arguments inside a function definition (as opposed to a function call). Must come inside an `args`.|One child - a symbol, representing the argument name, if a name is given. If no name given, it has no children..|def foo(**kwargs)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
+|kwrestargs|Double splat used for keyword arguments inside a function definition (as opposed to a function call). Must come inside an `args`.|One child - a symbol, representing the argument name, if a name is given. If no name given, it has no children..|def foo(**kwargs)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
 |lvar|Local variable access|One child, the variable name|foo|N/A
 
@@ -156,7 +156,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |mlhs|Multiple left-hand side. Used inside a `masgn` and block argument destructuring.|Children must all be assignment nodes. Represents the left side of a multiple assignment (`a, b` in the example).|a, b = 5, 6|N/A
 
-|module|Module definition|Two children. First child is a `const` node for the module name. Second child is a body statement.|module Foo < Bar; end|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ModuleNode[ModuleNode]
+|module|Module definition|Two children. First child is a `const` node for the module name. Second child is a body statement.|module Foo < Bar; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ModuleNode[ModuleNode]
 
 |next|next keyword|Zero or one child with an expression node for the results to be passed through the next|next 1|N/A
 
@@ -164,71 +164,71 @@ The following fields are given when relevant to nodes in the source code:
 
 |nth-ref|Regular expression capture group ($1, $2 etc.)|One child: The capture name, e.g. `:$1`|re = /foo(abc)/; $1|N/A
 
-|numblock|Block that has numbered arguments (`_1`) referenced inside it.|Three children. First child is a `send`/`csend` node representing the way the block is created, second child is an `int` (the number of numeric arguments) and the third child is a body statement.|proc { _1 + _3 }|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/BlockNode[BlockNode]
+|numblock|Block that has numbered arguments (`_1`) referenced inside it.|Three children. First child is a `send`/`csend` node representing the way the block is created, second child is an `int` (the number of numeric arguments) and the third child is a body statement.|proc { _1 + _3 }|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/BlockNode[BlockNode]
 
 |op_asgn|Operator-assignment - perform an operation and assign the value.|Three children. First child must be an assignment node, second child is the operator (e.g. `:+`) and the third child is the expression node.|a += b|N/A
 
-|optarg|Optional positional argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar=1)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
+|optarg|Optional positional argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar=1)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
-|or|Or operator|Two children are both expression nodes representing the operands.|a or b|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/OrNode[OrNode]
+|or|Or operator|Two children are both expression nodes representing the operands.|a or b|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/OrNode[OrNode]
 
 |or_asgn|Or-assignment (OR the receiver with the argument and assign it back to receiver).|Two children. First child must be an assignment node, second child is the expression node.|a \|\|= b|N/A
 
-|pair|One entry in a hash. |Two children, the key and value nodes.|1 => 2|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/PairNode[PairNode]
+|pair|One entry in a hash. |Two children, the key and value nodes.|1 => 2|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/PairNode[PairNode]
 
 |rational|Rational literal|One child, the Rational value|2.0r|N/A
 
 |redo|Redo command|None|redo|N/A
 
-|regexp|Regular expression literal.|Children are split into `str` nodes, with interpolation represented by separate expression nodes. The last child is a `regopt`.|/foo#{bar}56/|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/RegexpNode[RegexpNode]
+|regexp|Regular expression literal.|Children are split into `str` nodes, with interpolation represented by separate expression nodes. The last child is a `regopt`.|/foo#{bar}56/|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/RegexpNode[RegexpNode]
 
 |regopt|Regular expression option, appearing after a regexp literal (the "im" in the example).|A list of symbols representing the options (e.g. `:i` and `:m`)
 |/foo#{bar}/im|N/A
 
-|resbody|Exception rescue. Always occurs inside a `rescue` node.|Three children. First child is either `nil` or an array of expression nodes representing the exceptions to rescue. Second child is `nil` or an assignment node representing the value to save the exception into. Last child is a body statement.|begin; rescue Exception, A => bar; 1; end|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ResbodyNode[ResbodyNode]
+|resbody|Exception rescue. Always occurs inside a `rescue` node.|Three children. First child is either `nil` or an array of expression nodes representing the exceptions to rescue. Second child is `nil` or an assignment node representing the value to save the exception into. Last child is a body statement.|begin; rescue Exception, A => bar; 1; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ResbodyNode[ResbodyNode]
 
 |rescue|A rescue statement.May be "top-level" or may be nested inside an `ensure` block (if both rescue and ensure are in the block).|First node is a body statement. Last child is the "else" body statement, or `nil`. Remaining children are `resbody` nodes.|begin; rescue Exception, A => bar; 1; end|
 
-|restarg|Positional splat argument. Must come inside an `args`.|One child - a symbol, representing the argument name (if given). If no name given, there are no children.|def foo(*rest)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
+|restarg|Positional splat argument. Must come inside an `args`.|One child - a symbol, representing the argument name (if given). If no name given, there are no children.|def foo(*rest)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
-|return|Return statement|Zero or one child, an expression node for the value to return.|return|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ReturnNode[ReturnNode]
+|return|Return statement|Zero or one child, an expression node for the value to return.|return|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ReturnNode[ReturnNode]
 
-|sclass|Singleton class declaration.|Two children. The first child is the expression for the class being opened (e.g. `self`); second child is a body statement.|class << some_var|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/SelfClassNode[SelfClassNode]
+|sclass|Singleton class declaration.|Two children. The first child is the expression for the class being opened (e.g. `self`); second child is a body statement.|class << some_var|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/SelfClassNode[SelfClassNode]
 
 |self|Access to self|None|self|N/A
 
 |send|Non-safe method invocation (i.e. top-level or using a dot)|First child is the receiver node (e.g. `self`), second child is the method name (e.g. `:foo=`)  and the remaining children (if any) are the arguments (expression nodes).
-a|`foo` or `foo.bar`|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/SendNode[SendNode]
+a|`foo` or `foo.bar`|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/SendNode[SendNode]
 
-|shadowarg|Shadow argument, aka block-local variable. Must come inside an `args`.|One child - a symbol, representing the argument name.|foo { \|a; b\| b }|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
+|shadowarg|Shadow argument, aka block-local variable. Must come inside an `args`.|One child - a symbol, representing the argument name.|foo { \|a; b\| b }|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
 |splat|Array or function argument * operator|One child, an expression.|*foo|N/A
 
 |str|Non-interpolated string literal. The heredoc version works very differently from the regular version and the location info is totally separate.|One child, the String content.
-|"hi mom"|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/StrNode[StrNode]
+|"hi mom"|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/StrNode[StrNode]
 
-|super|Super method call with arguments and/or brackets.|Children are expression nodes representing arguments.|super(a, b, c)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/SuperNode[SuperNode]
+|super|Super method call with arguments and/or brackets.|Children are expression nodes representing arguments.|super(a, b, c)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/SuperNode[SuperNode]
 
-|sym|Non-interpolated symbol|One child, the Symbol content.|`:foo`|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/SymbolNode[SymbolNode]
+|sym|Non-interpolated symbol|One child, the Symbol content.|`:foo`|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/SymbolNode[SymbolNode]
 
 |true|True literal|None|true|N/A
 
 |undef|Method undefinition|A list of `sym`, or `dsym` nodes representing method names to undefine.|undef :foo, :bar|N/A
 
-|until|Negative loop with condition coming first.|Two children. First child is an expression node for condition, second child is a body statement.|until foo do bar; end|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/UntilNode[UntilNode]
+|until|Negative loop with condition coming first.|Two children. First child is an expression node for condition, second child is a body statement.|until foo do bar; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/UntilNode[UntilNode]
 
-|until_post|Negative loop with condition coming last.|Two children. First child is an expression node for condition, second child is a body statement.|begin; foo; end until condition|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/UntilNode[UntilNode]
+|until_post|Negative loop with condition coming last.|Two children. First child is an expression node for condition, second child is a body statement.|begin; foo; end until condition|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/UntilNode[UntilNode]
 
-|when|Case matching. Usually nested under `case` nodes.|Two children. First child is a regexp, expression node, or `splat` node for the condition. Second child is an expression node or `begin` node for the results.|when a then b|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/WhenNode[WhenNode]
+|when|Case matching. Usually nested under `case` nodes.|Two children. First child is a regexp, expression node, or `splat` node for the condition. Second child is an expression node or `begin` node for the results.|when a then b|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/WhenNode[WhenNode]
 
-|while|Loop with condition coming first.|Two children. First child is an expression node for condition, second child is a body statement.|while foo do bar; end|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/WhileNode[WhileNode]
+|while|Loop with condition coming first.|Two children. First child is an expression node for condition, second child is a body statement.|while foo do bar; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/WhileNode[WhileNode]
 
-|while-post|Loop with condition coming last.|Two children. First child is an expression node for condition, second child is a body statement.|begin; foo; end while condition|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/WhileNode[WhileNode]
+|while-post|Loop with condition coming last.|Two children. First child is an expression node for condition, second child is a body statement.|begin; foo; end while condition|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/WhileNode[WhileNode]
 
-|xstr|Execute string (backticks). The heredoc version is treated totally differently from the regular version.|Children are split into `str` nodes, with interpolation represented by separate expression nodes .|`foo#{bar}`|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/StrNode[StrNode]
+|xstr|Execute string (backticks). The heredoc version is treated totally differently from the regular version.|Children are split into `str` nodes, with interpolation represented by separate expression nodes .|`foo#{bar}`|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/StrNode[StrNode]
 
-|yield|Yield to a block.|Children are expression nodes representing arguments.|yield(foo)|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/YieldNode[YieldNode]
+|yield|Yield to a block.|Children are expression nodes representing arguments.|yield(foo)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/YieldNode[YieldNode]
 
-|zsuper|Super method call with no arguments or brackets.|None|super|https://rubydoc.info/github/rubocop-hq/rubocop-ast/RuboCop/AST/SuperNode[SuperNode]
+|zsuper|Super method call with no arguments or brackets.|None|super|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/SuperNode[SuperNode]
 
 |=============================================
