@@ -1,1 +1,0 @@
-* [#186](https://github.com/rubocop-hq/rubocop-ast/pull/186): Add `pattern` method for `AST::InPatternNode` node. ([@koic][])

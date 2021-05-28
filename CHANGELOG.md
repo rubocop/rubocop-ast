@@ -2,6 +2,11 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#171](https://github.com/rubocop-hq/rubocop-ast/pull/171): Add `SendNode#def_modifier` that returns the `def` node it modifies, or `nil`. ([@marcandre][])
+* [#186](https://github.com/rubocop-hq/rubocop-ast/pull/186): Add `pattern` method for `AST::InPatternNode` node. ([@koic][])
+
 ## 1.6.0 (2021-05-26)
 
 ### New features
