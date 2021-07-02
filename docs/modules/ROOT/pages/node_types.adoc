@@ -99,10 +99,10 @@ The following fields are given when relevant to nodes in the source code:
 |defs|Singleton method definition (full format) - i.e. defining a method on a single object.|Four children. First child is the receiver; second child is the name of the method (symbol); third child is `args` or `forward_args` (only if `emit_forward` is false, and it's true by default), and the fourth child is a body statement.|def some_obj.foo(some_arg, kwarg: 1); end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/DefNode[DefNode]
 
 |dstr|Interpolated string literal.|Children are split into `str` nodes, with interpolation represented by separate expression nodes.
-|`"foo#{bar}baz"`|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/StrNode[StrNode]
+|`"foo#\{bar\}baz"`|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/StrNode[StrNode]
 
 |dsym|Interpolated symbol literal.|Children are split into `str` nodes, with interpolation represented by separate expression nodes.
-|`:"foo#{bar}baz"`|N/A
+|`:"foo#\{bar\}baz"`|N/A
 
 |ensure|Block that contains an `ensure` along with possible `rescue`s. Must be inside a `def`, `defs`, `block` or `begin`.|The last child is the body statement of the `ensure` block. If there is a `rescue`, it is the first child (and contains the body statement of the top block); otherwise, the first child is the body statement of the top block.|begin; foo; rescue Exception; bar; ensure; baz; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/EnsureNode[EnsureNode]
 
@@ -180,10 +180,10 @@ The following fields are given when relevant to nodes in the source code:
 
 |redo|Redo command|None|redo|N/A
 
-|regexp|Regular expression literal.|Children are split into `str` nodes, with interpolation represented by separate expression nodes. The last child is a `regopt`.|/foo#{bar}56/|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/RegexpNode[RegexpNode]
+|regexp|Regular expression literal.|Children are split into `str` nodes, with interpolation represented by separate expression nodes. The last child is a `regopt`.|/foo#\{bar\}56/|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/RegexpNode[RegexpNode]
 
 |regopt|Regular expression option, appearing after a regexp literal (the "im" in the example).|A list of symbols representing the options (e.g. `:i` and `:m`)
-|/foo#{bar}/im|N/A
+|/foo#\{bar\}/im|N/A
 
 |resbody|Exception rescue. Always occurs inside a `rescue` node.|Three children. First child is either `nil` or an array of expression nodes representing the exceptions to rescue. Second child is `nil` or an assignment node representing the value to save the exception into. Last child is a body statement.|begin; rescue Exception, A => bar; 1; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ResbodyNode[ResbodyNode]
 
@@ -225,7 +225,7 @@ a|`foo` or `foo.bar`|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST
 
 |while-post|Loop with condition coming last.|Two children. First child is an expression node for condition, second child is a body statement.|begin; foo; end while condition|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/WhileNode[WhileNode]
 
-|xstr|Execute string (backticks). The heredoc version is treated totally differently from the regular version.|Children are split into `str` nodes, with interpolation represented by separate expression nodes .|`foo#{bar}`|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/StrNode[StrNode]
+|xstr|Execute string (backticks). The heredoc version is treated totally differently from the regular version.|Children are split into `str` nodes, with interpolation represented by separate expression nodes .|`foo#\{bar\}`|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/StrNode[StrNode]
 
 |yield|Yield to a block.|Children are expression nodes representing arguments.|yield(foo)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/YieldNode[YieldNode]
 
