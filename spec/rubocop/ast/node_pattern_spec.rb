@@ -945,7 +945,7 @@ RSpec.describe RuboCop::AST::NodePattern do
     context 'with complex nesting' do
       let(:pattern) do
         '{(send {$int $float} {$:inc $:dec}) ' \
-        '[!nil {($_ sym $_) (send ($_ $_) :object_id)}]}'
+          '[!nil {($_ sym $_) (send ($_ $_) :object_id)}]}'
       end
       let(:ruby) { '10.object_id' }
       let(:captured_vals) { [:int, 10] }
