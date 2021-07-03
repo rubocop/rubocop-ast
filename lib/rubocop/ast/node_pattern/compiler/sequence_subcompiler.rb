@@ -347,7 +347,7 @@ module RuboCop
           def compile_loop_advance(to = '+=1')
             # The `#{@cur_child_var} ||` is just to avoid unused variable warning
             "(#{@cur_child_var} = #{@seq_var}.children[#{@cur_index_var} #{to}]; " \
-            "#{@cur_child_var} || true)"
+              "#{@cur_child_var} || true)"
           end
 
           def compile_loop(term)

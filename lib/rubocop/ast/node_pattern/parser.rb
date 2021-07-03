@@ -52,7 +52,7 @@ module RuboCop
 
           detail = node.loc&.expression&.source || node.to_s
           raise NodePattern::Invalid, 'parse error, expected unary node pattern ' \
-            "but got expression matching multiple elements: #{detail}"
+                                      "but got expression matching multiple elements: #{detail}"
         end
 
         # Overrides Racc::Parser's method:
