@@ -332,7 +332,7 @@ We can use the `#prime?` function directly in the expression:
 
 You may call a method on a constant too. Let's say you define:
 
-source,ruby]
+[source,ruby]
 ----
 module Util
   def self.palindrome?(str)
