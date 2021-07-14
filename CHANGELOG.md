@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.8.0 (2021-07-14)
+
 ### New features
 
 * [#192](https://github.com/rubocop/rubocop-ast/pull/192): Add `branches` method for `AST::CaseMatchNode`. ([@koic][])
