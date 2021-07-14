@@ -2,6 +2,14 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#192](https://github.com/rubocop/rubocop-ast/pull/192): Add `branches` method for `AST::CaseMatchNode`. ([@koic][])
+
+### Changes
+
+* Escape References in Documentation, partially addressing https://github.com/rubocop/rubocop/issues/9150. ([@wcmonty][])
+
 ## 1.7.0 (2021-05-28)
 
 ### New features
@@ -243,3 +251,5 @@
 [@koic]: https://github.com/koic
 [@dvandersluis]: https://github.com/dvandersluis
 [@eugeneius]: https://github.com/eugeneius
+
+[@wcmonty]: https://github.com/wcmonty
