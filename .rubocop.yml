@@ -18,6 +18,7 @@ AllCops:
     - 'spec/rubocop/ast/node_pattern/parse_helper.rb'
     - 'spec/rubocop/ast/fixtures/*'
   TargetRubyVersion: 2.5
+  SuggestExtensions: false
 
 InternalAffairs/NodeMatcherDirective:
   Exclude:
