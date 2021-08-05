@@ -80,23 +80,23 @@ module RuboCop
         "#<#{self.class} #{pattern}>"
       end
 
-      def marshal_load(pattern) #:nodoc:
+      def marshal_load(pattern) # :nodoc:
         initialize pattern
       end
 
-      def marshal_dump #:nodoc:
+      def marshal_dump # :nodoc:
         pattern
       end
 
-      def as_json(_options = nil) #:nodoc:
+      def as_json(_options = nil) # :nodoc:
         pattern
       end
 
-      def encode_with(coder) #:nodoc:
+      def encode_with(coder) # :nodoc:
         coder['pattern'] = pattern
       end
 
-      def init_with(coder) #:nodoc:
+      def init_with(coder) # :nodoc:
         initialize(coder['pattern'])
       end
 
