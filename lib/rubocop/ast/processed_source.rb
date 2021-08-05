@@ -177,6 +177,14 @@ module RuboCop
         sorted_tokens[last_token_index(range_or_node)]
       end
 
+      # The tokens list is always sorted by token position, except for cases when heredoc
+      # is passed as a method argument. In this case tokens are interleaved by
+      # heredoc contents' tokens.
+      def sorted_tokens
+        # Use stable sort.
+        @sorted_tokens ||= tokens.sort_by.with_index { |token, i| [token.begin_pos, i] }
+      end
+
       private
 
       def comment_index
@@ -270,14 +278,6 @@ module RuboCop
       def last_token_index(range_or_node)
         end_pos = source_range(range_or_node).end_pos
         sorted_tokens.bsearch_index { |token| token.end_pos >= end_pos }
-      end
-
-      # The tokens list is always sorted by token position, except for cases when heredoc
-      # is passed as a method argument. In this case tokens are interleaved by
-      # heredoc contents' tokens.
-      def sorted_tokens
-        # Use stable sort.
-        @sorted_tokens ||= tokens.sort_by.with_index { |token, i| [token.begin_pos, i] }
       end
 
       def source_range(range_or_node)
