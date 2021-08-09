@@ -6,7 +6,7 @@
 
 ### New features
 
-* [#x](https://github.com/rubocop-hq/rubocop-ast/pull/x): Move `ProcessedSource#sorted_tokens` to be a public method. ([@dvandersluis][])
+* [#195](https://github.com/rubocop-hq/rubocop-ast/pull/x): Move `ProcessedSource#sorted_tokens` to be a public method. ([@dvandersluis][])
 
 ## 1.8.0 (2021-07-14)
 
