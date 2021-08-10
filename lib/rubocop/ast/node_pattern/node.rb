@@ -54,7 +54,7 @@ module RuboCop
           children_nodes.sum(&:nb_captures)
         end
 
-        # @return [Boolean] returns true iff matches variable number of elements
+        # @return [Boolean] returns wether it matches a variable number of elements
         def variadic?
           arity.is_a?(Range)
         end
