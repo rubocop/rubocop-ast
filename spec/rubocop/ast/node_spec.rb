@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::Node do
-  let(:ast) { RuboCop::AST::ProcessedSource.new(src, ruby_version).ast }
+  let(:ast) { parse_source(src).node }
   let(:node) { ast }
 
   describe '#value_used?' do
@@ -657,6 +657,88 @@ RSpec.describe RuboCop::AST::Node do
         module_node = node.children.last
         expect(module_node.module_definition?).to eq(module_node.body)
       end
+    end
+  end
+
+  describe '#parent_module_name' do
+    subject(:parent_module_name) { node.parent_module_name }
+
+    context 'when node on top level' do
+      let(:src) { 'def config; end' }
+
+      it { is_expected.to eq 'Object' }
+    end
+
+    context 'when node on module' do
+      let(:src) do
+        <<~RUBY
+          module Foo
+            >>attr_reader :config<<
+          end
+        RUBY
+      end
+
+      it { is_expected.to eq 'Foo' }
+    end
+
+    context 'when node on singleton class' do
+      let(:src) do
+        <<~RUBY
+          module Foo
+            class << self
+              >>attr_reader :config<<
+            end
+          end
+        RUBY
+      end
+
+      it { is_expected.to eq 'Foo::#<Class:Foo>' }
+    end
+
+    context 'when node on class in singleton class' do
+      let(:src) do
+        <<~RUBY
+          module Foo
+            class << self
+              class Bar
+                >>attr_reader :config<<
+              end
+            end
+          end
+        RUBY
+      end
+
+      it { is_expected.to eq 'Foo::#<Class:Foo>::Bar' }
+    end
+
+    context 'when node nested in an unknown block' do
+      let(:src) do
+        <<~RUBY
+          module Foo
+            foo do
+              class Bar
+                >>attr_reader :config<<
+              end
+            end
+          end
+        RUBY
+      end
+
+      it { is_expected.to eq nil }
+    end
+
+    context 'when node nested in a class << exp' do
+      let(:src) do
+        <<~RUBY
+          class A
+            class << expr
+              >>attr_reader :config<<
+            end
+          end
+        RUBY
+      end
+
+      it { is_expected.to eq nil }
     end
   end
 end
