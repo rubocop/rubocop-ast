@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Bug fixes
+
+* [#197](https://github.com/rubocop-hq/rubocop-ast/pull/197): [Fix #184] Fix `Node#parent_module_name` for `sclass` nodes. ([@dvandersluis][])
+
 ## 1.9.0 (2021-08-06)
 
 ### New features
