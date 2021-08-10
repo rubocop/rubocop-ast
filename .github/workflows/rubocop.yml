@@ -83,7 +83,7 @@ jobs:
       matrix:
         os: [ ubuntu ]
         ruby: [ 2.5, 2.7 ]
-        rubocop: [ 'v0.92.0', master ]
+        rubocop: [ master ]
         internal_investigation: [ null ]
         include:
           - { rubocop: master, ruby: '3.0', os: ubuntu }
