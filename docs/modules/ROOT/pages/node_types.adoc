@@ -56,7 +56,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |and|And operator|Two children are both expression nodes representing the operands.|a and b && c |https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/AndNode[AndNode]
 
-|and_asgn|And-assignment (AND the receiver with the argument and assign it back to receiver).|First child must be an assignment node, second child is the expression node.|a &&= b |N/A
+|and_asgn|And-assignment (AND the receiver with the argument and assign it back to receiver).|First child must be an assignment node, second child is the expression node.|a &&= b |https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/AndAsgnNode[AndAsgnNode]
 
 |arg|Required positional argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
@@ -76,7 +76,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |case|Case statement.|First child is an expression node for the condition to check. Last child is an expression node for the "else" condition. All middle nodes are `when` nodes.|case a; when 1; b; when 2; c; else d; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/CaseNode[CaseNode]
 
-|casgn|Constant assignment|Three children: the parent object (either an expression, `nil` or `cbase`), the constant name (a symbol), and the expression being assigned.|Foo::Bar = 5|N/A
+|casgn|Constant assignment|Three children: the parent object (either an expression, `nil` or `cbase`), the constant name (a symbol), and the expression being assigned.|Foo::Bar = 5|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/CasgnNode[CasgnNode]
 
 |cbase|Represents the top-module constant (i.e. the '::' before a constant name). Only occurs inside a `const` node.|None|::Foo|N/A
 
@@ -90,7 +90,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |cvar|Class variable access|One child, the variable name `:@@cfoo`|@@cfoo|N/A
 
-|cvasgn|Class variable assignment|Two children: the variable name `:@@foo` and the expression being assigned|@@foo = 5|N/A
+|cvasgn|Class variable assignment|Two children: the variable name `:@@foo` and the expression being assigned|@@foo = 5|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/AsgnNode[AsgnNode]
 
 |def|Instance method definition (full format)|Three children. First child is the name of the method (symbol); second child is `args` or `forward_args` (only if `emit_forward` is false, and it's true by default), and the last child is a body statement.|def foo(some_arg, kwarg: 1); end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/DefNode[DefNode]
 
@@ -122,7 +122,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |gvar|Global variable access|One child, the variable name as a symbol `:$foo`|$foo|N/A
 
-|gvasgn|Global variable assignment|Two children, the variable name `:$foo` and the expression being assigned|$foo = 5|N/A
+|gvasgn|Global variable assignment|Two children, the variable name `:$foo` and the expression being assigned|$foo = 5|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/AsgnNode[AsgnNode]
 
 |hash|Hash literal.|`pair` s and/or  `kwsplat` s.|{ foo: 'bar' }|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/HashNode[HashNode]
 
@@ -132,7 +132,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |ivar|Instance variable access|One child, the variable name `:@foo`|@foo|N/A
 
-|ivasgn|Instance variable assignment|Two children, the variable name `:@foo` and the expression being assigned|@foo = 5|N/A
+|ivasgn|Instance variable assignment|Two children, the variable name `:@foo` and the expression being assigned|@foo = 5|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/AsgnNode[AsgnNode]
 
 |irange|Inclusive range literal.|Two children, the start and end nodes (including `nil` for beginless/endless)|1..2|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/RangeNode[RangeNode]
 
@@ -150,7 +150,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |lvar|Local variable access|One child, the variable name|foo|N/A
 
-|lvasgn|Local variable assignment|Two children: The variable name (symbol) and the expression.|a = some_thing|N/A
+|lvasgn|Local variable assignment|Two children: The variable name (symbol) and the expression.|a = some_thing|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/AsgnNode[AsgnNode]
 
 |masgn|Multiple assigment.|First set of children are all `mlhs` nodes, and the rest of the children must be expression nodes corresponding to the values in the `mlhs` nodes.|a, b, = [1, 2]|N/A
 
@@ -166,13 +166,13 @@ The following fields are given when relevant to nodes in the source code:
 
 |numblock|Block that has numbered arguments (`_1`) referenced inside it.|Three children. First child is a `send`/`csend` node representing the way the block is created, second child is an `int` (the number of numeric arguments) and the third child is a body statement.|proc { _1 + _3 }|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/BlockNode[BlockNode]
 
-|op_asgn|Operator-assignment - perform an operation and assign the value.|Three children. First child must be an assignment node, second child is the operator (e.g. `:+`) and the third child is the expression node.|a += b|N/A
+|op_asgn|Operator-assignment - perform an operation and assign the value.|Three children. First child must be an assignment node, second child is the operator (e.g. `:+`) and the third child is the expression node.|a += b|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/OpAsgnNode[OpAsgnNode]
 
 |optarg|Optional positional argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar=1)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
 |or|Or operator|Two children are both expression nodes representing the operands.|a or b|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/OrNode[OrNode]
 
-|or_asgn|Or-assignment (OR the receiver with the argument and assign it back to receiver).|Two children. First child must be an assignment node, second child is the expression node.|a \|\|= b|N/A
+|or_asgn|Or-assignment (OR the receiver with the argument and assign it back to receiver).|Two children. First child must be an assignment node, second child is the expression node.|a \|\|= b|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/OrAsgnNode[OrAsgnNode]
 
 |pair|One entry in a hash. |Two children, the key and value nodes.|1 => 2|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/PairNode[PairNode]
 
