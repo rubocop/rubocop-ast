@@ -65,6 +65,8 @@ module RuboCop
         kwargs:              HashNode,
         kwsplat:             KeywordSplatNode,
         lambda:              LambdaNode,
+        masgn:               MasgnNode,
+        mlhs:                MlhsNode,
         module:              ModuleNode,
         next:                NextNode,
         op_asgn:             OpAsgnNode,
