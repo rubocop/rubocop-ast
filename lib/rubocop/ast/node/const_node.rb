@@ -4,8 +4,6 @@ module RuboCop
   module AST
     # A node extension for `const` nodes.
     class ConstNode < Node
-      # The `send` node associated with this block.
-      #
       # @return [Node, nil] the node associated with the scope (e.g. cbase, const, ...)
       def namespace
         children[0]
@@ -16,8 +14,6 @@ module RuboCop
         children[1]
       end
 
-      # The body of this block.
-      #
       # @return [Boolean] if the constant is a Module / Class, according to the standard convention.
       #                   Note: some classes might have uppercase in which case this method
       #                         returns false
