@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#201](https://github.com/rubocop-hq/rubocop-ast/pull/201): Add discrete node classes for assignments. ([@dvandersluis][])
+
 ## 1.9.1 (2021-08-10)
 
 ### Bug fixes
