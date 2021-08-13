@@ -19,6 +19,7 @@ module RuboCop
       def name
         node_parts[1]
       end
+      alias short_name name
 
       # The expression being assigned to the variable.
       #
