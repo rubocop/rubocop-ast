@@ -88,7 +88,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |csend|Null-safe method invocation, i.e. using `&.`|First child is the receiver node (e.g. `self`), second child is the method name (e.g. `:foo=`) and the remaining children (if any) are nodes representing arguments.|foo&.bar|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/SendNode[SendNode]
 
-|cvar|Class variable access|One child, the variable name `:@@cfoo`|@@cfoo|N/A
+|cvar|Class variable access|One child, the variable name `:@@cfoo`|@@cfoo|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/VarNode[VarNode]
 
 |cvasgn|Class variable assignment|Two children: the variable name `:@@foo` and the expression being assigned|@@foo = 5|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/AsgnNode[AsgnNode]
 
@@ -124,7 +124,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |forwarded_kwrestarg|Forwarding keyword arguments into a method call|None|foo(**)|N/A
 
-|gvar|Global variable access|One child, the variable name as a symbol `:$foo`|$foo|N/A
+|gvar|Global variable access|One child, the variable name as a symbol `:$foo`|$foo|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/VarNode[VarNode]
 
 |gvasgn|Global variable assignment|Two children, the variable name `:$foo` and the expression being assigned|$foo = 5|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/AsgnNode[AsgnNode]
 
@@ -134,7 +134,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |int|Integer literal|1, the integer value|-123|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/IntNode[IntNode]
 
-|ivar|Instance variable access|One child, the variable name `:@foo`|@foo|N/A
+|ivar|Instance variable access|One child, the variable name `:@foo`|@foo|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/VarNode[VarNode]
 
 |ivasgn|Instance variable assignment|Two children, the variable name `:@foo` and the expression being assigned|@foo = 5|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/AsgnNode[AsgnNode]
 
@@ -152,7 +152,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |kwrestargs|Double splat used for keyword arguments inside a function definition (as opposed to a function call). Must come inside an `args`.|One child - a symbol, representing the argument name, if a name is given. If no name given, it has no children..|def foo(**kwargs)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
-|lvar|Local variable access|One child, the variable name|foo|N/A
+|lvar|Local variable access|One child, the variable name|foo|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/VarNode[VarNode]
 
 |lvasgn|Local variable assignment|Two children: The variable name (symbol) and the expression.|a = some_thing|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/AsgnNode[AsgnNode]
 
