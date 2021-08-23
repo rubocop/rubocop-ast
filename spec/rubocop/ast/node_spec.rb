@@ -490,6 +490,21 @@ RSpec.describe RuboCop::AST::Node do
         class_node = node.children.last
         expect(class_node.class_definition?).to eq(class_node.body)
       end
+
+      context 'when using numbered parameter', :ruby27 do
+        let(:src) do
+          <<~RUBY
+            Person = Struct.new(:name, :age) do
+              do_something _1
+            end
+          RUBY
+        end
+
+        it 'matches' do
+          class_node = node.children.last
+          expect(class_node.class_definition?).to eq(class_node.body)
+        end
+      end
     end
 
     context 'constant defined as Struct without block' do
@@ -513,6 +528,21 @@ RSpec.describe RuboCop::AST::Node do
       it 'matches' do
         class_node = node.children.last
         expect(class_node.class_definition?).to eq(class_node.body)
+      end
+
+      context 'when using numbered parameter', :ruby27 do
+        let(:src) do
+          <<~RUBY
+            Person = Class.new do
+              do_something _1
+            end
+          RUBY
+        end
+
+        it 'matches' do
+          class_node = node.children.last
+          expect(class_node.class_definition?).to eq(class_node.body)
+        end
       end
     end
 
@@ -592,6 +622,21 @@ RSpec.describe RuboCop::AST::Node do
       it 'matches' do
         module_node = node.children.last
         expect(module_node.module_definition?).to eq(module_node.body)
+      end
+
+      context 'when using numbered parameter', :ruby27 do
+        let(:src) do
+          <<~RUBY
+            Person = Module.new do
+              do_something _1
+            end
+          RUBY
+        end
+
+        it 'matches' do
+          module_node = node.children.last
+          expect(module_node.module_definition?).to eq(module_node.body)
+        end
       end
     end
 

@@ -507,20 +507,20 @@ module RuboCop
       # @deprecated Use `:class_constructor?`
       # @!method struct_constructor?(node = self)
       def_node_matcher :struct_constructor?, <<~PATTERN
-        (block (send #global_const?(:Struct) :new ...) _ $_)
+        ({block numblock} (send #global_const?(:Struct) :new ...) _ $_)
       PATTERN
 
       # @!method class_definition?(node = self)
       def_node_matcher :class_definition?, <<~PATTERN
         {(class _ _ $_)
          (sclass _ $_)
-         (block (send #global_const?({:Struct :Class}) :new ...) _ $_)}
+         ({block numblock} (send #global_const?({:Struct :Class}) :new ...) _ $_)}
       PATTERN
 
       # @!method module_definition?(node = self)
       def_node_matcher :module_definition?, <<~PATTERN
         {(module _ $_)
-         (block (send #global_const?(:Module) :new ...) _ $_)}
+         ({block numblock} (send #global_const?(:Module) :new ...) _ $_)}
       PATTERN
 
       # Some expressions are evaluated for their value, some for their side
