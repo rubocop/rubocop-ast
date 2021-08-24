@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#205](https://github.com/rubocop/rubocop-ast/pull/205): Make class, module, and struct definitions aware of numblock. ([@koic][])
+
 ## 1.10.0 (2021-08-12)
 
 ### New features
