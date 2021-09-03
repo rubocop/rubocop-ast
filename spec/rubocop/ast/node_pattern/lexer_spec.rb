@@ -67,7 +67,7 @@ RSpec.describe RuboCop::AST::NodePattern::Lexer do
 
     it 'distinguishes them' do
       types = tokens.map(&:first)
-      expect(types).to eq [:tNODE_TYPE] * 2 + [:tPARAM_CONST] * 7
+      expect(types).to eq ([:tNODE_TYPE] * 2) + ([:tPARAM_CONST] * 7)
       zz, percent_zz = tokens.last(2).map(&:last).map(&:first)
       expect(zz).to eq 'Zz'
       expect(percent_zz).to eq 'Zz'
