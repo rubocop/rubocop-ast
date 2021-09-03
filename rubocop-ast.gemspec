@@ -20,16 +20,16 @@ Gem::Specification.new do |s|
               lib/rubocop/ast/node_pattern/lexer.rex.rb
             ]
   s.extra_rdoc_files = ['LICENSE.txt', 'README.md']
-  s.homepage = 'https://github.com/rubocop-hq/rubocop-ast'
+  s.homepage = 'https://github.com/rubocop/rubocop-ast'
   s.licenses = ['MIT']
   s.summary = 'RuboCop tools to deal with Ruby code AST.'
 
   s.metadata = {
     'homepage_uri' => 'https://www.rubocop.org/',
-    'changelog_uri' => 'https://github.com/rubocop-hq/rubocop-ast/blob/master/CHANGELOG.md',
-    'source_code_uri' => 'https://github.com/rubocop-hq/rubocop-ast/',
+    'changelog_uri' => 'https://github.com/rubocop/rubocop-ast/blob/master/CHANGELOG.md',
+    'source_code_uri' => 'https://github.com/rubocop/rubocop-ast/',
     'documentation_uri' => 'https://docs.rubocop.org/rubocop-ast/',
-    'bug_tracker_uri' => 'https://github.com/rubocop-hq/rubocop-ast/issues'
+    'bug_tracker_uri' => 'https://github.com/rubocop/rubocop-ast/issues'
   }
 
   s.add_runtime_dependency('parser', '>= 3.0.1.1')

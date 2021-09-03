@@ -1259,7 +1259,7 @@ RSpec.describe RuboCop::AST::SendNode do
       it { expect(send_node).not_to be_lambda }
     end
 
-    # Regression test https://github.com/rubocop-hq/rubocop/pull/5194
+    # Regression test https://github.com/rubocop/rubocop/pull/5194
     context 'with `a.() {}` style method' do
       let(:source) { '>>a.()<< {}' }
 
