@@ -556,8 +556,8 @@ Curious about how it works?
 
 Check more details in the
 https://www.rubydoc.info/gems/rubocop-ast/RuboCop/AST/NodePattern[documentation]
-or browse the https://github.com/rubocop-hq/rubocop-ast/blob/master/lib/rubocop/ast/node_pattern.rb[source code]
+or browse the https://github.com/rubocop/rubocop-ast/blob/master/lib/rubocop/ast/node_pattern.rb[source code]
 directly. It's easy to read and hack on.
 
-The https://github.com/rubocop-hq/rubocop-ast/blob/master/spec/rubocop/ast/node_pattern_spec.rb[specs]
+The https://github.com/rubocop/rubocop-ast/blob/master/spec/rubocop/ast/node_pattern_spec.rb[specs]
 are also very useful to comprehend each feature.

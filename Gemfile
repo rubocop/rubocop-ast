@@ -26,7 +26,7 @@ else
   if File.exist?(local_ast)
     gem 'rubocop', path: local_ast
   elsif ENV['RUBOCOP_VERSION'] == 'master'
-    gem 'rubocop', git: 'https://github.com/rubocop-hq/rubocop.git'
+    gem 'rubocop', git: 'https://github.com/rubocop/rubocop.git'
   else
     gem 'rubocop', '>= 1.0'
   end

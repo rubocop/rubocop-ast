@@ -1,7 +1,7 @@
 = Hacker's guide to the `NodePattern` compiler
 
 This documentation is aimed at anyone wanting to understand / modify the `NodePattern` compiler.
-It assumes some familiarity with the syntax of https://github.com/rubocop-hq/rubocop-ast/blob/master/docs/modules/ROOT/pages/node_pattern.adoc[`NodePattern`], as well as the AST produced by the `parser` gem.
+It assumes some familiarity with the syntax of https://github.com/rubocop/rubocop-ast/blob/master/docs/modules/ROOT/pages/node_pattern.adoc[`NodePattern`], as well as the AST produced by the `parser` gem.
 
 == High level view
 

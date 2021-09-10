@@ -49,22 +49,22 @@ $ rubocop -V
 Here are a few examples:
 
 ```
-* [#716](https://github.com/rubocop-hq/rubocop-ast/issues/716): Fixed a regression in the auto-correction logic of `MethodDefParentheses`. ([@bbatsov][])
+* [#716](https://github.com/rubocop/rubocop-ast/issues/716): Fixed a regression in the auto-correction logic of `MethodDefParentheses`. ([@bbatsov][])
 * New cop `ElseLayout` checks for odd arrangement of code in the `else` branch of a conditional expression. ([@bbatsov][])
-* [#7542](https://github.com/rubocop-hq/rubocop-ast/pull/7542): **(Breaking)** Move `LineLength` cop from `Metrics` department to `Layout` department. ([@koic][])
+* [#7542](https://github.com/rubocop/rubocop-ast/pull/7542): **(Breaking)** Move `LineLength` cop from `Metrics` department to `Layout` department. ([@koic][])
 ```
 
 * Create one file `changelog/{type}_{some_description}.md`, where `type` is `new` (New feature), `fix` or `change`, and `some_description` is unique to avoid conflicts.
 * Mark it up in [Markdown syntax][6].
 * The entry line should start with `* ` (an asterisk and a space).
-* If the change has a related GitHub issue (e.g. a bug fix for a reported issue), put a link to the issue as `[#123](https://github.com/rubocop-hq/rubocop-ast/issues/123): `.
+* If the change has a related GitHub issue (e.g. a bug fix for a reported issue), put a link to the issue as `[#123](https://github.com/rubocop/rubocop-ast/issues/123): `.
 * Describe the brief of the change. The sentence should end with a punctuation.
 * If this is a breaking change, mark it with `**(Breaking)**`.
 * At the end of the entry, add an implicit link to your GitHub user page as `([@username][])`.
 * The rake tasks `rake changelog:new|bug|change` will create a file with the body based off the last git commit. Modifiy it and add it to your commit; maintainers will merge it automatically later.
 * Alternatively, you may modify the CHANGELOG file directly, but this may result in conflicts later on. Also, if this is your first contribution to RuboCop project, you'll have to add a link definition for the implicit link to the bottom of the changelog as `[@username]: https://github.com/username`.
 
-[1]: https://github.com/rubocop-hq/rubocop-ast/issues
+[1]: https://github.com/rubocop/rubocop-ast/issues
 [2]: https://www.gun.io/blog/how-to-github-fork-branch-and-pull-request
 [3]: https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 [4]: https://help.github.com/articles/about-pull-requests
