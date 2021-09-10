@@ -425,7 +425,7 @@ module RuboCop
       end
 
       def keyword?
-        return true if special_keyword? || send_type? && prefix_not?
+        return true if special_keyword? || (send_type? && prefix_not?)
         return false unless KEYWORDS.include?(type)
 
         !OPERATOR_KEYWORDS.include?(type) || loc.operator.is?(type.to_s)
