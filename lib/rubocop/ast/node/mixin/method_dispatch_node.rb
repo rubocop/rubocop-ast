@@ -28,9 +28,9 @@ module RuboCop
         node_parts[1]
       end
 
-      # The `block` node associated with this method dispatch, if any.
+      # The `block` or `numblock` node associated with this method dispatch, if any.
       #
-      # @return [BlockNode, nil] the `block` node associated with this method
+      # @return [BlockNode, nil] the `block` or `numblock` node associated with this method
       #                          call or `nil`
       def block_node
         parent if block_literal?
@@ -154,7 +154,7 @@ module RuboCop
       #
       # @return [Boolean] whether the dispatched method has a block
       def block_literal?
-        parent&.block_type? && eql?(parent.send_node)
+        (parent&.block_type? || parent&.numblock_type?) && eql?(parent.send_node)
       end
 
       # Checks whether this node is an arithmetic operation

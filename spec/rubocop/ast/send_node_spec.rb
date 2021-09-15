@@ -1034,6 +1034,14 @@ RSpec.describe RuboCop::AST::SendNode do
 
       it { expect(send_node).not_to be_block_literal }
     end
+
+    context 'with Ruby >= 2.7', :ruby27 do
+      context 'with a numblock literal' do
+        let(:source) { '>> foo.bar << { baz(_1) }' }
+
+        it { expect(send_node).to be_block_literal }
+      end
+    end
   end
 
   describe '#arithmetic_operation?' do
@@ -1073,6 +1081,14 @@ RSpec.describe RuboCop::AST::SendNode do
       let(:source) { 'foo.bar' }
 
       it { expect(send_node.block_node).to be_nil }
+    end
+
+    context 'with Ruby >= 2.7', :ruby27 do
+      context 'with a numblock literal' do
+        let(:source) { '>>foo.bar<< { baz(_1) }' }
+
+        it { expect(send_node.block_node).to be_numblock_type }
+      end
     end
   end
 
