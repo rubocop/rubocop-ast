@@ -2,9 +2,9 @@
 
 module RuboCop
   module AST
-    # A node extension for `array` nodes. This will be used in place of a plain
-    # node when the builder constructs the AST, making its methods available
-    # to all `array` nodes within RuboCop.
+    # A node extension for `array` and `array-pattern` nodes. This will be used
+    # in place of a plain node when the builder constructs the AST, making its
+    # methods available to all `array` and `array-pattern` nodes within RuboCop.
     class ArrayNode < Node
       PERCENT_LITERAL_TYPES = {
         string: /^%[wW]/,

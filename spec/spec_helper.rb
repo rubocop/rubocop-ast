@@ -67,7 +67,7 @@ end
 module ParseSourceHelper
   def parse_source(source)
     lookup = nil
-    ruby = source.gsub(/>>(.*)<</) { lookup = Regexp.last_match(1).strip }
+    ruby = source.gsub(/>>(.*)<</m) { lookup = Regexp.last_match(1).strip }
     source = RuboCop::AST::ProcessedSource.new(ruby, ruby_version, nil)
     source.node = if lookup
                     source.ast.each_node.find(

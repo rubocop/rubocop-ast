@@ -2,9 +2,9 @@
 
 module RuboCop
   module AST
-    # A node extension for `hash` nodes. This will be used in place of a plain
-    # node when the builder constructs the AST, making its methods available
-    # to all `hash` nodes within RuboCop.
+    # A node extension for `hash` and `hash-pattern` nodes. This will be used
+    # in place of a plain node when the builder constructs the AST, making its
+    # methods available to all `hash` and `hash-pattern` nodes within RuboCop.
     class HashNode < Node
       # Returns an array of all the key value pairs in the `hash` literal.
       #

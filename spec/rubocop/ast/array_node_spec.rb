@@ -3,10 +3,28 @@
 RSpec.describe RuboCop::AST::ArrayNode do
   subject(:array_node) { parse_source(source).ast }
 
-  describe '.new' do
-    let(:source) { '[]' }
+  let(:array_pattern_source) { '[foo, bar]' }
+  let(:array_pattern_node) do
+    source = <<~RUBY
+      case foo
+        in >>#{array_pattern_source}<<
+      end
+    RUBY
+    parse_source(source).node
+  end
 
-    it { is_expected.to be_a(described_class) }
+  describe '.new' do
+    context 'with an array literal' do
+      let(:source) { '[]' }
+
+      it { is_expected.to be_a(described_class) }
+    end
+
+    context 'with an `array-pattern`', :ruby27 do
+      subject { array_pattern_node }
+
+      it { is_expected.to be_a(described_class) }
+    end
   end
 
   describe '#values' do
@@ -28,6 +46,11 @@ RSpec.describe RuboCop::AST::ArrayNode do
 
       it { expect(array_node.values.size).to eq(2) }
       it { expect(array_node.values).to all(be_send_type) }
+    end
+
+    context 'with an `array-pattern`', :ruby27 do
+      it { expect(array_pattern_node.values.size).to eq(2) }
+      it { expect(array_pattern_node.values).to all(be_match_var_type) }
     end
   end
 
@@ -62,6 +85,20 @@ RSpec.describe RuboCop::AST::ArrayNode do
 
       it { is_expected.not_to be_square_brackets }
     end
+
+    context 'with an `array-pattern`', :ruby27 do
+      subject { array_pattern_node }
+
+      context 'with square brackets' do
+        it { is_expected.to be_square_brackets }
+      end
+
+      context 'with no brackets' do
+        let(:array_pattern_source) { 'foo, bar' }
+
+        it { is_expected.not_to be_square_brackets }
+      end
+    end
   end
 
   describe '#percent_literal?' do
@@ -88,6 +125,24 @@ RSpec.describe RuboCop::AST::ArrayNode do
       it { is_expected.not_to be_percent_literal(:string) }
       it { is_expected.to be_percent_literal(:symbol) }
     end
+
+    context 'with an `array-pattern`', :ruby27 do
+      subject { array_pattern_node }
+
+      context 'with square brackets' do
+        it { is_expected.not_to be_percent_literal }
+        it { is_expected.not_to be_percent_literal(:string) }
+        it { is_expected.not_to be_percent_literal(:symbol) }
+      end
+
+      context 'with no brackets' do
+        let(:array_pattern_source) { 'foo, bar' }
+
+        it { is_expected.not_to be_percent_literal }
+        it { is_expected.not_to be_percent_literal(:string) }
+        it { is_expected.not_to be_percent_literal(:symbol) }
+      end
+    end
   end
 
   describe '#bracketed?' do
@@ -105,10 +160,24 @@ RSpec.describe RuboCop::AST::ArrayNode do
 
     context 'unbracketed' do
       let(:array_node) do
-        parse_source('foo = 1, 2, 3').ast.to_a.last
+        parse_source('foo = >>1, 2, 3<<').node
       end
 
-      it { expect(array_node.bracketed?).to be(nil) }
+      it { expect(array_node).not_to be_bracketed }
+    end
+
+    context 'with an `array-pattern`', :ruby27 do
+      subject { array_pattern_node }
+
+      context 'with square brackets' do
+        it { is_expected.to be_bracketed }
+      end
+
+      context 'with no brackets' do
+        let(:array_pattern_source) { 'foo, bar' }
+
+        it { is_expected.not_to be_bracketed }
+      end
     end
   end
 end

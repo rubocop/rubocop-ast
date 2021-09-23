@@ -3,10 +3,28 @@
 RSpec.describe RuboCop::AST::HashNode do
   subject(:hash_node) { parse_source(source).ast }
 
-  describe '.new' do
-    let(:source) { '{}' }
+  let(:hash_pattern_source) { '{ foo: 17, bar: 42 }' }
+  let(:hash_pattern_node) do
+    source = <<~RUBY
+      case foo
+        in >>#{hash_pattern_source}<<
+      end
+    RUBY
+    parse_source(source).node
+  end
 
-    it { is_expected.to be_a(described_class) }
+  describe '.new' do
+    context 'with a hash literal' do
+      let(:source) { '{}' }
+
+      it { is_expected.to be_a(described_class) }
+    end
+
+    context 'with a `hash-pattern`', :ruby27 do
+      subject { hash_pattern_node }
+
+      it { is_expected.to be_a(described_class) }
+    end
   end
 
   describe '#pairs' do
@@ -29,6 +47,11 @@ RSpec.describe RuboCop::AST::HashNode do
       it { expect(hash_node.pairs.size).to eq(2) }
       it { expect(hash_node.pairs).to all(be_pair_type) }
     end
+
+    context 'with a `hash-pattern`', :ruby27 do
+      it { expect(hash_pattern_node.pairs.size).to eq(2) }
+      it { expect(hash_pattern_node.pairs).to all(be_pair_type) }
+    end
   end
 
   describe '#empty?' do
@@ -46,6 +69,12 @@ RSpec.describe RuboCop::AST::HashNode do
 
     context 'with a hash containing a keyword splat' do
       let(:source) { '{ **foo }' }
+
+      it { is_expected.not_to be_empty }
+    end
+
+    context 'with a `hash-pattern`', :ruby27 do
+      subject { hash_pattern_node }
 
       it { is_expected.not_to be_empty }
     end
@@ -70,6 +99,11 @@ RSpec.describe RuboCop::AST::HashNode do
 
       it { expect(hash_node.keys.size).to eq(2) }
       it { expect(hash_node.keys).to all(be_str_type) }
+    end
+
+    context 'with a `hash-pattern`', :ruby27 do
+      it { expect(hash_pattern_node.keys.size).to eq(2) }
+      it { expect(hash_pattern_node.keys).to all(be_sym_type) }
     end
   end
 
@@ -115,6 +149,11 @@ RSpec.describe RuboCop::AST::HashNode do
 
       it { expect(hash_node.values.size).to eq(2) }
       it { expect(hash_node.values).to all(be_send_type) }
+    end
+
+    context 'with a `hash-pattern`', :ruby27 do
+      it { expect(hash_pattern_node.values.size).to eq(2) }
+      it { expect(hash_pattern_node.values).to all(be_int_type) }
     end
   end
 
@@ -184,6 +223,18 @@ RSpec.describe RuboCop::AST::HashNode do
 
       it { is_expected.to be_pairs_on_same_line }
     end
+
+    context 'with a `hash-pattern`', :ruby27 do
+      subject { hash_pattern_node }
+
+      it { is_expected.to be_pairs_on_same_line }
+
+      context 'with no pairs on the same line' do
+        let(:hash_pattern_source) { "{ foo: 17,\nbar: 42 }" }
+
+        it { is_expected.not_to be_pairs_on_same_line }
+      end
+    end
   end
 
   describe '#mixed_delimiters?' do
@@ -203,6 +254,16 @@ RSpec.describe RuboCop::AST::HashNode do
       let(:source) { '{ :a => 1, b: 2 }' }
 
       it { is_expected.to be_mixed_delimiters }
+    end
+
+    context 'with a `hash-pattern`', :ruby27 do
+      subject { hash_pattern_node }
+
+      context 'when all pairs are using a colon delimiter' do
+        let(:hash_pattern_source) { '{ a: 1, b: 2 }' }
+
+        it { is_expected.not_to be_mixed_delimiters }
+      end
     end
   end
 
