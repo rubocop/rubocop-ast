@@ -18,7 +18,7 @@ RSpec.describe RuboCop::AST::NodePattern::Parser do
       )
     end
 
-    it 'parses capture vs repetition with correct priority ' do
+    it 'parses capture vs repetition with correct priority' do
       s_int = s(:capture, s(:node_type, :int))
       s_str = s(:capture, s(:node_type, :str))
       expect_parsing(
