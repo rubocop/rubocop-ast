@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Bug fixes
+
+* [#208](https://github.com/rubocop/rubocop-ast/issues/208): Update `MethodDispatchNode#block_literal?` to return true for `numblock`s. ([@dvandersluis][])
+
 ## 1.11.0 (2021-08-24)
 
 ### New features
