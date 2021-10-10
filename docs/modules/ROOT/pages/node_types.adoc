@@ -152,7 +152,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |lvasgn|Local variable assignment|Two children: The variable name (symbol) and the expression.|a = some_thing|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/AsgnNode[AsgnNode]
 
-|masgn|Multiple assigment.|First set of children are all `mlhs` nodes, and the rest of the children must be expression nodes corresponding to the values in the `mlhs` nodes.|a, b, = [1, 2]|N/A
+|masgn|Multiple assignment.|First set of children are all `mlhs` nodes, and the rest of the children must be expression nodes corresponding to the values in the `mlhs` nodes.|a, b, = [1, 2]|N/A
 
 |mlhs|Multiple left-hand side. Used inside a `masgn` and block argument destructuring.|Children must all be assignment nodes. Represents the left side of a multiple assignment (`a, b` in the example).|a, b = 5, 6|N/A
 

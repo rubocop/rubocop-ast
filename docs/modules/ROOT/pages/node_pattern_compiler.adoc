@@ -243,7 +243,7 @@ Like the node pattern subcompiler, it generates code that has higher or equal pr
 
 These variants of the Parser / Builder / Lexer generate `location` information (exactly like the `parser` gem) for AST nodes as well as comments with their locations (like the `parser` gem).
 
-Since this information is not typically used when one ony wants to define methods, it is not loaded by default.
+Since this information is not typically used when one only wants to define methods, it is not loaded by default.
 
 == Variant: Debug
 

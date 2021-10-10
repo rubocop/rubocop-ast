@@ -61,7 +61,7 @@ Here are a few examples:
 * Describe the brief of the change. The sentence should end with a punctuation.
 * If this is a breaking change, mark it with `**(Breaking)**`.
 * At the end of the entry, add an implicit link to your GitHub user page as `([@username][])`.
-* The rake tasks `rake changelog:new|bug|change` will create a file with the body based off the last git commit. Modifiy it and add it to your commit; maintainers will merge it automatically later.
+* The rake tasks `rake changelog:new|bug|change` will create a file with the body based off the last git commit. Modify it and add it to your commit; maintainers will merge it automatically later.
 * Alternatively, you may modify the CHANGELOG file directly, but this may result in conflicts later on. Also, if this is your first contribution to RuboCop project, you'll have to add a link definition for the implicit link to the bottom of the changelog as `[@username]: https://github.com/username`.
 
 [1]: https://github.com/rubocop/rubocop-ast/issues

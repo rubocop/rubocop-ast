@@ -171,7 +171,7 @@ module RuboCop
       #
       #   private def foo; end
       #
-      # @return wether the `def|defs` node is a modifier or not.
+      # @return whether the `def|defs` node is a modifier or not.
       # See also `def_modifier` that returns the node or `nil`
       def def_modifier?(node = self)
         !!def_modifier(node)

@@ -6,9 +6,9 @@ module RuboCop
     # plain node when the builder constructs the AST, making its methods
     # available to all `module` nodes within RuboCop.
     class ModuleNode < Node
-      # The identifer for this `module` node.
+      # The identifier for this `module` node.
       #
-      # @return [Node] the identifer of the module
+      # @return [Node] the identifier of the module
       def identifier
         node_parts[0]
       end
