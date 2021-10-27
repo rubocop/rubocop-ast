@@ -9,7 +9,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'bump', require: false
-gem 'oedipus_lex', require: false
+gem 'oedipus_lex', '>= 2.6.0', require: false
 gem 'racc'
 gem 'rake', '~> 13.0'
 gem 'rspec', '~> 3.7'
