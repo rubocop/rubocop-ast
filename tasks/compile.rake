@@ -3,12 +3,6 @@
 require 'oedipus_lex'
 Rake.application.rake_require 'oedipus_lex'
 
-# Patch gem, see https://github.com/seattlerb/oedipus_lex/pull/15
-class OedipusLex
-  remove_const :RE
-  RE = %r{(/(?:\\.|[^/])*/[ion]?)}.freeze
-end
-
 def update_file(path)
   content = File.read(path)
   File.write(path, yield(content))
