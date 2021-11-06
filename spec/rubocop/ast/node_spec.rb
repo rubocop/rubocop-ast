@@ -786,4 +786,54 @@ RSpec.describe RuboCop::AST::Node do
       it { is_expected.to eq nil }
     end
   end
+
+  describe '#nurimec_type?' do
+    context 'when integer literal' do
+      let(:src) { '42' }
+
+      it 'is true' do
+        expect(node).to be_numeric_type
+      end
+    end
+
+    context 'when float literal' do
+      let(:src) { '42.0' }
+
+      it 'is true' do
+        expect(node).to be_numeric_type
+      end
+    end
+
+    context 'when rational literal' do
+      let(:src) { '42r' }
+
+      it 'is true' do
+        expect(node).to be_numeric_type
+      end
+    end
+
+    context 'when complex literal' do
+      let(:src) { '42i' }
+
+      it 'is true' do
+        expect(node).to be_numeric_type
+      end
+    end
+
+    context 'when complex literal whose imaginary part is a rational' do
+      let(:src) { '42ri' }
+
+      it 'is true' do
+        expect(node).to be_numeric_type
+      end
+    end
+
+    context 'when string literal' do
+      let(:src) { '"42"' }
+
+      it 'is true' do
+        expect(node).not_to be_numeric_type
+      end
+    end
+  end
 end
