@@ -464,7 +464,7 @@ module RuboCop
       end
 
       def numeric_type?
-        int_type? || float_type?
+        int_type? || float_type? || rational_type? || complex_type?
       end
 
       def range_type?
