@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#213](https://github.com/rubocop/rubocop-ast/pull/213): Make `Node#numeric_type?` aware of rational and complex literals. ([@koic][])
+
 ## 1.12.0 (2021-09-27)
 
 ### Bug fixes
