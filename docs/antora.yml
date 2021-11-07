@@ -1,5 +1,5 @@
 name: rubocop-ast
 title: RuboCop AST
-version: 'master'
+version: '1.13'
 nav:
 - modules/ROOT/nav.adoc
