@@ -787,7 +787,7 @@ RSpec.describe RuboCop::AST::Node do
     end
   end
 
-  describe '#nurimec_type?' do
+  describe '#numeric_type?' do
     context 'when integer literal' do
       let(:src) { '42' }
 
