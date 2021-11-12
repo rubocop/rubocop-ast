@@ -29,7 +29,8 @@ Gem::Specification.new do |s|
     'changelog_uri' => 'https://github.com/rubocop/rubocop-ast/blob/master/CHANGELOG.md',
     'source_code_uri' => 'https://github.com/rubocop/rubocop-ast/',
     'documentation_uri' => 'https://docs.rubocop.org/rubocop-ast/',
-    'bug_tracker_uri' => 'https://github.com/rubocop/rubocop-ast/issues'
+    'bug_tracker_uri' => 'https://github.com/rubocop/rubocop-ast/issues',
+    'rubygems_mfa_required' => 'true'
   }
 
   s.add_runtime_dependency('parser', '>= 3.0.1.1')
