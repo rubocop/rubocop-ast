@@ -36,6 +36,34 @@ RSpec.describe RuboCop::AST::Traversal do
     end
   end
 
+  context 'when a class defines `on_block_pass`', :ruby31 do
+    let(:klass) do
+      Class.new do
+        attr_reader :calls
+
+        include RuboCop::AST::Traversal
+        def on_block_pass(node)
+          (@calls ||= []) << node.children.first&.type
+          super
+        end
+      end
+    end
+
+    let(:source) { <<~RUBY }
+      def foo(&) # Anonymous block forwarding.
+        bar(&)
+      end
+
+      def baz(&block)
+        qux(&block)
+      end
+    RUBY
+
+    it 'calls it for all block-pass arguments' do
+      expect(traverse.calls).to eq [nil, :lvar]
+    end
+  end
+
   File.read("#{__dir__}/fixtures/code_examples.rb")
       .split("#----\n")
       .each_with_index do |example, _i|

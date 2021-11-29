@@ -91,11 +91,10 @@ module RuboCop
 
       many_symbol_children = %i[regopt]
 
-      node_child = %i[block_pass not
-                      match_current_line defined?
+      node_child = %i[not match_current_line defined?
                       arg_expr pin if_guard unless_guard
                       match_with_trailing_comma]
-      node_or_nil_child = %i[preexe postexe]
+      node_or_nil_child = %i[block_pass preexe postexe]
 
       NO_CHILD_NODES = (no_children + opt_symbol_child + literal_child).to_set.freeze
       private_constant :NO_CHILD_NODES # Used by Commissioner
