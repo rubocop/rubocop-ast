@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.14.0 (2021-12-02)
+
 ### New features
 
 * [#218](https://github.com/rubocop/rubocop-ast/pull/218): Support Ruby 3.1's anonymous block forwarding syntax. ([@koic][])
