@@ -62,6 +62,13 @@ module RuboCop
       def value_on_new_line?
         key.loc.line != value.loc.line
       end
+
+      # Checks whether the `pair` uses hash value omission.
+      #
+      # @return [Boolean] whether this `pair` uses hash value omission
+      def value_omission?
+        source.end_with?(':')
+      end
     end
   end
 end
