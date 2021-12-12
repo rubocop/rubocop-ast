@@ -711,4 +711,18 @@ RSpec.describe RuboCop::AST::PairNode do
       end
     end
   end
+
+  describe '#value_omission?' do
+    context 'when using hash value omission', :ruby31 do
+      let(:source) { '{ x: }' }
+
+      it { expect(pair_node).to be_value_omission }
+    end
+
+    context 'when not using hash value omission' do
+      let(:source) { '{ x: x }' }
+
+      it { expect(pair_node).not_to be_value_omission }
+    end
+  end
 end
