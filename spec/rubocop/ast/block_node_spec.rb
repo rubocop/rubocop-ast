@@ -288,4 +288,18 @@ RSpec.describe RuboCop::AST::BlockNode do
       it { is_expected.not_to be_void_context }
     end
   end
+
+  describe '#receiver' do
+    context 'with dot operator call' do
+      let(:source) { 'foo.bar { baz }' }
+
+      it { expect(block_node.receiver.source).to eq('foo') }
+    end
+
+    context 'with safe navigation operator call' do
+      let(:source) { 'foo&.bar { baz }' }
+
+      it { expect(block_node.receiver.source).to eq('foo') }
+    end
+  end
 end

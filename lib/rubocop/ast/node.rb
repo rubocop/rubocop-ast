@@ -274,7 +274,7 @@ module RuboCop
 
       # @!method receiver(node = self)
       def_node_matcher :receiver, <<~PATTERN
-        {(send $_ ...) ({block numblock} (send $_ ...) ...)}
+        {(send $_ ...) ({block numblock} (call $_ ...) ...)}
       PATTERN
 
       # @!method str_content(node = self)
