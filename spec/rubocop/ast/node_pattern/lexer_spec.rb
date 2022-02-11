@@ -73,4 +73,12 @@ RSpec.describe RuboCop::AST::NodePattern::Lexer do
       expect(percent_zz).to eq 'Zz'
     end
   end
+
+  context 'when given arithmetic symbols' do
+    let(:source) { ':&' }
+
+    it 'works' do
+      expect(tokens.map(&:last).map(&:first)).to eq [:&]
+    end
+  end
 end
