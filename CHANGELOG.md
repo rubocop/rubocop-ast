@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Bug fixes
+
+* Fix `:&` parsing ([@zverok][])
+
 ## 1.15.1 (2021-12-27)
 
 ### Bug fixes
@@ -308,3 +312,4 @@
 [@dvandersluis]: https://github.com/dvandersluis
 [@eugeneius]: https://github.com/eugeneius
 [@wcmonty]: https://github.com/wcmonty
+[@zverok]: https://github.com/zverok

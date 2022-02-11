@@ -12,7 +12,7 @@ class RuboCop::AST::NodePattern::LexerRex
 
 macros
         CONST_NAME                /[A-Z:][a-zA-Z_:]+/
-        SYMBOL_NAME               /[\w+@*\/?!<>=~|%^-]+|\[\]=?/
+        SYMBOL_NAME               /[\w+@*\/?!<>=~|%^&-]+|\[\]=?/
         IDENTIFIER                /[a-z][a-zA-Z0-9_]*/
         NODE_TYPE                 /[a-z][a-zA-Z0-9_-]*/  # Same as identifier but allows '-'
         CALL                      /(?:#{CONST_NAME}\.)?#{IDENTIFIER}[!?]?/
