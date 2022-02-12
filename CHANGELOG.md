@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.15.2 (2022-02-12)
+
 ### Bug fixes
 
 * Fix `:&` parsing ([@zverok][])
