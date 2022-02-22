@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
     'rubygems_mfa_required' => 'true'
   }
 
-  s.add_runtime_dependency('parser', '>= 3.0.1.1')
+  s.add_runtime_dependency('parser', '>= 3.1.1.0')
 
   s.add_development_dependency('bundler', '>= 1.15.0', '< 3.0')
 

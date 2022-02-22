@@ -226,7 +226,7 @@ module RuboCop
         [ast, comments, tokens]
       end
 
-      # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
       def parser_class(ruby_version)
         case ruby_version
         when 2.4
@@ -247,12 +247,15 @@ module RuboCop
         when 3.1
           require 'parser/ruby31'
           Parser::Ruby31
+        when 3.2
+          require 'parser/ruby32'
+          Parser::Ruby32
         else
           raise ArgumentError,
                 "RuboCop found unknown Ruby version: #{ruby_version.inspect}"
         end
       end
-      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
       def create_parser(ruby_version)
         builder = RuboCop::AST::Builder.new

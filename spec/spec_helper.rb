@@ -47,6 +47,10 @@ RSpec.shared_context 'ruby 3.1', :ruby31 do
   let(:ruby_version) { 3.1 }
 end
 
+RSpec.shared_context 'ruby 3.2', :ruby32 do
+  let(:ruby_version) { 3.2 }
+end
+
 # ...
 module DefaultRubyVersion
   extend RSpec::SharedContext
