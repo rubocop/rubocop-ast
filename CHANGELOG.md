@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#223](https://github.com/rubocop-hq/rubocop-ast/pull/223): Support `Parser::Ruby32` for Ruby 3.2 parser (experimental). ([@koic][])
+
 ## 1.15.2 (2022-02-12)
 
 ### Bug fixes
