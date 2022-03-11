@@ -49,7 +49,7 @@ RSpec.describe RuboCop::AST::NodePattern do
 
   shared_examples 'nonmatching' do
     it "doesn't match" do
-      expect(result).to be nil
+      expect(result).to be_nil
     end
   end
 
@@ -160,10 +160,10 @@ RSpec.describe RuboCop::AST::NodePattern do
       let(:pattern) { "  (send  42 \n :to_s ) " }
 
       it 'returns true iff the patterns are similar' do
-        expect(instance == instance.dup).to eq true
-        expect(instance == 42).to eq false
-        expect(instance == described_class.new('(send)')).to eq false
-        expect(instance == described_class.new('(send 42 :to_s)')).to eq true
+        expect(instance == instance.dup).to be true
+        expect(instance == 42).to be false
+        expect(instance == described_class.new('(send)')).to be false
+        expect(instance == described_class.new('(send 42 :to_s)')).to be true
       end
     end
   end

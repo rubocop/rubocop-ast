@@ -254,7 +254,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
           item.text == '# comment four'
         end
 
-        expect(comment).to eq nil
+        expect(comment).to be_nil
       end
     end
 
@@ -265,7 +265,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
 
       it 'returns nil if line has no comment' do
-        expect(processed_source.comment_at_line(3)).to be nil
+        expect(processed_source.comment_at_line(3)).to be_nil
       end
     end
 
@@ -369,7 +369,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       it 'yields nil when there is no match' do
         token = processed_source.find_token(&:right_bracket?)
 
-        expect(token).to eq nil
+        expect(token).to be_nil
       end
     end
   end

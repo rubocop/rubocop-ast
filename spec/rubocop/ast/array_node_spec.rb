@@ -108,7 +108,7 @@ RSpec.describe RuboCop::AST::ArrayNode do
         parse_source('foo = 1, 2, 3').ast.to_a.last
       end
 
-      it { expect(array_node.bracketed?).to be(nil) }
+      it { expect(array_node.bracketed?).to be_nil }
     end
   end
 end

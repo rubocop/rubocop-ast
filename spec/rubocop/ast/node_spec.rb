@@ -338,9 +338,9 @@ RSpec.describe RuboCop::AST::Node do
     let(:src) { '[0, 1, 2, 3, 4, 5]' }
 
     it 'returns trivial values for a root node' do
-      expect(node.sibling_index).to eq nil
-      expect(node.left_sibling).to eq nil
-      expect(node.right_sibling).to eq nil
+      expect(node.sibling_index).to be_nil
+      expect(node.left_sibling).to be_nil
+      expect(node.right_sibling).to be_nil
       expect(node.left_siblings).to eq []
       expect(node.right_siblings).to eq []
     end
@@ -363,8 +363,8 @@ RSpec.describe RuboCop::AST::Node do
 
       it 'returns the expected values' do
         expect(node.sibling_index).to eq 0
-        expect(node.left_sibling).to eq nil
-        expect(node.right_sibling).to eq nil
+        expect(node.left_sibling).to be_nil
+        expect(node.right_sibling).to be_nil
         expect(node.left_siblings.map(&:value)).to eq []
         expect(node.right_siblings.map(&:value)).to eq []
       end
@@ -412,7 +412,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { 'class Foo; a = 42; end' }
 
       it 'does not match' do
-        expect(node.class_constructor?).to eq(nil)
+        expect(node.class_constructor?).to be_nil
       end
     end
 
@@ -438,7 +438,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { 'Struct.new(:foo, :bar)' }
 
       it 'does not match' do
-        expect(node.struct_constructor?).to eq(nil)
+        expect(node.struct_constructor?).to be_nil
       end
     end
 
@@ -511,7 +511,7 @@ RSpec.describe RuboCop::AST::Node do
       let(:src) { 'Person = Struct.new(:name, :age)' }
 
       it 'does not match' do
-        expect(node.class_definition?).to eq(nil)
+        expect(node.class_definition?).to be_nil
       end
     end
 
@@ -769,7 +769,7 @@ RSpec.describe RuboCop::AST::Node do
         RUBY
       end
 
-      it { is_expected.to eq nil }
+      it { is_expected.to be_nil }
     end
 
     context 'when node nested in a class << exp' do
@@ -783,7 +783,7 @@ RSpec.describe RuboCop::AST::Node do
         RUBY
       end
 
-      it { is_expected.to eq nil }
+      it { is_expected.to be_nil }
     end
   end
 

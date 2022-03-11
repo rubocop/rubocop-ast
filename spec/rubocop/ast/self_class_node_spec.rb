@@ -41,7 +41,7 @@ RSpec.describe RuboCop::AST::SelfClassNode do
         'class << self; end'
       end
 
-      it { expect(self_class_node.body).to be(nil) }
+      it { expect(self_class_node.body).to be_nil }
     end
   end
 end

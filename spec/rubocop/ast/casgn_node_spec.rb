@@ -19,7 +19,7 @@ RSpec.describe RuboCop::AST::CasgnNode do
     context 'when there is no parent' do
       let(:source) { 'VAR = value' }
 
-      it { is_expected.to eq(nil) }
+      it { is_expected.to be_nil }
     end
 
     context 'when the parent is a `cbase`' do

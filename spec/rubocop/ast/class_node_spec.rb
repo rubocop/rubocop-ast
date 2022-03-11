@@ -33,7 +33,7 @@ RSpec.describe RuboCop::AST::ClassNode do
         'class Foo; end'
       end
 
-      it { expect(class_node.parent_class).to be(nil) }
+      it { expect(class_node.parent_class).to be_nil }
     end
   end
 
@@ -59,7 +59,7 @@ RSpec.describe RuboCop::AST::ClassNode do
         'class Foo; end'
       end
 
-      it { expect(class_node.body).to be(nil) }
+      it { expect(class_node.body).to be_nil }
     end
   end
 end
