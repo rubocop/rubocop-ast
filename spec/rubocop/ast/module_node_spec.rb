@@ -41,7 +41,7 @@ RSpec.describe RuboCop::AST::ModuleNode do
         'module Foo; end'
       end
 
-      it { expect(module_node.body).to be(nil) }
+      it { expect(module_node.body).to be_nil }
     end
   end
 end

@@ -14,7 +14,7 @@ RSpec.describe RuboCop::AST::DefinedNode do
   describe '#receiver' do
     let(:source) { 'defined? :foo' }
 
-    it { expect(defined_node.receiver).to eq(nil) }
+    it { expect(defined_node.receiver).to be_nil }
   end
 
   describe '#method_name' do

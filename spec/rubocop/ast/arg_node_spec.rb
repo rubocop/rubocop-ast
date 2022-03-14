@@ -249,63 +249,63 @@ RSpec.describe RuboCop::AST::ArgNode do
     context 'with a regular argument' do
       let(:source) { 'def foo(x) end' }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
 
     context 'with a block' do
       let(:source) { 'foo { |x| x }' }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
 
     context 'with an optional argument' do
       let(:source) { 'def foo(x = 42) end' }
 
-      it { is_expected.to eq(true) }
+      it { is_expected.to be(true) }
     end
 
     context 'with an optional keyword argument' do
       let(:source) { 'def foo(x: 42) end' }
 
-      it { is_expected.to eq(true) }
+      it { is_expected.to be(true) }
     end
 
     context 'with a splatted argument' do
       let(:source) { 'def foo(*x) end' }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
 
     context 'with a double splatted argument' do
       let(:source) { 'def foo(**x) end' }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
 
     context 'with a block argument' do
       let(:source) { 'def foo(&x) end' }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
 
     context 'with a shadow argument' do
       let(:source) { 'foo { |; x| x = 5 }' }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
 
     context 'with argument forwarding' do
       context 'with Ruby >= 2.7', :ruby27 do
         let(:source) { 'def foo(...); end' }
 
-        it { is_expected.to eq(false) } if RuboCop::AST::Builder.emit_forward_arg
+        it { is_expected.to be(false) } if RuboCop::AST::Builder.emit_forward_arg
       end
 
       context 'with Ruby >= 3.0', :ruby30 do
         let(:source) { 'def foo(x, ...); end' }
         let(:arg_node) { args_node.last }
 
-        it { is_expected.to eq(false) }
+        it { is_expected.to be(false) }
       end
     end
   end

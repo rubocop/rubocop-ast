@@ -63,7 +63,7 @@ RSpec.describe RuboCop::AST::ResbodyNode do
     context 'when an exception variable is not given' do
       let(:source) { 'begin; beginbody; rescue; rescuebody; end' }
 
-      it { expect(resbody_node.exception_variable).to be(nil) }
+      it { expect(resbody_node.exception_variable).to be_nil }
     end
   end
 

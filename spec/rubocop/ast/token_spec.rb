@@ -107,8 +107,8 @@ RSpec.describe RuboCop::AST::Token do
     end
 
     it 'returns nil when there is not a space after token' do
-      expect(left_ref_bracket_token.space_after?).to be nil
-      expect(zero_token.space_after?).to be nil
+      expect(left_ref_bracket_token.space_after?).to be_nil
+      expect(zero_token.space_after?).to be_nil
     end
   end
 
@@ -131,12 +131,12 @@ RSpec.describe RuboCop::AST::Token do
     end
 
     it 'returns nil when there is not a space before token' do
-      expect(semicolon_token.space_before?).to be nil
-      expect(zero_token.space_before?).to be nil
+      expect(semicolon_token.space_before?).to be_nil
+      expect(zero_token.space_before?).to be_nil
     end
 
     it 'returns nil when it is on the first line' do
-      expect(processed_source.tokens[0].space_before?).to be nil
+      expect(processed_source.tokens[0].space_before?).to be_nil
     end
   end
 

@@ -12,7 +12,7 @@ module NodePatternHelper
   end
 
   def assert(test, mess = nil)
-    expect(test).to eq(true), *mess
+    expect(test).to be(true), *mess
   end
 
   def expect_parsing(ast, source, source_maps)

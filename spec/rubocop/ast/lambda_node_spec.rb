@@ -7,7 +7,7 @@ RSpec.describe RuboCop::AST::LambdaNode do
   let(:source) { '->(a, b) { a + b }' }
 
   describe '#receiver' do
-    it { expect(lambda_node.receiver).to eq nil }
+    it { expect(lambda_node.receiver).to be_nil }
   end
 
   describe '#method_name' do
