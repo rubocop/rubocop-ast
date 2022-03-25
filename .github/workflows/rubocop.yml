@@ -46,7 +46,7 @@ jobs:
           echo "TMPDIR=$env:RUNNER_TEMP" >> $GITHUB_ENV
           git config --system core.autocrlf false
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -89,7 +89,7 @@ jobs:
           - { rubocop: master, ruby: '3.0', os: ubuntu }
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -122,7 +122,7 @@ jobs:
         rubocop: [ master ]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: set up Ruby
         uses: ruby/setup-ruby@v1
         with:
