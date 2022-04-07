@@ -57,7 +57,7 @@ module RuboCop
       # @api private
       BASIC_CONDITIONALS = %i[if while until].to_set.freeze
       # @api private
-      CONDITIONALS = (BASIC_CONDITIONALS + [:case]).freeze
+      CONDITIONALS = (BASIC_CONDITIONALS + %i[case case_match]).freeze
       # @api private
       POST_CONDITION_LOOP_TYPES = %i[while_post until_post].to_set.freeze
       # @api private
