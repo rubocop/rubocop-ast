@@ -836,4 +836,86 @@ RSpec.describe RuboCop::AST::Node do
       end
     end
   end
+
+  describe '#conditional?' do
+    context 'when `if` node' do
+      let(:src) do
+        <<~RUBY
+          if condition
+          end
+        RUBY
+      end
+
+      it 'is true' do
+        expect(node).to be_conditional
+      end
+    end
+
+    context 'when `while` node' do
+      let(:src) do
+        <<~RUBY
+          while condition
+          end
+        RUBY
+      end
+
+      it 'is true' do
+        expect(node).to be_conditional
+      end
+    end
+
+    context 'when `until` node' do
+      let(:src) do
+        <<~RUBY
+          until condition
+          end
+        RUBY
+      end
+
+      it 'is true' do
+        expect(node).to be_conditional
+      end
+    end
+
+    context 'when `case` node' do
+      let(:src) do
+        <<~RUBY
+          case condition
+          when foo
+          end
+        RUBY
+      end
+
+      it 'is true' do
+        expect(node).to be_conditional
+      end
+    end
+
+    context 'when `case_match` node', :ruby27 do
+      let(:src) do
+        <<~RUBY
+          case pattern
+          in foo
+          end
+        RUBY
+      end
+
+      it 'is true' do
+        expect(node).to be_conditional
+      end
+    end
+
+    context 'when post condition loop node' do
+      let(:src) do
+        <<~RUBY
+          begin
+          end while condition
+        RUBY
+      end
+
+      it 'is false' do
+        expect(node).not_to be_conditional
+      end
+    end
+  end
 end
