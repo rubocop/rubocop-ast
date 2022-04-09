@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#227](https://github.com/rubocop-hq/rubocop-ast/pull/227):  Make `Node#condition?` aware of `case-match` node. ([@koic][])
+
 ## 1.16.0 (2022-02-21)
 
 ### New features
