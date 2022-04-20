@@ -53,6 +53,18 @@ RSpec.describe RuboCop::AST::RegexpNode do
 
       it { expect(regexp_node.to_regexp.inspect).to eq('/abc/i') }
     end
+
+    context 'with a regexp with an "n" option' do
+      let(:source) { '/abc/n' }
+
+      it { expect(regexp_node.to_regexp.inspect).to eq('/abc/n') }
+    end
+
+    context 'with a regexp with an "u" option' do
+      let(:source) { '/abc/u' }
+
+      it { expect(regexp_node.to_regexp.inspect).to eq('/abc/') }
+    end
   end
 
   describe '#regopt' do
@@ -487,6 +499,32 @@ RSpec.describe RuboCop::AST::RegexpNode do
       let(:source) { '/x/xnm' }
 
       it { is_expected.to be_no_encoding }
+    end
+  end
+
+  describe '#fixed_encoding?' do
+    context 'with no options' do
+      let(:source) { '/x/' }
+
+      it { is_expected.not_to be_fixed_encoding }
+    end
+
+    context 'with other options' do
+      let(:source) { '/x/xm' }
+
+      it { is_expected.not_to be_fixed_encoding }
+    end
+
+    context 'with only u option' do
+      let(:source) { '/x/u' }
+
+      it { is_expected.to be_fixed_encoding }
+    end
+
+    context 'with u and other options' do
+      let(:source) { '/x/unm' }
+
+      it { is_expected.to be_fixed_encoding }
     end
   end
 
