@@ -18,14 +18,14 @@ gem 'rspec', '~> 3.7'
 # https://github.com/codeclimate/test-reporter/issues/418
 gem 'simplecov', '~> 0.10', '< 0.18'
 
-if ENV['RUBOCOP_VERSION'] == 'none'
+if ENV.fetch('RUBOCOP_VERSION', nil) == 'none'
   # Set this way on CI
   puts 'Running specs independently of RuboCop'
 else
   local_ast = File.expand_path('../rubocop', __dir__)
   if File.exist?(local_ast)
     gem 'rubocop', path: local_ast
-  elsif ENV['RUBOCOP_VERSION'] == 'master'
+  elsif ENV.fetch('RUBOCOP_VERSION', nil) == 'master'
     gem 'rubocop', git: 'https://github.com/rubocop/rubocop.git'
   else
     gem 'rubocop', '>= 1.0'

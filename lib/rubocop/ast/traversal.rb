@@ -34,7 +34,7 @@ module RuboCop
 
         def def_callback(type, *signature,
                          arity: signature.size..signature.size,
-                         arity_check: ENV['RUBOCOP_DEBUG'] && self.arity_check(arity),
+                         arity_check: ENV.fetch('RUBOCOP_DEBUG', nil) && self.arity_check(arity),
                          body: self.body(signature, arity_check))
           type, *aliases = type
           lineno = caller_locations(1, 1).first.lineno
