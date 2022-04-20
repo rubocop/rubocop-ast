@@ -11,6 +11,7 @@ module RuboCop
         i: Regexp::IGNORECASE,
         m: Regexp::MULTILINE,
         n: Regexp::NOENCODING,
+        u: Regexp::FIXEDENCODING,
         o: 0
       }.freeze
       private_constant :OPTIONS
@@ -85,6 +86,11 @@ module RuboCop
       # @return [Bool] if regexp uses the no-encoding regopt
       def no_encoding?
         regopt_include?(:n)
+      end
+
+      # @return [Bool] if regexp uses the fixed-encoding regopt
+      def fixed_encoding?
+        regopt_include?(:u)
       end
 
       private
