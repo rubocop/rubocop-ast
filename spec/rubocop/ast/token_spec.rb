@@ -7,7 +7,7 @@ RSpec.describe RuboCop::AST::Token do
     # comment
     def some_method
       [ 1, 2 ];
-      foo[0] = 3
+      foo[0] = 3.to_i
       1..42
       1...42
     end
@@ -26,6 +26,7 @@ RSpec.describe RuboCop::AST::Token do
   let(:comma_token) { processed_source.find_token { |t| t.text == ',' } }
   let(:irange_token) { processed_source.find_token { |t| t.text == '..' } }
   let(:erange_token) { processed_source.find_token { |t| t.text == '...' } }
+  let(:dot_token) { processed_source.find_token { |t| t.text == '.' } }
   let(:right_array_bracket_token) do
     processed_source.find_token { |t| t.text == ']' && t.line == 3 }
   end
@@ -89,7 +90,7 @@ RSpec.describe RuboCop::AST::Token do
     it 'returns index of first char in token range of entire source' do
       expect(first_token.begin_pos).to eq 0
       expect(zero_token.begin_pos).to eq 44
-      expect(end_token.begin_pos).to eq 68
+      expect(end_token.begin_pos).to eq 73
     end
   end
 
@@ -97,7 +98,7 @@ RSpec.describe RuboCop::AST::Token do
     it 'returns index of last char in token range of entire source' do
       expect(first_token.end_pos).to eq 9
       expect(zero_token.end_pos).to eq 45
-      expect(end_token.end_pos).to eq 71
+      expect(end_token.end_pos).to eq 76
     end
   end
 
@@ -233,6 +234,17 @@ RSpec.describe RuboCop::AST::Token do
       it 'returns false for non comma tokens' do
         expect(semicolon_token).not_to be_comma
         expect(right_ref_bracket_token).not_to be_comma
+      end
+    end
+
+    describe '#dot?' do
+      it 'returns true for dot tokens' do
+        expect(dot_token).to be_dot
+      end
+
+      it 'returns false for non dot tokens' do
+        expect(semicolon_token).not_to be_dot
+        expect(right_ref_bracket_token).not_to be_dot
       end
     end
 
