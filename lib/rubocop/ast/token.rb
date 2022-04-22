@@ -100,6 +100,10 @@ module RuboCop
         type == :tCOMMA
       end
 
+      def dot?
+        type == :tDOT
+      end
+
       def regexp_dots?
         %i[tDOT2 tDOT3].include?(type)
       end
