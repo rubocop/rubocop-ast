@@ -162,7 +162,7 @@ module RuboCop
       ### generic processing of any other node (forward compatibility)
       defined = instance_methods(false)
                 .grep(/^on_/)
-                .map { |s| s.to_s[3..-1].to_sym } # :on_foo => :foo
+                .map { |s| s.to_s[3..].to_sym } # :on_foo => :foo
 
       to_define = ::Parser::Meta::NODE_TYPES.to_a
       to_define -= defined
