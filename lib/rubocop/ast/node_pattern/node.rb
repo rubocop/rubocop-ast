@@ -116,7 +116,7 @@ module RuboCop
 
           def initialize(type, children = [], properties = {})
             if (replace = children.first.in_sequence_head)
-              children = [*replace, *children[1..-1]]
+              children = [*replace, *children[1..]]
             end
 
             super
@@ -130,7 +130,7 @@ module RuboCop
           end
 
           def arg_list
-            children[1..-1]
+            children[1..]
           end
         end
         FunctionCall = Predicate
@@ -212,7 +212,7 @@ module RuboCop
 
             return unless (replace = children.first.in_sequence_head)
 
-            [with(children: [*replace, *children[1..-1]])]
+            [with(children: [*replace, *children[1..]])]
           end
         end
 

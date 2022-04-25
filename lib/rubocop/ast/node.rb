@@ -194,7 +194,7 @@ module RuboCop
       def right_siblings
         return [].freeze unless parent
 
-        parent.children[sibling_index + 1..-1].freeze
+        parent.children[sibling_index + 1..].freeze
       end
 
       # Common destructuring method. This can be used to normalize

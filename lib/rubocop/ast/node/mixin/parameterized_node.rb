@@ -84,7 +84,7 @@ module RuboCop
         include ParameterizedNode
         # @return [Array<Node>] arguments, if any
         def arguments
-          children[first_argument_index..-1].freeze
+          children[first_argument_index..].freeze
         end
 
         # A shorthand for getting the first argument of the node.
