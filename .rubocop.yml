@@ -20,6 +20,10 @@ AllCops:
   TargetRubyVersion: 2.6
   SuggestExtensions: false
 
+# It cannot be replaced with suggested methods defined by RuboCop AST itself.
+InternalAffairs/MethodNameEndWith:
+  Enabled: false
+
 InternalAffairs/NodeMatcherDirective:
   Exclude:
     - 'spec/rubocop/ast/node_pattern_spec.rb'
