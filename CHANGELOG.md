@@ -2,6 +2,14 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#233](https://github.com/rubocop-hq/rubocop-ast/pull/233): Make parse from Ruby 1.9 to 2.3 available. ([@koic][])
+
+### Changes
+
+* [#232](https://github.com/rubocop/rubocop-ast/pull/232): **(Compatibility)** Drop support for Ruby 2.5. ([@koic][])
+
 ## 1.17.0 (2022-04-09)
 
 ### New features
