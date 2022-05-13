@@ -226,9 +226,24 @@ module RuboCop
         [ast, comments, tokens]
       end
 
-      # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
       def parser_class(ruby_version)
         case ruby_version
+        when 1.9
+          require 'parser/ruby19'
+          Parser::Ruby19
+        when 2.0
+          require 'parser/ruby20'
+          Parser::Ruby20
+        when 2.1
+          require 'parser/ruby21'
+          Parser::Ruby21
+        when 2.2
+          require 'parser/ruby22'
+          Parser::Ruby22
+        when 2.3
+          require 'parser/ruby23'
+          Parser::Ruby23
         when 2.4
           require 'parser/ruby24'
           Parser::Ruby24
@@ -255,7 +270,7 @@ module RuboCop
                 "RuboCop found unknown Ruby version: #{ruby_version.inspect}"
         end
       end
-      # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
 
       def create_parser(ruby_version)
         builder = RuboCop::AST::Builder.new
