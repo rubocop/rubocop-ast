@@ -20,8 +20,8 @@ module RuboCop
             end
 
             if var == :forbidden_unification
-              raise Invalid, "Wildcard #{name} was first seen in a subset of a" \
-                             " union and can't be used outside that union"
+              raise Invalid, "Wildcard #{name} was first seen in a subset of a " \
+                             "union and can't be used outside that union"
             end
             var
           end
