@@ -28,7 +28,7 @@ class Changelog # rubocop:disable Metrics/ClassLength
     end
 
     def write
-      Dir.mkdir(ENTRIES_PATH) unless Dir.exist?(ENTRIES_PATH)
+      FileUtils.mkdir_p(ENTRIES_PATH)
       File.write(path, content)
       path
     end
