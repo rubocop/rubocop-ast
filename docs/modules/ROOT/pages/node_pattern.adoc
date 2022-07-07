@@ -249,7 +249,7 @@ with a parent that is a hash:
 (^hash _key $_value)
 ----
 
-It is possible to use `^` somewhere else than the head of a sequnece; in that
+It is possible to use `^` somewhere else than the head of a sequence; in that
 case it is relative to that child (i.e. the current node). One case also use
 multiple `^` to go up multiple levels.
 For example, the previous example is basically the same as:
