@@ -8,6 +8,8 @@ RSpec.describe RuboCop::AST::Token do
     def some_method
       [ 1, 2 ];
       foo[0] = 3
+      1..42
+      1...42
     end
   RUBY
 
@@ -22,6 +24,8 @@ RSpec.describe RuboCop::AST::Token do
     processed_source.find_token { |t| t.text == '[' && t.line == 3 }
   end
   let(:comma_token) { processed_source.find_token { |t| t.text == ',' } }
+  let(:irange_token) { processed_source.find_token { |t| t.text == '..' } }
+  let(:erange_token) { processed_source.find_token { |t| t.text == '...' } }
   let(:right_array_bracket_token) do
     processed_source.find_token { |t| t.text == ']' && t.line == 3 }
   end
@@ -69,7 +73,7 @@ RSpec.describe RuboCop::AST::Token do
     it 'returns line of token' do
       expect(first_token.line).to eq 1
       expect(zero_token.line).to eq 4
-      expect(end_token.line).to eq 5
+      expect(end_token.line).to eq 7
     end
   end
 
@@ -85,7 +89,7 @@ RSpec.describe RuboCop::AST::Token do
     it 'returns index of first char in token range of entire source' do
       expect(first_token.begin_pos).to eq 0
       expect(zero_token.begin_pos).to eq 44
-      expect(end_token.begin_pos).to eq 51
+      expect(end_token.begin_pos).to eq 68
     end
   end
 
@@ -93,7 +97,7 @@ RSpec.describe RuboCop::AST::Token do
     it 'returns index of last char in token range of entire source' do
       expect(first_token.end_pos).to eq 9
       expect(zero_token.end_pos).to eq 45
-      expect(end_token.end_pos).to eq 54
+      expect(end_token.end_pos).to eq 71
     end
   end
 
@@ -229,6 +233,18 @@ RSpec.describe RuboCop::AST::Token do
       it 'returns false for non comma tokens' do
         expect(semicolon_token).not_to be_comma
         expect(right_ref_bracket_token).not_to be_comma
+      end
+    end
+
+    describe '#regexp_dot?' do
+      it 'returns true for regexp tokens' do
+        expect(irange_token).to be_regexp_dot
+        expect(erange_token).to be_regexp_dot
+      end
+
+      it 'returns false for non comma tokens' do
+        expect(semicolon_token).not_to be_regexp_dot
+        expect(right_ref_bracket_token).not_to be_regexp_dot
       end
     end
 

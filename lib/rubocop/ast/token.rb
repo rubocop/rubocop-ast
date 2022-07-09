@@ -100,6 +100,10 @@ module RuboCop
         type == :tCOMMA
       end
 
+      def regexp_dot?
+        %i[tDOT2 tDOT3].include?(type)
+      end
+
       def rescue_modifier?
         type == :kRESCUE_MOD
       end
