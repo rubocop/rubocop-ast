@@ -236,15 +236,15 @@ RSpec.describe RuboCop::AST::Token do
       end
     end
 
-    describe '#regexp_dot?' do
+    describe '#regexp_dots?' do
       it 'returns true for regexp tokens' do
-        expect(irange_token).to be_regexp_dot
-        expect(erange_token).to be_regexp_dot
+        expect(irange_token).to be_regexp_dots
+        expect(erange_token).to be_regexp_dots
       end
 
       it 'returns false for non comma tokens' do
-        expect(semicolon_token).not_to be_regexp_dot
-        expect(right_ref_bracket_token).not_to be_regexp_dot
+        expect(semicolon_token).not_to be_regexp_dots
+        expect(right_ref_bracket_token).not_to be_regexp_dots
       end
     end
 
