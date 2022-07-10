@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.19.1 (2022-07-10)
+
 ### New features
 
 * [#235](https://github.com/rubocop-hq/rubocop-ast/pull/235): Add `regexp_dots?` method to `RuboCop::AST::Token` (erroneously released in 1.19.0 as `regexp_dot?`). ([@koic][])
