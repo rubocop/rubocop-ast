@@ -382,8 +382,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
 
   describe '#blank?' do
     context 'with source of no content' do
-      let(:source) { <<~RUBY }
-      RUBY
+      let(:source) { '' }
 
       it 'returns true' do
         expect(processed_source).to be_blank
@@ -403,8 +402,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
 
   describe '#start_with?' do
     context 'with blank source' do
-      let(:source) { <<~RUBY }
-      RUBY
+      let(:source) { '' }
 
       it 'returns false' do
         expect(processed_source).not_to be_start_with('start')
