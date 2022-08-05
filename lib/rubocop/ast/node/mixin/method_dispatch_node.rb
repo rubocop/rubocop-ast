@@ -249,7 +249,7 @@ module RuboCop
           ^{                                       # or the parent is...
             sclass class module class_constructor? # a class-like node
             [ {                                    # or some "wrapper"
-                kwbegin begin block
+                kwbegin begin block numblock
                 (if _condition <%0 _>)  # note: we're excluding the condition of `if` nodes
               }
               #in_macro_scope?                     # that is itself in a macro scope
