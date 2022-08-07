@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.20.1 (2022-08-07)
+
 ### New features
 
 * [#237](https://github.com/rubocop/rubocop-ast/pull/237) Fix `#macro?` for numblock nodes ([@gsamokovarov][])
