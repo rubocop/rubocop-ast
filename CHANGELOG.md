@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.20.0 (2022-08-07)
+
 ### Bug fixes
 
 * [#230](https://github.com/rubocop-hq/rubocop-ast/pull/230): Make `RegexpNode` aware of fixed-encoding regopt. ([@koic][])
