@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#231](https://github.com/rubocop/rubocop-ast/pull/231): Add a type predicate `dot?` to Token. ([@nobuyo][])
+
 ## 1.20.1 (2022-08-07)
 
 ### New features
@@ -357,3 +361,4 @@
 [@zverok]: https://github.com/zverok
 
 [@gsamokovarov]: https://github.com/gsamokovarov
+[@nobuyo]: https://github.com/nobuyo
