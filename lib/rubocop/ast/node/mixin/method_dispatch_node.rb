@@ -233,7 +233,7 @@ module RuboCop
       #
       #   foo + bar
       #
-      # @return [Bookean] whether this method is a binary operation
+      # @return [Boolean] whether this method is a binary operation
       def binary_operation?
         return false unless loc.selector
 
