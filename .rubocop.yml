@@ -100,6 +100,11 @@ Metrics/ModuleLength:
   Exclude:
     - 'spec/**/*.rb'
 
+RSpec:
+  Language:
+    Expectations:
+      - expect_parsing
+
 RSpec/PredicateMatcher:
   Strict: false
 
