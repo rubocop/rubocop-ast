@@ -105,6 +105,16 @@ module RuboCop
         else_branch&.if_type? && else_branch&.elsif?
       end
 
+      # Checks whether the `if` node has multiple `elsif` branch. Returns
+      # true if this `if` node has multiple `elsif` branches.
+      #
+      # @return [Boolean] whether the `if` node has multiple `elsif` branches.
+      def multiple_elsif?
+        return true if if? && elsif_conditional? && else_branch.elsif_conditional?
+
+        elsif? && parent.elsif?
+      end
+
       # Returns the branch of the `if` node that gets evaluated when its
       # condition is truthy.
       #

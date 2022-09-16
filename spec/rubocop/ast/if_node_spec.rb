@@ -362,6 +362,84 @@ RSpec.describe RuboCop::AST::IfNode do
     end
   end
 
+  describe '#multiple_elsif?' do
+    context 'with one elsif conditional' do
+      let(:source) do
+        <<~RUBY
+          if foo?
+            1
+          elsif bar?
+            2
+          else
+            3
+          end
+        RUBY
+      end
+
+      it { is_expected.not_to be_multiple_elsif }
+    end
+
+    context 'with multiple elsif conditionals' do
+      let(:source) do
+        <<~RUBY
+          if foo?
+            1
+          elsif bar?
+            2
+          elsif baz?
+            3
+          else
+            4
+          end
+        RUBY
+      end
+
+      it { is_expected.to be_multiple_elsif }
+    end
+
+    context 'with nested conditionals in if clause' do
+      let(:source) do
+        <<~RUBY
+          if foo?
+            if baz; 1; end
+          else
+            2
+          end
+        RUBY
+      end
+
+      it { is_expected.not_to be_multiple_elsif }
+    end
+
+    context 'with nested conditionals in else clause' do
+      let(:source) do
+        <<~RUBY
+          if foo?
+            1
+          else
+            if baz; 2; end
+          end
+        RUBY
+      end
+
+      it { is_expected.not_to be_multiple_elsif }
+    end
+
+    context 'with nested ternary operators' do
+      context 'when nested in the truthy branch' do
+        let(:source) { 'foo? ? bar? ? 1 : 2 : 3' }
+
+        it { is_expected.not_to be_multiple_elsif }
+      end
+
+      context 'when nested in the falsey branch' do
+        let(:source) { 'foo? ? 3 : bar? ? 1 : 2' }
+
+        it { is_expected.not_to be_multiple_elsif }
+      end
+    end
+  end
+
   describe '#if_branch' do
     context 'with an if statement' do
       let(:source) do
