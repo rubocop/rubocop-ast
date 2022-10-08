@@ -42,6 +42,7 @@ RSpec.describe RuboCop::AST::Token do
   let(:equals_token) { processed_source.find_token { |t| t.text == '=' } }
 
   let(:end_token) { processed_source.find_token { |t| t.text == 'end' } }
+  let(:new_line_token) { processed_source.find_token { |t| t.line == 7 && t.column == 3 } }
 
   describe '.from_parser_token' do
     subject(:token) { described_class.from_parser_token(parser_token) }
@@ -300,6 +301,17 @@ RSpec.describe RuboCop::AST::Token do
       it 'returns false for non equals sign tokens' do
         expect(semicolon_token).not_to be_equal_sign
         expect(comma_token).not_to be_equal_sign
+      end
+    end
+
+    describe '#new_line?' do
+      it 'returns true for new line tokens' do
+        expect(new_line_token).to be_a_new_line
+      end
+
+      it 'returns false for non new line tokens' do
+        expect(end_token).not_to be_a_new_line
+        expect(semicolon_token).not_to be_a_new_line
       end
     end
 

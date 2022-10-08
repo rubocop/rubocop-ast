@@ -119,6 +119,10 @@ module RuboCop
       def equal_sign?
         %i[tEQL tOP_ASGN].include?(type)
       end
+
+      def new_line?
+        type == :tNL
+      end
     end
   end
 end
