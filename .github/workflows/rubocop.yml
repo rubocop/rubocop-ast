@@ -20,6 +20,7 @@ jobs:
       TEST_QUEUE_WORKERS: 2
       RUBOCOP_VERSION: none
       JRUBY_OPTS: --dev # http://blog.headius.com/2019/09/jruby-startup-time-exploration.html
+      TRUFFLERUBYOPT: --engine.Mode=latency # optimize for short test suites
     strategy:
       fail-fast: false
       matrix:
