@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#240](https://github.com/rubocop/rubocop-ast/pull/240): Add a type predicate `new_line?` to Token. ([@tdeo][])
+
 ## 1.21.0 (2022-08-08)
 
 ### New features
@@ -364,3 +368,4 @@
 
 [@gsamokovarov]: https://github.com/gsamokovarov
 [@nobuyo]: https://github.com/nobuyo
+[@tdeo]: https://github.com/tdeo

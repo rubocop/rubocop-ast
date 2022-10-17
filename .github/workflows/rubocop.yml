@@ -24,18 +24,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu ]
-        ruby: [ 2.6, 2.7, '3.0', 3.1, head ]
-        coverage: [ null ]
-        modern: [ null ]
-        title: [ null ]
+        os: [ubuntu]
+        ruby: [2.6, 2.7, "3.0", 3.1, head]
+        coverage: [null]
+        modern: [null]
+        title: [null]
         include:
           - { os: windows, ruby: mingw }
-          - { ruby: 2.6, os: ubuntu, coverage: true, title: 'Coverage' }
-          - { ruby: '3.0', os: ubuntu, modern: true, title: 'Specs "modern"' }
+          - { ruby: 2.6, os: ubuntu, coverage: true, title: "Coverage" }
+          - { ruby: "3.0", os: ubuntu, modern: true, title: 'Specs "modern"' }
+          - { ruby: jruby, os: ubuntu }
           # jruby disabled because of: https://github.com/jruby/jruby/issues/6416
-          # - { ruby: jruby, os: ubuntu }
-          - { ruby: jruby-head, os: ubuntu }
+          # - { ruby: jruby-head, os: ubuntu }
           - { ruby: truffleruby, os: ubuntu }
           - { ruby: truffleruby-head, os: ubuntu }
 
@@ -58,8 +58,8 @@ jobs:
         if: matrix.coverage
         uses: paambaati/codeclimate-action@v2.6.0
         env:
-          CC_TEST_REPORTER_ID: '758a8228862932dc8afa9144c4a5bc5dfe29c2f7dde1b7734175bad49ee310e7'
-          COVERAGE: 'true'
+          CC_TEST_REPORTER_ID: "758a8228862932dc8afa9144c4a5bc5dfe29c2f7dde1b7734175bad49ee310e7"
+          COVERAGE: "true"
         with:
           coverageCommand: bundle exec rake spec
           debug: true
@@ -71,7 +71,7 @@ jobs:
         run: (! bundle exec rubocop -h 2> /dev/null) && echo 'RuboCop successfully *not* loaded for local tests'
       - name: spec
         if: "matrix.coverage != true && matrix.internal_investigation != true"
-        run:  bundle exec rake spec
+        run: bundle exec rake spec
   rubocop_specs:
     name: >-
       Main Gem Specs | RuboCop: ${{ matrix.rubocop }} | ${{ matrix.ruby }}
@@ -82,12 +82,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu ]
-        ruby: [ 2.6, 2.7 ]
-        rubocop: [ master ]
-        internal_investigation: [ null ]
+        os: [ubuntu]
+        ruby: [2.6, 2.7]
+        rubocop: [master]
+        internal_investigation: [null]
         include:
-          - { rubocop: master, ruby: '3.0', os: ubuntu }
+          - { rubocop: master, ruby: "3.0", os: ubuntu }
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -106,7 +106,7 @@ jobs:
       - name: generate lexer and parser
         run: bundle exec rake generate
       - name: spec
-        run:  cd ../rubocop && bundle exec rake spec
+        run: cd ../rubocop && bundle exec rake spec
   internal_investigation:
     name: >-
       Coding Style | ${{ matrix.ruby }}
@@ -118,9 +118,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu ]
-        ruby: [ '3.0' ]
-        rubocop: [ master ]
+        os: [ubuntu]
+        ruby: ["3.0"]
+        rubocop: [master]
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -131,4 +131,4 @@ jobs:
       - name: install dependencies
         run: bundle install --jobs 3 --retry 3
       - name: internal investigation
-        run:  bundle exec rake generate internal_investigation
+        run: bundle exec rake generate internal_investigation
