@@ -8,6 +8,10 @@ module RuboCop
     class StrNode < Node
       include BasicLiteralNode
 
+      def character_literal?
+        loc.respond_to?(:begin) && loc.begin && loc.begin.is?('?')
+      end
+
       def heredoc?
         loc.is_a?(Parser::Source::Map::Heredoc)
       end

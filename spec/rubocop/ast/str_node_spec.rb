@@ -30,6 +30,33 @@ RSpec.describe RuboCop::AST::StrNode do
     end
   end
 
+  describe '#character_literal?' do
+    context 'with a character literal' do
+      let(:source) { '?\n' }
+
+      it { is_expected.to be_character_literal }
+    end
+
+    context 'with a normal string literal' do
+      let(:source) { '"\n"' }
+
+      it { is_expected.not_to be_character_literal }
+    end
+
+    context 'with a heredoc' do
+      let(:source) do
+        <<~RUBY
+          <<-CODE
+            foo
+            bar
+          CODE
+        RUBY
+      end
+
+      it { is_expected.not_to be_character_literal }
+    end
+  end
+
   describe '#heredoc?' do
     context 'with a normal string' do
       let(:source) { "'foo'" }
