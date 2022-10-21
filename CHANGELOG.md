@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#242](https://github.com/rubocop/rubocop-ast/pull/242): Add `character_literal?` to `StrNode`. ([@koic][])
+
 ## 1.22.0 (2022-10-17)
 
 ### New features
