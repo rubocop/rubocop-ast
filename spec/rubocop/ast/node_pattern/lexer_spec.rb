@@ -31,7 +31,7 @@ RSpec.describe RuboCop::AST::NodePattern::Lexer do
   context 'with $type+' do
     let(:source) { '(array sym $int+ x)' }
 
-    it 'works' do
+    it 'is parsed as `$ int + x`' do
       expect(tokens.map(&:last).map(&:first)).to eq \
         %i[( array sym $ int + x )]
     end
@@ -77,7 +77,7 @@ RSpec.describe RuboCop::AST::NodePattern::Lexer do
   context 'when given arithmetic symbols' do
     let(:source) { ':&' }
 
-    it 'works' do
+    it 'is parsed as `:&`' do
       expect(tokens.map(&:last).map(&:first)).to eq [:&]
     end
   end
