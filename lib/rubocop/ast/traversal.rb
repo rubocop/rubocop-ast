@@ -75,7 +75,8 @@ module RuboCop
       ### arity == 0
       no_children = %i[true false nil self cbase zsuper redo retry
                        forward_args forwarded_args match_nil_pattern
-                       forward_arg lambda empty_else kwnilarg
+                       forward_arg forwarded_restarg forwarded_kwrestarg
+                       lambda empty_else kwnilarg
                        __FILE__ __LINE__ __ENCODING__]
 
       ### arity == 0..1
