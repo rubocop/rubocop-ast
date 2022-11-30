@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#245](https://github.com/rubocop/rubocop-ast/pull/245): Add node types `forwarded_restarg` and `forwarded_kwrestarg`. ([@ydah][])
+
 ## 1.23.0 (2022-10-21)
 
 ### New features
@@ -377,3 +381,4 @@
 [@gsamokovarov]: https://github.com/gsamokovarov
 [@nobuyo]: https://github.com/nobuyo
 [@tdeo]: https://github.com/tdeo
+[@ydah]: https://github.com/ydah
