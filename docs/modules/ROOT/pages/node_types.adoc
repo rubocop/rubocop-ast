@@ -120,6 +120,10 @@ The following fields are given when relevant to nodes in the source code:
 
 |forwarded-args|Forwarding arguments into a method call|None|foo(...)|N/A
 
+|forwarded-restarg|Forwarding positional arguments into a method call|None|foo(*)|N/A
+
+|forwarded-kwrestarg|Forwarding keyword arguments into a method call|None|foo(**)|N/A
+
 |gvar|Global variable access|One child, the variable name as a symbol `:$foo`|$foo|N/A
 
 |gvasgn|Global variable assignment|Two children, the variable name `:$foo` and the expression being assigned|$foo = 5|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/AsgnNode[AsgnNode]
