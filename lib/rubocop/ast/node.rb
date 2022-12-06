@@ -313,6 +313,8 @@ module RuboCop
       ## Searching the AST
 
       def parent_module_name
+        return 'Object' unless parent
+
         # what class or module is this method/constant/etc definition in?
         # returns nil if answer cannot be determined
         ancestors = each_ancestor(:class, :module, :sclass, :casgn, :block)
