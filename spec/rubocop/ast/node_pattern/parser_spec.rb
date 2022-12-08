@@ -74,8 +74,8 @@ RSpec.describe RuboCop::AST::NodePattern::Parser do
     it 'generates specialized nodes' do
       source_file = Parser::Source::Buffer.new('(spec)', source: '($_)')
       ast = parser.parse(source_file)
-      expect(ast.class).to eq ::RuboCop::AST::NodePattern::Node::Sequence
-      expect(ast.child.class).to eq ::RuboCop::AST::NodePattern::Node::Capture
+      expect(ast.class).to eq RuboCop::AST::NodePattern::Node::Sequence
+      expect(ast.child.class).to eq RuboCop::AST::NodePattern::Node::Capture
     end
   end
 end

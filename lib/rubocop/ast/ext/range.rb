@@ -25,4 +25,4 @@ module RuboCop
   end
 end
 
-::Parser::Source::Range.include ::RuboCop::AST::Ext::Range
+Parser::Source::Range.include RuboCop::AST::Ext::Range
