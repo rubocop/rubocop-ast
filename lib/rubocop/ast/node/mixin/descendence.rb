@@ -36,7 +36,10 @@ module RuboCop
       #
       # @return [Array<Node>] an array of child nodes
       def child_nodes
-        each_child_node.to_a
+        # Iterate child nodes directly to avoid allocating an Enumerator.
+        nodes = []
+        each_child_node { |node| nodes << node }
+        nodes
       end
 
       # Calls the given block for each descendant node with depth first order.
@@ -102,7 +105,9 @@ module RuboCop
       protected
 
       def visit_descendants(types, &block)
-        each_child_node do |child|
+        children.each do |child|
+          next unless child.is_a?(::AST::Node)
+
           yield child if types.empty? || types.include?(child.type)
           child.visit_descendants(types, &block)
         end

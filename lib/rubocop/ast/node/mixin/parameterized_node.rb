@@ -82,9 +82,17 @@ module RuboCop
       # and optimizes other calls
       module RestArguments
         include ParameterizedNode
+
+        EMPTY_ARGUMENTS = [].freeze
+
         # @return [Array<Node>] arguments, if any
         def arguments
-          children[first_argument_index..].freeze
+          if arguments?
+            children.drop(first_argument_index).freeze
+          else
+            # Skip unneeded Array allocation.
+            EMPTY_ARGUMENTS
+          end
         end
 
         # A shorthand for getting the first argument of the node.

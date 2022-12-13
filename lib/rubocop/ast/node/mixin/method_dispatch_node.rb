@@ -211,7 +211,7 @@ module RuboCop
       #
       # @return [Boolean] whether this method is a lambda literal
       def lambda_literal?
-        block_literal? && loc.expression && loc.expression.source == '->'
+        loc.expression.source == '->' && block_literal?
       end
 
       # Checks whether this is a unary operation.

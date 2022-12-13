@@ -4,6 +4,8 @@ module RuboCop
   module AST
     # A basic wrapper around Parser's tokens.
     class Token
+      LEFT_PAREN_TYPES = %i[tLPAREN tLPAREN2].freeze
+
       attr_reader :pos, :type, :text
 
       def self.from_parser_token(parser_token)
@@ -89,7 +91,7 @@ module RuboCop
       end
 
       def left_parens?
-        %i[tLPAREN tLPAREN2].include?(type)
+        LEFT_PAREN_TYPES.include?(type)
       end
 
       def right_parens?

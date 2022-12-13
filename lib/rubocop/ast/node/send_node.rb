@@ -15,6 +15,10 @@ module RuboCop
          (_    _    _                                                 _ ...)]
       PATTERN
 
+      def send_type?
+        true
+      end
+
       private
 
       def first_argument_index

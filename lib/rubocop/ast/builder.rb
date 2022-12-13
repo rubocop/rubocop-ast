@@ -75,7 +75,7 @@ module RuboCop
         rescue:       RescueNode,
         resbody:      ResbodyNode,
         return:       ReturnNode,
-        csend:        SendNode,
+        csend:        CsendNode,
         send:         SendNode,
         str:          StrNode,
         xstr:         StrNode,
