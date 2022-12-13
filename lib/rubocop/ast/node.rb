@@ -84,8 +84,12 @@ module RuboCop
       LITERAL_RECURSIVE_TYPES = (OPERATOR_KEYWORDS + COMPOSITE_LITERALS + %i[begin pair]).freeze
       private_constant :LITERAL_RECURSIVE_METHODS, :LITERAL_RECURSIVE_TYPES
 
+      EMPTY_CHILDREN = [].freeze
+      EMPTY_PROPERTIES = {}.freeze
+      private_constant :EMPTY_CHILDREN, :EMPTY_PROPERTIES
+
       # @see https://www.rubydoc.info/gems/ast/AST/Node:initialize
-      def initialize(type, children = [], properties = {})
+      def initialize(type, children = EMPTY_CHILDREN, properties = EMPTY_PROPERTIES)
         @mutable_attributes = {}
 
         # ::AST::Node#initialize freezes itself.
@@ -101,11 +105,19 @@ module RuboCop
         end
       end
 
-      Parser::Meta::NODE_TYPES.each do |node_type|
+      (Parser::Meta::NODE_TYPES - [:send]).each do |node_type|
         method_name = "#{node_type.to_s.gsub(/\W/, '')}_type?"
-        define_method(method_name) do
-          type == node_type
-        end
+        class_eval <<~RUBY, __FILE__, __LINE__ + 1
+          def #{method_name}          # def block_type?
+            @type == :#{node_type}    #   @type == :block
+          end                         # end
+        RUBY
+      end
+
+      # Most nodes are of 'send' type, so this method is defined
+      # separately to make this check as fast as possible.
+      def send_type?
+        false
       end
 
       # Returns the parent node, or `nil` if the receiver is a root node.
@@ -203,9 +215,7 @@ module RuboCop
       # destructuring method.
       #
       # @return [Array<Node>] the different parts of the ndde
-      def node_parts
-        to_a
-      end
+      alias node_parts to_a
 
       # Calls the given block for each ancestor node from parent to root.
       # If no block is given, an `Enumerator` is returned.
