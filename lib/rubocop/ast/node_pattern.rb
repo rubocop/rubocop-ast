@@ -54,6 +54,22 @@ module RuboCop
 
       VAR = 'node'
 
+      # Yields its argument and any descendants, depth-first.
+      #
+      def self.descend(element, &block)
+        return to_enum(__method__, element) unless block
+
+        yield element
+
+        if element.is_a?(::RuboCop::AST::Node)
+          element.children.each do |child|
+            descend(child, &block)
+          end
+        end
+
+        nil
+      end
+
       attr_reader :pattern, :ast, :match_code
 
       def_delegators :@compiler, :captures, :named_parameters, :positional_parameters
@@ -98,22 +114,6 @@ module RuboCop
 
       def init_with(coder) # :nodoc:
         initialize(coder['pattern'])
-      end
-
-      # Yields its argument and any descendants, depth-first.
-      #
-      def self.descend(element, &block)
-        return to_enum(__method__, element) unless block
-
-        yield element
-
-        if element.is_a?(::RuboCop::AST::Node)
-          element.children.each do |child|
-            descend(child, &block)
-          end
-        end
-
-        nil
       end
 
       def freeze

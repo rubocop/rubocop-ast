@@ -77,6 +77,21 @@ class Changelog # rubocop:disable Metrics/ClassLength
       user
     end
   end
+
+  def self.pending?
+    entry_paths.any?
+  end
+
+  def self.entry_paths
+    Dir["#{ENTRIES_PATH}*"]
+  end
+
+  def self.read_entries
+    entry_paths.to_h do |path|
+      [path, File.read(path)]
+    end
+  end
+
   attr_reader :header, :rest
 
   def initialize(content: File.read(PATH), entries: Changelog.read_entries)
@@ -116,20 +131,6 @@ class Changelog # rubocop:disable Metrics/ClassLength
       @rest,
       *new_contributor_lines
     ].join("\n")
-  end
-
-  def self.pending?
-    entry_paths.any?
-  end
-
-  def self.entry_paths
-    Dir["#{ENTRIES_PATH}*"]
-  end
-
-  def self.read_entries
-    entry_paths.to_h do |path|
-      [path, File.read(path)]
-    end
   end
 
   def new_contributor_lines

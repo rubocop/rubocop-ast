@@ -12,6 +12,9 @@ module RuboCop
       # @api private
       STRING_SOURCE_NAME = '(string)'
 
+      INVALID_LEVELS = %i[error fatal].freeze
+      private_constant :INVALID_LEVELS
+
       attr_reader :path, :buffer, :ast, :comments, :tokens, :diagnostics,
                   :parser_error, :raw_source, :ruby_version
 
@@ -19,9 +22,6 @@ module RuboCop
         file = File.read(path, mode: 'rb')
         new(file, ruby_version, path)
       end
-
-      INVALID_LEVELS = %i[error fatal].freeze
-      private_constant :INVALID_LEVELS
 
       def initialize(source, ruby_version, path = nil)
         # Defaults source encoding to UTF-8, regardless of the encoding it has
