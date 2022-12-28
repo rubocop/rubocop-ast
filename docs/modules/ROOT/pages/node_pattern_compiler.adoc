@@ -126,7 +126,7 @@ The compilation itself is handled by three subcompilers:
 
 === Visitors
 
-The subcompilers use the visitor pattern [https://en.wikipedia.org/wiki/Visitor_pattern]
+The subcompilers use the https://en.wikipedia.org/wiki/Visitor_pattern[visitor pattern].
 
 The methods starting with `visit_` are used to process the different types of nodes.
 For a node of type `:capture`, the method `visit_capture` will be called, or if none is defined then `visit_other_type` will be called.
