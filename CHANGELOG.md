@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.24.1 (2022-12-29)
+
 ## 1.24.0 (2022-11-30)
 
 ### New features
