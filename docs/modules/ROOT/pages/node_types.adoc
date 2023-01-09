@@ -229,7 +229,7 @@ a|`foo` or `foo.bar`|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST
 
 |while-post|Loop with condition coming last.|Two children. First child is an expression node for condition, second child is a body statement.|begin; foo; end while condition|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/WhileNode[WhileNode]
 
-|xstr|Execute string (backticks). The heredoc version is treated totally differently from the regular version.|Children are split into `str` nodes, with interpolation represented by separate expression nodes .|`foo#\{bar\}`|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/StrNode[StrNode]
+|xstr|Execute string (backticks). The heredoc version is treated totally differently from the regular version.|Children are split into `str` nodes, with interpolation represented by separate expression nodes .|\`date`|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/StrNode[StrNode]
 
 |yield|Yield to a block.|Children are expression nodes representing arguments.|yield(foo)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/YieldNode[YieldNode]
 
