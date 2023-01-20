@@ -31,6 +31,12 @@ RSpec.describe RuboCop::AST::SuperNode do
     it { expect(super_node.method_name).to eq(:super) }
   end
 
+  describe '#selector' do
+    let(:source) { 'super(foo)' }
+
+    it { expect(super_node.selector.source).to eq('super') }
+  end
+
   describe '#method?' do
     context 'when message matches' do
       context 'when argument is a symbol' do
