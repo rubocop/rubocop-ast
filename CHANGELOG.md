@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+* [#262](https://github.com/rubocop/rubocop-ast/pull/267): Introduce RuboCop::Ast::MethodDispatchNode#selector. ([@gsamokovarov][])
+
 ## 1.28.1 (2023-05-01)
 
 ### Bug fixes

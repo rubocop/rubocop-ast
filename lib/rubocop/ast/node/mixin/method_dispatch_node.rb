@@ -5,7 +5,7 @@ module RuboCop
     # Common functionality for nodes that are a kind of method dispatch:
     # `send`, `csend`, `super`, `zsuper`, `yield`, `defined?`,
     # and (modern only): `index`, `indexasgn`, `lambda`
-    module MethodDispatchNode
+    module MethodDispatchNode # rubocop:disable Metrics/ModuleLength
       extend NodePattern::Macros
       include MethodIdentifierPredicates
 
@@ -26,6 +26,17 @@ module RuboCop
       # @return [Symbol] the name of the dispatched method
       def method_name
         node_parts[1]
+      end
+
+      # The source range for the method name or keyword that dispatches this call.
+      #
+      # @return [Parser::Source::Range] the source range for the method name or keyword
+      def selector
+        if loc.respond_to? :keyword
+          loc.keyword
+        else
+          loc.selector
+        end
       end
 
       # The `block` or `numblock` node associated with this method dispatch, if any.
@@ -147,7 +158,7 @@ module RuboCop
       #
       # @return [Boolean] whether the method is the implicit form of `#call`
       def implicit_call?
-        method?(:call) && !loc.selector
+        method?(:call) && !selector
       end
 
       # Whether this method dispatch has an explicit block.
@@ -222,9 +233,9 @@ module RuboCop
       #
       # @return [Boolean] whether this method is a unary operation
       def unary_operation?
-        return false unless loc.selector
+        return false unless selector
 
-        operator_method? && loc.expression.begin_pos == loc.selector.begin_pos
+        operator_method? && loc.expression.begin_pos == selector.begin_pos
       end
 
       # Checks whether this is a binary operation.
@@ -235,9 +246,9 @@ module RuboCop
       #
       # @return [Boolean] whether this method is a binary operation
       def binary_operation?
-        return false unless loc.selector
+        return false unless selector
 
-        operator_method? && loc.expression.begin_pos != loc.selector.begin_pos
+        operator_method? && loc.expression.begin_pos != selector.begin_pos
       end
 
       private

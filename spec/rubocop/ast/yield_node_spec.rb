@@ -23,6 +23,12 @@ RSpec.describe RuboCop::AST::YieldNode do
     it { expect(yield_node.method_name).to eq(:yield) }
   end
 
+  describe '#selector' do
+    let(:source) { 'yield :foo, :bar' }
+
+    it { expect(yield_node.selector.source).to eq('yield') }
+  end
+
   describe '#method?' do
     context 'when message matches' do
       context 'when argument is a symbol' do
