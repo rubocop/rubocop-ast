@@ -2,9 +2,9 @@
 
 module RuboCop
   module AST
-    # A node extension for `send` nodes. This will be used in place of a plain
+    # A node extension for `csend` nodes. This will be used in place of a plain
     # node when the builder constructs the AST, making its methods available
-    # to all `send` nodes within RuboCop.
+    # to all `csend` nodes within RuboCop.
     class CsendNode < SendNode
       def send_type?
         false
