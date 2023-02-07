@@ -513,7 +513,7 @@ module RuboCop
         {
           (send #global_const?({:Class :Module :Struct}) :new ...)
           (send #global_const?(:Data) :define ...)
-          (block {
+          ({block numblock} {
             (send #global_const?({:Class :Module :Struct}) :new ...)
             (send #global_const?(:Data) :define ...)
           } ...)

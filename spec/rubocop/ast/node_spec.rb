@@ -424,9 +424,43 @@ RSpec.describe RuboCop::AST::Node do
       end
     end
 
+    context 'using Ruby >= 2.7', :ruby27 do
+      context 'class definition with a numblock' do
+        let(:src) { 'Class.new { do_something(_1) }' }
+
+        it 'matches' do
+          expect(node).to be_class_constructor
+        end
+      end
+
+      context 'module definition with a numblock' do
+        let(:src) { 'Module.new { do_something(_1) }' }
+
+        it 'matches' do
+          expect(node).to be_class_constructor
+        end
+      end
+
+      context 'Struct definition with a numblock' do
+        let(:src) { 'Struct.new(:foo, :bar) { do_something(_1) }' }
+
+        it 'matches' do
+          expect(node).to be_class_constructor
+        end
+      end
+    end
+
     context 'using Ruby >= 3.2', :ruby32 do
       context 'Data definition with a block' do
         let(:src) { 'Data.define(:foo, :bar) { def a = 42 }' }
+
+        it 'matches' do
+          expect(node).to be_class_constructor
+        end
+      end
+
+      context 'Data definition with a numblock' do
+        let(:src) { 'Data.define(:foo, :bar) { do_something(_1) }' }
 
         it 'matches' do
           expect(node).to be_class_constructor
