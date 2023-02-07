@@ -423,6 +423,32 @@ RSpec.describe RuboCop::AST::Node do
         expect(node).to be_class_constructor
       end
     end
+
+    context 'using Ruby >= 3.2', :ruby32 do
+      context 'Data definition with a block' do
+        let(:src) { 'Data.define(:foo, :bar) { def a = 42 }' }
+
+        it 'matches' do
+          expect(node).to be_class_constructor
+        end
+      end
+
+      context 'Data definition without block' do
+        let(:src) { 'Data.define(:foo, :bar)' }
+
+        it 'matches' do
+          expect(node).to be_class_constructor
+        end
+      end
+
+      context '::Data' do
+        let(:src) { '::Data.define(:foo, :bar) { def a = 42 }' }
+
+        it 'matches' do
+          expect(node).to be_class_constructor
+        end
+      end
+    end
   end
 
   describe '#struct_constructor?' do

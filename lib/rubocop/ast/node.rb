@@ -510,8 +510,14 @@ module RuboCop
 
       # @!method class_constructor?(node = self)
       def_node_matcher :class_constructor?, <<~PATTERN
-        {       (send #global_const?({:Class :Module :Struct}) :new ...)
-         (block (send #global_const?({:Class :Module :Struct}) :new ...) ...)}
+        {
+          (send #global_const?({:Class :Module :Struct}) :new ...)
+          (send #global_const?(:Data) :define ...)
+          (block {
+            (send #global_const?({:Class :Module :Struct}) :new ...)
+            (send #global_const?(:Data) :define ...)
+          } ...)
+        }
       PATTERN
 
       # @deprecated Use `:class_constructor?`
