@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.25.0 (2023-02-11)
+
 ### New features
 
 * [#256](https://github.com/rubocop-hq/rubocop-ast/pull/256): Support `Parser::Ruby33` for Ruby 3.3 parser (experimental). ([@koic][])
