@@ -48,12 +48,12 @@ module RuboCop
 
             def emit_unary_op(type, operator_t = nil, *children)
               children[-1] = children[-1].first if children[-1].is_a?(Array) # token?
-              map = source_map(children.first.loc.expression, operator_t: operator_t)
+              map = source_map(children.first.source_range, operator_t: operator_t)
               n(type, children, map)
             end
 
             def emit_list(type, begin_t, children, end_t)
-              expr = children.first.loc.expression.join(children.last.loc.expression)
+              expr = children.first.source_range.join(children.last.source_range)
               map = source_map(expr, begin_t: begin_t, end_t: end_t)
               n(type, children, map)
             end
@@ -79,8 +79,7 @@ module RuboCop
             end
 
             def join_exprs(left_expr, right_expr)
-              left_expr.loc.expression
-                       .join(right_expr.loc.expression)
+              left_expr.source_range.join(right_expr.source_range)
             end
 
             def source_map(token_or_range, begin_t: nil, end_t: nil, operator_t: nil, selector_t: nil)

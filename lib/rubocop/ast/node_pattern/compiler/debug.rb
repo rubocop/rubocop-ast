@@ -47,7 +47,7 @@ module RuboCop
               # @return [String] a Rainbow colorized version of ruby
               def colorize(color_scheme = COLOR_SCHEME)
                 map = color_map(color_scheme)
-                ast.loc.expression.source_buffer.source.chars.map.with_index do |char, i|
+                ast.source_range.source_buffer.source.chars.map.with_index do |char, i|
                   Rainbow(char).color(map[i])
                 end.join
               end
