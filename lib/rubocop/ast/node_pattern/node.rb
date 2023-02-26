@@ -75,6 +75,10 @@ module RuboCop
           self.class.new(type, children, { location: location })
         end
 
+        def source_range
+          loc.expression
+        end
+
         INT_TO_RANGE = Hash.new { |h, k| h[k] = k..k }
         private_constant :INT_TO_RANGE
 

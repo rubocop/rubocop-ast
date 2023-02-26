@@ -297,7 +297,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       let(:hash) { array.children[1] }
 
       context 'provided source_range on line without comment' do
-        let(:range) { hash.pairs.first.loc.expression }
+        let(:range) { hash.pairs.first.source_range }
 
         it { is_expected.to be false }
       end
@@ -309,13 +309,13 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
 
       context 'provided source_range on line with comment' do
-        let(:range) { hash.pairs.last.loc.expression }
+        let(:range) { hash.pairs.last.source_range }
 
         it { is_expected.to be true }
       end
 
       context 'provided a multiline source_range with at least one line with comment' do
-        let(:range) { array.loc.expression }
+        let(:range) { array.source_range }
 
         it { is_expected.to be true }
       end

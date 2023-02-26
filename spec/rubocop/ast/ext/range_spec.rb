@@ -16,7 +16,7 @@ RSpec.describe RuboCop::AST::Ext::Range do
     end
 
     it 'accepts an `exclude_end` keyword argument' do
-      expect(node.loc.expression.line_span(exclude_end: true)).to eq 1...4
+      expect(node.source_range.line_span(exclude_end: true)).to eq 1...4
     end
   end
 end
