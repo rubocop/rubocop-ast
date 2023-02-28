@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.27.0 (2023-02-27)
+
 ### New features
 
 * [#229](https://github.com/rubocop/rubocop-ast/pull/229): Add `source_range` method to `NodePattern`. ([@koic][])
