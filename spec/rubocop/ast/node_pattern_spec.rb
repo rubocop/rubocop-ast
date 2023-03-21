@@ -2112,7 +2112,7 @@ RSpec.describe RuboCop::AST::NodePattern do
           context 'when called on matching code' do
             it 'returns an enumerator yielding the matches' do
               is_expected.to be_a(Enumerator)
-              expect(result.to_a).to match_array [s(:sym, :hello), s(:sym, :world)]
+              expect(result.to_a).to contain_exactly(s(:sym, :hello), s(:sym, :world))
             end
           end
 

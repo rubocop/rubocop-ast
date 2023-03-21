@@ -67,7 +67,7 @@ RSpec.describe RuboCop::AST::Traversal do
   File.read("#{__dir__}/fixtures/code_examples.rb")
       .split("#----\n")
       .each_with_index do |example, _i|
-    context "for example #{example}", :ruby27 do
+    context "with example #{example}", :ruby27 do
       let(:klass) do
         Struct.new(:hits) do
           include RuboCop::AST::Traversal
