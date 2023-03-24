@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.28.0 (2023-03-24)
+
 ### New features
 
 * [#259](https://github.com/rubocop/rubocop-ast/pull/259): Add `forwarded_kwrestarg` node to `AST::Builder`. ([@koic][])
