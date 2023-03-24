@@ -2,9 +2,9 @@
 
 module RuboCop
   module AST
-    # A node extension for `kwsplat` nodes. This will be used in place of a
-    # plain  node when the builder constructs the AST, making its methods
-    # available to all `kwsplat` nodes within RuboCop.
+    # A node extension for `kwsplat` and `forwarded_kwrestarg` nodes. This will be used in
+    # place of a plain node when the builder constructs the AST, making its methods available to
+    # all `kwsplat` and `forwarded_kwrestarg` nodes within RuboCop.
     class KeywordSplatNode < Node
       include HashElementNode
 
@@ -40,6 +40,13 @@ module RuboCop
       # @return [Array<KeywordSplatNode>] the different parts of the `kwsplat`
       def node_parts
         [self, self]
+      end
+
+      # This provides `forwarded_kwrestarg` node to return true to be compatible with `kwsplat` node.
+      #
+      # @return [true]
+      def kwsplat_type?
+        true
       end
     end
   end
