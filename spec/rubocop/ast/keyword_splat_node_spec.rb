@@ -2,41 +2,81 @@
 
 RSpec.describe RuboCop::AST::KeywordSplatNode do
   let(:kwsplat_node) { parse_source(source).ast.children.last }
+  let(:source) { '{ a: 1, **foo }' }
 
   describe '.new' do
-    let(:source) { '{ a: 1, **foo }' }
-
     it { expect(kwsplat_node).to be_a(described_class) }
   end
 
   describe '#hash_rocket?' do
-    let(:source) { '{ a: 1, **foo }' }
-
     it { expect(kwsplat_node).not_to be_hash_rocket }
   end
 
   describe '#colon?' do
-    let(:source) { '{ a: 1, **foo }' }
-
     it { expect(kwsplat_node).not_to be_colon }
   end
 
   describe '#key' do
-    let(:source) { '{ a: 1, **foo }' }
-
     it { expect(kwsplat_node.key).to eq(kwsplat_node) }
   end
 
   describe '#value' do
-    let(:source) { '{ a: 1, **foo }' }
-
     it { expect(kwsplat_node.value).to eq(kwsplat_node) }
   end
 
   describe '#operator' do
-    let(:source) { '{ a: 1, **foo }' }
-
     it { expect(kwsplat_node.operator).to eq('**') }
+  end
+
+  describe '#kwsplat_type?' do
+    it { expect(kwsplat_node).to be_kwsplat_type }
+  end
+
+  describe '#forwarded_kwrestarg_type?' do
+    it { expect(kwsplat_node).not_to be_forwarded_kwrestarg_type }
+  end
+
+  context 'when forwarded keyword rest arguments', :ruby32 do
+    let(:kwsplat_node) { parse_source(source).ast.children.last.children.last }
+    let(:source) do
+      <<~RUBY
+        def foo(**)
+          { a: 1, ** }
+        end
+      RUBY
+    end
+
+    describe '.new' do
+      it { expect(kwsplat_node).to be_a(described_class) }
+    end
+
+    describe '#hash_rocket?' do
+      it { expect(kwsplat_node).not_to be_hash_rocket }
+    end
+
+    describe '#colon?' do
+      it { expect(kwsplat_node).not_to be_colon }
+    end
+
+    describe '#key' do
+      it { expect(kwsplat_node.key).to eq(kwsplat_node) }
+    end
+
+    describe '#value' do
+      it { expect(kwsplat_node.value).to eq(kwsplat_node) }
+    end
+
+    describe '#operator' do
+      it { expect(kwsplat_node.operator).to eq('**') }
+    end
+
+    describe '#kwsplat_type?' do
+      it { expect(kwsplat_node).to be_kwsplat_type }
+    end
+
+    describe '#forwarded_kwrestarg_type?' do
+      it { expect(kwsplat_node).to be_forwarded_kwrestarg_type }
+    end
   end
 
   describe '#same_line?' do
