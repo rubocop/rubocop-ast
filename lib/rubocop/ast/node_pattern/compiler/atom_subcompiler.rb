@@ -38,7 +38,7 @@ module RuboCop
           end
 
           def visit_set
-            set = node.children.map(&:child).to_set.freeze
+            set = node.children.to_set(&:child).freeze
             NodePattern::Sets[set]
           end
 
