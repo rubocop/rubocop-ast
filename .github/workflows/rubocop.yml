@@ -87,7 +87,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu]
-        ruby: [2.6, 2.7]
+        ruby: [2.7]
         rubocop: [master]
         internal_investigation: [null]
         include:
