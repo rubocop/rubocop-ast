@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.28.1 (2023-05-01)
+
 ### Bug fixes
 
 * [#262](https://github.com/rubocop/rubocop-ast/pull/262): Fix an error when parsing non UTF-8 frozen string. ([@koic][])
