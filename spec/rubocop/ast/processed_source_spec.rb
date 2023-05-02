@@ -17,6 +17,16 @@ RSpec.describe RuboCop::AST::ProcessedSource do
     let(:source) { "# \xf9" }
   end
 
+  describe '#initialize' do
+    context 'when parsing non UTF-8 frozen string' do
+      let(:source) { (+'true').force_encoding(Encoding::ASCII_8BIT).freeze }
+
+      it 'returns an instance of ProcessedSource' do
+        is_expected.to be_a(described_class)
+      end
+    end
+  end
+
   describe '.from_file' do
     describe 'when the file exists' do
       around do |example|
