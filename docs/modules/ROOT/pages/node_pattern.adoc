@@ -47,20 +47,84 @@ def on_send(node)
 end
 ----
 
-== `(` and `)` Navigate deeply with Parens
+== Ruby Abstract Syntax Tree (AST)
 
-Parens delimits navigation inside node and its children.
+Parser translates Ruby source code to a tree structure represented in text.
+A simple integer literal like `1` is represented by `(int 1)` in the AST.
+A method call with two integer literals:
 
-A simple integer like `1` is represented by `(int 1)` in the AST.
+[source,ruby]
+----
+foo(1, 2)
+----
+
+is represented with:
+
+[source]
+----
+(send nil :foo
+  (int 1)
+  (int 2)
+)
+----
+
+Every node is represented with a sequence.
+The first element is the node type.
+Other elements are child nodes. They are optionally present and depend on the node type.
+E.g.:
+
+* `nil` is just `(nil)`
+* `1` is `(int 1)`
+* `[1]` is `(array (int 1))`
+* `[1, 2]` is `(array (int 1) (int 2))`
+* `foo` is `(send nil :foo)`
+* `foo(1)` is `(send nil :foo (int 1))`
+
+=== Getting the AST representation
+
+==== From the command-line with `ruby-parse`
 
 [source,sh]
 ----
-$ ruby-parse -e '1'
-(int 1)
+$ ruby-parse --legacy -e 'foo(1)'
+(send nil :foo
+  (int 1))
 ----
 
-* `int` will match exactly the node, looking only the node type.
-* `(int 1)` will match precisely the node
+NOTE: Use the `--legacy` `ruby-parse` flag to get https://github.com/whitequark/parser/#usage[the same AST that RuboCop AST returns].
+There are several differences, e.g. without `--legacy`, `foo(a: 1)` would return `kwargs`, and with `--legacy` it returns `hash`.
+
+==== From REPL
+
+[source,ruby]
+----
+> puts RuboCop::AST::ProcessedSource.new('foo(1)', RUBY_VERSION.to_f).ast.to_s
+(send nil :foo
+  (int 1))
+----
+
+== Basic Node Pattern Structure
+
+The simplest Node Pattern would match just the node type.
+E.g. the `int` node pattern would match the `(int 1)` AST (literal `1` in Ruby code).
+More sophisticated node patterns match more than one child.
+
+== `(` and `)` to Match Elements
+
+Several matchers surrounded by parentheses would match a node with elements each matching a corresponding matcher, order-dependently.
+Ruby code with an array with two integer literals, `[1, 2]` represented in AST as `(array (int 1) (int 2))` could be matched with `(array int int)` node pattern.
+
+For a literal integer, e.g. `1` Ruby code represented by `(int 1)` in AST:
+
+* `int` node pattern will match exactly the node, looking only the node type
+* `(int 1)` node pattern will match precisely the node
+* `(int 2)` node pattern will not match
+
+== `(` and `)` for Nested Matching
+
+Ruby code with a method call with two integer literals as arguments, `foo(1, 2)` represented in AST as `(send nil :foo (int 1) (int 2))` could be matched with `(send nil? :foo int int)` node pattern.
+To match just those method calls where the first argument is a literal `1`, use `(send nil? :foo (int 1) int)`.
+Any child that is a node can be a target for nested matching.
 
 == `_` for any single node
 
