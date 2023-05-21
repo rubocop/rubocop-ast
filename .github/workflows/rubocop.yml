@@ -92,6 +92,7 @@ jobs:
         internal_investigation: [null]
         include:
           - { rubocop: master, ruby: "3.0", os: ubuntu }
+          - { rubocop: "v1.35.0", ruby: "3.2", os: ubuntu }
     steps:
       - name: checkout
         uses: actions/checkout@v3
