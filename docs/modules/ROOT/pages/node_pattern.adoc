@@ -273,6 +273,16 @@ Imagine you want to check if the number is `odd?` and also positive numbers:
 
 NOTE: Refer to <<Predicate methods>> to see how `odd?` works.
 
+== `!` for Negation
+
+Node pattern `(send nil? :sum !int _)` would match a `sum` call where the first argument is *not* a literal integer.
+E.g.:
+
+* it will match `sum(2.0, 3)`, as the first argument is of a `float` type
+* it will not match `sum(2, 3)`, as the first argument is of an `int` type
+
+NOTE: Negation operator works with other node pattern syntax elements, `{}`, `[]`, `()`, `$`, but only with those that target a single element. E.g. `$!(int 1)`, `!{false nil}`, `![#positive? #even?]` will work, while `!{int int | sym}`, `!{int int | sym sym}`, and any use of `<>` won't.
+
 == `$` for captures
 
 You can capture elements or nodes along with your search, prefixing the expression
