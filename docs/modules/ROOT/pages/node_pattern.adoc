@@ -486,7 +486,7 @@ current symbol is being called from an initialization method, like:
 
 [source,sh]
 ----
-$ ruby-parse -e 'Comment.new(user: current_user)'
+$ ruby-parse --legacy -e 'Comment.new(user: current_user)'
 (send
   (const nil :Comment) :new
   (hash
