@@ -271,6 +271,8 @@ Imagine you want to check if the number is `odd?` and also positive numbers:
 
 `(int [odd? positive?])` - is an int and the value should be odd and positive.
 
+NOTE: Refer to <<Predicate methods>> to see how `odd?` works.
+
 == `$` for captures
 
 You can capture elements or nodes along with your search, prefixing the expression
