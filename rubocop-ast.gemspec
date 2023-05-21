@@ -35,7 +35,5 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency('parser', '>= 3.2.1.0')
 
-  s.add_development_dependency('bundler', '>= 1.15.0', '< 3.0')
-
   ##### Do NOT add `rubocop` (or anything depending on `rubocop`) here. See Gemfile
 end
