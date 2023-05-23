@@ -78,7 +78,7 @@ class MyRule < Parser::AST::Processor
   end
 end
 
-source = RuboCop::ProcessedSource.new(code, 2.7)
+source = RuboCop::AST::ProcessedSource.new(code, 2.7)
 rule = MyRule.new
 source.ast.each_node { |n| rule.process(n) }
 ----
