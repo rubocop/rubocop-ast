@@ -70,7 +70,7 @@ is represented with:
 
 Every node is represented with a sequence.
 The first element is the node type.
-Other elements are child nodes. They are optionally present and depend on the node type.
+Other elements are the children. They are optionally present and depend on the node type.
 E.g.:
 
 * `nil` is just `(nil)`
