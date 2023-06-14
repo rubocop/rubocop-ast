@@ -120,8 +120,5 @@ RSpec/NestedGroups:
 RSpec/MultipleMemoizedHelpers:
   Enabled: false
 
-RSpec/FactoryBot/CreateList:
-  Enabled: false
-
 RSpec/StubbedMock:
   Enabled: false
