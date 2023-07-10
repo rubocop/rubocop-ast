@@ -60,7 +60,7 @@ jobs:
         run: bundle install --jobs 3 --retry 3
       - name: code coverage
         if: matrix.coverage
-        uses: paambaati/codeclimate-action@v3.2.0
+        uses: paambaati/codeclimate-action@v5.0.0
         env:
           CC_TEST_REPORTER_ID: "758a8228862932dc8afa9144c4a5bc5dfe29c2f7dde1b7734175bad49ee310e7"
           COVERAGE: "true"
