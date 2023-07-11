@@ -138,7 +138,7 @@ RSpec.describe RuboCop::AST::IfNode do
       it { expect(elsif_node).to be_elsif }
     end
 
-    context 'with an if statement comtaining an elsif' do
+    context 'with an if statement containing an elsif' do
       let(:source) do
         ['if foo?',
          '  1',
