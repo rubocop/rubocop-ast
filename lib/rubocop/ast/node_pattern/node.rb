@@ -207,7 +207,7 @@ module RuboCop
           include ForbidInSeqHead
 
           def arity
-            min, max = children.map(&:arity_range).map(&:minmax).transpose.map(&:sum)
+            min, max = children.map { |child| child.arity_range.minmax }.transpose.map(&:sum)
             min == max ? min || 0 : min..max # NOTE: || 0 for empty case, where min == max == nil.
           end
 
@@ -223,7 +223,7 @@ module RuboCop
         # Node class for `{ ... }`
         class Union < Node
           def arity
-            minima, maxima = children.map(&:arity_range).map(&:minmax).transpose
+            minima, maxima = children.map { |child| child.arity_range.minmax }.transpose
             min = minima.min
             max = maxima.max
             min == max ? min : min..max

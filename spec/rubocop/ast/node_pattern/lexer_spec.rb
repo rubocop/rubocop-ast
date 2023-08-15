@@ -32,7 +32,7 @@ RSpec.describe RuboCop::AST::NodePattern::Lexer do
     let(:source) { '(array sym $int+ x)' }
 
     it 'is parsed as `$ int + x`' do
-      expect(tokens.map(&:last).map(&:first)).to eq \
+      expect(tokens.map { |token| token.last.first }).to eq \
         %i[( array sym $ int + x )]
     end
   end
@@ -68,7 +68,7 @@ RSpec.describe RuboCop::AST::NodePattern::Lexer do
     it 'distinguishes them' do
       types = tokens.map(&:first)
       expect(types).to eq ([:tNODE_TYPE] * 2) + ([:tPARAM_CONST] * 7)
-      zz, percent_zz = tokens.last(2).map(&:last).map(&:first)
+      zz, percent_zz = tokens.last(2).map { |token| token.last.first }
       expect(zz).to eq 'Zz'
       expect(percent_zz).to eq 'Zz'
     end
@@ -78,7 +78,7 @@ RSpec.describe RuboCop::AST::NodePattern::Lexer do
     let(:source) { ':&' }
 
     it 'is parsed as `:&`' do
-      expect(tokens.map(&:last).map(&:first)).to eq [:&]
+      expect(tokens.map { |token| token.last.first }).to eq [:&]
     end
   end
 end
