@@ -120,5 +120,9 @@ RSpec/NestedGroups:
 RSpec/MultipleMemoizedHelpers:
   Enabled: false
 
+RSpec/SpecFilePathFormat:
+  CustomTransform:
+    RuboCopCompatibility: rubocop_compatibility
+
 RSpec/StubbedMock:
   Enabled: false

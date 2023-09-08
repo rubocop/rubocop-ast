@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe RuboCop::AST::RuboCopCompatibility do # rubocop:disable RSpec/FilePath
+RSpec.describe RuboCop::AST::RuboCopCompatibility do
   subject(:callback) { RuboCop::AST.rubocop_loaded }
 
   before do
