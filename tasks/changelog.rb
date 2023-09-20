@@ -134,9 +134,9 @@ class Changelog # rubocop:disable Metrics/ClassLength
   end
 
   def new_contributor_lines
-    contributors
-      .map { |user| format(CONTRIBUTOR, user: user) }
-      .reject { |line| @rest.include?(line) }
+    unique_contributor_names = contributors.map { |user| format(CONTRIBUTOR, user: user) }.uniq
+
+    unique_contributor_names.reject { |line| @rest.include?(line) }
   end
 
   def contributors
