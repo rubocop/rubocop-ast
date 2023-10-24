@@ -302,4 +302,84 @@ RSpec.describe RuboCop::AST::BlockNode do
       it { expect(block_node.receiver.source).to eq('foo') }
     end
   end
+
+  describe '#first_argument' do
+    context 'with no arguments' do
+      let(:source) { 'foo { bar }' }
+
+      it { expect(block_node.first_argument).to be_nil }
+    end
+
+    context 'with a single literal argument' do
+      let(:source) { 'foo { |q| bar(q) }' }
+
+      it { expect(block_node.first_argument.source).to eq('q') }
+    end
+
+    context 'with a single splat argument' do
+      let(:source) { 'foo { |*q| bar(q) }' }
+
+      it { expect(block_node.first_argument.source).to eq('*q') }
+    end
+
+    context 'with multiple mixed arguments' do
+      let(:source) { 'foo { |q, *z| bar(q, z) }' }
+
+      it { expect(block_node.first_argument.source).to eq('q') }
+    end
+
+    context 'with destructured arguments' do
+      let(:source) { 'foo { |(q, r), s| bar(q, r, s) }' }
+
+      it { expect(block_node.first_argument.source).to eq('(q, r)') }
+    end
+
+    context '>= Ruby 2.7', :ruby27 do
+      context 'using numbered parameters' do
+        let(:source) { 'foo { _1 }' }
+
+        it { expect(block_node.first_argument).to be_nil }
+      end
+    end
+  end
+
+  describe '#last_argument' do
+    context 'with no arguments' do
+      let(:source) { 'foo { bar }' }
+
+      it { expect(block_node.last_argument).to be_nil }
+    end
+
+    context 'with a single literal argument' do
+      let(:source) { 'foo { |q| bar(q) }' }
+
+      it { expect(block_node.last_argument.source).to eq('q') }
+    end
+
+    context 'with a single splat argument' do
+      let(:source) { 'foo { |*q| bar(q) }' }
+
+      it { expect(block_node.last_argument.source).to eq('*q') }
+    end
+
+    context 'with multiple mixed arguments' do
+      let(:source) { 'foo { |q, *z| bar(q, z) }' }
+
+      it { expect(block_node.last_argument.source).to eq('*z') }
+    end
+
+    context 'with destructured arguments' do
+      let(:source) { 'foo { |q, (r, s)| bar(q, r, s) }' }
+
+      it { expect(block_node.last_argument.source).to eq('(r, s)') }
+    end
+
+    context '>= Ruby 2.7', :ruby27 do
+      context 'using numbered parameters' do
+        let(:source) { 'foo { _1 }' }
+
+        it { expect(block_node.last_argument).to be_nil }
+      end
+    end
+  end
 end

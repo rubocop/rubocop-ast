@@ -21,6 +21,24 @@ module RuboCop
         node_parts[0]
       end
 
+      # A shorthand for getting the first argument of this block.
+      # Equivalent to `arguments.first`.
+      #
+      # @return [Node, nil] the first argument of this block,
+      #                     or `nil` if there are no arguments
+      def first_argument
+        arguments[0]
+      end
+
+      # A shorthand for getting the last argument of this block.
+      # Equivalent to `arguments.last`.
+      #
+      # @return [Node, nil] the last argument of this block,
+      #                     or `nil` if there are no arguments
+      def last_argument
+        arguments[-1]
+      end
+
       # The arguments of this block.
       # Note that if the block has destructured arguments, `arguments` will
       # return a `mlhs` node, whereas `argument_list` will return only
