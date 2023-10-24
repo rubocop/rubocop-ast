@@ -81,7 +81,7 @@ module RuboCop
         (if? || unless?) && super
       end
 
-      # Chacks whether the `if` node has nested `if` nodes in any of its
+      # Checks whether the `if` node has nested `if` nodes in any of its
       # branches.
       #
       # @note This performs a shallow search.
