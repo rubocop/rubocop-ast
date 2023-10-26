@@ -3,7 +3,7 @@
 module RuboCop
   module AST
     module Version
-      STRING = '1.29.0'
+      STRING = '1.30.0'
     end
   end
 end

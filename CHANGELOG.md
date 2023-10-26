@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.30.0 (2023-10-26)
+
 ### New features
 
 - [#270](https://github.com/rubocop/rubocop-ast/pull/270): Add `BlockNode#{first,last}_argument` helpers. ([@sambostock][])
