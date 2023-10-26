@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+- [#270](https://github.com/rubocop/rubocop-ast/pull/270): Add `BlockNode#{first,last}_argument` helpers. ([@sambostock][])
+
 ## 1.29.0 (2023-06-01)
 
 * [#262](https://github.com/rubocop/rubocop-ast/pull/267): Introduce RuboCop::Ast::MethodDispatchNode#selector. ([@gsamokovarov][])
@@ -416,8 +420,8 @@
 [@eugeneius]: https://github.com/eugeneius
 [@wcmonty]: https://github.com/wcmonty
 [@zverok]: https://github.com/zverok
-
 [@gsamokovarov]: https://github.com/gsamokovarov
 [@nobuyo]: https://github.com/nobuyo
 [@tdeo]: https://github.com/tdeo
 [@ydah]: https://github.com/ydah
+[@sambostock]: https://github.com/sambostock
