@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::Procarg0Node, :ruby27 do
-  let(:procarg0_node) { parse_source(source).ast.arguments.first }
+  let(:procarg0_node) { parse_source(source).ast.first_argument }
 
   describe '.new' do
     context 'with a block' do
