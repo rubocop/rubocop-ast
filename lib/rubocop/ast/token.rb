@@ -83,7 +83,7 @@ module RuboCop
       end
 
       def left_curly_brace?
-        type == :tLCURLY
+        type == :tLCURLY || type == :tLAMBEG
       end
 
       def right_curly_brace?

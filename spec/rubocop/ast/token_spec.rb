@@ -319,6 +319,7 @@ RSpec.describe RuboCop::AST::Token do
       let(:source) { <<~RUBY }
         { a: 1 }
         foo { |f| bar(f) }
+        -> { f }
       RUBY
 
       let(:left_hash_brace_token) do
@@ -330,6 +331,9 @@ RSpec.describe RuboCop::AST::Token do
 
       let(:left_block_brace_token) do
         processed_source.find_token { |t| t.text == '{' && t.line == 2 }
+      end
+      let(:left_lambda_brace_token) do
+        processed_source.find_token { |t| t.text == '{' && t.line == 3 }
       end
       let(:left_parens_token) do
         processed_source.find_token { |t| t.text == '(' }
@@ -357,6 +361,7 @@ RSpec.describe RuboCop::AST::Token do
       describe '#left_curly_brace?' do
         it 'returns true for left block brace tokens' do
           expect(left_block_brace_token).to be_left_curly_brace
+          expect(left_lambda_brace_token).to be_left_curly_brace
         end
 
         # FIXME: `broken_on: :prism` can be removed when
