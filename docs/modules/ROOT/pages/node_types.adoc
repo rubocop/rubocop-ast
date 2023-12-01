@@ -64,7 +64,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |array|Array literal.|The values in the array, including a possible `splat`.|[1, 2, 3]|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArrayNode[ArrayNode]
 
-|back-ref|Regular expression back-reference, e.g. $&.|One child (symbol) representing the reference name, e.g. `:$&`.|re = /foo(abc)/; $&|N/A
+|back_ref|Regular expression back-reference, e.g. $&.|One child (symbol) representing the reference name, e.g. `:$&`.|re = /foo(abc)/; $&|N/A
 
 |block|Block execution.|Three children. First child is the receiver *or* a `lambda` node; second child is `args` or `forward_args` (only if `emit_forward` is false; it's true by default); third child is a body statement.|foo.bar do \|a, b\|; puts a; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/BlockNode[BlockNode]
 
@@ -114,15 +114,15 @@ The following fields are given when relevant to nodes in the source code:
 
 |for|for..in looping condition|Three children. First child is a `lvasgn` or `mlhs` node with the variable(s), second child is an expression node with the array/range to loop over, third child is a body statement.|for a in arr do foo; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ForNode[ForNode]
 
-|forward_arg|Forwarding argument, for Ruby 2.8 (when `emit_forward_arg` is true). Must come inside an `args` node.|None|def whatever(foo, ...)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
+|forward_arg|Forwarding argument, for Ruby 3.0 (when `emit_forward_arg` is true). Must come inside an `args` node.|None|def whatever(foo, ...)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
 |forward_args|Forwarding argument list, for Ruby 2.7 (when `emit_forward_arg` is false). Must come inside a `def`, `defs`, `def_e`, or `defs_e` node.|None|def (foo(...)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ForwardArgsNode[ForwardArgsNode]
 
-|forwarded-args|Forwarding arguments into a method call|None|foo(...)|N/A
+|forwarded_args|Forwarding arguments into a method call|None|foo(...)|N/A
 
-|forwarded-restarg|Forwarding positional arguments into a method call|None|foo(*)|N/A
+|forwarded_restarg|Forwarding positional arguments into a method call|None|foo(*)|N/A
 
-|forwarded-kwrestarg|Forwarding keyword arguments into a method call|None|foo(**)|N/A
+|forwarded_kwrestarg|Forwarding keyword arguments into a method call|None|foo(**)|N/A
 
 |gvar|Global variable access|One child, the variable name as a symbol `:$foo`|$foo|N/A
 
@@ -166,7 +166,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |nil|Nil literal|None|nil|N/A
 
-|nth-ref|Regular expression capture group ($1, $2 etc.)|One child: The capture name, e.g. `:$1`|re = /foo(abc)/; $1|N/A
+|nth_ref|Regular expression capture group ($1, $2 etc.)|One child: The capture name, e.g. `:$1`|re = /foo(abc)/; $1|N/A
 
 |numblock|Block that has numbered arguments (`_1`) referenced inside it.|Three children. First child is a `send`/`csend` node representing the way the block is created, second child is an `int` (the number of numeric arguments) and the third child is a body statement.|proc { _1 + _3 }|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/BlockNode[BlockNode]
 
@@ -227,7 +227,7 @@ a|`foo` or `foo.bar`|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST
 
 |while|Loop with condition coming first.|Two children. First child is an expression node for condition, second child is a body statement.|while foo do bar; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/WhileNode[WhileNode]
 
-|while-post|Loop with condition coming last.|Two children. First child is an expression node for condition, second child is a body statement.|begin; foo; end while condition|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/WhileNode[WhileNode]
+|while_post|Loop with condition coming last.|Two children. First child is an expression node for condition, second child is a body statement.|begin; foo; end while condition|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/WhileNode[WhileNode]
 
 |xstr|Execute string (backticks). The heredoc version is treated totally differently from the regular version.|Children are split into `str` nodes, with interpolation represented by separate expression nodes .|\`date`|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/StrNode[StrNode]
 
