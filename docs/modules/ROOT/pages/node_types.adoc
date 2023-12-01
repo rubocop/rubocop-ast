@@ -114,7 +114,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |for|for..in looping condition|Three children. First child is a `lvasgn` or `mlhs` node with the variable(s), second child is an expression node with the array/range to loop over, third child is a body statement.|for a in arr do foo; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ForNode[ForNode]
 
-|forward_arg|Forwarding argument, for Ruby 2.8 (when `emit_forward_arg` is true). Must come inside an `args` node.|None|def whatever(foo, ...)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
+|forward_arg|Forwarding argument, for Ruby 3.0 (when `emit_forward_arg` is true). Must come inside an `args` node.|None|def whatever(foo, ...)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
 |forward_args|Forwarding argument list, for Ruby 2.7 (when `emit_forward_arg` is false). Must come inside a `def`, `defs`, `def_e`, or `defs_e` node.|None|def (foo(...)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ForwardArgsNode[ForwardArgsNode]
 
