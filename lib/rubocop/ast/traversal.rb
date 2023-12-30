@@ -45,7 +45,7 @@ module RuboCop
             end                         # end
           RUBY
           aliases.each do |m|
-            alias_method "on_#{m}", "on_#{type}"
+            alias_method :"on_#{m}", :"on_#{type}"
           end
         end
 
