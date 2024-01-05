@@ -410,6 +410,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
     end
   end
 
+  # rubocop:disable RSpec/RedundantPredicateMatcher
   describe '#start_with?' do
     context 'with blank source' do
       let(:source) { '' }
@@ -439,6 +440,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
     end
   end
+  # rubocop:enable RSpec/RedundantPredicateMatcher
 
   describe '#preceding_line' do
     let(:source) { <<~RUBY }
