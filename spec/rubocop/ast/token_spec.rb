@@ -342,7 +342,9 @@ RSpec.describe RuboCop::AST::Token do
       end
 
       describe '#left_brace?' do
-        it 'returns true for left hash brace tokens' do
+        # FIXME: `broken_on: :prism` can be removed when
+        # https://github.com/ruby/prism/issues/2454 will be released.
+        it 'returns true for left hash brace tokens', broken_on: :prism do
           expect(left_hash_brace_token).to be_left_brace
         end
 
@@ -357,7 +359,9 @@ RSpec.describe RuboCop::AST::Token do
           expect(left_block_brace_token).to be_left_curly_brace
         end
 
-        it 'returns false for non left block brace tokens' do
+        # FIXME: `broken_on: :prism` can be removed when
+        # https://github.com/ruby/prism/issues/2454 will be released.
+        it 'returns false for non left block brace tokens', broken_on: :prism do
           expect(left_hash_brace_token).not_to be_left_curly_brace
           expect(right_block_brace_token).not_to be_left_curly_brace
         end

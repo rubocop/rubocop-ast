@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::ProcessedSource do
-  subject(:processed_source) { described_class.new(source, ruby_version, path) }
+  subject(:processed_source) do
+    described_class.new(source, ruby_version, path, parser_engine: parser_engine)
+  end
 
   let(:source) { <<~RUBY }
     # an awesome method
@@ -25,6 +27,17 @@ RSpec.describe RuboCop::AST::ProcessedSource do
         is_expected.to be_a(described_class)
       end
     end
+
+    context 'when using invalid `parser_engine` argument' do
+      let(:parser_engine) { :unknown_parser_engine }
+
+      it 'raises a Errno::ENOENT when the file does not exist' do
+        expect { processed_source }.to raise_error(ArgumentError) do |e|
+          expect(e.message).to eq 'The keyword argument `parser_engine` accepts `parser` or ' \
+                                  '`parser_prism`, but `unknown_parser_engine` was passed.'
+        end
+      end
+    end
   end
 
   describe '.from_file' do
@@ -36,7 +49,9 @@ RSpec.describe RuboCop::AST::ProcessedSource do
         Dir.chdir(org_pwd)
       end
 
-      let(:processed_source) { described_class.from_file(path, ruby_version) }
+      let(:processed_source) do
+        described_class.from_file(path, ruby_version, parser_engine: parser_engine)
+      end
 
       it 'returns an instance of ProcessedSource' do
         is_expected.to be_a(described_class)
@@ -186,7 +201,9 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
     end
 
-    context 'when the source is valid but has some warning diagnostics' do
+    # FIXME: `broken_on: :prism` can be removed when
+    # https://github.com/ruby/prism/issues/2454 will be released.
+    context 'when the source is valid but has some warning diagnostics', broken_on: :prism do
       let(:source) { 'do_something *array' }
 
       it 'returns true' do
@@ -442,7 +459,8 @@ RSpec.describe RuboCop::AST::ProcessedSource do
   end
   # rubocop:enable RSpec/RedundantPredicateMatcher
 
-  describe '#preceding_line' do
+  # FIXME: https://github.com/ruby/prism/issues/2467
+  describe '#preceding_line', broken_on: :prism do
     let(:source) { <<~RUBY }
       [ line, 1 ]
       { line: 2 }
@@ -458,7 +476,8 @@ RSpec.describe RuboCop::AST::ProcessedSource do
     end
   end
 
-  describe '#following_line' do
+  # FIXME: https://github.com/ruby/prism/issues/2467
+  describe '#following_line', broken_on: :prism do
     let(:source) { <<~RUBY }
       [ line, 1 ]
       { line: 2 }

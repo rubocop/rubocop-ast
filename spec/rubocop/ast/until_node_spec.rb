@@ -29,7 +29,8 @@ RSpec.describe RuboCop::AST::UntilNode do
     it { expect(until_node.inverse_keyword).to eq('while') }
   end
 
-  describe '#do?' do
+  # FIXME: `broken_on: :prism` can be removed when Prism > 0.24.0 will be released.
+  describe '#do?', broken_on: :prism do
     context 'with a do keyword' do
       let(:source) { 'until foo do; bar; end' }
 

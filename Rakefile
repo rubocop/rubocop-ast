@@ -22,6 +22,23 @@ RSpec::Core::RakeTask.new(spec: :generate) do |spec|
   spec.pattern = FileList['spec/**/*_spec.rb']
 end
 
+desc 'Run RSpec code examples with Prism'
+task prism_spec: :generate do
+  original_parser_engine = ENV.fetch('PARSER_ENGINE', nil)
+  original_target_ruby_version = ENV.fetch('TARGET_RUBY_VERSION', nil)
+
+  RSpec::Core::RakeTask.new(prism_spec: :generate) do |spec|
+    # Specify the minimum Ruby version 3.3 required for Prism to analyze.
+    ENV['PARSER_ENGINE'] = 'parser_prism'
+    ENV['TARGET_RUBY_VERSION'] = '3.3'
+
+    spec.pattern = FileList['spec/**/*_spec.rb']
+  end
+
+  ENV['PARSER_ENGINE'] = original_parser_engine
+  ENV['TARGET_RUBY_VERSION'] = original_target_ruby_version
+end
+
 desc 'Run RSpec with code coverage'
 task :coverage do
   ENV['COVERAGE'] = 'true'
@@ -35,5 +52,6 @@ end
 
 task default: %i[
   spec
+  prism_spec
   internal_investigation
 ]

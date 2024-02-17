@@ -20,35 +20,43 @@ if ENV['MODERNIZE']
 end
 
 RSpec.shared_context 'ruby 2.3', :ruby23 do
-  let(:ruby_version) { 2.3 }
+  # Prism supports parsing Ruby 3.3+.
+  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 2.3 }
 end
 
 RSpec.shared_context 'ruby 2.4', :ruby24 do
-  let(:ruby_version) { 2.4 }
+  # Prism supports parsing Ruby 3.3+.
+  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 2.4 }
 end
 
 RSpec.shared_context 'ruby 2.5', :ruby25 do
-  let(:ruby_version) { 2.5 }
+  # Prism supports parsing Ruby 3.3+.
+  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 2.5 }
 end
 
 RSpec.shared_context 'ruby 2.6', :ruby26 do
-  let(:ruby_version) { 2.6 }
+  # Prism supports parsing Ruby 3.3+.
+  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 2.6 }
 end
 
 RSpec.shared_context 'ruby 2.7', :ruby27 do
-  let(:ruby_version) { 2.7 }
+  # Prism supports parsing Ruby 3.3+.
+  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 2.7 }
 end
 
 RSpec.shared_context 'ruby 3.0', :ruby30 do
-  let(:ruby_version) { 3.0 }
+  # Prism supports parsing Ruby 3.3+.
+  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 3.0 }
 end
 
 RSpec.shared_context 'ruby 3.1', :ruby31 do
-  let(:ruby_version) { 3.1 }
+  # Prism supports parsing Ruby 3.3+.
+  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 3.1 }
 end
 
 RSpec.shared_context 'ruby 3.2', :ruby32 do
-  let(:ruby_version) { 3.2 }
+  # Prism supports parsing Ruby 3.3+.
+  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 3.2 }
 end
 
 RSpec.shared_context 'ruby 3.3', :ruby33 do
@@ -63,7 +71,13 @@ end
 module DefaultRubyVersion
   extend RSpec::SharedContext
 
-  let(:ruby_version) { 2.4 }
+  let(:ruby_version) { ENV.fetch('TARGET_RUBY_VERSION', 2.4).to_f }
+end
+
+module DefaultParserEngine
+  extend RSpec::SharedContext
+
+  let(:parser_engine) { ENV.fetch('PARSER_ENGINE', :parser_whitequark).to_sym }
 end
 
 module RuboCop
@@ -80,7 +94,7 @@ module ParseSourceHelper
   def parse_source(source)
     lookup = nil
     ruby = source.gsub(/>>(.*)<</) { lookup = Regexp.last_match(1).strip }
-    source = RuboCop::AST::ProcessedSource.new(ruby, ruby_version, nil)
+    source = RuboCop::AST::ProcessedSource.new(ruby, ruby_version, nil, parser_engine: parser_engine)
     source.node = if lookup
                     source.ast.each_node.find(
                       -> { raise "No node corresponds to source '#{lookup}'" }
@@ -95,6 +109,7 @@ end
 RSpec.configure do |config|
   config.include ParseSourceHelper
   config.include DefaultRubyVersion
+  config.include DefaultParserEngine
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
   config.filter_run_when_matching :focus
@@ -111,6 +126,8 @@ RSpec.configure do |config|
     mocks.syntax = :expect
     mocks.verify_partial_doubles = true
   end
+
+  config.filter_run_excluding broken_on: :prism if ENV['PARSER_ENGINE'] == 'parser_prism'
 
   config.order = :random
   Kernel.srand config.seed

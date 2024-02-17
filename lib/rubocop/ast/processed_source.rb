@@ -15,15 +15,23 @@ module RuboCop
       INVALID_LEVELS = %i[error fatal].freeze
       private_constant :INVALID_LEVELS
 
-      attr_reader :path, :buffer, :ast, :comments, :tokens, :diagnostics,
-                  :parser_error, :raw_source, :ruby_version
+      PARSER_ENGINES = %i[parser_whitequark parser_prism].freeze
+      private_constant :PARSER_ENGINES
 
-      def self.from_file(path, ruby_version)
+      attr_reader :path, :buffer, :ast, :comments, :tokens, :diagnostics,
+                  :parser_error, :raw_source, :ruby_version, :parser_engine
+
+      def self.from_file(path, ruby_version, parser_engine: :parser_whitequark)
         file = File.read(path, mode: 'rb')
-        new(file, ruby_version, path)
+        new(file, ruby_version, path, parser_engine: parser_engine)
       end
 
-      def initialize(source, ruby_version, path = nil)
+      def initialize(source, ruby_version, path = nil, parser_engine: :parser_whitequark)
+        unless PARSER_ENGINES.include?(parser_engine)
+          raise ArgumentError, 'The keyword argument `parser_engine` accepts ' \
+                               "`parser` or `parser_prism`, but `#{parser_engine}` was passed."
+        end
+
         # Defaults source encoding to UTF-8, regardless of the encoding it has
         # been read with, which could be non-utf8 depending on the default
         # external encoding.
@@ -33,9 +41,10 @@ module RuboCop
         @path = path
         @diagnostics = []
         @ruby_version = ruby_version
+        @parser_engine = parser_engine
         @parser_error = nil
 
-        parse(source, ruby_version)
+        parse(source, ruby_version, parser_engine)
       end
 
       def ast_with_comments
@@ -193,7 +202,7 @@ module RuboCop
         end
       end
 
-      def parse(source, ruby_version)
+      def parse(source, ruby_version, parser_engine)
         buffer_name = @path || STRING_SOURCE_NAME
         @buffer = Parser::Source::Buffer.new(buffer_name, 1)
 
@@ -207,7 +216,7 @@ module RuboCop
           return
         end
 
-        @ast, @comments, @tokens = tokenize(create_parser(ruby_version))
+        @ast, @comments, @tokens = tokenize(create_parser(ruby_version, parser_engine))
       end
 
       def tokenize(parser)
@@ -227,61 +236,77 @@ module RuboCop
       end
 
       # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
-      def parser_class(ruby_version)
-        case ruby_version
-        when 1.9
-          require 'parser/ruby19'
-          Parser::Ruby19
-        when 2.0
-          require 'parser/ruby20'
-          Parser::Ruby20
-        when 2.1
-          require 'parser/ruby21'
-          Parser::Ruby21
-        when 2.2
-          require 'parser/ruby22'
-          Parser::Ruby22
-        when 2.3
-          require 'parser/ruby23'
-          Parser::Ruby23
-        when 2.4
-          require 'parser/ruby24'
-          Parser::Ruby24
-        when 2.5
-          require 'parser/ruby25'
-          Parser::Ruby25
-        when 2.6
-          require 'parser/ruby26'
-          Parser::Ruby26
-        when 2.7
-          require 'parser/ruby27'
-          Parser::Ruby27
-        when 2.8, 3.0
-          require 'parser/ruby30'
-          Parser::Ruby30
-        when 3.1
-          require 'parser/ruby31'
-          Parser::Ruby31
-        when 3.2
-          require 'parser/ruby32'
-          Parser::Ruby32
-        when 3.3
-          require 'parser/ruby33'
-          Parser::Ruby33
-        when 3.4
-          require 'parser/ruby34'
-          Parser::Ruby34
-        else
-          raise ArgumentError,
-                "RuboCop found unknown Ruby version: #{ruby_version.inspect}"
+      def parser_class(ruby_version, parser_engine)
+        case parser_engine
+        when :parser_whitequark
+          case ruby_version
+          when 1.9
+            require 'parser/ruby19'
+            Parser::Ruby19
+          when 2.0
+            require 'parser/ruby20'
+            Parser::Ruby20
+          when 2.1
+            require 'parser/ruby21'
+            Parser::Ruby21
+          when 2.2
+            require 'parser/ruby22'
+            Parser::Ruby22
+          when 2.3
+            require 'parser/ruby23'
+            Parser::Ruby23
+          when 2.4
+            require 'parser/ruby24'
+            Parser::Ruby24
+          when 2.5
+            require 'parser/ruby25'
+            Parser::Ruby25
+          when 2.6
+            require 'parser/ruby26'
+            Parser::Ruby26
+          when 2.7
+            require 'parser/ruby27'
+            Parser::Ruby27
+          when 2.8, 3.0
+            require 'parser/ruby30'
+            Parser::Ruby30
+          when 3.1
+            require 'parser/ruby31'
+            Parser::Ruby31
+          when 3.2
+            require 'parser/ruby32'
+            Parser::Ruby32
+          when 3.3
+            require 'parser/ruby33'
+            Parser::Ruby33
+          when 3.4
+            require 'parser/ruby34'
+            Parser::Ruby34
+          else
+            raise ArgumentError, "RuboCop found unknown Ruby version: #{ruby_version.inspect}"
+          end
+        when :parser_prism
+          require 'prism'
+
+          case ruby_version
+          when 3.3
+            require 'prism/translation/parser33'
+            Prism::Translation::Parser33
+          when 3.4
+            require 'prism/translation/parser34'
+            Prism::Translation::Parser34
+          else
+            raise ArgumentError, 'RuboCop supports target Ruby versions 3.3 and above with Prism. ' \
+                                 "Specified target Ruby version: #{ruby_version.inspect}"
+          end
         end
       end
       # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
 
-      def create_parser(ruby_version)
+      def create_parser(ruby_version, parser_engine)
         builder = RuboCop::AST::Builder.new
 
-        parser_class(ruby_version).new(builder).tap do |parser|
+        parser_class(ruby_version, parser_engine).new(builder).tap do |parser|
           # On JRuby there's a risk that we hang in tokenize() if we
           # don't set the all errors as fatal flag. The problem is caused by a bug
           # in Racc that is discussed in issue #93 of the whitequark/parser
