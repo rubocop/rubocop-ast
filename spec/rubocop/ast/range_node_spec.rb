@@ -22,8 +22,7 @@ RSpec.describe RuboCop::AST::RangeNode do
       it { is_expected.to be_range_type }
     end
 
-    context 'with an infinite range' do
-      let(:ruby_version) { 2.6 }
+    context 'with an infinite range', :ruby26 do
       let(:source) do
         '1..'
       end
@@ -32,8 +31,7 @@ RSpec.describe RuboCop::AST::RangeNode do
       it { is_expected.to be_range_type }
     end
 
-    context 'with a beignless range' do
-      let(:ruby_version) { 2.7 }
+    context 'with a beignless range', :ruby27 do
       let(:source) do
         '..42'
       end

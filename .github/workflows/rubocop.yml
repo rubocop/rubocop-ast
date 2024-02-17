@@ -76,6 +76,23 @@ jobs:
       - name: spec
         if: "matrix.coverage != true && matrix.internal_investigation != true"
         run: bundle exec rake spec
+  prism:
+    runs-on: ubuntu-latest
+    name: Prism
+    steps:
+      - uses: actions/checkout@v4
+      - name: set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          # Specify the minimum Ruby version 2.7 required for Prism to run.
+          ruby-version: 2.7
+          bundler-cache: true
+      - name: spec
+        env:
+          # Specify the minimum Ruby version 3.3 required for Prism to analyze.
+          PARSER_ENGINE: parser_prism
+          TARGET_RUBY_VERSION: 3.3
+        run: bundle exec rake prism_spec
   rubocop_specs:
     name: >-
       Main Gem Specs | RuboCop: ${{ matrix.rubocop }} | ${{ matrix.ruby }}
