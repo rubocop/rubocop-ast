@@ -29,7 +29,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu]
-        ruby: [2.6, 2.7, "3.0", 3.1, 3.2, head]
+        ruby: [2.6, 2.7, "3.0", 3.1, 3.2, 3.3, head]
         coverage: [null]
         modern: [null]
         title: [null]
@@ -92,7 +92,7 @@ jobs:
         internal_investigation: [null]
         include:
           - { rubocop: master, ruby: "3.0", os: ubuntu }
-          - { rubocop: "v1.35.0", ruby: "3.2", os: ubuntu }
+          - { rubocop: "v1.35.0", ruby: "3.3", os: ubuntu }
     steps:
       - name: checkout
         uses: actions/checkout@v4
