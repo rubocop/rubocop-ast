@@ -29,13 +29,13 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu]
-        ruby: [2.6, 2.7, "3.0", 3.1, 3.2, 3.3, head]
+        ruby: [2.7, "3.0", 3.1, 3.2, 3.3, head]
         coverage: [null]
         modern: [null]
         title: [null]
         include:
           - { os: windows, ruby: mingw }
-          - { ruby: 2.6, os: ubuntu, coverage: true, title: "Coverage" }
+          - { ruby: 2.7, os: ubuntu, coverage: true, title: "Coverage" }
           - { ruby: "3.0", os: ubuntu, modern: true, title: 'Specs "modern"' }
           - { ruby: jruby, os: ubuntu }
           # jruby disabled because of: https://github.com/jruby/jruby/issues/6416
