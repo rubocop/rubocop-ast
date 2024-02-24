@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'uri'
+
 RSpec.describe RuboCop::AST::Node do
   let(:ast) { parse_source(src).node }
   let(:node) { ast }
