@@ -89,9 +89,7 @@ jobs:
           bundler-cache: true
       - name: spec
         env:
-          # Specify the minimum Ruby version 3.3 required for Prism to analyze.
           PARSER_ENGINE: parser_prism
-          TARGET_RUBY_VERSION: 3.3
         run: bundle exec rake prism_spec
   rubocop_specs:
     name: >-
