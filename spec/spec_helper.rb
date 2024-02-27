@@ -71,7 +71,8 @@ end
 module DefaultRubyVersion
   extend RSpec::SharedContext
 
-  let(:ruby_version) { ENV.fetch('TARGET_RUBY_VERSION', 2.4).to_f }
+  # The minimum version Prism can parse is 3.3.
+  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 2.4 }
 end
 
 module DefaultParserEngine
