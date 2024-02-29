@@ -2,6 +2,16 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#277](https://github.com/rubocop/rubocop-ast/pull/277): Support Prism as a Ruby parser (experimental). ([@koic][])
+* [#276](https://github.com/rubocop-hq/rubocop-ast/pull/276): Support `Parser::Ruby34` for Ruby 3.4 parser (experimental). ([@koic][])
+
+### Changes
+
+* [#279](https://github.com/rubocop/rubocop-ast/pull/279): **(Compatibility)** Drop Ruby 2.6 runtime support. ([@koic][])
+* [#272](https://github.com/rubocop/rubocop-ast/pull/272): Make `Node#left_curly_brace?` aware of lambda brace. ([@koic][])
+
 ## 1.30.0 (2023-10-26)
 
 ### New features
