@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.31.0 (2024-02-29)
+
 ### New features
 
 * [#277](https://github.com/rubocop/rubocop-ast/pull/277): Support Prism as a Ruby parser (experimental). ([@koic][])
