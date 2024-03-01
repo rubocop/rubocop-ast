@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.31.1 (2024-03-01)
+
 ### Changes
 
 * [#282](https://github.com/rubocop/rubocop-ast/issues/282): Remove Prism from runtime dependency. ([@koic][])
