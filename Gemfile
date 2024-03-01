@@ -18,6 +18,7 @@ gem 'rspec', '~> 3.7'
 # Stop upgrading SimpleCov until the following issue will be resolved.
 # https://github.com/codeclimate/test-reporter/issues/418
 gem 'simplecov', '~> 0.10', '< 0.18'
+gem 'prism', '>= 0.24.0', require: false
 
 if ENV.fetch('RUBOCOP_VERSION', nil) == 'none'
   # Set this way on CI
