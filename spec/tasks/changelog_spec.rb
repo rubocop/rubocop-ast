@@ -42,22 +42,21 @@ RSpec.describe Changelog do
   end
 
   let(:duplicate_entry) do
-    Changelog::Entry.new(type: :fix, body: 'Duplicate contributor name entry', user: 'johndoe')
+    described_class::Entry.new(type: :fix, body: 'Duplicate contributor name entry', user: 'johndoe')
   end
 
   let(:entries) do
     %i[fix new fix].map.with_index do |type, i|
-      Changelog::Entry.new(type: type, body: "Do something cool#{'x' * i}", user: "johndoe#{'x' * i}")
+      described_class::Entry.new(type: type, body: "Do something cool#{'x' * i}",
+                                 user: "johndoe#{'x' * i}")
     end << duplicate_entry
   end
   let(:entry) { entries.first }
 
-  describe Changelog::Entry do
-    it 'generates correct content' do
-      expect(entry.content).to eq <<~MD
-        * [#x](https://github.com/rubocop/rubocop-ast/pull/x): Do something cool. ([@johndoe][])
-      MD
-    end
+  it 'Changelog::Entry generates correct content' do
+    expect(entry.content).to eq <<~MD
+      * [#x](https://github.com/rubocop/rubocop-ast/pull/x): Do something cool. ([@johndoe][])
+    MD
   end
 
   it 'parses correctly' do
