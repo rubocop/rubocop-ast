@@ -83,7 +83,15 @@ rule = MyRule.new
 source.ast.each_node { |n| rule.process(n) }
 ----
 
-In RuboCop AST, you can specify Prism as the parser engine backend by setting `parser_engine: :parser_prism`:
+In RuboCop AST, you can specify Prism as the parser engine backend.
+
+If running through Bundler, please first add `gem 'prism'` to your Gemfile:
+
+```ruby
+gem 'prism'
+```
+
+By specifying `parser_engine: :parser_prism`, parsing with Prism can be processed:
 
 ```ruby
 # Using the Parser gem with `parser_engine: parser_whitequark` is the default.

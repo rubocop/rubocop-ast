@@ -286,7 +286,12 @@ module RuboCop
             raise ArgumentError, "RuboCop found unknown Ruby version: #{ruby_version.inspect}"
           end
         when :parser_prism
-          require 'prism'
+          begin
+            require 'prism'
+          rescue LoadError
+            warn "Error: Unable to load Prism. Add `gem 'prism'` to your Gemfile."
+            exit!
+          end
 
           case ruby_version
           when 3.3
