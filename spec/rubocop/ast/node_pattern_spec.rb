@@ -56,7 +56,7 @@ RSpec.describe RuboCop::AST::NodePattern do
   shared_examples 'invalid' do
     it 'is invalid' do
       expect { instance }
-        .to raise_error(RuboCop::AST::NodePattern::Invalid)
+        .to raise_error(described_class::Invalid)
     end
   end
 

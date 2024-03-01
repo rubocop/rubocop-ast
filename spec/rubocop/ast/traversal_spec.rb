@@ -95,7 +95,7 @@ RSpec.describe RuboCop::AST::Traversal do
   end
 
   it 'knows all current node types' do
-    expect(RuboCop::AST::Traversal::MISSING).to eq []
+    expect(described_class::MISSING).to eq []
   end
 
   # Sanity checking the debugging checks
@@ -107,7 +107,7 @@ RSpec.describe RuboCop::AST::Traversal do
       let(:node) { s(:int) }
 
       it 'raises debugging error' do
-        expect { traverse }.to raise_error(RuboCop::AST::Traversal::DebugError)
+        expect { traverse }.to raise_error(described_class::DebugError)
       end
     end
 
@@ -115,7 +115,7 @@ RSpec.describe RuboCop::AST::Traversal do
       let(:node) { s(:int, 1, 2) }
 
       it 'raises debugging error' do
-        expect { traverse }.to raise_error(RuboCop::AST::Traversal::DebugError)
+        expect { traverse }.to raise_error(described_class::DebugError)
       end
     end
   end
