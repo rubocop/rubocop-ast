@@ -28,15 +28,26 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
     end
 
-    context 'when using invalid `parser_engine` argument' do
-      let(:parser_engine) { :unknown_parser_engine }
-
-      it 'raises a Errno::ENOENT when the file does not exist' do
+    shared_examples 'invalid parser_engine' do
+      it 'raises ArgumentError' do
         expect { processed_source }.to raise_error(ArgumentError) do |e|
-          expect(e.message).to eq 'The keyword argument `parser_engine` accepts `parser` or ' \
-                                  '`parser_prism`, but `unknown_parser_engine` was passed.'
+          expected =  'The keyword argument `parser_engine` accepts `parser_whitequark` ' \
+                      "or `parser_prism`, but `#{parser_engine}` was passed."
+          expect(e.message).to eq(expected)
         end
       end
+    end
+
+    context 'when using an invalid `parser_engine` symbol argument' do
+      let(:parser_engine) { :unknown_parser_engine }
+
+      it_behaves_like 'invalid parser_engine'
+    end
+
+    context 'when using an invalid `parser_engine` string argument' do
+      let(:parser_engine) { 'unknown_parser_engine' }
+
+      it_behaves_like 'invalid parser_engine'
     end
   end
 
