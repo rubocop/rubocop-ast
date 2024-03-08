@@ -27,9 +27,10 @@ module RuboCop
       end
 
       def initialize(source, ruby_version, path = nil, parser_engine: :parser_whitequark)
+        parser_engine = parser_engine.to_sym
         unless PARSER_ENGINES.include?(parser_engine)
-          raise ArgumentError, 'The keyword argument `parser_engine` accepts ' \
-                               "`parser` or `parser_prism`, but `#{parser_engine}` was passed."
+          raise ArgumentError, 'The keyword argument `parser_engine` accepts `parser_whitequark` ' \
+                               "or `parser_prism`, but `#{parser_engine}` was passed."
         end
 
         # Defaults source encoding to UTF-8, regardless of the encoding it has
