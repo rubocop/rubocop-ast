@@ -4,6 +4,10 @@
 
 ## 1.31.2 (2024-03-08)
 
+### Bug fixes
+
+* [#286](https://github.com/rubocop/rubocop-ast/pull/286): Improve error message for invalid `parser_engine` value. ([@Earlopain][])
+
 ## 1.31.1 (2024-03-01)
 
 ### Changes
