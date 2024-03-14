@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Bug fixes
+
+* [#288](https://github.com/rubocop/rubocop-ast/pull/288): Fix a Ruby warning (`RUBYOPT=-w`) when doing `bundle exec rubocop` during `rubocop-ast` development. ([@Earlopain][])
+
 ## 1.31.2 (2024-03-08)
 
 ### Bug fixes
@@ -451,3 +455,4 @@
 [@tdeo]: https://github.com/tdeo
 [@ydah]: https://github.com/ydah
 [@sambostock]: https://github.com/sambostock
+[@Earlopain]: https://github.com/Earlopain
