@@ -38,7 +38,7 @@ module RuboCop
                          body: self.body(signature, arity_check))
           type, *aliases = type
           lineno = caller_locations(1, 1).first.lineno
-          module_eval(<<~RUBY, __FILE__, lineno) # rubocop:disable Style/EvalWithLocation
+          module_eval(<<~RUBY, __FILE__, lineno)
             def on_#{type}(node)        # def on_send(node)
               #{body}                   #   # body ...
               nil                       #   nil
