@@ -118,7 +118,7 @@ jobs:
       - name: setup env
         run: echo 'RUBOCOP_VERSION=${{ matrix.rubocop }}' >> $GITHUB_ENV
       - name: install rubocop from source for full specs
-        run: git clone --branch ${{ matrix.rubocop }} https://github.com/rubocop-hq/rubocop.git ../rubocop
+        run: git clone --branch ${{ matrix.rubocop }} https://github.com/rubocop/rubocop.git ../rubocop
       - name: install rubocop dependencies
         run: cd ../rubocop && bundle install --jobs 3 --retry 3
       - name: install dependencies

@@ -19,7 +19,7 @@
 ### New features
 
 * [#277](https://github.com/rubocop/rubocop-ast/pull/277): Support Prism as a Ruby parser (experimental). ([@koic][])
-* [#276](https://github.com/rubocop-hq/rubocop-ast/pull/276): Support `Parser::Ruby34` for Ruby 3.4 parser (experimental). ([@koic][])
+* [#276](https://github.com/rubocop/rubocop-ast/pull/276): Support `Parser::Ruby34` for Ruby 3.4 parser (experimental). ([@koic][])
 
 ### Changes
 
@@ -65,7 +65,7 @@
 
 ### New features
 
-* [#256](https://github.com/rubocop-hq/rubocop-ast/pull/256): Support `Parser::Ruby33` for Ruby 3.3 parser (experimental). ([@koic][])
+* [#256](https://github.com/rubocop/rubocop-ast/pull/256): Support `Parser::Ruby33` for Ruby 3.3 parser (experimental). ([@koic][])
 
 ## 1.24.1 (2022-12-29)
 
@@ -103,19 +103,19 @@
 
 ### Bug fixes
 
-* [#230](https://github.com/rubocop-hq/rubocop-ast/pull/230): Make `RegexpNode` aware of fixed-encoding regopt. ([@koic][])
+* [#230](https://github.com/rubocop/rubocop-ast/pull/230): Make `RegexpNode` aware of fixed-encoding regopt. ([@koic][])
 
 ## 1.19.1 (2022-07-10)
 
 ### New features
 
-* [#235](https://github.com/rubocop-hq/rubocop-ast/pull/235): Add `regexp_dots?` method to `RuboCop::AST::Token` (erroneously released in 1.19.0 as `regexp_dot?`). ([@koic][])
+* [#235](https://github.com/rubocop/rubocop-ast/pull/235): Add `regexp_dots?` method to `RuboCop::AST::Token` (erroneously released in 1.19.0 as `regexp_dot?`). ([@koic][])
 
 ## 1.18.0 (2022-05-13)
 
 ### New features
 
-* [#233](https://github.com/rubocop-hq/rubocop-ast/pull/233): Make parse from Ruby 1.9 to 2.3 available. ([@koic][])
+* [#233](https://github.com/rubocop/rubocop-ast/pull/233): Make parse from Ruby 1.9 to 2.3 available. ([@koic][])
 
 ### Changes
 
@@ -125,13 +125,13 @@
 
 ### New features
 
-* [#227](https://github.com/rubocop-hq/rubocop-ast/pull/227):  Make `Node#condition?` aware of `case-match` node. ([@koic][])
+* [#227](https://github.com/rubocop/rubocop-ast/pull/227):  Make `Node#condition?` aware of `case-match` node. ([@koic][])
 
 ## 1.16.0 (2022-02-21)
 
 ### New features
 
-* [#223](https://github.com/rubocop-hq/rubocop-ast/pull/223): Support `Parser::Ruby32` for Ruby 3.2 parser (experimental). ([@koic][])
+* [#223](https://github.com/rubocop/rubocop-ast/pull/223): Support `Parser::Ruby32` for Ruby 3.2 parser (experimental). ([@koic][])
 
 ## 1.15.2 (2022-02-12)
 
