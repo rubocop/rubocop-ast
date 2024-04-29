@@ -28,6 +28,16 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
     end
 
+    context 'when parsing code with an invalid encoding comment' do
+      let(:source) { '# encoding: foobar' }
+
+      it 'returns a parser error' do
+        expect(processed_source.parser_error).to be_a(Parser::UnknownEncodingInMagicComment)
+        expect(processed_source.parser_error.message)
+          .to include('unknown encoding name - foobar')
+      end
+    end
+
     shared_examples 'invalid parser_engine' do
       it 'raises ArgumentError' do
         expect { processed_source }.to raise_error(ArgumentError) do |e|
