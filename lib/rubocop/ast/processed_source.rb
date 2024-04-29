@@ -209,7 +209,7 @@ module RuboCop
 
         begin
           @buffer.source = source
-        rescue EncodingError => e
+        rescue EncodingError, Parser::UnknownEncodingInMagicComment => e
           @parser_error = e
           @ast = nil
           @comments = []
