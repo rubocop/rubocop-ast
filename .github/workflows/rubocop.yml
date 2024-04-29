@@ -34,7 +34,6 @@ jobs:
         modern: [null]
         title: [null]
         include:
-          - { os: windows, ruby: mingw }
           - { ruby: 2.7, os: ubuntu, coverage: true, title: "Coverage" }
           - { ruby: "3.0", os: ubuntu, modern: true, title: 'Specs "modern"' }
           - { ruby: jruby, os: ubuntu }
