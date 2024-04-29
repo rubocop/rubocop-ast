@@ -11,7 +11,10 @@ gemspec
 gem 'bump', require: false
 gem 'bundler', '>= 1.15.0', '< 3.0'
 gem 'oedipus_lex', '>= 2.6.0', require: false
-gem 'prism', '>= 0.24.0'
+# FIXME: This is a workaround for incompatibilities between Prism 0.24.0 and 0.25.0.
+# To upgrade to Prism 0.25+, it is necessary to investigate the following build error
+# and provide feedback to Prism.
+gem 'prism', '0.24.0'
 gem 'racc'
 gem 'rake', '~> 13.0'
 gem 'rspec', '~> 3.7'
