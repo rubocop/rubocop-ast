@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.31.3 (2024-04-29)
+
 ### Bug fixes
 
 * [#289](https://github.com/rubocop/rubocop-ast/pull/289): Fix an error during parsing when encountering unknown encodings in the encoding magic comment. ([@Earlopain][])
