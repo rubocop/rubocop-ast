@@ -2063,6 +2063,7 @@ RSpec.describe RuboCop::AST::NodePattern do
     let(:ruby) { ':hello' }
     let(:instance) { defined_class.new }
 
+    # rubocop:disable RSpec/ExpectInLet
     let(:raise_argument_error) do
       raise_error do |err|
         expect(err).to be_a(ArgumentError)
@@ -2070,6 +2071,7 @@ RSpec.describe RuboCop::AST::NodePattern do
         expect(err.backtrace_locations.first.lineno).to be(line_no) if RUBY_ENGINE == 'ruby'
       end
     end
+    # rubocop:enable RSpec/ExpectInLet
 
     context 'with a pattern without captures' do
       let(:pattern) { '(sym _)' }
