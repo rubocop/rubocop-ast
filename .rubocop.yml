@@ -105,11 +105,6 @@ RSpec:
     Expectations:
       - expect_parsing
 
-# Disable `RSpec/FilePath` cop because it has been deprecated:
-# https://docs.rubocop.org/rubocop-rspec/cops_rspec.html#rspecfilepath
-RSpec/FilePath:
-  Enabled: false
-
 RSpec/PredicateMatcher:
   Strict: false
 
