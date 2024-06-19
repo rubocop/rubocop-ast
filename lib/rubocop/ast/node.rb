@@ -88,6 +88,27 @@ module RuboCop
       EMPTY_PROPERTIES = {}.freeze
       private_constant :EMPTY_CHILDREN, :EMPTY_PROPERTIES
 
+      # Define a +recursive_?+ predicate method for the given node kind.
+      private_class_method def self.def_recursive_literal_predicate(kind) # rubocop:disable Metrics/MethodLength
+        recursive_kind = "recursive_#{kind}?"
+        kind_filter = "#{kind}?"
+
+        class_eval <<~RUBY, __FILE__, __LINE__ + 1
+          def #{recursive_kind}                                     # def recursive_literal?
+            case type                                               #   case type
+            when :send                                              #   when :send
+              LITERAL_RECURSIVE_METHODS.include?(method_name) &&    #     LITERAL_RECURSIVE_METHODS.include?(method_name) &&
+                receiver.send(:#{recursive_kind}) &&                #       receiver.send(:recursive_literal?) &&
+                arguments.all?(&:#{recursive_kind})                 #       arguments.all?(&:recursive_literal?)
+            when LITERAL_RECURSIVE_TYPES                            #   when LITERAL_RECURSIVE_TYPES
+              children.compact.all?(&:#{recursive_kind})            #     children.compact.all?(&:recursive_literal?)
+            else                                                    #   else
+              send(:#{kind_filter})                                 #     send(:literal?)
+            end                                                     #   end
+          end                                                       # end
+        RUBY
+      end
+
       # @see https://www.rubydoc.info/gems/ast/AST/Node:initialize
       def initialize(type, children = EMPTY_CHILDREN, properties = EMPTY_PROPERTIES)
         @mutable_attributes = {}
@@ -380,22 +401,11 @@ module RuboCop
         IMMUTABLE_LITERALS.include?(type)
       end
 
-      %i[literal basic_literal].each do |kind|
-        recursive_kind = :"recursive_#{kind}?"
-        kind_filter = :"#{kind}?"
-        define_method(recursive_kind) do
-          case type
-          when :send
-            LITERAL_RECURSIVE_METHODS.include?(method_name) &&
-              receiver.send(recursive_kind) &&
-              arguments.all?(&recursive_kind)
-          when LITERAL_RECURSIVE_TYPES
-            children.compact.all?(&recursive_kind)
-          else
-            send(kind_filter)
-          end
-        end
-      end
+      # @!macro [attach] def_recursive_literal_predicate
+      #   @!method recursive_$1?
+      #     @return [Boolean]
+      def_recursive_literal_predicate :literal
+      def_recursive_literal_predicate :basic_literal
 
       def variable?
         VARIABLES.include?(type)
