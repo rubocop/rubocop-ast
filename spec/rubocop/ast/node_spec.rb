@@ -980,4 +980,14 @@ RSpec.describe RuboCop::AST::Node do
       end
     end
   end
+
+  describe '*_type? methods on Node' do
+    Parser::Meta::NODE_TYPES.each do |node_type|
+      method_name = "#{node_type.to_s.gsub(/\W/, '')}_type?"
+
+      it "is not of #{method_name}" do
+        expect(described_class.allocate.public_send(method_name)).to be(false)
+      end
+    end
+  end
 end

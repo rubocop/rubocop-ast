@@ -88,6 +88,15 @@ module RuboCop
       EMPTY_PROPERTIES = {}.freeze
       private_constant :EMPTY_CHILDREN, :EMPTY_PROPERTIES
 
+      # Define a +_type?+ predicate method for the given node type.
+      private_class_method def self.def_node_type_predicate(name, type = name)
+        class_eval <<~RUBY, __FILE__, __LINE__ + 1
+          def #{name}_type?      # def block_type?
+            @type == :#{type}    #   @type == :block
+          end                    # end
+        RUBY
+      end
+
       # @see https://www.rubydoc.info/gems/ast/AST/Node:initialize
       def initialize(type, children = EMPTY_CHILDREN, properties = EMPTY_PROPERTIES)
         @mutable_attributes = {}
@@ -105,20 +114,152 @@ module RuboCop
         end
       end
 
-      (Parser::Meta::NODE_TYPES - [:send]).each do |node_type|
-        method_name = "#{node_type.to_s.gsub(/\W/, '')}_type?"
-        class_eval <<~RUBY, __FILE__, __LINE__ + 1
-          def #{method_name}          # def block_type?
-            @type == :#{node_type}    #   @type == :block
-          end                         # end
-        RUBY
-      end
+      # @!group Type Predicates
 
-      # Most nodes are of 'send' type, so this method is defined
-      # separately to make this check as fast as possible.
+      # @!macro [attach] def_node_type_predicate
+      #   @!method $1_type?
+      #     @return [Boolean]
+      def_node_type_predicate :true
+      def_node_type_predicate :false
+      def_node_type_predicate :nil
+      def_node_type_predicate :int
+      def_node_type_predicate :float
+      def_node_type_predicate :str
+      def_node_type_predicate :dstr
+      def_node_type_predicate :sym
+      def_node_type_predicate :dsym
+      def_node_type_predicate :xstr
+      def_node_type_predicate :regopt
+      def_node_type_predicate :regexp
+      def_node_type_predicate :array
+      def_node_type_predicate :splat
+      def_node_type_predicate :pair
+      def_node_type_predicate :kwsplat
+      def_node_type_predicate :hash
+      def_node_type_predicate :irange
+      def_node_type_predicate :erange
+      def_node_type_predicate :self
+      def_node_type_predicate :lvar
+      def_node_type_predicate :ivar
+      def_node_type_predicate :cvar
+      def_node_type_predicate :gvar
+      def_node_type_predicate :const
+      def_node_type_predicate :defined, :defined?
+      def_node_type_predicate :lvasgn
+      def_node_type_predicate :ivasgn
+      def_node_type_predicate :cvasgn
+      def_node_type_predicate :gvasgn
+      def_node_type_predicate :casgn
+      def_node_type_predicate :mlhs
+      def_node_type_predicate :masgn
+      def_node_type_predicate :op_asgn
+      def_node_type_predicate :and_asgn
+      def_node_type_predicate :ensure
+      def_node_type_predicate :rescue
+      def_node_type_predicate :arg_expr
+      def_node_type_predicate :or_asgn
+      def_node_type_predicate :back_ref
+      def_node_type_predicate :nth_ref
+      def_node_type_predicate :match_with_lvasgn
+      def_node_type_predicate :match_current_line
+      def_node_type_predicate :module
+      def_node_type_predicate :class
+      def_node_type_predicate :sclass
+      def_node_type_predicate :def
+      def_node_type_predicate :defs
+      def_node_type_predicate :undef
+      def_node_type_predicate :alias
+      def_node_type_predicate :args
+      def_node_type_predicate :cbase
+      def_node_type_predicate :arg
+      def_node_type_predicate :optarg
+      def_node_type_predicate :restarg
+      def_node_type_predicate :blockarg
+      def_node_type_predicate :block_pass
+      def_node_type_predicate :kwarg
+      def_node_type_predicate :kwoptarg
+      def_node_type_predicate :kwrestarg
+      def_node_type_predicate :kwnilarg
+      def_node_type_predicate :csend
+      def_node_type_predicate :super
+      def_node_type_predicate :zsuper
+      def_node_type_predicate :yield
+      def_node_type_predicate :block
+      def_node_type_predicate :and
+      def_node_type_predicate :not
+      def_node_type_predicate :or
+      def_node_type_predicate :if
+      def_node_type_predicate :when
+      def_node_type_predicate :case
+      def_node_type_predicate :while
+      def_node_type_predicate :until
+      def_node_type_predicate :while_post
+      def_node_type_predicate :until_post
+      def_node_type_predicate :for
+      def_node_type_predicate :break
+      def_node_type_predicate :next
+      def_node_type_predicate :redo
+      def_node_type_predicate :return
+      def_node_type_predicate :resbody
+      def_node_type_predicate :kwbegin
+      def_node_type_predicate :begin
+      def_node_type_predicate :retry
+      def_node_type_predicate :preexe
+      def_node_type_predicate :postexe
+      def_node_type_predicate :iflipflop
+      def_node_type_predicate :eflipflop
+      def_node_type_predicate :shadowarg
+      def_node_type_predicate :complex
+      def_node_type_predicate :rational
+      def_node_type_predicate :__FILE__
+      def_node_type_predicate :__LINE__
+      def_node_type_predicate :__ENCODING__
+      def_node_type_predicate :ident
+      def_node_type_predicate :lambda
+      def_node_type_predicate :indexasgn
+      def_node_type_predicate :index
+      def_node_type_predicate :procarg0
+      def_node_type_predicate :restarg_expr
+      def_node_type_predicate :blockarg_expr
+      def_node_type_predicate :objc_kwarg
+      def_node_type_predicate :objc_restarg
+      def_node_type_predicate :objc_varargs
+      def_node_type_predicate :numargs
+      def_node_type_predicate :numblock
+      def_node_type_predicate :forward_args
+      def_node_type_predicate :forwarded_args
+      def_node_type_predicate :forward_arg
+      def_node_type_predicate :case_match
+      def_node_type_predicate :in_match
+      def_node_type_predicate :in_pattern
+      def_node_type_predicate :match_var
+      def_node_type_predicate :pin
+      def_node_type_predicate :match_alt
+      def_node_type_predicate :match_as
+      def_node_type_predicate :match_rest
+      def_node_type_predicate :array_pattern
+      def_node_type_predicate :match_with_trailing_comma
+      def_node_type_predicate :array_pattern_with_tail
+      def_node_type_predicate :hash_pattern
+      def_node_type_predicate :const_pattern
+      def_node_type_predicate :if_guard
+      def_node_type_predicate :unless_guard
+      def_node_type_predicate :match_nil_pattern
+      def_node_type_predicate :empty_else
+      def_node_type_predicate :find_pattern
+      def_node_type_predicate :kwargs
+      def_node_type_predicate :match_pattern_p
+      def_node_type_predicate :match_pattern
+      def_node_type_predicate :forwarded_restarg
+      def_node_type_predicate :forwarded_kwrestarg
+
       def send_type?
+        # Most nodes are of 'send' type, so this method is defined
+        # separately to make this check as fast as possible.
         false
       end
+
+      # @!endgroup
 
       # Returns the parent node, or `nil` if the receiver is a root node.
       #
