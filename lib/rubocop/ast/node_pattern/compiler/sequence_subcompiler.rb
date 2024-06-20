@@ -13,8 +13,8 @@ module RuboCop
         # Doc on how this fits in the compiling process:
         #   /docs/modules/ROOT/pages/node_pattern.adoc
         #
-        # rubocop:disable Metrics/ClassLength
-        class SequenceSubcompiler < Subcompiler
+        class SequenceSubcompiler < Subcompiler # rubocop:disable Metrics/ClassLength
+          # Shift of 1 from standard Ruby indices
           DELTA = 1
           POSITIVE = :positive?.to_proc
           private_constant :POSITIVE
@@ -413,7 +413,6 @@ module RuboCop
             @in_sync = sub_compilers.all?(&:in_sync)
           end
         end
-        # rubocop:enable Metrics/ClassLength
       end
     end
   end
