@@ -17,7 +17,11 @@ module RuboCop
       # @return [Array<Node>] an array of value nodes
       alias values children
 
-      # @deprecated Use `values.each` (a.k.a. `children.each`)
+      # Calls the given block for each `value` node in the `array` literal.
+      # If no block is given, an `Enumerator` is returned.
+      #
+      # @return [self] if a block is given
+      # @return [Enumerator] if no block is given
       def each_value(&block)
         return to_enum(__method__) unless block
 
