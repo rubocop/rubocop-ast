@@ -2,25 +2,23 @@
 
 require 'uri'
 
+module RuboCop
+  module AST
+    # Patch Node
+    class Node
+      # Let's make our predicate matchers read better
+      def used?
+        value_used?
+      end
+    end
+  end
+end
+
 RSpec.describe RuboCop::AST::Node do
   let(:ast) { parse_source(src).node }
   let(:node) { ast }
 
   describe '#value_used?' do
-    before :all do
-      module RuboCop # rubocop:disable Lint/ConstantDefinitionInBlock
-        module AST
-          # Patch Node
-          class Node
-            # Let's make our predicate matchers read better
-            def used?
-              value_used?
-            end
-          end
-        end
-      end
-    end
-
     context 'at the top level' do
       let(:src) { 'expr' }
 
