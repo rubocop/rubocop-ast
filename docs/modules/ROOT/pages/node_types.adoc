@@ -60,7 +60,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |arg|Required positional argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
-|args|Argument list. Must come inside a `def`, `defs`, `def_e`, `defs_e` or `block` node.|Children must be `arg`, `optarg`, `restarg`, `blockarg`, `kwarg`, `kwoptarg`, `kwrestarg`, `kwnilarg`, or `forwardarg`.|def whatever(foo, bar=1, baz: 5)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgsNode[ArgsNode]
+|args|Argument list. Must come inside a `def`, `defs`, or `block` node.|Children must be `arg`, `optarg`, `restarg`, `blockarg`, `kwarg`, `kwoptarg`, `kwrestarg`, `kwnilarg`, or `forwardarg`.|def whatever(foo, bar=1, baz: 5)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgsNode[ArgsNode]
 
 |array|Array literal.|The values in the array, including a possible `splat`.|[1, 2, 3]|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArrayNode[ArrayNode]
 
@@ -116,7 +116,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |forward_arg|Forwarding argument, for Ruby 3.0 (when `emit_forward_arg` is true). Must come inside an `args` node.|None|def whatever(foo, ...)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
-|forward_args|Forwarding argument list, for Ruby 2.7 (when `emit_forward_arg` is false). Must come inside a `def`, `defs`, `def_e`, or `defs_e` node.|None|def (foo(...)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ForwardArgsNode[ForwardArgsNode]
+|forward_args|Forwarding argument list, for Ruby 2.7 (when `emit_forward_arg` is false). Must come inside a `def`, or `defs` node.|None|def (foo(...)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ForwardArgsNode[ForwardArgsNode]
 
 |forwarded_args|Forwarding arguments into a method call|None|foo(...)|N/A
 
