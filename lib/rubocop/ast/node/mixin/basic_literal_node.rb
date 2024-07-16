@@ -3,7 +3,7 @@
 module RuboCop
   module AST
     # Common functionality for primitive literal nodes: `sym`, `str`,
-    # `int`, `float`, ...
+    # `int`, `float`, `rational`...
     module BasicLiteralNode
       # Returns the value of the literal.
       #
