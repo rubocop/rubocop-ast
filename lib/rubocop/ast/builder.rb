@@ -72,6 +72,7 @@ module RuboCop
         or:                  OrNode,
         pair:                PairNode,
         procarg0:            Procarg0Node,
+        rational:            RationalNode,
         regexp:              RegexpNode,
         rescue:              RescueNode,
         resbody:             ResbodyNode,

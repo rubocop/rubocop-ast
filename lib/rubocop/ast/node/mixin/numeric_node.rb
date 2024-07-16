@@ -2,7 +2,7 @@
 
 module RuboCop
   module AST
-    # Common functionality for primitive numeric nodes: `int`, `float`, ...
+    # Common functionality for primitive numeric nodes: `int`, `float`, `rational`...
     module NumericNode
       SIGN_REGEX = /\A[+-]/.freeze
       private_constant :SIGN_REGEX
