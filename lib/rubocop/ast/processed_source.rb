@@ -208,15 +208,13 @@ module RuboCop
 
         begin
           @buffer.source = source
+          @ast, @comments, @tokens = tokenize(create_parser(ruby_version, parser_engine))
         rescue EncodingError, Parser::UnknownEncodingInMagicComment => e
           @parser_error = e
           @ast = nil
           @comments = []
           @tokens = []
-          return
         end
-
-        @ast, @comments, @tokens = tokenize(create_parser(ruby_version, parser_engine))
       end
 
       def tokenize(parser)

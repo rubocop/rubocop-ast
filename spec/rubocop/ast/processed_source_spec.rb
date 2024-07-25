@@ -38,6 +38,14 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
     end
 
+    context 'when parsing invalid encoding regexp', broken_on: :prism do
+      let(:source) { '/あ/n' }
+
+      it 'returns a parser error' do
+        expect(processed_source.parser_error).to be_a(EncodingError)
+      end
+    end
+
     shared_examples 'invalid parser_engine' do
       it 'raises ArgumentError' do
         expect { processed_source }.to raise_error(ArgumentError) do |e|
