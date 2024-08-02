@@ -3,6 +3,8 @@
 This documentation is aimed at anyone wanting to understand / modify the `NodePattern` compiler.
 It assumes some familiarity with the syntax of https://github.com/rubocop/rubocop-ast/blob/master/docs/modules/ROOT/pages/node_pattern.adoc[`NodePattern`], as well as the AST produced by the `parser` gem.
 
+TIP: Use the https://nodepattern.herokuapp.com/[node pattern debugger] if you want to quickly try things out.
+
 == High level view
 
 The `NodePattern` compiler uses the same techniques as the `parser` gem:
