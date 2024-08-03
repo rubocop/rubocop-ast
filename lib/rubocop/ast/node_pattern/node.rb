@@ -7,7 +7,6 @@ module RuboCop
       class Node < ::Parser::AST::Node
         extend Forwardable
         include ::RuboCop::AST::Descendence
-        using Ext::RangeMinMax
 
         MATCHES_WITHIN_SET = %i[symbol number string].to_set.freeze
         private_constant :MATCHES_WITHIN_SET
