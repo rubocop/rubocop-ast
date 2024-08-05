@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#304](https://github.com/rubocop/rubocop-ast/pull/304): Add `RuboCop::AST::RationalNode`. ([@koic][])
+
 ## 1.31.3 (2024-04-29)
 
 ### Bug fixes
