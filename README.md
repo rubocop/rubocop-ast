@@ -1,7 +1,7 @@
 # RuboCop AST
 
 [![Gem Version](https://badge.fury.io/rb/rubocop-ast.svg)](https://badge.fury.io/rb/rubocop-ast)
-[![CI](https://github.com/rubocop/rubocop-ast/workflows/CI/badge.svg)](https://github.com/rubocop/rubocop-ast/actions?query=workflow%3ACI)
+[![CI](https://github.com/rubocop/rubocop-ast/actions/workflows/rubocop.yml/badge.svg)](https://github.com/rubocop/rubocop-ast/actions/workflows/rubocop.yml)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/a29666e6373bc41bc0a9/test_coverage)](https://codeclimate.com/github/rubocop/rubocop-ast/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a29666e6373bc41bc0a9/maintainability)](https://codeclimate.com/github/rubocop/rubocop-ast/maintainability)
 
