@@ -13,7 +13,7 @@ module RuboCop
       #
       # @return [Boolean] whether the `def` node body is a void context
       def void_context?
-        method?(:initialize) || assignment_method?
+        (def_type? && method?(:initialize)) || assignment_method?
       end
 
       # Checks whether this method definition node forwards its arguments

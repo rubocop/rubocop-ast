@@ -324,6 +324,12 @@ RSpec.describe RuboCop::AST::DefNode do
       it { is_expected.to be_void_context }
     end
 
+    context 'with a class method called "initialize"' do
+      let(:source) { 'def self.initialize(bar); end' }
+
+      it { is_expected.not_to be_void_context }
+    end
+
     context 'with a regular assignment method' do
       let(:source) { 'def foo=(bar); end' }
 
