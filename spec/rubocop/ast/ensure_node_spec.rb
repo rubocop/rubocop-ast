@@ -14,4 +14,10 @@ RSpec.describe RuboCop::AST::EnsureNode do
 
     it { expect(ensure_node.body).to be_sym_type }
   end
+
+  describe '#void_context?' do
+    let(:source) { 'begin; beginbody; ensure; ensurebody; end' }
+
+    it { expect(ensure_node).to be_void_context }
+  end
 end

@@ -12,6 +12,14 @@ module RuboCop
       def body
         node_parts[1]
       end
+
+      # Checks whether this node body is a void context.
+      # Always `true` for `ensure`.
+      #
+      # @return [true] whether the `ensure` node body is a void context
+      def void_context?
+        true
+      end
     end
   end
 end
