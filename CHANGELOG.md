@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.32.1 (2024-08-17)
+
 ### Changes
 
 * [#309](https://github.com/rubocop/rubocop-ast/pull/309): Mark `RuboCop::AST::EnsureNode` as being in a void context. ([@earlopain][])
