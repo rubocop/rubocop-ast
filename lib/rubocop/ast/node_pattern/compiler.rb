@@ -9,7 +9,6 @@ module RuboCop
       # Doc on how this fits in the compiling process:
       #   /docs/modules/ROOT/pages/node_pattern.adoc
       class Compiler
-        extend Forwardable
         attr_reader :captures, :named_parameters, :positional_parameters, :binding
 
         def initialize
@@ -21,7 +20,9 @@ module RuboCop
           @atom_subcompiler = self.class::AtomSubcompiler.new(self)
         end
 
-        def_delegators :binding, :bind
+        def bind(...)
+          @binding.bind(...)
+        end
 
         def positional_parameter(number)
           @positional_parameters = number if number > @positional_parameters

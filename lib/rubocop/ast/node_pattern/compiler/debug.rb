@@ -133,7 +133,13 @@ module RuboCop
             @parser ||= Parser::WithMeta.new
           end
 
-          def_delegators :parser, :comments, :tokens
+          def comments
+            parser.comments
+          end
+
+          def tokens
+            parser.tokens
+          end
 
           # @api private
           module InstrumentationSubcompiler

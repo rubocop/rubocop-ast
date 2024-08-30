@@ -11,8 +11,6 @@ module RuboCop
       # Doc on how this fits in the compiling process:
       #   /docs/modules/ROOT/pages/node_pattern.adoc
       class Parser < Racc::Parser
-        extend Forwardable
-
         Builder = NodePattern::Builder
         Lexer = NodePattern::Lexer
 
@@ -43,9 +41,17 @@ module RuboCop
 
         private
 
-        def_delegators :@builder, :emit_list, :emit_unary_op, :emit_atom, :emit_capture,
-                       :emit_call, :emit_union
-        def_delegators :@lexer, :next_token
+        %i[emit_list emit_unary_op emit_atom emit_capture emit_call emit_union].each do |method|
+          class_eval(<<~RUBY, __FILE__, __LINE__ + 1)
+            def #{method}(...)        # def emit_list(...)
+              @builder.#{method}(...) #   @builder.emit_list(...)
+            end                       # end
+          RUBY
+        end
+
+        def next_token
+          @lexer.next_token
+        end
 
         def enforce_unary(node)
           return node if node.arity == 1

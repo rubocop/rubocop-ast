@@ -48,7 +48,6 @@ module RuboCop
         end
       end
 
-      extend Forwardable
       include MethodDefiner
       Invalid = Class.new(StandardError)
 
@@ -72,14 +71,24 @@ module RuboCop
 
       attr_reader :pattern, :ast, :match_code
 
-      def_delegators :@compiler, :captures, :named_parameters, :positional_parameters
-
       def initialize(str, compiler: Compiler.new)
         @pattern = str
         @ast = compiler.parser.parse(str)
         @compiler = compiler
         @match_code = @compiler.compile_as_node_pattern(@ast, var: VAR)
         @cache = {}
+      end
+
+      def captures
+        @compiler.captures
+      end
+
+      def named_parameters
+        @compiler.named_parameters
+      end
+
+      def positional_parameters
+        @compiler.positional_parameters
       end
 
       def match(*args, **rest, &block)

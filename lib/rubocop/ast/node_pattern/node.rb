@@ -5,7 +5,6 @@ module RuboCop
     class NodePattern
       # Base class for AST Nodes of a `NodePattern`
       class Node < ::Parser::AST::Node
-        extend Forwardable
         include ::RuboCop::AST::Descendence
 
         MATCHES_WITHIN_SET = %i[symbol number string].to_set.freeze
@@ -95,7 +94,13 @@ module RuboCop
         # Node class for `$something`
         class Capture < Node
           # Delegate most introspection methods to it's only child
-          def_delegators :child, :arity, :rest?
+          def arity
+            child.arity
+          end
+
+          def rest?
+            child.rest?
+          end
 
           def capture?
             true

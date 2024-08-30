@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'parser'
-require 'forwardable'
 require 'set'
 
 require_relative 'ast/ext/range'
