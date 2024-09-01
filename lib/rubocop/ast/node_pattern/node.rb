@@ -5,7 +5,7 @@ module RuboCop
     class NodePattern
       # Base class for AST Nodes of a `NodePattern`
       class Node < ::Parser::AST::Node
-        extend Forwardable
+        extend SimpleForwardable
         include ::RuboCop::AST::Descendence
 
         MATCHES_WITHIN_SET = %i[symbol number string].to_set.freeze
