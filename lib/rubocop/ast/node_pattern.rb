@@ -48,7 +48,7 @@ module RuboCop
         end
       end
 
-      extend Forwardable
+      extend SimpleForwardable
       include MethodDefiner
       Invalid = Class.new(StandardError)
 

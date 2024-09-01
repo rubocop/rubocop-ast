@@ -11,7 +11,7 @@ module RuboCop
       # Doc on how this fits in the compiling process:
       #   /docs/modules/ROOT/pages/node_pattern.adoc
       class Parser < Racc::Parser
-        extend Forwardable
+        extend SimpleForwardable
 
         Builder = NodePattern::Builder
         Lexer = NodePattern::Lexer
