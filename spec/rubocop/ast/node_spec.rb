@@ -317,7 +317,15 @@ RSpec.describe RuboCop::AST::Node do
       end
 
       context 'with no interpolation' do
-        let(:src) { URI::DEFAULT_PARSER.make_regexp.inspect }
+        let(:src) do
+          # TODO: When supporting Ruby 3.3+ runtime, `URI::DEFAULT_PARSER` can be removed and
+          #       only `URI::RFC2396_PARSER` can be used.
+          if defined?(URI::RFC2396_PARSER)
+            URI::RFC2396_PARSER
+          else
+            URI::DEFAULT_PARSER
+          end.make_regexp.inspect
+        end
 
         it 'returns true' do
           expect(node).to be_pure
