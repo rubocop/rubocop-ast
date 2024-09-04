@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Bug fixes
+
+* [#310](https://github.com/rubocop/rubocop-ast/pull/310): Fix `RuboCop::AST::DefNode#void_context?` to handle class methods called `initialize`. ([@vlad-pisanov][])
+
 ## 1.32.2 (2024-09-02)
 
 ## 1.32.1 (2024-08-17)
