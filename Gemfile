@@ -15,10 +15,7 @@ gem 'prism', '>= 0.28.0'
 gem 'racc'
 gem 'rake', '~> 13.0'
 gem 'rspec', '~> 3.7'
-# Workaround for cc-test-reporter with SimpleCov 0.18.
-# Stop upgrading SimpleCov until the following issue will be resolved.
-# https://github.com/codeclimate/test-reporter/issues/418
-gem 'simplecov', '~> 0.10', '< 0.18'
+gem 'simplecov', '~> 0.20'
 
 if ENV.fetch('RUBOCOP_VERSION', nil) == 'none'
   # Set this way on CI
