@@ -117,7 +117,7 @@ module RuboCop
       #
       # @return [Boolean] whether the method was called with a connecting dot
       def dot?
-        loc.respond_to?(:dot) && loc.dot && loc.dot.is?('.')
+        loc.respond_to?(:dot) && loc.dot&.is?('.')
       end
 
       # Checks whether the dispatched method uses a double colon to connect the
@@ -125,7 +125,7 @@ module RuboCop
       #
       # @return [Boolean] whether the method was called with a connecting dot
       def double_colon?
-        loc.respond_to?(:dot) && loc.dot && loc.dot.is?('::')
+        loc.respond_to?(:dot) && loc.dot&.is?('::')
       end
 
       # Checks whether the dispatched method uses a safe navigation operator to
@@ -133,7 +133,7 @@ module RuboCop
       #
       # @return [Boolean] whether the method was called with a connecting dot
       def safe_navigation?
-        loc.respond_to?(:dot) && loc.dot && loc.dot.is?('&.')
+        loc.respond_to?(:dot) && loc.dot&.is?('&.')
       end
 
       # Checks whether the *explicit* receiver of this method dispatch is

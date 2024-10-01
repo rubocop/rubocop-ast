@@ -460,7 +460,7 @@ module RuboCop
       end
 
       def parenthesized_call?
-        loc.respond_to?(:begin) && loc.begin && loc.begin.is?('(')
+        loc.respond_to?(:begin) && loc.begin&.is?('(')
       end
 
       def call_type?
