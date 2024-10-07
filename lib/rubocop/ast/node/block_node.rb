@@ -90,14 +90,14 @@ module RuboCop
       #
       # @return [Boolean] whether the `block` literal is enclosed in braces
       def braces?
-        loc.end&.is?('}')
+        loc.end.is?('}')
       end
 
       # Checks whether the `block` literal is delimited by `do`-`end` keywords.
       #
       # @return [Boolean] whether the `block` literal is enclosed in `do`-`end`
       def keywords?
-        loc.end&.is?('end')
+        loc.end.is?('end')
       end
 
       # The delimiters for this `block` literal.
