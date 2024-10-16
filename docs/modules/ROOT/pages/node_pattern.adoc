@@ -126,6 +126,7 @@ Ruby code with a method call with two integer literals as arguments, `foo(1, 2)`
 To match just those method calls where the first argument is a literal `1`, use `(send nil? :foo (int 1) int)`.
 Any child that is a node can be a target for nested matching.
 
+[#any-single-node]
 == `_` for any single node
 
 `_` will check if there's something present in the specific position, no matter the
@@ -134,6 +135,22 @@ value:
 * `(int _)` will match any number
 * `(int _ _)` will not match because `int` types have just one child that
 contains the value.
+
+You can specify a name to make a more descriptive reference:
+
+----
+(send nil? _method_name)
+----
+
+You can also reference them later in the pattern to match against the value that was previously captured:
+
+----
+(pair
+  (_ _key)
+  (_ _key))
+----
+
+`{ a: :a }` will match, while `{ a: :b }` won't.
 
 == `+...+` for several subsequent nodes
 
@@ -314,6 +331,17 @@ The following pattern will have two captures, both arrays:
 (send nil? $int+ (send $...))
 ----
 
+When capturing <<any-single-node, any single node>>, you can reference the value you previously captured.
+
+The following pattern will have one capture:
+
+----
+(pair
+  (_ $_key)
+  (_ _key))
+----
+
+
 == `^` for parent
 
 One may use the `^` character to check against a parent.
@@ -347,6 +375,7 @@ we can write:
 This would match both of these methods `foo` and `bar`, even though
 these `return` for `foo` and `bar` are not at the same level.
 
+[source,ruby]
 ----
 def foo              # (def :foo
   return 42          #   (args)
