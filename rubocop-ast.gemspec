@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
 
   s.email = 'rubocop@googlegroups.com'
   s.files = `git ls-files lib LICENSE.txt README.md`
-            .split($RS) + %w[
+            .lines(chomp: true) + %w[
               lib/rubocop/ast/node_pattern/parser.racc.rb
               lib/rubocop/ast/node_pattern/lexer.rex.rb
             ]
