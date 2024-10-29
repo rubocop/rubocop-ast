@@ -1109,4 +1109,28 @@ RSpec.describe RuboCop::AST::Node do
       end
     end
   end
+
+  describe '#loc_is?' do
+    let(:src) { '%i[>> sym << sym2]' }
+
+    context 'when loc exists' do
+      let(:src) { ':sym' }
+
+      it 'returns true when loc matches argument' do
+        expect(node).to be_loc_is(:begin, ':')
+      end
+
+      it 'returns false when loc does not match argument' do
+        expect(node).not_to be_loc_is(:begin, '!')
+      end
+    end
+
+    it 'returns false when requested loc is `nil`' do
+      expect(node).not_to be_loc_is(:begin, ':')
+    end
+
+    it 'returns false when requested loc does not exist' do
+      expect(node).not_to be_loc_is(:foo, ':')
+    end
+  end
 end
