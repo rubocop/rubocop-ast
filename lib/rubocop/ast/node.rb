@@ -534,6 +534,17 @@ module RuboCop
         node.match_guard_clause?
       end
 
+      # Shortcut to safely test a particular location, even if
+      # this location does not exist or is `nil`
+      def loc_is?(which_loc, str)
+        return false unless loc.respond_to?(which_loc)
+
+        location = loc.public_send(which_loc)
+        return false unless location
+
+        location.is?(str)
+      end
+
       # @!method match_guard_clause?(node = self)
       def_node_matcher :match_guard_clause?, <<~PATTERN
         [${(send nil? {:raise :fail} ...) return break next} single_line?]
