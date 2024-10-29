@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.33.0 (2024-10-29)
+
 ### New features
 
 * [#203](https://github.com/rubocop-hq/rubocop-ast/pull/203): Add classes for `masgn` and `mlhs` nodes. ([@dvandersluis][])
