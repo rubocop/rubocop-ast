@@ -118,6 +118,18 @@ RSpec.describe RuboCop::AST::SendNode do
       it { expect(send_node).to be_access_modifier }
     end
 
+    context 'when node is a non-bare `module_function` with multiple arguments' do
+      let(:source) do
+        <<~RUBY
+          module Foo
+          >> module_function :foo, :bar <<
+          end
+        RUBY
+      end
+
+      it { expect(send_node).to be_access_modifier }
+    end
+
     context 'when node is not an access modifier' do
       let(:source) do
         <<~RUBY
@@ -202,6 +214,18 @@ RSpec.describe RuboCop::AST::SendNode do
         <<~RUBY
           module Foo
           >> module_function :foo <<
+          end
+        RUBY
+      end
+
+      it { expect(send_node).to be_non_bare_access_modifier }
+    end
+
+    context 'when node is a non-bare `module_function` with multiple arguments' do
+      let(:source) do
+        <<~RUBY
+          module Foo
+          >> module_function :foo, :bar <<
           end
         RUBY
       end

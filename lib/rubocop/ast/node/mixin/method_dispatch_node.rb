@@ -281,7 +281,7 @@ module RuboCop
 
       # @!method non_bare_access_modifier_declaration?(node = self)
       def_node_matcher :non_bare_access_modifier_declaration?, <<~PATTERN
-        (send nil? {:public :protected :private :module_function} _)
+        (send nil? {:public :protected :private :module_function} _+)
       PATTERN
     end
   end

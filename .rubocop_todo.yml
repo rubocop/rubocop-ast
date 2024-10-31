@@ -92,3 +92,11 @@ RSpec/MultipleExpectations:
 # URISchemes: http, https
 Layout/LineLength:
   Max: 102
+
+# Offense count: 1
+# This cop supports unsafe autocorrection (--autocorrect-all).
+# Configuration parameters: EnforcedStyle, AllowModifiersOnSymbols, AllowModifiersOnAttrs.
+# SupportedStyles: inline, group
+Style/AccessModifierDeclarations:
+  Exclude:
+    - 'lib/rubocop/ast/node_pattern/compiler/sequence_subcompiler.rb'
