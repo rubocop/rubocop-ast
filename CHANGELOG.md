@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Bug fixes
+
+* [#325](https://github.com/rubocop-hq/rubocop-ast/pull/325): Allow `non_bare_access_modifier_declaration?` to handle modifiers with multiple arguments. ([@dvandersluis][])
+
 ## 1.33.0 (2024-10-29)
 
 ### New features
