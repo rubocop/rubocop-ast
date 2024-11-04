@@ -986,4 +986,66 @@ RSpec.describe RuboCop::AST::Node do
       end
     end
   end
+
+  describe '#const_name' do
+    context 'when given a `const` node' do
+      context 'FOO' do
+        let(:src) { 'FOO' }
+
+        it 'returns FOO' do
+          expect(node.const_name).to eq('FOO')
+        end
+      end
+
+      context 'FOO::BAR::BAZ' do
+        let(:src) { 'FOO::BAR::BAZ' }
+
+        it 'returns FOO::BAR::BAZ' do
+          expect(node.const_name).to eq('FOO::BAR::BAZ')
+        end
+      end
+
+      context '::FOO::BAR::BAZ' do
+        let(:src) { '::FOO::BAR::BAZ' }
+
+        it 'returns FOO::BAR::BAZ' do
+          expect(node.const_name).to eq('FOO::BAR::BAZ')
+        end
+      end
+    end
+
+    context 'when given a `casgn` node' do
+      context 'FOO = 1' do
+        let(:src) { 'FOO = 1' }
+
+        it 'returns FOO' do
+          expect(node.const_name).to eq('FOO')
+        end
+      end
+
+      context 'FOO::BAR::BAZ = 1' do
+        let(:src) { 'FOO::BAR::BAZ = 1' }
+
+        it 'returns FOO::BAR::BAZ' do
+          expect(node.const_name).to eq('FOO::BAR::BAZ')
+        end
+      end
+
+      context '::FOO::BAR::BAZ = 1' do
+        let(:src) { '::FOO::BAR::BAZ = 1' }
+
+        it 'returns FOO::BAR::BAZ' do
+          expect(node.const_name).to eq('FOO::BAR::BAZ')
+        end
+      end
+    end
+
+    context 'when given a `send` node' do
+      let(:src) { 'foo.bar' }
+
+      it 'return nil' do
+        expect(node.const_name).to be_nil
+      end
+    end
+  end
 end
