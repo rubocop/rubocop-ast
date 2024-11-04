@@ -88,6 +88,34 @@ module RuboCop
       EMPTY_PROPERTIES = {}.freeze
       private_constant :EMPTY_CHILDREN, :EMPTY_PROPERTIES
 
+      # @api private
+      GROUP_FOR_TYPE = {
+        arg: :argument,
+        optarg: :argument,
+        restarg: :argument,
+        kwarg: :argument,
+        kwoptarg: :argument,
+        kwrestarg: :argument,
+        blockarg: :argument,
+        forward_arg: :argument,
+        shardowarg: :argument,
+
+        true: :boolean,
+        false: :boolean,
+
+        int: :numeric,
+        float: :numeric,
+        rational: :numeric,
+        complex: :numeric,
+
+        irange: :range,
+        erange: :range,
+
+        send: :call,
+        csend: :call
+      }.freeze
+      private_constant :GROUP_FOR_TYPE
+
       # Define a +recursive_?+ predicate method for the given node kind.
       private_class_method def self.def_recursive_literal_predicate(kind) # rubocop:disable Metrics/MethodLength
         recursive_kind = "recursive_#{kind}?"
@@ -463,7 +491,7 @@ module RuboCop
       end
 
       def call_type?
-        send_type? || csend_type?
+        GROUP_FOR_TYPE[type] == :call
       end
 
       def chained?
@@ -475,19 +503,19 @@ module RuboCop
       end
 
       def argument_type?
-        ARGUMENT_TYPES.include?(type)
+        GROUP_FOR_TYPE[type] == :argument
       end
 
       def boolean_type?
-        true_type? || false_type?
+        GROUP_FOR_TYPE[type] == :boolean
       end
 
       def numeric_type?
-        int_type? || float_type? || rational_type? || complex_type?
+        GROUP_FOR_TYPE[type] == :numeric
       end
 
       def range_type?
-        irange_type? || erange_type?
+        GROUP_FOR_TYPE[type] == :range
       end
 
       def guard_clause?
