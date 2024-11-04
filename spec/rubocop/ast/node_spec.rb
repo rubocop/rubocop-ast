@@ -1048,4 +1048,65 @@ RSpec.describe RuboCop::AST::Node do
       end
     end
   end
+
+  describe '#type?' do
+    let(:src) do
+      <<~RUBY
+        foo.bar
+      RUBY
+    end
+
+    context 'when it is one of the given types' do
+      it 'is true' do
+        expect(node).to be_type(:send, :const, :lvar)
+      end
+    end
+
+    context 'when it is not one of the given types' do
+      it 'is false' do
+        expect(node).not_to be_type(:if, :while, :until)
+      end
+    end
+
+    context 'when given :argument with an `arg` node' do
+      let(:src) { 'foo { |>> var <<| } ' }
+
+      it 'is true' do
+        arg_node = ast.procarg0_type? ? ast.child_nodes.first : node
+        expect(arg_node).to be_type(:argument)
+      end
+    end
+
+    context 'when given :boolean with an `true` node' do
+      let(:src) { 'true' }
+
+      it 'is true' do
+        expect(node).to be_type(:boolean)
+      end
+    end
+
+    context 'when given :numeric with an `int` node' do
+      let(:src) { '42' }
+
+      it 'is true' do
+        expect(node).to be_type(:numeric)
+      end
+    end
+
+    context 'when given :range with an `irange` node' do
+      let(:src) { '1..3' }
+
+      it 'is true' do
+        expect(node).to be_type(:range)
+      end
+    end
+
+    context 'when given :call with an `send` node' do
+      let(:src) { 'foo.bar' }
+
+      it 'is true' do
+        expect(node).to be_type(:call)
+      end
+    end
+  end
 end
