@@ -12,6 +12,7 @@ module RuboCop
       def name
         node_parts[0]
       end
+      alias lhs name
 
       # The expression being assigned to the variable.
       #
@@ -19,6 +20,7 @@ module RuboCop
       def expression
         node_parts[1]
       end
+      alias rhs expression
     end
   end
 end

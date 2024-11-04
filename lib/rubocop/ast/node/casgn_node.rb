@@ -9,6 +9,7 @@ module RuboCop
       include ConstantNode
 
       alias name short_name
+      alias lhs short_name
 
       # The expression being assigned to the variable.
       #
@@ -16,6 +17,7 @@ module RuboCop
       def expression
         node_parts[2]
       end
+      alias rhs expression
     end
   end
 end

@@ -10,6 +10,7 @@ module RuboCop
       def assignment_node
         node_parts[0]
       end
+      alias lhs assignment_node
 
       # The name of the variable being assigned as a symbol.
       #
@@ -31,6 +32,7 @@ module RuboCop
       def expression
         node_parts.last
       end
+      alias rhs expression
     end
   end
 end
