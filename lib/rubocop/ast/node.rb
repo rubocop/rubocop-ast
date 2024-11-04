@@ -154,6 +154,16 @@ module RuboCop
         end
       end
 
+      # Determine if the node is one of several node types in a single query
+      # Allows specific single node types, as well as "grouped" types
+      # (e.g. `:boolean` for `:true` or `:false`)
+      def type?(*types)
+        return true if types.include?(type)
+
+        group_type = GROUP_FOR_TYPE[type]
+        !group_type.nil? && types.include?(group_type)
+      end
+
       (Parser::Meta::NODE_TYPES - [:send]).each do |node_type|
         method_name = "#{node_type.to_s.gsub(/\W/, '')}_type?"
         class_eval <<~RUBY, __FILE__, __LINE__ + 1
