@@ -108,6 +108,10 @@ module RuboCop
         rational: :numeric,
         complex: :numeric,
 
+        str: :any_str,
+        dstr: :any_str,
+        xstr: :any_str,
+
         irange: :range,
         erange: :range,
 
@@ -545,6 +549,10 @@ module RuboCop
 
       def any_match_pattern_type?
         GROUP_FOR_TYPE[type] == :any_match_pattern
+      end
+
+      def any_str_type?
+        GROUP_FOR_TYPE[type] == :any_str
       end
 
       def guard_clause?
