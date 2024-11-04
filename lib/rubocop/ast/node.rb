@@ -312,13 +312,12 @@ module RuboCop
       def_node_matcher :str_content, '(str $_)'
 
       def const_name
-        return unless const_type?
+        return unless const_type? || casgn_type?
 
-        namespace, name = *self
         if namespace && !namespace.cbase_type?
-          "#{namespace.const_name}::#{name}"
+          "#{namespace.const_name}::#{short_name}"
         else
-          name.to_s
+          short_name.to_s
         end
       end
 
