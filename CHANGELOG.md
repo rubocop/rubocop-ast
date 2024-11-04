@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.34.0 (2024-11-04)
+
 ### New features
 
 - [#326](https://github.com/rubocop-hq/rubocop-ast/pull/326): Introduce `lhs` and `rhs` aliases to assignment nodes for consistency. ([@dvandersluis][])
