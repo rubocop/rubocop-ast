@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.34.1 (2024-11-07)
+
 ### New features
 
 * [#329](https://github.com/rubocop/rubocop-ast/pull/329): Add `Node#type?` to reduce complexity of checking against multiple node types. ([@dvandersluis][])
