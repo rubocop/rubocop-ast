@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::OpAsgnNode do
-  let(:op_asgn_node) { parse_source(source).ast }
+  let(:parsed_source) { parse_source(source) }
+  let(:op_asgn_node) { parsed_source.ast }
 
   describe '.new' do
     context 'with an `op_asgn_node` node' do
@@ -15,8 +16,21 @@ RSpec.describe RuboCop::AST::OpAsgnNode do
     subject { op_asgn_node.assignment_node }
 
     let(:source) { 'var += value' }
+    let(:node) { parsed_source.node }
 
     it { is_expected.to be_a(RuboCop::AST::AsgnNode) }
+
+    context 'when the LHS is a `send` node' do
+      let(:source) { '>> foo.var << += value' }
+
+      it { is_expected.to eq(node) }
+    end
+
+    context 'when the LHS is a `csend` node' do
+      let(:source) { '>> foo&.var << += value' }
+
+      it { is_expected.to eq(node) }
+    end
   end
 
   describe '#name' do
@@ -25,6 +39,18 @@ RSpec.describe RuboCop::AST::OpAsgnNode do
     let(:source) { 'var += value' }
 
     it { is_expected.to eq(:var) }
+
+    context 'when the LHS is a `send` node' do
+      let(:source) { 'foo.var += value' }
+
+      it { is_expected.to eq(:var) }
+    end
+
+    context 'when the LHS is a `csend` node' do
+      let(:source) { 'foo&.var += value' }
+
+      it { is_expected.to eq(:var) }
+    end
   end
 
   describe '#operator' do
