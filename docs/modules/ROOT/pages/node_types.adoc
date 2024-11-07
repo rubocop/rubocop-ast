@@ -142,7 +142,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |kwarg|Required keyword argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar:)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
-|kwbegin|Explicit `begin` block.|Child nodes are body statements.|begin,end|N/A
+|kwbegin|Explicit `begin` block.|Child nodes are body statements.|begin,end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/KeywordBeginNode[KeywordBeginNode]
 
 |kwnilarg|Double splat with nil in function definition, used to specify that the function does not accept keyword args. Must come inside an `args`.|None|def foo(**nil)|N/A
 
