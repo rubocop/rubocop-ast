@@ -63,6 +63,7 @@ module RuboCop
         irange:              RangeNode,
         erange:              RangeNode,
         kwargs:              HashNode,
+        kwbegin:             KeywordBeginNode,
         kwsplat:             KeywordSplatNode,
         lambda:              LambdaNode,
         masgn:               MasgnNode,
