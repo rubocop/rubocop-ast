@@ -24,6 +24,19 @@ RSpec.describe RuboCop::AST::RescueNode do
     RUBY
 
     it { expect(rescue_node.body).to be_send_type }
+
+    context 'with multiple lines in body' do
+      let(:source) { <<~RUBY }
+        begin
+          foo
+          bar
+        rescue => e
+          baz
+        end
+      RUBY
+
+      it { expect(rescue_node.body).to be_begin_type }
+    end
   end
 
   describe '#resbody_branches' do
