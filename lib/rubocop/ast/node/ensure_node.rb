@@ -13,6 +13,13 @@ module RuboCop
         node_parts[1]
       end
 
+      # Returns the `rescue` node of the `ensure`, if present.
+      #
+      # @return [Node, nil] The `rescue` node.
+      def rescue_node
+        node_parts[0] if node_parts[0].rescue_type?
+      end
+
       # Checks whether this node body is a void context.
       # Always `true` for `ensure`.
       #
