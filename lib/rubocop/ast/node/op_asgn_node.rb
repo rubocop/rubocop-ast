@@ -16,7 +16,7 @@ module RuboCop
       #
       # @return [Symbol] the name of the variable being assigned
       def name
-        assignment_node.name
+        assignment_node.call_type? ? assignment_node.method_name : assignment_node.name
       end
 
       # The operator being used for assignment as a symbol.
