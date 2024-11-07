@@ -2,6 +2,15 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#329](https://github.com/rubocop/rubocop-ast/pull/329): Add `Node#type?` to reduce complexity of checking against multiple node types. ([@dvandersluis][])
+* [#330](https://github.com/rubocop/rubocop-ast/pull/330): Extend `Node#const_name` to `casgn` nodes. ([@dvandersluis][])
+
+### Bug fixes
+
+* [#331](https://github.com/rubocop/rubocop-ast/issue/331): [Fix #331] Fix crash in `OpAsgnNode#name` when the lhs is a `send` or `csend` node. ([@dvandersluis][])
+
 ## 1.34.0 (2024-11-04)
 
 ### New features
