@@ -1110,12 +1110,42 @@ RSpec.describe RuboCop::AST::Node do
     end
   end
 
-  describe '*_type? methods on Node' do
-    Parser::Meta::NODE_TYPES.each do |node_type|
-      method_name = "#{node_type.to_s.gsub(/\W/, '')}_type?"
+  Parser::Meta::NODE_TYPES.each do |node_type|
+    node_name = node_type.to_s.gsub(/\W/, '')
+    method_name = :"#{node_name}_type?"
 
-      it "is not of #{method_name}" do
+    describe "##{method_name}" do
+      it 'is false' do
         expect(described_class.allocate.public_send(method_name)).to be(false)
+      end
+
+      it 'is documented' do
+        expect(node_type_predicate_is_documented?(node_type)).to(
+          be(true),
+          missing_documentation_failure_message(method_name, node_name, node_type)
+        )
+      end
+
+      private
+
+      def node_type_predicate_is_documented?(node_type)
+        described_class
+          .instance_variable_get(:@node_types_with_documented_predicate_method)
+          .include?(node_type)
+      end
+
+      def missing_documentation_failure_message(method_name, node_name, node_type)
+        name_matches_type = node_type.to_s == node_name
+
+        <<~MSG
+          #{described_class.name}##{method_name} is not documented as it was generated automatically as a fallback.
+
+          To fix this, define it using the following macro instead:
+
+              class #{described_class.name} < #{described_class.superclass.name}
+                # ...
+                def_node_type_predicate :#{node_name}#{", :#{node_type}" unless name_matches_type}
+        MSG
       end
     end
   end

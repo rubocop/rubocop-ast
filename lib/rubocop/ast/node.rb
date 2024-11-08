@@ -139,12 +139,15 @@ module RuboCop
 
       # Define a +_type?+ predicate method for the given node type.
       private_class_method def self.def_node_type_predicate(name, type = name)
+        @node_types_with_documented_predicate_method << type
+
         class_eval <<~RUBY, __FILE__, __LINE__ + 1
           def #{name}_type?      # def block_type?
             @type == :#{type}    #   @type == :block
           end                    # end
         RUBY
       end
+      @node_types_with_documented_predicate_method = []
 
       # @see https://www.rubydoc.info/gems/ast/AST/Node:initialize
       def initialize(type, children = EMPTY_CHILDREN, properties = EMPTY_PROPERTIES)
@@ -316,6 +319,14 @@ module RuboCop
         # Most nodes are of 'send' type, so this method is defined
         # separately to make this check as fast as possible.
         false
+      end
+      @node_types_with_documented_predicate_method << :send
+
+      # Ensure forward compatibility with new node types by defining methods for unknown node types.
+      # Note these won't get auto-generated documentation, which is why we prefer defining them above.
+      (Parser::Meta::NODE_TYPES - @node_types_with_documented_predicate_method).each do |node_type|
+        method_name = :"#{node_type.to_s.gsub(/\W/, '')}_type?"
+        define_method(method_name) { false }
       end
 
       # @!endgroup
