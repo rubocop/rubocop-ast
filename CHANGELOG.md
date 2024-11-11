@@ -2,6 +2,14 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#333](https://github.com/rubocop/rubocop-ast/pull/333): Add `BeginNode` for `kwbegin` nodes. ([@dvandersluis][])
+
+### Changes
+
+* [#333](https://github.com/rubocop/rubocop-ast/pull/333): Add `EnsureNode#rescue_node` method. ([@dvandersluis][])
+
 ## 1.34.1 (2024-11-07)
 
 ### New features
