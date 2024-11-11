@@ -6,12 +6,13 @@ module RuboCop
     # node when the builder constructs the AST, making its methods available
     # to all `ensure` nodes within RuboCop.
     class EnsureNode < Node
-      # Returns the body of the `ensure` clause.
+      # Returns the body of the `ensure` node.
       #
-      # @return [Node, nil] The body of the `ensure`.
-      # @deprecated Use `EnsureNode#branch`
+      # @return [Node, nil] The body of the `ensure` node.
       def body
-        branch
+        return rescue_node.body if rescue_node
+
+        node_parts[0]
       end
 
       # Returns an the ensure branch in the exception handling statement.
@@ -25,7 +26,7 @@ module RuboCop
       #
       # @return [Node, nil] The `rescue` node.
       def rescue_node
-        node_parts[0] if node_parts[0].rescue_type?
+        node_parts[0] if node_parts[0]&.rescue_type?
       end
 
       # Checks whether this node body is a void context.
