@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.35.0 (2024-11-11)
+
 ### New features
 
 * [#333](https://github.com/rubocop/rubocop-ast/pull/333): Add `BeginNode` for `kwbegin` nodes. ([@dvandersluis][])
