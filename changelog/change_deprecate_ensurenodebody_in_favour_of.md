@@ -1,0 +1,1 @@
+* [#337](https://github.com/rubocop/rubocop-ast/pull/337): Deprecate `EnsureNode#body` in favour of `EnsureNode#branch`. `EnsureNode#body` will be redefined in the next major version of rubocop-ast. ([@dvandersluis][])
