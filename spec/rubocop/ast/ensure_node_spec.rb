@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::EnsureNode do
-  let(:ensure_node) { parse_source(source).ast.children.first }
+  let(:parsed_source) { parse_source(source) }
+  let(:ensure_node) { parsed_source.ast.children.first }
+  let(:node) { parsed_source.node }
 
   describe '.new' do
     let(:source) { 'begin; beginbody; ensure; ensurebody; end' }
@@ -9,10 +11,10 @@ RSpec.describe RuboCop::AST::EnsureNode do
     it { expect(ensure_node).to be_a(described_class) }
   end
 
-  describe '#body' do
-    let(:source) { 'begin; beginbody; ensure; :ensurebody; end' }
+  describe '#branch' do
+    let(:source) { 'begin; beginbody; ensure; >>ensurebody<<; end' }
 
-    it { expect(ensure_node.body).to be_sym_type }
+    it { expect(ensure_node.branch).to eq(node) }
   end
 
   describe '#rescue_node' do
