@@ -93,7 +93,7 @@ The bulk of the processing is in the inherited class `parser.racc.rb` that is ge
 The `Parser` emits `NodePattern::Node` which are similar to RuboCop's node.
 They both inherit from ``parser``'s `Parser::AST::Source::Node`, and share additional methods  too.
 
-Like for RuboCop's nodes, some nodes have specicialized classes (e.g.
+Like for RuboCop's nodes, some nodes have specialized classes (e.g.
 `Sequence`) while other nodes use the base class directly (e.g.
 `s(:number, 42)`)
 
