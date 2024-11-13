@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Bug fixes
+
+* [#339](https://github.com/rubocop/rubocop-ast/pull/339): Do not emit a deprecation warning for `EnsureNode#body` to give RuboCop a chance to update its usage. `EnsureNode#body` will still be changed in the next major version of `rubocop-ast`. ([@earlopain][])
+
 ## 1.36.0 (2024-11-13)
 
 ### Changes
