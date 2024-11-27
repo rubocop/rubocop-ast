@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Bug fixes
+
+* [#340](https://github.com/rubocop/rubocop-ast/pull/340): Handle anonymous splats in `MlhsNode`. ([@earlopain][])
+
 ## 1.36.1 (2024-11-13)
 
 ### Bug fixes
