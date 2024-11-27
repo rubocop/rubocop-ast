@@ -8,13 +8,15 @@ module RuboCop
     class MlhsNode < Node
       # Returns all the assignment nodes on the left hand side (LHS) of a multiple assignment.
       # These are generally assignment nodes (`lvasgn`, `ivasgn`, `cvasgn`, `gvasgn`, `casgn`)
-      # but can also be `send` nodes in case of `foo.bar, ... =` or `foo[:bar], ... =`.
+      # but can also be `send` nodes in case of `foo.bar, ... =` or `foo[:bar], ... =`,
+      # or a `splat` node for `*, ... =`.
       #
       # @return [Array<Node>] the assignment nodes of the multiple assignment LHS
       def assignments
         child_nodes.flat_map do |node|
           if node.splat_type?
-            node.child_nodes.first
+            # Anonymous splats have no children
+            node.child_nodes.first || node
           elsif node.mlhs_type?
             node.assignments
           else

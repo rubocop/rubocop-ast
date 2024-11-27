@@ -28,6 +28,12 @@ RSpec.describe RuboCop::AST::MlhsNode do
       it { is_expected.to eq([s(:lvasgn, :x), s(:lvasgn, :y)]) }
     end
 
+    context 'with an anonymous splat' do
+      let(:source) { 'x, * = z' }
+
+      it { is_expected.to eq([s(:lvasgn, :x), s(:splat)]) }
+    end
+
     context 'with nested `mlhs` nodes' do
       let(:source) { 'a, (b, c) = z' }
 
