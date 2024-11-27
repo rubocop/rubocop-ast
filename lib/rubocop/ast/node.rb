@@ -529,7 +529,7 @@ module RuboCop
       end
 
       def guard_clause?
-        node = and_type? || or_type? ? rhs : self
+        node = operator_keyword? ? rhs : self
 
         node.match_guard_clause?
       end
