@@ -25,6 +25,13 @@ module RuboCop
         keyword == 'unless'
       end
 
+      # Checks whether the `if` node has an `then` clause.
+      #
+      # @return [Boolean] whether the node has an `then` clause
+      def then?
+        loc_is?(:begin, 'then')
+      end
+
       # Checks whether the `if` is an `elsif`. Parser handles these by nesting
       # `if` nodes in the `else` branch.
       #

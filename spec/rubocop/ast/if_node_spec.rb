@@ -124,6 +124,32 @@ RSpec.describe RuboCop::AST::IfNode, broken_on: :prism do
     end
   end
 
+  describe '#then?' do
+    context 'with `then` keyword' do
+      let(:source) do
+        <<~SOURCE
+          if foo? then
+            1
+          end
+        SOURCE
+      end
+
+      it { is_expected.to be_then }
+    end
+
+    context 'without `then` keyword' do
+      let(:source) do
+        <<~SOURCE
+          if foo?
+            1
+          end
+        SOURCE
+      end
+
+      it { is_expected.not_to be_then }
+    end
+  end
+
   describe '#elsif?' do
     context 'with an elsif statement' do
       let(:source) do
