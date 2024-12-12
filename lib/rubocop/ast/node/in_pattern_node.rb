@@ -24,7 +24,7 @@ module RuboCop
       #
       # @return [Boolean] whether the `in` node has a `then` keyword
       def then?
-        loc.begin&.is?('then')
+        loc_is?(:begin, 'then')
       end
 
       # Returns the body of the `in` node.
