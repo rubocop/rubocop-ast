@@ -1,0 +1,1 @@
+* [#343](https://github.com/rubocop/rubocop-ast/pull/343): Add `StrNode#single_quoted?`, `StrNode#double_quoted?` and `StrNode#percent_literal?` to simplify checking for string delimiters. ([@dvandersluis][])

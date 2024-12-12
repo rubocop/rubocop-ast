@@ -8,12 +8,55 @@ module RuboCop
     class StrNode < Node
       include BasicLiteralNode
 
+      PERCENT_LITERAL_TYPES = {
+        :% => /\A%(?=[^a-zA-Z])/,
+        :q => /\A%q/,
+        :Q => /\A%Q/
+      }.freeze
+
+      def single_quoted?
+        opening_delimiter&.is?("'")
+      end
+
+      def double_quoted?
+        opening_delimiter&.is?('"')
+      end
+
       def character_literal?
-        loc.respond_to?(:begin) && loc.begin&.is?('?')
+        opening_delimiter&.is?('?')
       end
 
       def heredoc?
         loc.is_a?(Parser::Source::Map::Heredoc)
+      end
+
+      # Checks whether the string literal is delimited by percent brackets.
+      #
+      # @overload percent_literal?
+      #   Check for any string percent literal.
+      #
+      # @overload percent_literal?(type)
+      #   Check for a string percent literal of type `type`.
+      #
+      # @param type [Symbol] an optional percent literal type
+      #
+      # @return [Boolean] whether the string is enclosed in percent brackets
+      def percent_literal?(type = nil)
+        return false unless opening_delimiter
+
+        if type
+          opening_delimiter.source.match?(PERCENT_LITERAL_TYPES[type])
+        else
+          opening_delimiter.source.start_with?('%')
+        end
+      end
+
+      private
+
+      def opening_delimiter
+        return unless loc.respond_to?(:begin)
+
+        loc.begin
       end
     end
   end

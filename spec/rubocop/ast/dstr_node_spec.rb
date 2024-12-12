@@ -35,4 +35,73 @@ RSpec.describe RuboCop::AST::DstrNode do
       it { is_expected.to eq('foo bar baz') }
     end
   end
+
+  describe '#single_quoted?' do
+    context 'with a double-quoted string' do
+      let(:source) { '"#{foo}"' }
+
+      it { is_expected.not_to be_single_quoted }
+    end
+
+    context 'with a %() delimited string' do
+      let(:source) { '%(#{foo})' }
+
+      it { is_expected.not_to be_single_quoted }
+    end
+
+    context 'with a %Q() delimited string' do
+      let(:source) { '%Q(#{foo})' }
+
+      it { is_expected.not_to be_single_quoted }
+    end
+  end
+
+  describe '#double_quoted?' do
+    context 'with a double-quoted string' do
+      let(:source) { '"#{foo}"' }
+
+      it { is_expected.to be_double_quoted }
+    end
+
+    context 'with a %() delimited string' do
+      let(:source) { '%(#{foo})' }
+
+      it { is_expected.not_to be_double_quoted }
+    end
+
+    context 'with a %Q() delimited string' do
+      let(:source) { '%Q(#{foo})' }
+
+      it { is_expected.not_to be_double_quoted }
+    end
+  end
+
+  describe '#percent_literal?' do
+    context 'with a quoted string' do
+      let(:source) { '"#{foo}"' }
+
+      it { is_expected.not_to be_percent_literal }
+      it { is_expected.not_to be_percent_literal(:%) }
+      it { is_expected.not_to be_percent_literal(:q) }
+      it { is_expected.not_to be_percent_literal(:Q) }
+    end
+
+    context 'with a %() delimited string' do
+      let(:source) { '%(#{foo})' }
+
+      it { is_expected.to be_percent_literal }
+      it { is_expected.to be_percent_literal(:%) }
+      it { is_expected.not_to be_percent_literal(:q) }
+      it { is_expected.not_to be_percent_literal(:Q) }
+    end
+
+    context 'with a %Q() delimited string' do
+      let(:source) { '%Q(#{foo})' }
+
+      it { is_expected.to be_percent_literal }
+      it { is_expected.not_to be_percent_literal(:%) }
+      it { is_expected.not_to be_percent_literal(:q) }
+      it { is_expected.to be_percent_literal(:Q) }
+    end
+  end
 end
