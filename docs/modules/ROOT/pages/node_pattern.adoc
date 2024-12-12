@@ -1,7 +1,10 @@
 = Node Pattern
 
 Node pattern is a DSL to help find specific nodes in the Abstract Syntax Tree
-using a simple string, in a similar fashion to how Regexp is used to find text.
+using a simple string.
+
+It evokes the pattern-matching capabilities of regular expressions,
+but is designed to target specific nodes in Ruby code.
 
 == History
 
