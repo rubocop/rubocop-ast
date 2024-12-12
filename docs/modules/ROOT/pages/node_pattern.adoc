@@ -3,7 +3,7 @@
 Node pattern is a DSL to help find specific nodes in the Abstract Syntax Tree
 using a simple string.
 
-It reminds the simplicity of regular expressions but used to find specific
+It resembles the simplicity of regular expressions but used to find specific
 nodes of Ruby code.
 
 == History
