@@ -9,7 +9,7 @@ module RuboCop
       include BasicLiteralNode
 
       def character_literal?
-        loc.respond_to?(:begin) && loc.begin&.is?('?')
+        loc_is?(:begin, '?')
       end
 
       def heredoc?

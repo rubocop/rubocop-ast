@@ -34,7 +34,7 @@ module RuboCop
       #
       # @return [Boolean] whether the array is enclosed in square brackets
       def square_brackets?
-        loc.begin&.is?('[')
+        loc_is?(:begin, '[')
       end
 
       # Checks whether the `array` literal is delimited by percent brackets.
