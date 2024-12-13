@@ -105,7 +105,7 @@ module RuboCop
       #
       # @return [Boolean] whether the dispatched method is a setter
       def setter_method?
-        loc.respond_to?(:operator) && loc.operator
+        loc?(:operator)
       end
       alias assignment? setter_method?
 
