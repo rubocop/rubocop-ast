@@ -1,1 +1,0 @@
-- [#345](https://github.com/rubocop/rubocop-ast/pull/345): Add `Node#loc_is?` for easier test of locations. ([@marcandre][])

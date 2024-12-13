@@ -2,6 +2,15 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#341](https://github.com/rubocop/rubocop-ast/pull/341): Make `RuboCop::AST::IfNode` support `then?`. ([@koic][])
+- [#345](https://github.com/rubocop/rubocop-ast/pull/345): Add `Node#loc_is?` for easier test of locations. ([@marcandre][])
+
+### Changes
+
+* [#343](https://github.com/rubocop/rubocop-ast/pull/343): Add `StrNode#single_quoted?`, `StrNode#double_quoted?` and `StrNode#percent_literal?` to simplify checking for string delimiters. ([@dvandersluis][])
+
 ## 1.36.2 (2024-11-27)
 
 ### Bug fixes
