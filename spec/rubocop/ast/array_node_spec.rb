@@ -88,6 +88,14 @@ RSpec.describe RuboCop::AST::ArrayNode do
       it { is_expected.not_to be_percent_literal(:string) }
       it { is_expected.to be_percent_literal(:symbol) }
     end
+
+    context 'with an invalid type' do
+      let(:source) { '%i(foo bar)' }
+
+      it 'raises KeyError' do
+        expect { array_node.percent_literal?(:foo) }.to raise_error(KeyError, 'key not found: :foo')
+      end
+    end
   end
 
   describe '#bracketed?' do

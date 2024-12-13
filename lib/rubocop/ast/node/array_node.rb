@@ -7,8 +7,8 @@ module RuboCop
     # to all `array` nodes within RuboCop.
     class ArrayNode < Node
       PERCENT_LITERAL_TYPES = {
-        string: /^%[wW]/,
-        symbol: /^%[iI]/
+        string: /\A%[wW]/,
+        symbol: /\A%[iI]/
       }.freeze
       private_constant :PERCENT_LITERAL_TYPES
 
@@ -50,7 +50,7 @@ module RuboCop
       # @return [Boolean] whether the array is enclosed in percent brackets
       def percent_literal?(type = nil)
         if type
-          loc.begin && loc.begin.source =~ PERCENT_LITERAL_TYPES[type]
+          loc.begin&.source&.match?(PERCENT_LITERAL_TYPES.fetch(type))
         else
           loc.begin&.source&.start_with?('%')
         end
