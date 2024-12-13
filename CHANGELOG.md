@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.37.0 (2024-12-13)
+
 ### New features
 
 * [#341](https://github.com/rubocop/rubocop-ast/pull/341): Make `RuboCop::AST::IfNode` support `then?`. ([@koic][])
