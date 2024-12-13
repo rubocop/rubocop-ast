@@ -13,6 +13,7 @@ module RuboCop
         :q => /\A%q/,
         :Q => /\A%Q/
       }.freeze
+      private_constant :PERCENT_LITERAL_TYPES
 
       def single_quoted?
         loc_is?(:begin, "'")
