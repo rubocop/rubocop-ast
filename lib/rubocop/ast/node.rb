@@ -534,15 +534,20 @@ module RuboCop
         node.match_guard_clause?
       end
 
+      # Shortcut to safely check if a location is present
+      # @return [Boolean]
+      def loc?(which_loc)
+        return false unless loc.respond_to?(which_loc)
+
+        !loc.public_send(which_loc).nil?
+      end
+
       # Shortcut to safely test a particular location, even if
       # this location does not exist or is `nil`
       def loc_is?(which_loc, str)
-        return false unless loc.respond_to?(which_loc)
+        return false unless loc?(which_loc)
 
-        location = loc.public_send(which_loc)
-        return false unless location
-
-        location.is?(str)
+        loc.public_send(which_loc).is?(str)
       end
 
       # @!method match_guard_clause?(node = self)

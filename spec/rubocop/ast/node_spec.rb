@@ -1110,6 +1110,28 @@ RSpec.describe RuboCop::AST::Node do
     end
   end
 
+  describe '#loc?' do
+    let(:src) { '%i[>> sym << sym2]' }
+
+    before(:all) { RSpec::Matchers.alias_matcher :have_loc, :be_loc }
+
+    context 'when loc exists' do
+      let(:src) { ':sym' }
+
+      it 'returns true when the location exists' do
+        expect(node).to have_loc(:begin)
+      end
+    end
+
+    it 'returns false when requested loc is `nil`' do
+      expect(node).not_to have_loc(:begin)
+    end
+
+    it 'returns false when requested loc does not exist' do
+      expect(node).not_to have_loc(:foo)
+    end
+  end
+
   describe '#loc_is?' do
     let(:src) { '%i[>> sym << sym2]' }
 
