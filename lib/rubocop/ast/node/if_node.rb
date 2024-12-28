@@ -47,14 +47,14 @@ module RuboCop
       #
       # @return [Boolean] whether the node has an `else` clause
       def else?
-        loc.respond_to?(:else) && loc.else
+        loc?(:else)
       end
 
       # Checks whether the `if` node is a ternary operator.
       #
       # @return [Boolean] whether the `if` node is a ternary operator
       def ternary?
-        loc.respond_to?(:question)
+        loc?(:question)
       end
 
       # Returns the keyword of the `if` statement as a string. Returns an empty

@@ -43,13 +43,12 @@ module RuboCop
       #
       # @return [Boolean] whether the string is enclosed in percent brackets
       def percent_literal?(type = nil)
-        opening_delimiter = loc.begin if loc.respond_to?(:begin)
-        return false unless opening_delimiter
+        return false unless loc?(:begin)
 
         if type
-          opening_delimiter.source.match?(PERCENT_LITERAL_TYPES.fetch(type))
+          loc.begin.source.match?(PERCENT_LITERAL_TYPES.fetch(type))
         else
-          opening_delimiter.source.start_with?('%')
+          loc.begin.source.start_with?('%')
         end
       end
     end
