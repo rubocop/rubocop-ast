@@ -5,6 +5,7 @@ module RuboCop
     # A basic wrapper around Parser's tokens.
     class Token
       LEFT_PAREN_TYPES = %i[tLPAREN tLPAREN2].freeze
+      LEFT_CURLY_TYPES = %i[tLCURLY tLAMBEG].freeze
 
       attr_reader :pos, :type, :text
 
@@ -83,7 +84,7 @@ module RuboCop
       end
 
       def left_curly_brace?
-        type == :tLCURLY || type == :tLAMBEG
+        LEFT_CURLY_TYPES.include?(type)
       end
 
       def right_curly_brace?
