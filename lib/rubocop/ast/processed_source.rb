@@ -318,7 +318,7 @@ module RuboCop
         require "prism/translation/parser#{version.to_s.delete('.')}"
       rescue LoadError
         warn <<~MESSAGE
-          Error: Unable to load Prism Parser for Ruby #{version}.
+          Error: Unable to load Prism parser for Ruby #{version}.
           * If you're using Bundler and don't yet have `gem 'prism'` as a dependency, add it now.
           * If you're using Bundler and already have `gem 'prism'` as a dependency, update it to the most recent version.
           * If you don't use Bundler, run `gem update prism`.
