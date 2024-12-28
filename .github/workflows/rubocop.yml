@@ -20,8 +20,6 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     timeout-minutes: 5
     env:
-      # See https://github.com/tmm1/test-queue#environment-variables
-      TEST_QUEUE_WORKERS: 2
       RUBOCOP_VERSION: none
       JRUBY_OPTS: --dev # http://blog.headius.com/2019/09/jruby-startup-time-exploration.html
       TRUFFLERUBYOPT: --engine.Mode=latency # optimize for short test suites
@@ -90,9 +88,6 @@ jobs:
     name: >-
       Main Gem Specs | RuboCop: ${{ matrix.rubocop }} | ${{ matrix.ruby }}
     runs-on: ${{ matrix.os }}-latest
-    env:
-      # See https://github.com/tmm1/test-queue#environment-variables
-      TEST_QUEUE_WORKERS: 2
     strategy:
       fail-fast: false
       matrix:
@@ -127,10 +122,6 @@ jobs:
     name: >-
       Coding Style | ${{ matrix.ruby }}
     runs-on: ${{ matrix.os }}-latest
-    env:
-      # See https://github.com/tmm1/test-queue#environment-variables
-      TEST_QUEUE_WORKERS: 2
-      RUBOCOP_VERSION: master
     strategy:
       fail-fast: false
       matrix:
