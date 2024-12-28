@@ -14,6 +14,11 @@ module RuboCop
       SEMANTIC_OR = 'or'
       private_constant :SEMANTIC_OR
 
+      LOGICAL_OPERATORS = [LOGICAL_AND, LOGICAL_OR].freeze
+      private_constant :LOGICAL_OPERATORS
+      SEMANTIC_OPERATORS = [SEMANTIC_AND, SEMANTIC_OR].freeze
+      private_constant :SEMANTIC_OPERATORS
+
       # Returns the operator as a string.
       #
       # @return [String] the operator
@@ -25,14 +30,14 @@ module RuboCop
       #
       # @return [Boolean] whether this is a logical operator
       def logical_operator?
-        operator == LOGICAL_AND || operator == LOGICAL_OR
+        LOGICAL_OPERATORS.include?(operator)
       end
 
       # Checks whether this is a semantic operator.
       #
       # @return [Boolean] whether this is a semantic operator
       def semantic_operator?
-        operator == SEMANTIC_AND || operator == SEMANTIC_OR
+        SEMANTIC_OPERATORS.include?(operator)
       end
     end
   end
