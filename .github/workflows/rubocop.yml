@@ -40,12 +40,6 @@ jobs:
           - { ruby: truffleruby-head, os: ubuntu }
 
     steps:
-      - name: windows misc
-        if: matrix.os == 'windows'
-        run: |
-          # set TMPDIR, git core.autocrlf
-          echo "TMPDIR=$env:RUNNER_TEMP" >> $GITHUB_ENV
-          git config --system core.autocrlf false
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
