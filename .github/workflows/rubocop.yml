@@ -104,7 +104,10 @@ jobs:
         rubocop: [master]
         internal_investigation: [null]
         include:
+          # Instead of testing all possibilities, we test the extreme points of
+          # a diagonal with the shiniest and latest
           - { rubocop: master, ruby: "3.4", os: ubuntu }
+          # as well as very old specs & ancient ruby version
           - { rubocop: "v1.61.0", ruby: "2.7", os: ubuntu }
     steps:
       - name: checkout
