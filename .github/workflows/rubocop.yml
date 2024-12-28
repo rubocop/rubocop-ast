@@ -69,6 +69,7 @@ jobs:
       - name: spec
         if: "matrix.coverage != true && matrix.internal_investigation != true"
         run: bundle exec rake spec
+
   prism:
     runs-on: ubuntu-latest
     name: Prism
@@ -83,6 +84,7 @@ jobs:
         env:
           PARSER_ENGINE: parser_prism
         run: bundle exec rake prism_spec
+
   rubocop_specs:
     name: >-
       Main Gem Specs | RuboCop: ${{ matrix.rubocop }} | ${{ matrix.ruby }}
@@ -117,6 +119,7 @@ jobs:
         run: bundle exec rake generate
       - name: spec
         run: cd ../rubocop && bundle exec rake spec
+
   internal_investigation:
     name: >-
       Coding Style | ${{ matrix.ruby }}
