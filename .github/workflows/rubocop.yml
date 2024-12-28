@@ -67,7 +67,7 @@ jobs:
         if: matrix.os != 'windows'
         run: (! bundle exec rubocop -h 2> /dev/null) && echo 'RuboCop successfully *not* loaded for local tests'
       - name: spec
-        if: "matrix.coverage != true && matrix.internal_investigation != true"
+        if: "matrix.coverage != true"
         run: bundle exec rake spec
 
   prism:
@@ -95,7 +95,6 @@ jobs:
         os: [ubuntu]
         ruby: [2.7]
         rubocop: [master]
-        internal_investigation: [null]
         include:
           # Instead of testing all possibilities, we test the extreme points of
           # a diagonal with the shiniest and latest
@@ -121,20 +120,13 @@ jobs:
         run: cd ../rubocop && bundle exec rake spec
 
   internal_investigation:
-    name: >-
-      Coding Style | ${{ matrix.ruby }}
-    runs-on: ${{ matrix.os }}-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu]
-        ruby: ["3.0"]
-        rubocop: [master]
+    name: Coding Style
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby }}
+          ruby-version: ruby # Latest stable CRuby version
           bundler-cache: true
       - name: internal investigation
         run: bundle exec rake generate internal_investigation
