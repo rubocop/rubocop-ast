@@ -48,10 +48,8 @@ jobs:
           # set TMPDIR, git core.autocrlf
           echo "TMPDIR=$env:RUNNER_TEMP" >> $GITHUB_ENV
           git config --system core.autocrlf false
-      - name: checkout
-        uses: actions/checkout@v4
-      - name: set up Ruby
-        uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
       - name: install dependencies
@@ -79,8 +77,7 @@ jobs:
     name: Prism
     steps:
       - uses: actions/checkout@v4
-      - name: set up Ruby
-        uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
           # Specify the minimum Ruby version 2.7 required for Prism to run.
           ruby-version: 2.7
@@ -110,10 +107,8 @@ jobs:
           # as well as very old specs & ancient ruby version
           - { rubocop: "v1.61.0", ruby: "2.7", os: ubuntu }
     steps:
-      - name: checkout
-        uses: actions/checkout@v4
-      - name: set up Ruby
-        uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
       - name: setup env
@@ -143,10 +138,8 @@ jobs:
         ruby: ["3.0"]
         rubocop: [master]
     steps:
-      - name: checkout
-        uses: actions/checkout@v4
-      - name: set up Ruby
-        uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
       - name: install dependencies
