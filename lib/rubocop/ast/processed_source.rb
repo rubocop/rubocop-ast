@@ -285,25 +285,45 @@ module RuboCop
             raise ArgumentError, "RuboCop found unknown Ruby version: #{ruby_version.inspect}"
           end
         when :parser_prism
-          begin
-            require 'prism'
-          rescue LoadError
-            warn "Error: Unable to load Prism. Add `gem 'prism'` to your Gemfile."
-            exit!
-          end
+          require_prism
 
           case ruby_version
           when 3.3
-            require 'prism/translation/parser33'
+            require_prism_translation_parser(ruby_version)
             Prism::Translation::Parser33
           when 3.4
-            require 'prism/translation/parser34'
+            require_prism_translation_parser(ruby_version)
             Prism::Translation::Parser34
           else
             raise ArgumentError, 'RuboCop supports target Ruby versions 3.3 and above with Prism. ' \
                                  "Specified target Ruby version: #{ruby_version.inspect}"
           end
         end
+      end
+
+      # Prism is a native extension, a `LoadError` will be raised if linked to an incompatible
+      # Ruby version. Only raise if it really was caused by Prism not being present.
+      def require_prism
+        require 'prism'
+      rescue LoadError => e
+        raise unless e.path == 'prism'
+
+        warn "Error: Unable to load Prism. Add `gem 'prism'` to your Gemfile."
+        exit!
+      end
+
+      # While Prism is not yet a dependency, users may run with outdated versions that
+      # don't have all the parsers.
+      def require_prism_translation_parser(version)
+        require "prism/translation/parser#{version.to_s.delete('.')}"
+      rescue LoadError
+        warn <<~MESSAGE
+          Error: Unable to load Prism Parser for Ruby #{version}.
+          * If you're using Bundler and don't yet have `gem 'prism'` as a dependency, add it now.
+          * If you're using Bundler and already have `gem 'prism'` as a dependency, update it to the most recent version.
+          * If you don't use Bundler, run `gem update prism`.
+        MESSAGE
+        exit!
       end
 
       def create_parser(ruby_version, parser_engine)
