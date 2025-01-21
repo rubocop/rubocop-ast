@@ -326,6 +326,17 @@ module RuboCop
         end
       end
 
+      def builder_class(parser_engine)
+        case parser_engine
+        when :parser_whitequark
+          RuboCop::AST::Builder
+        when :parser_prism
+          require_prism
+          require_relative 'builder_prism'
+          RuboCop::AST::BuilderPrism
+        end
+      end
+
       # Prism is a native extension, a `LoadError` will be raised if linked to an incompatible
       # Ruby version. Only raise if it really was caused by Prism not being present.
       def require_prism
@@ -353,7 +364,7 @@ module RuboCop
 
       # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def create_parser(ruby_version, parser_engine, prism_result)
-        builder = RuboCop::AST::Builder.new
+        builder = builder_class(parser_engine).new
 
         parser_class = parser_class(ruby_version, parser_engine)
 
