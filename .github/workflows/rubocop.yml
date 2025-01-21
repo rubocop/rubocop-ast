@@ -81,29 +81,31 @@ jobs:
 
   rubocop_specs:
     name: >-
-      Main Gem Specs | RuboCop: ${{ matrix.rubocop }} | ${{ matrix.ruby }}
-    runs-on: ${{ matrix.os }}-latest
+      Main Gem Specs | RuboCop: ${{ matrix.rubocop }} | ${{ matrix.ruby }} | ${{ matrix.parser_engine }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu]
-        ruby: [2.7]
+        # Instead of testing all possibilities, we test the extreme points of
+        # a diagonal with the shiniest and latest
+        ruby: ["2.7", "3.4"]
         rubocop: [master]
+        parser_engine: [parser_whitequark]
         include:
-          # Instead of testing all possibilities, we test the extreme points of
-          # a diagonal with the shiniest and latest
-          - { rubocop: master, ruby: "3.4", os: ubuntu }
           # as well as very old specs & ancient ruby version
-          - { rubocop: "v1.61.0", ruby: "2.7", os: ubuntu }
+          - { rubocop: "v1.61.0", parser_engine: parser_whitequark, ruby: "2.7" }
+          # also test against the prism parser translator
+          - { rubocop: "master", parser_engine: parser_prism, ruby: "3.4" }
+    env:
+      RUBOCOP_VERSION: ${{ matrix.rubocop }}
+      PARSER_ENGINE: ${{ matrix.parser_engine }}
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - name: setup env
-        run: echo 'RUBOCOP_VERSION=${{ matrix.rubocop }}' >> $GITHUB_ENV
       - name: install rubocop from source for full specs
-        run: git clone --branch ${{ matrix.rubocop }} https://github.com/rubocop/rubocop.git ../rubocop
+        run: git clone --branch $RUBOCOP_VERSION https://github.com/rubocop/rubocop.git ../rubocop
       - name: install rubocop dependencies
         run: cd ../rubocop && bundle install --jobs 3 --retry 3
       - name: install dependencies
