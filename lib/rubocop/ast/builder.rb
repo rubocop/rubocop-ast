@@ -2,20 +2,13 @@
 
 module RuboCop
   module AST
-    # `RuboCop::AST::Builder` is an AST builder that is utilized to let `Parser`
-    # generate ASTs with {RuboCop::AST::Node}.
-    #
-    # @example
-    #   buffer = Parser::Source::Buffer.new('(string)')
-    #   buffer.source = 'puts :foo'
-    #
-    #   builder = RuboCop::AST::Builder.new
-    #   require 'parser/ruby25'
-    #   parser = Parser::Ruby25.new(builder)
-    #   root_node = parser.parse(buffer)
-    class Builder < Parser::Builders::Default
-      self.emit_forward_arg = true if respond_to?(:emit_forward_arg=)
-      self.emit_match_pattern = true if respond_to?(:emit_match_pattern=)
+    # Common functionality between the parser and prism builder
+    # @api private
+    module BuilderExtensions
+      def self.included(base)
+        base.emit_forward_arg = true
+        base.emit_match_pattern = true
+      end
 
       # @api private
       NODE_MAP = {
@@ -107,7 +100,7 @@ module RuboCop
         node_klass(type).new(type, children, location: source_map)
       end
 
-      # TODO: Figure out what to do about literal encoding handling...
+      # Overwrite the base method to allow strings with invalid encoding
       # More details here https://github.com/whitequark/parser/issues/283
       def string_value(token)
         value(token)
@@ -118,6 +111,21 @@ module RuboCop
       def node_klass(type)
         NODE_MAP[type] || Node
       end
+    end
+
+    # `RuboCop::AST::Builder` is an AST builder that is utilized to let `Parser`
+    # generate ASTs with {RuboCop::AST::Node}.
+    #
+    # @example
+    #   buffer = Parser::Source::Buffer.new('(string)')
+    #   buffer.source = 'puts :foo'
+    #
+    #   builder = RuboCop::AST::Builder.new
+    #   require 'parser/ruby25'
+    #   parser = Parser::Ruby25.new(builder)
+    #   root_node = parser.parse(buffer)
+    class Builder < Parser::Builders::Default
+      include BuilderExtensions
     end
   end
 end
