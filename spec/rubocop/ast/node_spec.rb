@@ -1133,4 +1133,52 @@ RSpec.describe RuboCop::AST::Node do
       expect(node).not_to be_loc_is(:foo, ':')
     end
   end
+
+  context 'traversal' do
+    shared_examples 'traverse' do |test_name, *types, result|
+      it "handles #{test_name}" do
+        expect(node.send(method, *types).map(&:type)).to eq(result)
+      end
+    end
+
+    describe '#each_ancestor' do
+      let(:src) { 'foo&.bar([>>baz<<]).bat' }
+      let(:method) { :each_ancestor }
+
+      it_behaves_like 'traverse', 'no argument', %i[array csend send]
+      it_behaves_like 'traverse', 'single argument', :send, %i[send]
+      it_behaves_like 'traverse', 'two arguments', :send, :csend, %i[csend send]
+      it_behaves_like 'traverse', 'group argument', :call, %i[csend send]
+    end
+
+    describe '#each_child_node' do
+      let(:src) { '[1, 2.0, foo, 3i, 4, BAR, 5r]' }
+      let(:method) { :each_child_node }
+
+      it_behaves_like 'traverse', 'no argument', %i[int float send complex int const rational]
+      it_behaves_like 'traverse', 'single argument', :int, %i[int int]
+      it_behaves_like 'traverse', 'two arguments', :int, :complex, :csend, %i[int complex int]
+      it_behaves_like 'traverse', 'group argument', :numeric, %i[int float complex int rational]
+    end
+
+    describe '#each_descendant' do
+      let(:src) { 'foo(true, false, bar(baz, true))' }
+      let(:method) { :each_descendant }
+
+      it_behaves_like 'traverse', 'no argument', %i[true false send send true]
+      it_behaves_like 'traverse', 'single argument', :true, %i[true true]
+      it_behaves_like 'traverse', 'two arguments', :false, :send, %i[false send send]
+      it_behaves_like 'traverse', 'group argument', :boolean, %i[true false true]
+    end
+
+    describe '#each_node' do
+      let(:src) { 'def foo(bar, *, baz, **kw, &block); 123; end' }
+      let(:method) { :each_node }
+
+      it_behaves_like 'traverse', 'no argument', %i[def args arg restarg arg kwrestarg blockarg int]
+      it_behaves_like 'traverse', 'single argument', :arg, %i[arg arg]
+      it_behaves_like 'traverse', 'two arguments', :restarg, :blockarg, %i[restarg blockarg]
+      it_behaves_like 'traverse', 'group argument', :argument, %i[arg restarg arg kwrestarg blockarg]
+    end
+  end
 end
