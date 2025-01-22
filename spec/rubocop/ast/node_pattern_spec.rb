@@ -958,6 +958,168 @@ RSpec.describe RuboCop::AST::NodePattern do
 
       it_behaves_like 'invalid'
     end
+
+    context 'using repetition' do
+      shared_examples 'repetition' do |behavior|
+        context 'with one capture' do
+          let(:pattern) { pattern_placeholder.sub('{}', '{$_}') }
+
+          it_behaves_like behavior
+        end
+
+        context 'with two captures' do
+          let(:pattern) { pattern_placeholder.sub('{}', '{$_ | $_}') }
+
+          it_behaves_like behavior
+        end
+
+        context 'with three captures' do
+          let(:pattern) { pattern_placeholder.sub('{}', '{$_ | $_ | $_}') }
+
+          it_behaves_like behavior
+        end
+      end
+
+      context 'with ?' do
+        context 'one capture' do
+          let(:pattern_placeholder) { '(send _ _ (int {})?)' }
+
+          context 'one match' do
+            it_behaves_like 'repetition', 'single capture' do
+              let(:ruby) { 'foo(1)' }
+              let(:captured_val) { [1] }
+            end
+          end
+
+          context 'no match' do
+            it_behaves_like 'repetition', 'single capture' do
+              let(:ruby) { 'foo' }
+              let(:captured_val) { [] }
+            end
+          end
+        end
+
+        context 'two captures' do
+          let(:pattern_placeholder) { '(send _ $_ (int {})?)' }
+
+          context 'one match' do
+            it_behaves_like 'repetition', 'multiple capture' do
+              let(:ruby) { 'foo(1)' }
+              let(:captured_vals) { [:foo, [1]] }
+            end
+          end
+
+          context 'no match' do
+            it_behaves_like 'repetition', 'multiple capture' do
+              let(:ruby) { 'foo' }
+              let(:captured_vals) { [:foo, []] }
+            end
+          end
+        end
+      end
+
+      context 'with +' do
+        context 'one capture' do
+          let(:pattern_placeholder) { '(send _ _ (int {})+)' }
+
+          context 'one match' do
+            it_behaves_like 'repetition', 'single capture' do
+              let(:ruby) { 'foo(1)' }
+              let(:captured_val) { [1] }
+            end
+          end
+
+          context 'two matches' do
+            it_behaves_like 'repetition', 'single capture' do
+              let(:ruby) { 'foo(1, 2)' }
+              let(:captured_val) { [1, 2] }
+            end
+          end
+
+          context 'no match' do
+            it_behaves_like 'repetition', 'nonmatching' do
+              let(:ruby) { 'foo' }
+            end
+          end
+        end
+
+        context 'two captures' do
+          let(:pattern_placeholder) { '(send _ $_ (int {})+)' }
+
+          context 'one match' do
+            it_behaves_like 'repetition', 'multiple capture' do
+              let(:ruby) { 'foo(1)' }
+              let(:captured_vals) { [:foo, [1]] }
+            end
+          end
+
+          context 'two matches' do
+            it_behaves_like 'repetition', 'multiple capture' do
+              let(:ruby) { 'foo(1, 2)' }
+              let(:captured_vals) { [:foo, [1, 2]] }
+            end
+          end
+
+          context 'no match' do
+            it_behaves_like 'repetition', 'nonmatching' do
+              let(:ruby) { 'foo' }
+            end
+          end
+        end
+      end
+
+      context 'with *' do
+        context 'one capture' do
+          let(:pattern_placeholder) { '(send _ _ (int {})*)' }
+
+          context 'one match' do
+            it_behaves_like 'repetition', 'single capture' do
+              let(:ruby) { 'foo(1)' }
+              let(:captured_val) { [1] }
+            end
+          end
+
+          context 'two matches' do
+            it_behaves_like 'repetition', 'single capture' do
+              let(:ruby) { 'foo(1, 2)' }
+              let(:captured_val) { [1, 2] }
+            end
+          end
+
+          context 'no match' do
+            it_behaves_like 'repetition', 'single capture' do
+              let(:ruby) { 'foo' }
+              let(:captured_val) { [] }
+            end
+          end
+        end
+
+        context 'two captures' do
+          let(:pattern_placeholder) { '(send _ $_ (int {})*)' }
+
+          context 'one match' do
+            it_behaves_like 'repetition', 'multiple capture' do
+              let(:ruby) { 'foo(1)' }
+              let(:captured_vals) { [:foo, [1]] }
+            end
+          end
+
+          context 'two matches' do
+            it_behaves_like 'repetition', 'multiple capture' do
+              let(:ruby) { 'foo(1, 2)' }
+              let(:captured_vals) { [:foo, [1, 2]] }
+            end
+          end
+
+          context 'no match' do
+            it_behaves_like 'repetition', 'multiple capture' do
+              let(:ruby) { 'foo' }
+              let(:captured_vals) { [:foo, []] }
+            end
+          end
+        end
+      end
+    end
   end
 
   describe 'negation' do
