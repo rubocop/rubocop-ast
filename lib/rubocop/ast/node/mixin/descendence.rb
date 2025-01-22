@@ -25,7 +25,7 @@ module RuboCop
         children.each do |child|
           next unless child.is_a?(::AST::Node)
 
-          yield child if types.empty? || types.include?(child.type)
+          yield child if types.empty? || child.type?(*types)
         end
 
         self
@@ -95,7 +95,7 @@ module RuboCop
       def each_node(*types, &block)
         return to_enum(__method__, *types) unless block
 
-        yield self if types.empty? || types.include?(type)
+        yield self if types.empty? || type?(*types)
 
         visit_descendants(types, &block)
 
@@ -108,7 +108,7 @@ module RuboCop
         children.each do |child|
           next unless child.is_a?(::AST::Node)
 
-          yield child if types.empty? || types.include?(child.type)
+          yield child if types.empty? || child.type?(*types)
           child.visit_descendants(types, &block)
         end
       end

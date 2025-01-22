@@ -32,7 +32,7 @@ module RuboCop
       #
       # @return [Array<Node>] array of argument nodes.
       def argument_list
-        each_descendant(*ARGUMENT_TYPES).to_a.freeze
+        each_descendant(:argument).to_a.freeze
       end
     end
   end
