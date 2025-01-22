@@ -48,7 +48,7 @@ module RuboCop
           children[0]
         end
 
-        # @return [Integer] nb of captures of that node and its descendants
+        # @return [Integer] nb of captures that this node will emit
         def nb_captures
           children_nodes.sum(&:nb_captures)
         end
@@ -242,6 +242,12 @@ module RuboCop
             end
 
             [with(children: new_children)]
+          end
+
+          # Each child in a union must contain the same number
+          # of captures. Only one branch ends up capturing.
+          def nb_captures
+            child.nb_captures
           end
         end
 
