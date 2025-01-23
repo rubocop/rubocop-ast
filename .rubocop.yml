@@ -21,6 +21,10 @@ AllCops:
   SuggestExtensions: false
 
 # It cannot be replaced with suggested methods defined by RuboCop AST itself.
+InternalAffairs/LocationExpression:
+  Enabled: false
+
+# It cannot be replaced with suggested methods defined by RuboCop AST itself.
 InternalAffairs/MethodNameEndWith:
   Enabled: false
 
