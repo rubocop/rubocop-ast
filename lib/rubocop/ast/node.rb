@@ -109,7 +109,10 @@ module RuboCop
         erange: :range,
 
         send: :call,
-        csend: :call
+        csend: :call,
+
+        block: :any_block,
+        numblock: :any_block
       }.freeze
       private_constant :GROUP_FOR_TYPE
 
@@ -340,7 +343,7 @@ module RuboCop
 
       # @!method receiver(node = self)
       def_node_matcher :receiver, <<~PATTERN
-        {(send $_ ...) ({block numblock} (call $_ ...) ...)}
+        {(send $_ ...) (any_block (call $_ ...) ...)}
       PATTERN
 
       # @!method str_content(node = self)
@@ -525,6 +528,10 @@ module RuboCop
         GROUP_FOR_TYPE[type] == :range
       end
 
+      def any_block_type?
+        GROUP_FOR_TYPE[type] == :any_block
+      end
+
       def guard_clause?
         node = operator_keyword? ? rhs : self
 
@@ -555,7 +562,7 @@ module RuboCop
       PATTERN
 
       # @!method lambda?(node = self)
-      def_node_matcher :lambda?, '({block numblock} (send nil? :lambda) ...)'
+      def_node_matcher :lambda?, '(any_block (send nil? :lambda) ...)'
 
       # @!method lambda_or_proc?(node = self)
       def_node_matcher :lambda_or_proc?, '{lambda? proc?}'
@@ -568,7 +575,7 @@ module RuboCop
         {
           (send #global_const?({:Class :Module :Struct}) :new ...)
           (send #global_const?(:Data) :define ...)
-          ({block numblock} {
+          (any_block {
             (send #global_const?({:Class :Module :Struct}) :new ...)
             (send #global_const?(:Data) :define ...)
           } ...)
@@ -578,20 +585,20 @@ module RuboCop
       # @deprecated Use `:class_constructor?`
       # @!method struct_constructor?(node = self)
       def_node_matcher :struct_constructor?, <<~PATTERN
-        ({block numblock} (send #global_const?(:Struct) :new ...) _ $_)
+        (any_block (send #global_const?(:Struct) :new ...) _ $_)
       PATTERN
 
       # @!method class_definition?(node = self)
       def_node_matcher :class_definition?, <<~PATTERN
         {(class _ _ $_)
          (sclass _ $_)
-         ({block numblock} (send #global_const?({:Struct :Class}) :new ...) _ $_)}
+         (any_block (send #global_const?({:Struct :Class}) :new ...) _ $_)}
       PATTERN
 
       # @!method module_definition?(node = self)
       def_node_matcher :module_definition?, <<~PATTERN
         {(module _ $_)
-         ({block numblock} (send #global_const?(:Module) :new ...) _ $_)}
+         (any_block (send #global_const?(:Module) :new ...) _ $_)}
       PATTERN
 
       # Some expressions are evaluated for their value, some for their side

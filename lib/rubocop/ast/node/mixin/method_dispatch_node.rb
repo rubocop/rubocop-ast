@@ -165,7 +165,7 @@ module RuboCop
       #
       # @return [Boolean] whether the dispatched method has a block
       def block_literal?
-        (parent&.block_type? || parent&.numblock_type?) && eql?(parent.send_node)
+        parent&.any_block_type? && eql?(parent.send_node)
       end
 
       # Checks whether this node is an arithmetic operation
@@ -260,7 +260,7 @@ module RuboCop
           ^{                                       # or the parent is...
             sclass class module class_constructor? # a class-like node
             [ {                                    # or some "wrapper"
-                kwbegin begin block numblock
+                kwbegin begin any_block
                 (if _condition <%0 _>)  # note: we're excluding the condition of `if` nodes
               }
               #in_macro_scope?                     # that is itself in a macro scope
