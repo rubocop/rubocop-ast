@@ -2,6 +2,19 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#346](https://github.com/rubocop/rubocop-ast/pull/346): Add `Node#loc?` to determine if a node has a given location. ([@dvandersluis][])
+* [#356](https://github.com/rubocop/rubocop-ast/pull/356): Added `:any_block` as an alias for `:block` and `:numblock`, use it with `Node#any_block_type?`. Also available in node patterns: `{block numblock}` can become `any_block`. ([@earlopain][])
+
+### Bug fixes
+
+* [#323](https://github.com/rubocop/rubocop-ast/issues/323): Fix node captures inside of `?`, `+`, and `*` repetition. ([@earlopain][])
+
+### Changes
+
+* [#357](https://github.com/rubocop/rubocop-ast/pull/357): Support node groups in `Node#each_descendant` and similar traversal methods. ([@earlopain][])
+
 ## 1.37.0 (2024-12-13)
 
 ### New features

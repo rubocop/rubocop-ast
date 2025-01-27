@@ -1,1 +1,0 @@
-* [#356](https://github.com/rubocop/rubocop-ast/pull/356): Added `:any_block` as an alias for `:block` and `:numblock`, use it with `Node#any_block_type?`. Also available in node patterns: `{block numblock}` can become `any_block`. ([@earlopain][])
