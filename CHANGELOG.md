@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.38.0 (2025-01-27)
+
 ### New features
 
 * [#346](https://github.com/rubocop/rubocop-ast/pull/346): Add `Node#loc?` to determine if a node has a given location. ([@dvandersluis][])
