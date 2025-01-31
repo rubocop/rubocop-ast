@@ -99,7 +99,7 @@ module RuboCop
 
         def valid_argument_types?
           [first, second].all? do |argument|
-            argument.pair_type? || argument.kwsplat_type?
+            argument.type?(:pair, :kwsplat)
           end
         end
 

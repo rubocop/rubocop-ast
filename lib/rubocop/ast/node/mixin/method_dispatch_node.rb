@@ -201,7 +201,7 @@ module RuboCop
 
         return unless node.send_type? && node.receiver.nil? && arg.is_a?(::AST::Node)
 
-        return arg if arg.def_type? || arg.defs_type?
+        return arg if arg.type?(:def, :defs)
 
         def_modifier(arg)
       end

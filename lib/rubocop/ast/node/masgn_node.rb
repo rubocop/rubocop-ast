@@ -20,7 +20,7 @@ module RuboCop
       # @return [Array<Symbol>] names of all the variables being assigned
       def names
         assignments.map do |assignment|
-          if assignment.send_type? || assignment.indexasgn_type?
+          if assignment.type?(:send, :indexasgn)
             assignment.method_name
           else
             assignment.name

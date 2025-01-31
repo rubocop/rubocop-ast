@@ -57,7 +57,7 @@ module RuboCop
       # @return [Boolean] whether the last argument of the node is a block pass
       def block_argument?
         arguments? &&
-          (last_argument.block_pass_type? || last_argument.blockarg_type?)
+          last_argument.type?(:block_pass, :blockarg)
       end
 
       # A specialized `ParameterizedNode` for node that have a single child
