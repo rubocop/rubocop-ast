@@ -93,7 +93,7 @@ jobs:
         parser_engine: [parser_whitequark]
         include:
           # as well as very old specs & ancient ruby version
-          - { rubocop: "v1.61.0", parser_engine: parser_whitequark, ruby: "2.7" }
+          - { rubocop: "v1.72.1", parser_engine: parser_whitequark, ruby: "2.7" }
           # also test against the prism parser translator
           - { rubocop: "master", parser_engine: parser_prism, ruby: "3.4" }
     env:
