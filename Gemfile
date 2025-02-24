@@ -30,7 +30,7 @@ else
     gem 'rubocop', '>= 1.0'
   end
   gem 'rubocop-performance'
-  gem 'rubocop-rspec', '~> 3.0.0'
+  gem 'rubocop-rspec', '~> 3.5.0'
 end
 
 local_gemfile = File.expand_path('Gemfile.local', __dir__)
