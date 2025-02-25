@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.38.1 (2025-02-25)
+
 ### Bug fixes
 
 * [#360](https://github.com/rubocop/rubocop-ast/pull/360): Fix an error when the `Array` core class contains a writer method before `rubocop-ast` loaded. ([@earlopain][])
