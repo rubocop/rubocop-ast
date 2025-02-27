@@ -28,7 +28,7 @@
 ### New features
 
 * [#341](https://github.com/rubocop/rubocop-ast/pull/341): Make `RuboCop::AST::IfNode` support `then?`. ([@koic][])
-- [#345](https://github.com/rubocop/rubocop-ast/pull/345): Add `Node#loc_is?` for easier test of locations. ([@marcandre][])
+* [#345](https://github.com/rubocop/rubocop-ast/pull/345): Add `Node#loc_is?` for easier test of locations. ([@marcandre][])
 
 ### Changes
 
@@ -570,3 +570,4 @@
 [@sambostock]: https://github.com/sambostock
 [@Earlopain]: https://github.com/Earlopain
 [@earlopain]: https://github.com/earlopain
+[@vlad-pisanov]: https://github.com/vlad-pisanov
