@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+require 'prism'
+
 RSpec.describe RuboCop::AST::ProcessedSource do
   subject(:processed_source) do
-    described_class.new(source, ruby_version, path, parser_engine: parser_engine)
+    described_class.new(
+      source, ruby_version, path, parser_engine: parser_engine, prism_result: prism_result
+    )
   end
 
   let(:source) { <<~RUBY }
@@ -12,6 +16,9 @@ RSpec.describe RuboCop::AST::ProcessedSource do
     end
     some_method
   RUBY
+  let(:prism_result) { nil }
+  let(:prism_parse_lex_result) { Prism.parse_lex(source) }
+
   let(:ast) { processed_source.ast }
   let(:path) { 'ast/and_node_spec.rb' }
 
@@ -59,6 +66,16 @@ RSpec.describe RuboCop::AST::ProcessedSource do
 
       it_behaves_like 'invalid parser_engine'
     end
+
+    context 'when using `parser_engine: :parser_prism` and `prism_result` with a `ParseLexResult`' do
+      let(:ruby_version) { 3.4 }
+      let(:parser_prism) { :parser_prism }
+      let(:prism_result) { prism_parse_lex_result }
+
+      it 'returns an instance of ProcessedSource' do
+        is_expected.to be_a(described_class)
+      end
+    end
   end
 
   describe '.from_file' do
@@ -94,17 +111,47 @@ RSpec.describe RuboCop::AST::ProcessedSource do
     it 'is the path passed to .new' do
       expect(processed_source.path).to eq(path)
     end
+
+    context 'when using `parser_engine: :parser_prism` and `prism_result` with a `ParseLexResult`' do
+      let(:ruby_version) { 3.4 }
+      let(:parser_engine) { :parser_prism }
+      let(:prism_result) { prism_parse_lex_result }
+
+      it 'is the path passed to .new' do
+        expect(processed_source.path).to eq(path)
+      end
+    end
   end
 
   describe '#buffer' do
     it 'is a source buffer' do
       expect(processed_source.buffer).to be_a(Parser::Source::Buffer)
     end
+
+    context 'when using `parser_engine: :parser_prism` and `prism_result` with a `ParseLexResult`' do
+      let(:ruby_version) { 3.4 }
+      let(:parser_engine) { :parser_prism }
+      let(:prism_result) { prism_parse_lex_result }
+
+      it 'is a source buffer' do
+        expect(processed_source.buffer).to be_a(Parser::Source::Buffer)
+      end
+    end
   end
 
   describe '#ast' do
     it 'is the root node of AST' do
       expect(processed_source.ast).to be_a(RuboCop::AST::Node)
+    end
+
+    context 'when using `parser_engine: :parser_prism` and `prism_result` with a `ParseLexResult`' do
+      let(:ruby_version) { 3.4 }
+      let(:parser_engine) { :parser_prism }
+      let(:prism_result) { prism_parse_lex_result }
+
+      it 'is the root node of AST' do
+        expect(processed_source.ast).to be_a(RuboCop::AST::Node)
+      end
     end
   end
 
