@@ -26,16 +26,18 @@ module RuboCop
         SEND = 'send(TYPE_TO_METHOD[child.type], child)'
         assign_code = 'child = node.children[%<index>i]'
         code = "#{assign_code}\n#{SEND}"
+        # How a particular child node should be visited. For example, if a child node
+        # can be nil it should be guarded behind a nil check. Or, if a child node is a literal
+        # (like a symbol) then the literal itself should not be visited.
         TEMPLATE = {
           skip: '',
           always: code,
           nil?: "#{code} if child"
         }.freeze
 
-        def def_callback(type, *signature,
-                         arity: signature.size..signature.size,
-                         arity_check: ENV.fetch('RUBOCOP_DEBUG', nil) && self.arity_check(arity),
-                         body: self.body(signature, arity_check))
+        def def_callback(type, *child_node_types,
+                         expected_children_count: child_node_types.size..child_node_types.size,
+                         body: self.body(child_node_types, expected_children_count))
           type, *aliases = type
           lineno = caller_locations(1, 1).first.lineno
           module_eval(<<~RUBY, __FILE__, lineno)
@@ -49,16 +51,23 @@ module RuboCop
           end
         end
 
-        def body(signature, prelude)
-          signature
-            .map.with_index do |arg, i|
-              TEMPLATE[arg].gsub('%<index>i', i.to_s)
+        def body(child_node_types, expected_children_count)
+          visit_children_code =
+            child_node_types
+            .map.with_index do |child_type, i|
+              TEMPLATE.fetch(child_type).gsub('%<index>i', i.to_s)
             end
-            .unshift(prelude)
             .join("\n")
+
+          <<~BODY
+            #{children_count_check_code(expected_children_count)}
+            #{visit_children_code}
+          BODY
         end
 
-        def arity_check(range)
+        def children_count_check_code(range)
+          return '' unless ENV.fetch('RUBOCOP_DEBUG', false)
+
           <<~RUBY
             n = node.children.size
             raise DebugError, [
@@ -72,18 +81,18 @@ module RuboCop
       extend CallbackCompiler
       send_code = CallbackCompiler::SEND
 
-      ### arity == 0
+      ### children count == 0
       no_children = %i[true false nil self cbase zsuper redo retry
                        forward_args forwarded_args match_nil_pattern
                        forward_arg forwarded_restarg forwarded_kwrestarg
                        lambda empty_else kwnilarg
                        __FILE__ __LINE__ __ENCODING__]
 
-      ### arity == 0..1
+      ### children count == 0..1
       opt_symbol_child = %i[restarg kwrestarg]
       opt_node_child = %i[splat kwsplat match_rest]
 
-      ### arity == 1
+      ### children count == 1
       literal_child = %i[int float complex
                          rational str sym lvar
                          ivar cvar gvar nth_ref back_ref
@@ -100,12 +109,12 @@ module RuboCop
       NO_CHILD_NODES = (no_children + opt_symbol_child + literal_child).to_set.freeze
       private_constant :NO_CHILD_NODES # Used by Commissioner
 
-      ### arity > 1
+      ### children count > 1
       symbol_then_opt_node = %i[lvasgn ivasgn cvasgn gvasgn]
       symbol_then_node_or_nil = %i[optarg kwoptarg]
       node_then_opt_node = %i[while until module sclass]
 
-      ### variable arity
+      ### variable children count
       many_node_children = %i[dstr dsym xstr regexp array hash pair
                               mlhs masgn or_asgn and_asgn rasgn mrasgn
                               undef alias args super yield or and
@@ -121,18 +130,18 @@ module RuboCop
 
       ### Callbacks for above
       def_callback no_children
-      def_callback opt_symbol_child, :skip, arity: 0..1
-      def_callback opt_node_child, :nil?, arity: 0..1
+      def_callback opt_symbol_child, :skip, expected_children_count: 0..1
+      def_callback opt_node_child, :nil?, expected_children_count: 0..1
 
       def_callback literal_child, :skip
       def_callback node_child, :always
       def_callback node_or_nil_child, :nil?
 
-      def_callback symbol_then_opt_node, :skip, :nil?, arity: 1..2
+      def_callback symbol_then_opt_node, :skip, :nil?, expected_children_count: 1..2
       def_callback symbol_then_node_or_nil, :skip, :nil?
       def_callback node_then_opt_node, :always, :nil?
 
-      def_callback many_symbol_children, :skip, arity_check: nil
+      def_callback many_symbol_children, :skip, expected_children_count: (0..)
       def_callback many_node_children, body: <<~RUBY
         node.children.each { |child| #{send_code} }
       RUBY
@@ -143,7 +152,7 @@ module RuboCop
 
       ### Other particular cases
       def_callback :const, :nil?, :skip
-      def_callback :casgn, :nil?, :skip, :nil?, arity: 2..3
+      def_callback :casgn, :nil?, :skip, :nil?, expected_children_count: 2..3
       def_callback :class, :always, :nil?, :nil?
       def_callback :def, :skip, :always, :nil?
       def_callback :op_asgn, :always, :skip, :always
