@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#359](https://github.com/rubocop/rubocop-ast/pull/359): Enable reusable Prism parse result. ([@koic][])
+
 ## 1.38.1 (2025-02-25)
 
 ### Bug fixes
