@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Changes
+
+* [#354](https://github.com/rubocop/rubocop-ast/pull/354): Use `Prism::Translation::Parser::Builder` when parsing with prism. ([@earlopain][])
+
 ## 1.39.0 (2025-03-16)
 
 ### New features
