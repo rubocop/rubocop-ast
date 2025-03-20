@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
     'rubygems_mfa_required' => 'true'
   }
 
-  s.add_dependency('parser', '>= 3.3.1.0')
+  s.add_dependency('parser', '>= 3.3.7.2')
 
   ##### Do NOT add `rubocop` (or anything depending on `rubocop`) here. See Gemfile
 end

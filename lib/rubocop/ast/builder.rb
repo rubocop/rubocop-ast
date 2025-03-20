@@ -32,6 +32,7 @@ module RuboCop
         gvasgn:              AsgnNode,
         block:               BlockNode,
         numblock:            BlockNode,
+        itblock:             BlockNode,
         break:               BreakNode,
         case_match:          CaseMatchNode,
         casgn:               CasgnNode,

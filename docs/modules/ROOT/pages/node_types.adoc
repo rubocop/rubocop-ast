@@ -170,6 +170,8 @@ The following fields are given when relevant to nodes in the source code:
 
 |numblock|Block that has numbered arguments (`_1`) referenced inside it.|Three children. First child is a `send`/`csend` node representing the way the block is created, second child is an `int` (the number of numeric arguments) and the third child is a body statement.|proc { _1 + _3 }|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/BlockNode[BlockNode]
 
+|itblock|Block that has the `it` block parameter referenced inside it.|Three children. First child is a `send`/`csend` node representing the way the block is created, second child is the symbol `it` and the third child is a body statement.|proc { it }|N/A
+
 |op_asgn|Operator-assignment - perform an operation and assign the value.|Three children. First child must be an assignment node, second child is the operator (e.g. `:+`) and the third child is the expression node.|a += b|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/OpAsgnNode[OpAsgnNode]
 
 |optarg|Optional positional argument. Must come inside an `args`.|One child - a symbol, representing the argument name.|def foo(bar=1)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]

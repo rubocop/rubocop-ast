@@ -64,7 +64,8 @@ RSpec.shared_context 'ruby 3.3', :ruby33 do
 end
 
 RSpec.shared_context 'ruby 3.4', :ruby34 do
-  let(:ruby_version) { 3.4 }
+  # Parser supports parsing Ruby <= 3.3.
+  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.4 : 3.3 }
 end
 
 # ...
@@ -129,6 +130,7 @@ RSpec.configure do |config|
   end
 
   config.filter_run_excluding broken_on: :prism if ENV['PARSER_ENGINE'] == 'parser_prism'
+  config.filter_run_excluding broken_on: :parser if ENV['PARSER_ENGINE'] != 'parser_prism'
 
   config.order = :random
   Kernel.srand config.seed

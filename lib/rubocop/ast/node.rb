@@ -112,7 +112,8 @@ module RuboCop
         csend: :call,
 
         block: :any_block,
-        numblock: :any_block
+        numblock: :any_block,
+        itblock: :any_block
       }.freeze
       private_constant :GROUP_FOR_TYPE
 

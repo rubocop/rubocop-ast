@@ -47,6 +47,14 @@ RSpec.describe RuboCop::AST::BlockNode do
         it { expect(block_node.arguments).to be_empty }
       end
     end
+
+    context '>= Ruby 3.4', :ruby34, broken_on: :parser do
+      context 'using `it` block parameter' do
+        let(:source) { 'foo { it }' }
+
+        it { expect(block_node.arguments).to be_empty }
+      end
+    end
   end
 
   describe '#argument_list' do
@@ -79,6 +87,14 @@ RSpec.describe RuboCop::AST::BlockNode do
 
           it { expect(names).to eq(%i[_1 _2]) }
         end
+      end
+    end
+
+    context '>= Ruby 3.4', :ruby34, broken_on: :parser do
+      context 'using `it` block parameter' do
+        let(:source) { 'foo { it }' }
+
+        it { expect(names).to eq(%i[it]) }
       end
     end
   end
@@ -117,6 +133,14 @@ RSpec.describe RuboCop::AST::BlockNode do
     context '>= Ruby 2.7', :ruby27 do
       context 'using numbered parameters' do
         let(:source) { 'foo { _1 }' }
+
+        it { is_expected.not_to be_arguments }
+      end
+    end
+
+    context '>= Ruby 3.4', :ruby34 do
+      context 'using `it` block parameter' do
+        let(:source) { 'foo { it }' }
 
         it { is_expected.not_to be_arguments }
       end
@@ -337,6 +361,14 @@ RSpec.describe RuboCop::AST::BlockNode do
     context '>= Ruby 2.7', :ruby27 do
       context 'using numbered parameters' do
         let(:source) { 'foo { _1 }' }
+
+        it { expect(block_node.first_argument).to be_nil }
+      end
+    end
+
+    context '>= Ruby 3.4', :ruby34 do
+      context 'using `it` block parameter' do
+        let(:source) { 'foo { it }' }
 
         it { expect(block_node.first_argument).to be_nil }
       end

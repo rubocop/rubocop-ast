@@ -491,6 +491,40 @@ RSpec.describe RuboCop::AST::Node do
         end
       end
     end
+
+    context 'using Ruby >= 3.4', :ruby34 do
+      context 'class definition with an itblock' do
+        let(:src) { 'Class.new { do_something(it) }' }
+
+        it 'matches' do
+          expect(node).to be_class_constructor
+        end
+      end
+
+      context 'module definition with an itblock' do
+        let(:src) { 'Module.new { do_something(it) }' }
+
+        it 'matches' do
+          expect(node).to be_class_constructor
+        end
+      end
+
+      context 'Struct definition with an itblock' do
+        let(:src) { 'Struct.new(:foo, :bar) { do_something(it) }' }
+
+        it 'matches' do
+          expect(node).to be_class_constructor
+        end
+      end
+
+      context 'Data definition with an itblock' do
+        let(:src) { 'Data.define(:foo, :bar) { do_something(it) }' }
+
+        it 'matches' do
+          expect(node).to be_class_constructor
+        end
+      end
+    end
   end
 
   describe '#struct_constructor?' do

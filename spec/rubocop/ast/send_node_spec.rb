@@ -206,6 +206,21 @@ RSpec.describe RuboCop::AST::SendNode do
         it { expect(send_node).to be_bare_access_modifier }
       end
     end
+
+    context 'with Ruby >= 3.4', :ruby34 do
+      context 'when node is access modifier in itblock' do
+        let(:source) do
+          <<~RUBY
+            included do
+            it
+            >> module_function <<
+            end
+          RUBY
+        end
+
+        it { expect(send_node).to be_bare_access_modifier }
+      end
+    end
   end
 
   describe '#non_bare_access_modifier?' do
@@ -332,6 +347,19 @@ RSpec.describe RuboCop::AST::SendNode do
             ['concern :Auth do',
              '>>bar :baz<<',
              '  bar _1',
+             'end'].join("\n")
+          end
+
+          it { expect(send_node).to be_macro }
+        end
+      end
+
+      context 'with Ruby >= 3.4', :ruby27 do
+        context 'when parent is an itblock in a macro scope' do
+          let(:source) do
+            ['concern :Auth do',
+             '>>bar :baz<<',
+             '  bar it',
              'end'].join("\n")
           end
 
@@ -1106,6 +1134,14 @@ RSpec.describe RuboCop::AST::SendNode do
         it { expect(send_node).to be_block_literal }
       end
     end
+
+    context 'with Ruby >= 3.4', :ruby27 do
+      context 'with an itblock literal' do
+        let(:source) { '>> foo.bar << { baz(it) }' }
+
+        it { expect(send_node).to be_block_literal }
+      end
+    end
   end
 
   describe '#arithmetic_operation?' do
@@ -1152,6 +1188,14 @@ RSpec.describe RuboCop::AST::SendNode do
         let(:source) { '>>foo.bar<< { baz(_1) }' }
 
         it { expect(send_node.block_node).to be_numblock_type }
+      end
+    end
+
+    context 'with Ruby >= 3.4', :ruby34, broken_on: :parser do
+      context 'with an itblock literal' do
+        let(:source) { '>>foo.bar<< { baz(it) }' }
+
+        it { expect(send_node.block_node).to be_itblock_type }
       end
     end
   end

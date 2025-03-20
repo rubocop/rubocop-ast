@@ -39,10 +39,10 @@ module RuboCop
         end
       end
 
-      # The `block` or `numblock` node associated with this method dispatch, if any.
+      # The `block`, `numblock`, or `itblock` node associated with this method dispatch, if any.
       #
-      # @return [BlockNode, nil] the `block` or `numblock` node associated with this method
-      #                          call or `nil`
+      # @return [BlockNode, nil] the `block`, `numblock`, or `itblock` node associated with this
+      #                          method call or `nil`
       def block_node
         parent if block_literal?
       end
