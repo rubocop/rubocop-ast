@@ -109,14 +109,7 @@ module RuboCop
             private
 
             def ruby_ast(ruby)
-              buffer = ::Parser::Source::Buffer.new('(ruby)', source: ruby)
-              ruby_parser.parse(buffer)
-            end
-
-            def ruby_parser
-              require 'parser/current'
-              builder = ::RuboCop::AST::Builder.new
-              ::Parser::CurrentRuby.new(builder)
+              ProcessedSource.new(ruby, RUBY_VERSION.to_f, '(ruby)').ast
             end
           end
 
