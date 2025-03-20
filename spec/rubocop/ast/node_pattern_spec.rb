@@ -18,22 +18,14 @@ RSpec.describe RuboCop::AST::NodePattern do
   let(:instance) { described_class.new(pattern) }
   let(:method_name) { :match }
   let(:result) do
-    if keyword_params.empty? # Avoid bug in Ruby < 2.6
-      instance.match(node, *params)
-    else
-      instance.match(node, *params, **keyword_params)
-    end
+    instance.match(node, *params, **keyword_params)
   end
 
   RSpec::Matchers.define :match_code do |code, *params, **keyword_params|
     match do |pattern|
       instance = pattern.is_a?(String) ? described_class.new(pattern) : pattern
       code = parse(code) if code.is_a?(String)
-      if keyword_params.empty? # Avoid bug in Ruby < 2.6
-        instance.public_send(method_name, code, *params)
-      else
-        instance.public_send(method_name, code, *params, **keyword_params)
-      end
+      instance.public_send(method_name, code, *params, **keyword_params)
     end
   end
 
@@ -145,15 +137,13 @@ RSpec.describe RuboCop::AST::NodePattern do
       it { expect(pattern).to match_code(node) }
     end
 
-    if RUBY_VERSION >= '2.6'
-      describe 'yaml compatibility' do
-        let(:instance) do
-          YAML.safe_load(YAML.dump(super()), permitted_classes: [described_class])
-        end
-        let(:ruby) { 'obj.method' }
-
-        it { expect(pattern).to match_code(node) }
+    describe 'yaml compatibility' do
+      let(:instance) do
+        YAML.safe_load(YAML.dump(super()), permitted_classes: [described_class])
       end
+      let(:ruby) { 'obj.method' }
+
+      it { expect(pattern).to match_code(node) }
     end
 
     describe '#==' do
@@ -2201,11 +2191,7 @@ RSpec.describe RuboCop::AST::NodePattern do
     include RuboCop::AST::Sexp
 
     subject(:result) do
-      if keyword_params.empty? # Avoid bug in Ruby < 2.7
-        defined_class.new.send(method_name, node, *params)
-      else
-        defined_class.new.send(method_name, node, *params, **keyword_params)
-      end
+      defined_class.new.send(method_name, node, *params, **keyword_params)
     end
 
     before do
