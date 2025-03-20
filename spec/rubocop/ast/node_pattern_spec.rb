@@ -1,16 +1,13 @@
 # frozen_string_literal: true
 
-require 'parser/current'
-
 RSpec.describe RuboCop::AST::NodePattern do
   include RuboCop::AST::Sexp
 
   def parse(code)
-    buffer = Parser::Source::Buffer.new('(string)', 1, source: code)
-    builder = RuboCop::AST::Builder.new
-    Parser::CurrentRuby.new(builder).parse(buffer)
+    RuboCop::AST::ProcessedSource.new(code, ruby_version, '(string)').ast
   end
 
+  let(:ruby_version) { 3.3 }
   let(:root_node) { parse(ruby) }
   let(:node) { root_node }
   let(:params) { [] }
