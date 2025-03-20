@@ -159,6 +159,7 @@ module RuboCop
       def_callback :if, :always, :nil?, :nil?
       def_callback :block, :always, :always, :nil?
       def_callback :numblock, :always, :skip, :nil?
+      def_callback :itblock, :always, :skip, :nil?
       def_callback :defs, :always, :skip, :always, :nil?
 
       def_callback %i[send csend], body: <<~RUBY
@@ -176,7 +177,7 @@ module RuboCop
 
       to_define = ::Parser::Meta::NODE_TYPES.to_a
       to_define -= defined
-      to_define -= %i[numargs ident] # transient
+      to_define -= %i[numargs itarg ident] # transient
       to_define -= %i[blockarg_expr restarg_expr] # obsolete
       to_define -= %i[objc_kwarg objc_restarg objc_varargs] # mac_ruby
       def_callback to_define, body: <<~RUBY

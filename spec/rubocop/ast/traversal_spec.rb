@@ -64,6 +64,30 @@ RSpec.describe RuboCop::AST::Traversal do
     end
   end
 
+  context 'when a class defines `on_itblock`', :ruby34, broken_on: :parser do
+    let(:klass) do
+      Class.new do
+        attr_reader :calls
+
+        include RuboCop::AST::Traversal
+        def on_itblock(node)
+          (@calls ||= []) << node.children.first.type
+          super
+        end
+      end
+    end
+
+    let(:source) { <<~RUBY }
+      it_block { do_something(it) }
+      numbered_block { do_something(_1) }
+      normal_block { |arg| do_something(arg) }
+    RUBY
+
+    it 'gets called' do
+      expect(traverse.calls.count).to eq 1
+    end
+  end
+
   File.read("#{__dir__}/fixtures/code_examples.rb")
       .split("#----\n")
       .each_with_index do |example, _i|

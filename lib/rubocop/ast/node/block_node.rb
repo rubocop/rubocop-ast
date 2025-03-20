@@ -11,6 +11,8 @@ module RuboCop
     class BlockNode < Node
       include MethodIdentifierPredicates
 
+      IT_BLOCK_ARGUMENT = [ArgNode.new(:arg, [:it])].freeze
+      private_constant :IT_BLOCK_ARGUMENT
       VOID_CONTEXT_METHODS = %i[each tap].freeze
       private_constant :VOID_CONTEXT_METHODS
 
@@ -46,10 +48,10 @@ module RuboCop
       #
       # @return [Array<Node>]
       def arguments
-        if numblock_type?
-          [].freeze # Numbered parameters have no block arguments.
-        else
+        if block_type?
           node_parts[1]
+        else
+          [].freeze # Numblocks and itblocks have no explicit block arguments.
         end
       end
 
@@ -60,6 +62,8 @@ module RuboCop
       def argument_list
         if numblock_type?
           numbered_arguments
+        elsif itblock_type?
+          IT_BLOCK_ARGUMENT
         else
           arguments.argument_list
         end
@@ -153,10 +157,7 @@ module RuboCop
 
       private
 
-      # Numbered arguments of this `numblock`.
       def numbered_arguments
-        return [].freeze unless numblock_type?
-
         max_param = children[1]
         1.upto(max_param).map do |i|
           ArgNode.new(:arg, [:"_#{i}"])
