@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.41.0 (2025-03-21)
+
 ### New features
 
 * [#365](https://github.com/rubocop/rubocop-ast/pull/365): Add support for `itblock` node for Ruby 3.4. ([@earlopain][])
