@@ -48,9 +48,9 @@ RSpec.describe RuboCop::AST::ProcessedSource do
     shared_examples 'invalid parser_engine' do
       it 'raises ArgumentError' do
         expect { processed_source }.to raise_error(ArgumentError) do |e|
-          expected =  'The keyword argument `parser_engine` accepts `parser_whitequark` ' \
-                      "or `parser_prism`, but `#{parser_engine}` was passed."
-          expect(e.message).to eq(expected)
+          expected = 'The keyword argument `parser_engine` accepts .*, ' \
+                     "but `#{parser_engine}` was passed."
+          expect(e.message).to match(expected)
         end
       end
     end
@@ -69,11 +69,55 @@ RSpec.describe RuboCop::AST::ProcessedSource do
 
     context 'when using `parser_engine: :parser_prism` and `prism_result` with a `ParseLexResult`' do
       let(:ruby_version) { 3.4 }
-      let(:parser_prism) { :parser_prism }
+      let(:parser_engine) { :parser_prism }
       let(:prism_result) { prism_parse_lex_result }
 
       it 'returns an instance of ProcessedSource' do
         is_expected.to be_a(described_class)
+      end
+    end
+
+    context 'when `parser_engine` is `parser_whitequark`' do
+      let(:parser_engine) { :parser_whitequark }
+
+      context 'and Ruby 3.4 is requested' do
+        let(:ruby_version) { 3.4 }
+
+        it 'uses `parser_whitequark`' do
+          expect(processed_source.parser_engine).to eq(:parser_whitequark)
+        end
+      end
+    end
+
+    context 'when `parser_engine` is `parser_prism`' do
+      let(:parser_engine) { :parser_prism }
+
+      context 'and Ruby 3.3 is requested' do
+        let(:ruby_version) { 3.3 }
+
+        it 'uses `parser_prism`' do
+          expect(processed_source.parser_engine).to eq(:parser_prism)
+        end
+      end
+    end
+
+    context 'when `parser_engine` is `:default`' do
+      let(:parser_engine) { :default }
+
+      context 'and Ruby 3.4 is requested' do
+        let(:ruby_version) { 3.4 }
+
+        it 'uses `parser_whitequark`' do
+          expect(processed_source.parser_engine).to eq(:parser_whitequark)
+        end
+      end
+
+      context 'and Ruby 3.5 is requested' do
+        let(:ruby_version) { 3.5 }
+
+        it 'uses `parser_prism`' do
+          expect(processed_source.parser_engine).to eq(:parser_prism)
+        end
       end
     end
   end
