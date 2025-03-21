@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-# FIXME: `broken_on: :prism` can be removed when Prism > 0.24.0 will be released.
-RSpec.describe RuboCop::AST::IfNode, broken_on: :prism do
+RSpec.describe RuboCop::AST::IfNode do
   subject(:if_node) { parse_source(source).ast }
 
   describe '.new' do
