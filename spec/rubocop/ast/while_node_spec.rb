@@ -30,8 +30,7 @@ RSpec.describe RuboCop::AST::WhileNode do
   end
 
   describe '#do?' do
-    # FIXME: `broken_on: :prism` can be removed when Prism > 0.24.0 will be released.
-    context 'with a do keyword', broken_on: :prism do
+    context 'with a do keyword' do
       let(:source) { 'while foo do; bar; end' }
 
       it { is_expected.to be_do }

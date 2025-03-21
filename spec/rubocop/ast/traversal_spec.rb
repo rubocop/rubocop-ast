@@ -110,8 +110,7 @@ RSpec.describe RuboCop::AST::Traversal do
 
       let(:source) { "foo=bar=baz=nil; #{example}" }
 
-      # FIXME: `broken_on: :prism` can be removed when Prism > 0.24.0 will be released.
-      it 'traverses all nodes', broken_on: :prism do
+      it 'traverses all nodes' do
         actual = node.each_node.count
         expect(traverse.hits).to eql(actual)
       end

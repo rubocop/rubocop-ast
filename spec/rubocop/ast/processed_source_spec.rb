@@ -269,9 +269,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
     end
 
-    # FIXME: `broken_on: :prism` can be removed when
-    # https://github.com/ruby/prism/issues/2454 will be released.
-    context 'when the source is valid but has some warning diagnostics', broken_on: :prism do
+    context 'when the source is valid but has some warning diagnostics' do
       let(:source) { 'do_something *array' }
 
       it 'returns true' do
@@ -527,8 +525,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
   end
   # rubocop:enable RSpec/RedundantPredicateMatcher
 
-  # FIXME: https://github.com/ruby/prism/issues/2467
-  describe '#preceding_line', broken_on: :prism do
+  describe '#preceding_line' do
     let(:source) { <<~RUBY }
       [ line, 1 ]
       { line: 2 }
@@ -544,8 +541,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
     end
   end
 
-  # FIXME: https://github.com/ruby/prism/issues/2467
-  describe '#following_line', broken_on: :prism do
+  describe '#following_line' do
     let(:source) { <<~RUBY }
       [ line, 1 ]
       { line: 2 }

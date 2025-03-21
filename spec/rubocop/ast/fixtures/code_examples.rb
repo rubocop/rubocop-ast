@@ -719,9 +719,6 @@ unless foo then bar; else baz; end
 unless foo; bar; else baz; end
 
 #----
-proc {_1 = nil}
-
-#----
 begin ensure end
 
 #----
@@ -904,24 +901,6 @@ foo, bar = 1, 2
 
 #----
 foo, bar, baz = 1, 2
-
-#----
-proc {_1 = nil}
-
-#----
-_2 = 1
-
-#----
-proc {|_3|}
-
-#----
-def x(_4) end
-
-#----
-def _5; end
-
-#----
-def self._6; end
 
 #----
 meth rescue bar
@@ -1125,25 +1104,7 @@ bar def foo; self.each do end end
 case foo; in "a": then true; end
 
 #----
-case foo; in "#{ 'a' }": then true; end
-
-#----
-case foo; in "#{ %q{a} }": then true; end
-
-#----
-case foo; in "#{ %Q{a} }": then true; end
-
-#----
 case foo; in "a": 1 then true; end
-
-#----
-case foo; in "#{ 'a' }": 1 then true; end
-
-#----
-case foo; in "#{ %q{a} }": 1 then true; end
-
-#----
-case foo; in "#{ %Q{a} }": 1 then true; end
 
 #----
 a&.b &&= 1
@@ -1416,9 +1377,6 @@ f{ |a, b,| }
 
 #----
 p begin 1.times do 1 end end
-
-#----
-retry
 
 #----
 p <<~E
