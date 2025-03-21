@@ -35,25 +35,21 @@ module RuboCop
       INVALID_LEVELS = %i[error fatal].freeze
       private_constant :INVALID_LEVELS
 
-      PARSER_ENGINES = %i[parser_whitequark parser_prism].freeze
+      PARSER_ENGINES = %i[default parser_whitequark parser_prism].freeze
       private_constant :PARSER_ENGINES
 
       attr_reader :path, :buffer, :ast, :comments, :tokens, :diagnostics,
                   :parser_error, :raw_source, :ruby_version, :parser_engine
 
-      def self.from_file(path, ruby_version, parser_engine: :parser_whitequark)
+      def self.from_file(path, ruby_version, parser_engine: :default)
         file = File.read(path, mode: 'rb')
         new(file, ruby_version, path, parser_engine: parser_engine)
       end
 
       def initialize(
-        source, ruby_version, path = nil, parser_engine: :parser_whitequark, prism_result: nil
+        source, ruby_version, path = nil, parser_engine: :default, prism_result: nil
       )
-        parser_engine = parser_engine.to_sym
-        unless PARSER_ENGINES.include?(parser_engine)
-          raise ArgumentError, 'The keyword argument `parser_engine` accepts `parser_whitequark` ' \
-                               "or `parser_prism`, but `#{parser_engine}` was passed."
-        end
+        parser_engine = normalize_parser_engine(parser_engine, ruby_version)
 
         # Defaults source encoding to UTF-8, regardless of the encoding it has
         # been read with, which could be non-utf8 depending on the default
@@ -307,7 +303,8 @@ module RuboCop
             require 'parser/ruby34'
             Parser::Ruby34
           else
-            raise ArgumentError, "RuboCop found unknown Ruby version: #{ruby_version.inspect}"
+            raise ArgumentError, 'RuboCop supports target Ruby versions 3.4 and below with ' \
+                                 "`parser`. Specified target Ruby version: #{ruby_version.inspect}"
           end
         when :parser_prism
           require_prism
@@ -319,6 +316,9 @@ module RuboCop
           when 3.4
             require 'prism/translation/parser34'
             Prism::Translation::Parser34
+          when 3.5
+            require 'prism/translation/parser35'
+            Prism::Translation::Parser35
           else
             raise ArgumentError, 'RuboCop supports target Ruby versions 3.3 and above with Prism. ' \
                                  "Specified target Ruby version: #{ruby_version.inspect}"
@@ -396,6 +396,31 @@ module RuboCop
         end
       end
       # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+      def normalize_parser_engine(parser_engine, ruby_version)
+        parser_engine = parser_engine.to_sym
+        unless PARSER_ENGINES.include?(parser_engine)
+          raise ArgumentError, 'The keyword argument `parser_engine` accepts `default`, ' \
+                               "`parser_whitequark`, or `parser_prism`, but `#{parser_engine}` " \
+                               'was passed.'
+        end
+        if parser_engine == :default
+          default_parser_engine(ruby_version)
+        else
+          parser_engine
+        end
+      end
+
+      # The Parser gem does not support Ruby 3.5 or later.
+      # It is also not fully compatible with Ruby 3.4 but for
+      # now respects using parser for backwards compatibility.
+      def default_parser_engine(ruby_version)
+        if ruby_version >= 3.5
+          :parser_prism
+        else
+          :parser_whitequark
+        end
+      end
 
       def first_token_index(range_or_node)
         begin_pos = source_range(range_or_node).begin_pos

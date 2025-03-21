@@ -109,9 +109,13 @@ for the `:prism_result` keyword argument. Otherwise, the source code is parsed.
 
 [source,ruby]
 ----
-# Using the Parser gem with `prism_result: nil` is the default, meaning the source code is parsed.
+# Using the Parser gem with `prism_result: nil` is the default, meaning the source code is parsed until `ruby_version` is 3.4.
 ProcessedSource.new(@options[:stdin], ruby_version, file, parser_engine: :parser_prism, prism_result: :prism_result)
 ----
+
+IMPORTANT: The Parser gem supports syntax up to Ruby 3.3, but it does not support syntax in Ruby 3.4,
+such as `it` block parameters. Additionally, there are no plans to support Ruby 3.5 or later.
+For Ruby 3.5 and later, `parser_engine: parser_prism` is chosen automatically.
 
 This is an experimental feature. If you encounter any incompatibilities between
 Prism and the Parser gem, please check the following URL:
