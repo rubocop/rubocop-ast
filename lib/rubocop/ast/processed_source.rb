@@ -46,13 +46,35 @@ module RuboCop
         new(file, ruby_version, path, parser_engine: parser_engine)
       end
 
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def initialize(
         source, ruby_version, path = nil, parser_engine: :parser_whitequark, prism_result: nil
       )
-        parser_engine = parser_engine.to_sym
-        unless PARSER_ENGINES.include?(parser_engine)
-          raise ArgumentError, 'The keyword argument `parser_engine` accepts `parser_whitequark` ' \
-                               "or `parser_prism`, but `#{parser_engine}` was passed."
+        parser_engine = if parser_engine.nil?
+                          default_parser_engine(ruby_version)
+                        else
+                          unless PARSER_ENGINES.include?(parser_engine.to_sym)
+                            raise ArgumentError, <<~MESSAGE.chop.tr("\n", ' ')
+                              The keyword argument `parser_engine` accepts `parser_whitequark`
+                              or `parser_prism`, but `#{parser_engine}` was passed.
+                            MESSAGE
+                          end
+
+                          parser_engine.to_sym
+                        end
+
+        if ruby_version >= 3.5
+          if parser_engine == :parser_whitequark
+            warn Rainbow(<<~MESSAGE).yellow
+              The Parser gem does not support Ruby 3.5 or later.
+              The `ParserEngine` will be replaced with `:parser_prism`.
+            MESSAGE
+          end
+
+          # The Parser gem does not support Ruby 3.5 or later.
+          # It is not fully compatible with Ruby 3.4 but respects
+          # the specified `:parser_engine` value for backward compatibility.
+          parser_engine = :parser_prism
         end
 
         # Defaults source encoding to UTF-8, regardless of the encoding it has
@@ -69,6 +91,7 @@ module RuboCop
 
         parse(source, ruby_version, parser_engine, prism_result)
       end
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       def ast_with_comments
         return if !ast || !comments
@@ -319,6 +342,9 @@ module RuboCop
           when 3.4
             require 'prism/translation/parser34'
             Prism::Translation::Parser34
+          when 3.5
+            require 'prism/translation/parser35'
+            Prism::Translation::Parser35
           else
             raise ArgumentError, 'RuboCop supports target Ruby versions 3.3 and above with Prism. ' \
                                  "Specified target Ruby version: #{ruby_version.inspect}"
