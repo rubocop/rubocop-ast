@@ -83,40 +83,21 @@ rule = MyRule.new
 source.ast.each_node { |n| rule.process(n) }
 ----
 
-In RuboCop AST, you can specify Prism as the parser engine backend.
-
-If running through Bundler, please first add `gem 'prism'` to your Gemfile:
-
-[source,ruby]
-----
-gem 'prism'
-----
-
-By specifying `parser_engine: :parser_prism`, parsing with Prism can be processed:
-
-[source,ruby]
-----
-# Using the Parser gem with `parser_engine: parser_whitequark` is the default.
-ProcessedSource.new(@options[:stdin], ruby_version, file, parser_engine: :parser_prism)
-----
-
-Furthermore, by passing an instance of `Prism::ParseLexResult` to the `:prism_result` keyword argument,
-the Prism parsing process can be bypassed. This is a useful API for Ruby LSP, where `Prism::ParseLexResult` has
+If you have already parsed the Ruby code with `prism`, you can pass an instance of `Prism::ParseLexResult`
+to the `:prism_result` keyword argument. This is a useful API for Ruby LSP, where `Prism::ParseLexResult` has
 already been obtained externally from RuboCop. A `Prism::ParseLexResult` instance is a value that can be obtained,
 for example, as the return value of `Prism.parse_lex(source)`.
-The bypass occurs only when `parser_engine: :parser_prism` is set and an instance of `Prism::ParseLexResult` is specified
+The bypass occurs only when the source is processed by prism and an instance of `Prism::ParseLexResult` is specified
 for the `:prism_result` keyword argument. Otherwise, the source code is parsed.
 
 [source,ruby]
 ----
-# Using the Parser gem with `prism_result: nil` is the default, meaning the source code is parsed until `ruby_version` is 3.4.
-ProcessedSource.new(@options[:stdin], ruby_version, file, parser_engine: :parser_prism, prism_result: :prism_result)
+# `parser_prism` is chosen automatically for `ruby_version >= 3.5` but you can also request
+# it explicitly starting from `ruby_version` 3.3. Requesting `parser_prism` for an earlier version
+# will raise an error.
+ProcessedSource.new(@options[:stdin], ruby_version, file, parser_engine: :parser_prism, prism_result: parse_lex_result)
 ----
 
 IMPORTANT: The Parser gem supports syntax up to Ruby 3.3, but it does not support syntax in Ruby 3.4,
 such as `it` block parameters. Additionally, there are no plans to support Ruby 3.5 or later.
 For Ruby 3.5 and later, `parser_engine: parser_prism` is chosen automatically.
-
-This is an experimental feature. If you encounter any incompatibilities between
-Prism and the Parser gem, please check the following URL:
-https://github.com/ruby/prism/issues?q=is%3Aissue+is%3Aopen+label%3Arubocop
