@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'prism'
-
 RSpec.describe RuboCop::AST::ProcessedSource do
   subject(:processed_source) do
     described_class.new(

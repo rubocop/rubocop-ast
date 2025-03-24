@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'parser'
+require 'prism'
 require 'forwardable'
 require 'set'
 
@@ -92,6 +93,7 @@ require_relative 'ast/node/when_node'
 require_relative 'ast/node/while_node'
 require_relative 'ast/node/yield_node'
 require_relative 'ast/builder'
+require_relative 'ast/builder_prism'
 require_relative 'ast/processed_source'
 require_relative 'ast/rubocop_compatibility'
 require_relative 'ast/token'
