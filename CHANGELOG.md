@@ -2,6 +2,11 @@
 
 ## master (unreleased)
 
+### Changes
+
+* [#374](https://github.com/rubocop/rubocop-ast/pull/374): Use the `prism` translation layer to analyze Ruby 3.4 by default. ([@earlopain])
+* [#373](https://github.com/rubocop/rubocop-ast/pull/373): Add `prism` as a runtime dependency. ([@earlopain])
+
 ## 1.42.0 (2025-03-25)
 
 ### New features
