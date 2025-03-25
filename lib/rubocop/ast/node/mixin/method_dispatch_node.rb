@@ -200,8 +200,7 @@ module RuboCop
         arg = node.children[2]
 
         return unless node.send_type? && node.receiver.nil? && arg.is_a?(::AST::Node)
-
-        return arg if arg.type?(:def, :defs)
+        return arg if arg.any_def_type?
 
         def_modifier(arg)
       end
@@ -271,7 +270,7 @@ module RuboCop
 
       # @!method adjacent_def_modifier?(node = self)
       def_node_matcher :adjacent_def_modifier?, <<~PATTERN
-        (send nil? _ ({def defs} ...))
+        (send nil? _ (any_def ...))
       PATTERN
 
       # @!method bare_access_modifier_declaration?(node = self)
