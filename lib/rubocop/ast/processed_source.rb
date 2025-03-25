@@ -381,7 +381,7 @@ module RuboCop
       # It is also not fully compatible with Ruby 3.4 but for
       # now respects using parser for backwards compatibility.
       def default_parser_engine(ruby_version)
-        if ruby_version >= 3.5
+        if ruby_version >= 3.4
           :parser_prism
         else
           :parser_whitequark

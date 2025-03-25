@@ -102,16 +102,16 @@ RSpec.describe RuboCop::AST::ProcessedSource do
     context 'when `parser_engine` is `:default`' do
       let(:parser_engine) { :default }
 
-      context 'and Ruby 3.4 is requested' do
-        let(:ruby_version) { 3.4 }
+      context 'and Ruby 3.3 is requested' do
+        let(:ruby_version) { 3.3 }
 
         it 'uses `parser_whitequark`' do
           expect(processed_source.parser_engine).to eq(:parser_whitequark)
         end
       end
 
-      context 'and Ruby 3.5 is requested' do
-        let(:ruby_version) { 3.5 }
+      context 'and Ruby 3.4 is requested' do
+        let(:ruby_version) { 3.4 }
 
         it 'uses `parser_prism`' do
           expect(processed_source.parser_engine).to eq(:parser_prism)
