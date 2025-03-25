@@ -92,7 +92,7 @@ for the `:prism_result` keyword argument. Otherwise, the source code is parsed.
 
 [source,ruby]
 ----
-# `parser_prism` is chosen automatically for `ruby_version >= 3.5` but you can also request
+# `parser_prism` is chosen automatically for `ruby_version >= 3.4` but you can also request
 # it explicitly starting from `ruby_version` 3.3. Requesting `parser_prism` for an earlier version
 # will raise an error.
 ProcessedSource.new(@options[:stdin], ruby_version, file, parser_engine: :parser_prism, prism_result: parse_lex_result)
@@ -100,4 +100,4 @@ ProcessedSource.new(@options[:stdin], ruby_version, file, parser_engine: :parser
 
 IMPORTANT: The Parser gem supports syntax up to Ruby 3.3, but it does not support syntax in Ruby 3.4,
 such as `it` block parameters. Additionally, there are no plans to support Ruby 3.5 or later.
-For Ruby 3.5 and later, `parser_engine: parser_prism` is chosen automatically.
+For Ruby 3.4 and later, `parser_engine: parser_prism` is chosen automatically.
