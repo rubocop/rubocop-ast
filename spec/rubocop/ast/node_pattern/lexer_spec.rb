@@ -57,7 +57,7 @@ RSpec.describe RuboCop::AST::NodePattern::Lexer do
     let(:source) { '/tricky\\/' }
 
     it 'does not lexes it properly' do
-      expect { tokens }.to raise_error(RuboCop::AST::NodePattern::LexerRex::ScanError)
+      expect { tokens }.to raise_error(RuboCop::AST::NodePattern::Lexer::ScanError)
     end
   end
 

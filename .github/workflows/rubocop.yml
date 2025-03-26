@@ -110,8 +110,6 @@ jobs:
         run: cd ../rubocop && bundle install --jobs 3 --retry 3
       - name: install dependencies
         run: bundle install --jobs 3 --retry 3
-      - name: generate lexer and parser
-        run: bundle exec rake generate
       - name: spec
         run: cd ../rubocop && bundle exec rake spec
 

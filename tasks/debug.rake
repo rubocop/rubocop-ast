@@ -9,7 +9,7 @@ def pattern_or_file(input)
 end
 
 desc 'Compile pattern to Ruby code for debugging purposes'
-task compile: :generate do
+task :compile do
   if (pattern = pattern_or_file(ARGV[1]))
     require_relative '../lib/rubocop/ast'
     puts RuboCop::AST::NodePattern.new(pattern).compile_as_lambda
@@ -24,7 +24,7 @@ task compile: :generate do
 end
 
 desc 'Parse pattern to AST for debugging purposes'
-task parse: :generate do
+task :parse do
   if (pattern = pattern_or_file(ARGV[1]))
     require_relative '../lib/rubocop/ast'
     puts RuboCop::AST::NodePattern::Parser.new.parse(pattern)
@@ -39,7 +39,7 @@ task parse: :generate do
 end
 
 desc 'Tokens of pattern for debugging purposes'
-task tokenize: :generate do
+task :tokenize do
   if (pattern = pattern_or_file(ARGV[1]))
     require_relative '../lib/rubocop/ast'
     parser = RuboCop::AST::NodePattern::Parser::WithMeta.new
@@ -56,7 +56,7 @@ task tokenize: :generate do
 end
 
 desc 'Test pattern against ruby code'
-task test_pattern: :generate do
+task :test_pattern do
   if (pattern = pattern_or_file(ARGV[1])) && (ruby = pattern_or_file(ARGV[2]))
     require_relative '../lib/rubocop/ast'
     colorizer = RuboCop::AST::NodePattern::Compiler::Debug::Colorizer.new(pattern)

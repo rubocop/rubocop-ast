@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-task build: :generate
 task release: 'changelog:check_clean'
 
 require 'bundler'
@@ -18,15 +17,15 @@ end
 
 require 'rspec/core/rake_task'
 
-RSpec::Core::RakeTask.new(spec: :generate) do |spec|
+RSpec::Core::RakeTask.new(:spec) do |spec|
   spec.pattern = FileList['spec/**/*_spec.rb']
 end
 
 desc 'Run RSpec code examples with Prism'
-task prism_spec: :generate do
+task :prism_spec do
   original_parser_engine = ENV.fetch('PARSER_ENGINE', nil)
 
-  RSpec::Core::RakeTask.new(prism_spec: :generate) do |spec|
+  RSpec::Core::RakeTask.new(:prism_spec) do |spec|
     ENV['PARSER_ENGINE'] = 'parser_prism'
 
     spec.pattern = FileList['spec/**/*_spec.rb']
@@ -42,7 +41,7 @@ task :coverage do
 end
 
 desc 'Run RuboCop over itself'
-task internal_investigation: :generate do
+task :internal_investigation do
   sh 'rubocop'
 end
 

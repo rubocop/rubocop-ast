@@ -10,8 +10,6 @@ gemspec
 
 gem 'bump', require: false
 gem 'bundler', '>= 1.15.0', '< 3.0'
-gem 'oedipus_lex', '>= 2.6.0', require: false
-gem 'racc'
 gem 'rake', '~> 13.0'
 gem 'rspec', '~> 3.7'
 gem 'simplecov', '~> 0.20'

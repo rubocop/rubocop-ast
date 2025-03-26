@@ -14,11 +14,7 @@ Gem::Specification.new do |s|
   DESCRIPTION
 
   s.email = 'rubocop@googlegroups.com'
-  s.files = `git ls-files lib LICENSE.txt README.md`
-            .lines(chomp: true) + %w[
-              lib/rubocop/ast/node_pattern/parser.racc.rb
-              lib/rubocop/ast/node_pattern/lexer.rex.rb
-            ]
+  s.files = `git ls-files lib LICENSE.txt README.md`.lines(chomp: true)
   s.extra_rdoc_files = ['LICENSE.txt', 'README.md']
   s.homepage = 'https://github.com/rubocop/rubocop-ast'
   s.licenses = ['MIT']
