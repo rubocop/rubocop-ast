@@ -87,6 +87,9 @@ module RuboCop
 
       # @api private
       GROUP_FOR_TYPE = {
+        def: :any_def,
+        defs: :any_def,
+
         arg: :argument,
         optarg: :argument,
         restarg: :argument,
@@ -511,6 +514,10 @@ module RuboCop
 
       def argument?
         parent&.send_type? && parent.arguments.include?(self)
+      end
+
+      def any_def_type?
+        GROUP_FOR_TYPE[type] == :any_def
       end
 
       def argument_type?
