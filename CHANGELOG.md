@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.44.0 (2025-04-03)
+
 ### New features
 
 * [#377](https://github.com/rubocop/rubocop-ast/pull/377): Support `RuboCop::AST::Node#any_def_type?` method. ([@koic][])
