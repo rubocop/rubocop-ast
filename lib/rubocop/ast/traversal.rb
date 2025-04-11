@@ -118,7 +118,7 @@ module RuboCop
       many_node_children = %i[dstr dsym xstr regexp array hash pair
                               mlhs masgn or_asgn and_asgn rasgn mrasgn
                               undef alias args super yield or and
-                              while_post until_post iflipflop eflipflop
+                              while_post until_post
                               match_with_lvasgn begin kwbegin return
                               in_match match_alt break next
                               match_as array_pattern array_pattern_with_tail
@@ -126,7 +126,7 @@ module RuboCop
                               index indexasgn procarg0 kwargs]
       many_opt_node_children = %i[case rescue resbody ensure for when
                                   case_match in_pattern irange erange
-                                  match_pattern match_pattern_p]
+                                  match_pattern match_pattern_p iflipflop eflipflop]
 
       ### Callbacks for above
       def_callback no_children
