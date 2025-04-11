@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Bug fixes
+
+* [#378](https://github.com/rubocop/rubocop-ast/pull/378): Fix `flip-flop` operator possible children nodes count. ([@viralpraxis][])
+
 ## 1.44.0 (2025-04-03)
 
 ### New features
@@ -608,3 +612,4 @@
 [@Earlopain]: https://github.com/Earlopain
 [@earlopain]: https://github.com/earlopain
 [@vlad-pisanov]: https://github.com/vlad-pisanov
+[@viralpraxis]: https://github.com/viralpraxis
