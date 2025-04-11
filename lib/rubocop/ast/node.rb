@@ -41,6 +41,8 @@ module RuboCop
       # @api private
       BASIC_LITERALS = (LITERALS - COMPOSITE_LITERALS).freeze
       # @api private
+      STRING_LITERALS = %i[str dstr].freeze
+      # @api private
       MUTABLE_LITERALS = %i[str dstr xstr array hash
                             regexp irange erange].to_set.freeze
       # @api private
@@ -107,6 +109,9 @@ module RuboCop
         float: :numeric,
         rational: :numeric,
         complex: :numeric,
+
+        str: :string,
+        dstr: :string,
 
         irange: :range,
         erange: :range,
@@ -526,6 +531,10 @@ module RuboCop
 
       def boolean_type?
         GROUP_FOR_TYPE[type] == :boolean
+      end
+
+      def string_type?
+        GROUP_FOR_TYPE[type] == :string
       end
 
       def numeric_type?
