@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.44.1 (2025-04-11)
+
 ### Bug fixes
 
 * [#378](https://github.com/rubocop/rubocop-ast/pull/378): Fix `flip-flop` operator possible children nodes count. ([@viralpraxis][])
