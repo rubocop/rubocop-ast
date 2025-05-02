@@ -38,6 +38,7 @@ module RuboCop
         casgn:               CasgnNode,
         case:                CaseNode,
         class:               ClassNode,
+        complex:             ComplexNode,
         const:               ConstNode,
         def:                 DefNode,
         defined?:            DefinedNode,
