@@ -10,16 +10,18 @@ RSpec.describe RuboCop::AST::IntNode do
   end
 
   describe '#sign?' do
+    subject { int_node.sign? }
+
     context 'explicit positive int' do
       let(:source) { '+42' }
 
-      it { is_expected.to be_sign }
+      it { is_expected.to be(true) }
     end
 
     context 'explicit negative int' do
       let(:source) { '-42' }
 
-      it { is_expected.to be_sign }
+      it { is_expected.to be(true) }
     end
   end
 
