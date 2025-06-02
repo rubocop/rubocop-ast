@@ -1083,6 +1083,53 @@ RSpec.describe RuboCop::AST::Node do
     end
   end
 
+  describe '#any_match_pattern_type?' do
+    # Ruby 2.7's one-line `in` pattern node type is `match-pattern`.
+    context 'when `in` one-line pattern matching', :ruby27 do
+      let(:src) { 'expression in pattern' }
+
+      it 'is true' do
+        if node.in_match_type?
+          skip "`in_match` from `AST::Builder.modernize` isn't treated as one-line pattern matching."
+        end
+
+        expect(node).to be_any_match_pattern_type
+      end
+    end
+
+    # Ruby 3.0's one-line `in` pattern node type is `match-pattern-p`.
+    context 'when `in` one-line pattern matching', :ruby30 do
+      let(:src) { 'expression in pattern' }
+
+      it 'is true' do
+        expect(node).to be_any_match_pattern_type
+      end
+    end
+
+    # Ruby 3.0's one-line `=>` pattern node type is `match-pattern`.
+    context 'when `=>` one-line pattern matching', :ruby30 do
+      let(:src) { 'expression => pattern' }
+
+      it 'is true' do
+        expect(node).to be_any_match_pattern_type
+      end
+    end
+
+    context 'when pattern matching', :ruby27 do
+      let(:src) do
+        <<~RUBY
+          case expression
+          in pattern
+          end
+        RUBY
+      end
+
+      it 'is false' do
+        expect(node).not_to be_any_match_pattern_type
+      end
+    end
+  end
+
   describe '#type?' do
     let(:src) do
       <<~RUBY

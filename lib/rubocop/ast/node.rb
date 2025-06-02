@@ -116,7 +116,10 @@ module RuboCop
 
         block: :any_block,
         numblock: :any_block,
-        itblock: :any_block
+        itblock: :any_block,
+
+        match_pattern: :any_match_pattern,
+        match_pattern_p: :any_match_pattern
       }.freeze
       private_constant :GROUP_FOR_TYPE
 
@@ -538,6 +541,10 @@ module RuboCop
 
       def any_block_type?
         GROUP_FOR_TYPE[type] == :any_block
+      end
+
+      def any_match_pattern_type?
+        GROUP_FOR_TYPE[type] == :any_match_pattern
       end
 
       def guard_clause?
