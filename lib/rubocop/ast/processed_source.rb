@@ -256,7 +256,8 @@ module RuboCop
         [ast, comments, tokens]
       end
 
-      def parser_class(ruby_version, parser_engine) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
+      # rubocop:disable Lint/FloatComparison, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
+      def parser_class(ruby_version, parser_engine)
         case parser_engine
         when :parser_whitequark
           case ruby_version
@@ -323,6 +324,7 @@ module RuboCop
           end
         end
       end
+      # rubocop:enable Lint/FloatComparison, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
 
       def builder_class(parser_engine)
         case parser_engine
