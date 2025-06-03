@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.45.0 (2025-06-03)
+
 ### New features
 
 * [#381](https://github.com/rubocop/rubocop-ast/pull/381): Support `AST::Node#any_match_pattern_type?` method. ([@koic][])
