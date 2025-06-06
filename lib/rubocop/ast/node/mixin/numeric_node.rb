@@ -15,7 +15,7 @@ module RuboCop
       #
       # @return [Boolean] whether this literal has a sign.
       def sign?
-        source.match(SIGN_REGEX)
+        source.match?(SIGN_REGEX)
       end
     end
   end
