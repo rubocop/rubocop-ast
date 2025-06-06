@@ -15,10 +15,12 @@ module RuboCop
               @visit = {}
             end
 
+            # rubocop:disable Naming/PredicateMethod
             def enter(node_id)
               @visit[node_id] = false
               true
             end
+            # rubocop:enable Naming/PredicateMethod
 
             def success(node_id)
               @visit[node_id] = true

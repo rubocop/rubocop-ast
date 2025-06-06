@@ -1417,12 +1417,12 @@ RSpec.describe RuboCop::AST::NodePattern do
 
     context 'with an expression argument' do
       before do
-        def instance.some_function(node, arg)
+        def instance.some_function?(node, arg)
           arg === node # rubocop:disable Style/CaseEquality
         end
       end
 
-      let(:pattern) { '(send (int _value) :+ #some_function( {(int _value) (float _value)} ) )' }
+      let(:pattern) { '(send (int _value) :+ #some_function?( {(int _value) (float _value)} ) )' }
 
       context 'for which the predicate is true' do
         let(:ruby) { '2 + 2.0' }
@@ -1704,15 +1704,15 @@ RSpec.describe RuboCop::AST::NodePattern do
       module AST
         # Add test function calls
         class NodePattern
-          def goodmatch(_foo)
+          def goodmatch?(_foo)
             true
           end
 
-          def badmatch(_foo)
+          def badmatch?(_foo)
             false
           end
 
-          def witharg(foo, bar)
+          def witharg?(foo, bar)
             foo == bar
           end
 
@@ -1724,14 +1724,14 @@ RSpec.describe RuboCop::AST::NodePattern do
     end
 
     context 'without extra arguments' do
-      let(:pattern) { '(lvasgn #goodmatch ...)' }
+      let(:pattern) { '(lvasgn #goodmatch? ...)' }
       let(:ruby) { 'a = 1' }
 
       it { expect(pattern).to match_code(node) }
     end
 
     context 'with one argument' do
-      let(:pattern) { '(str #witharg(%1))' }
+      let(:pattern) { '(str #witharg?(%1))' }
       let(:ruby) { '"foo"' }
       let(:params) { %w[foo] }
 
@@ -2438,14 +2438,14 @@ RSpec.describe RuboCop::AST::NodePattern do
     end
 
     context 'with a pattern with a namespaced call' do
-      let(:pattern) { '(sym #MyMod.foo)' }
+      let(:pattern) { '(sym #MyMod.foo?)' }
       let(:helper_name) { :def_node_matcher }
 
       before do
         mod = Module.new
         mod::MyMod = Module.new
         mod::MyMod.module_eval do
-          def self.foo(val)
+          def self.foo?(val)
             val == :hello
           end
         end
