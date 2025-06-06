@@ -33,7 +33,7 @@ InternalAffairs/NodeMatcherDirective:
   Exclude:
     - 'spec/rubocop/ast/node_pattern_spec.rb'
 
-Naming/PredicateName:
+Naming/PredicatePrefix:
   # Method define macros for dynamically generated method.
   MethodDefinitionMacros:
     - define_method
