@@ -341,7 +341,7 @@ module RuboCop
 
         parser_class = parser_class(ruby_version, parser_engine)
 
-        parser_instance = if prism_result
+        parser_instance = if parser_engine == :parser_prism && prism_result
                             # NOTE: Since it is intended for use with Ruby LSP, it targets only Prism.
                             # If there is no reuse of a pre-parsed result, such as in Ruby LSP,
                             # regular parsing with Prism occurs, and `else` branch will be executed.
