@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### Bug fixes
+
+* [#382](https://github.com/rubocop/rubocop-ast/pull/382): Fix an error when using Parser gem with `prism_result`. ([@koic][])
+
 ## 1.45.0 (2025-06-03)
 
 ### New features
