@@ -10,16 +10,18 @@ RSpec.describe RuboCop::AST::FloatNode do
   end
 
   describe '#sign?' do
+    subject { float_node.sign? }
+
     context 'explicit positive float' do
       let(:source) { '+42.0' }
 
-      it { is_expected.to be_sign }
+      it { is_expected.to be(true) }
     end
 
     context 'explicit negative float' do
       let(:source) { '-42.0' }
 
-      it { is_expected.to be_sign }
+      it { is_expected.to be(true) }
     end
   end
 

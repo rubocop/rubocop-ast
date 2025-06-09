@@ -10,16 +10,18 @@ RSpec.describe RuboCop::AST::RationalNode do
   end
 
   describe '#sign?' do
+    subject { rational_node.sign? }
+
     context 'when explicit positive rational' do
       let(:source) { '+0.2r' }
 
-      it { is_expected.to be_sign }
+      it { is_expected.to be(true) }
     end
 
     context 'when explicit negative rational' do
       let(:source) { '-0.2r' }
 
-      it { is_expected.to be_sign }
+      it { is_expected.to be(true) }
     end
   end
 
