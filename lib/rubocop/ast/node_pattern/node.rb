@@ -179,7 +179,7 @@ module RuboCop
         class AnyOrder < Node
           include ForbidInSeqHead
 
-          ARITIES = Hash.new { |h, k| h[k] = k - 1..Float::INFINITY }
+          ARITIES = Hash.new { |h, k| h[k] = (k - 1)..Float::INFINITY }
           private_constant :ARITIES
 
           def term_nodes

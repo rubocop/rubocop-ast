@@ -261,7 +261,7 @@ module RuboCop
             arities = children
                       .reverse
                       .map(&:arity_range)
-                      .map { |r| last = last.begin + r.begin..last.max + r.max }
+                      .map { |r| last = (last.begin + r.begin)..(last.max + r.max) }
                       .reverse!
             arities.push last_arity
           end
