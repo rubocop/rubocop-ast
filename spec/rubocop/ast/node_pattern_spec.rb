@@ -1716,7 +1716,7 @@ RSpec.describe RuboCop::AST::NodePattern do
             foo == bar
           end
 
-          def withargs(foo, bar, qux)
+          def withargs?(foo, bar, qux)
             foo.between?(bar, qux)
           end
         end
@@ -1739,7 +1739,7 @@ RSpec.describe RuboCop::AST::NodePattern do
     end
 
     context 'with multiple arguments' do
-      let(:pattern) { '(str #withargs(%1, %2))' }
+      let(:pattern) { '(str #withargs?(%1, %2))' }
       let(:ruby) { '"c"' }
       let(:params) { %w[a d] }
 
