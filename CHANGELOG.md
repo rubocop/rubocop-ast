@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.46.0 (2025-07-16)
+
 ### New features
 
 * [#379](https://github.com/rubocop/rubocop-ast/pull/379): Support `RuboCop::AST::ComplexNode`. ([@koic][])
