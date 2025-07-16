@@ -2,6 +2,14 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#379](https://github.com/rubocop/rubocop-ast/pull/379): Support `RuboCop::AST::ComplexNode`. ([@koic][])
+
+### Bug fixes
+
+* [#380](https://github.com/rubocop/rubocop-ast/pull/380): Fix `RuboCop::AST::NumericNode#sign?` to return boolean. ([@viralpraxis][])
+
 ## 1.45.1 (2025-06-08)
 
 ### Bug fixes
