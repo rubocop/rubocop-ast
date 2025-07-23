@@ -50,6 +50,7 @@ module RuboCop
 
       extend SimpleForwardable
       include MethodDefiner
+
       Invalid = Class.new(StandardError)
 
       VAR = 'node'

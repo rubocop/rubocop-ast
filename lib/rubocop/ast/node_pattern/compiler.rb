@@ -10,6 +10,7 @@ module RuboCop
       #   /docs/modules/ROOT/pages/node_pattern.adoc
       class Compiler
         extend SimpleForwardable
+
         attr_reader :captures, :named_parameters, :positional_parameters, :binding
 
         def initialize

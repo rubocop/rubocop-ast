@@ -65,6 +65,7 @@ module RuboCop
       # arguments
       module WrappedArguments
         include ParameterizedNode
+
         # @return [Array] The arguments of the node.
         def arguments
           first = children.first

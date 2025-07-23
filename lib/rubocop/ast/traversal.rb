@@ -79,6 +79,7 @@ module RuboCop
       end
       private_constant :CallbackCompiler
       extend CallbackCompiler
+
       send_code = CallbackCompiler::SEND
 
       ### children count == 0

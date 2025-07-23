@@ -16,6 +16,7 @@ RSpec.describe RuboCop::AST::Traversal do
         attr_reader :calls
 
         include RuboCop::AST::Traversal
+
         def on_arg(node)
           (@calls ||= []) << node.children.first
           super
@@ -42,6 +43,7 @@ RSpec.describe RuboCop::AST::Traversal do
         attr_reader :calls
 
         include RuboCop::AST::Traversal
+
         def on_block_pass(node)
           (@calls ||= []) << node.children.first&.type
           super
@@ -70,6 +72,7 @@ RSpec.describe RuboCop::AST::Traversal do
         attr_reader :calls
 
         include RuboCop::AST::Traversal
+
         def on_itblock(node)
           (@calls ||= []) << node.children.first.type
           super
@@ -95,6 +98,7 @@ RSpec.describe RuboCop::AST::Traversal do
       let(:klass) do
         Struct.new(:hits) do
           include RuboCop::AST::Traversal
+
           def initialize
             super(0)
           end
@@ -124,6 +128,7 @@ RSpec.describe RuboCop::AST::Traversal do
   # Sanity checking the debugging checks
   context 'when given an unexpected AST' do
     include RuboCop::AST::Sexp
+
     let(:klass) { Class.new { include RuboCop::AST::Traversal } }
 
     context 'with too few children' do
