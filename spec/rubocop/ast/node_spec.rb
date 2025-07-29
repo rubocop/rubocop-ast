@@ -889,6 +889,40 @@ RSpec.describe RuboCop::AST::Node do
     end
   end
 
+  describe '#string_type?' do
+    context 'when string literal' do
+      let(:src) { "'foo'" }
+
+      it 'is true' do
+        expect(node).to be_string_type
+      end
+    end
+
+    context 'when interpolated string' do
+      let(:src) { %q("foo #{bar}") }
+
+      it 'is true' do
+        expect(node).to be_string_type
+      end
+    end
+
+    context 'when `xstr` node' do
+      let(:src) { '`ls`' }
+
+      it 'is false' do
+        expect(node).not_to be_string_type
+      end
+    end
+
+    context 'when numeric literal' do
+      let(:src) { '42' }
+
+      it 'is false' do
+        expect(node).not_to be_string_type
+      end
+    end
+  end
+
   describe '#numeric_type?' do
     context 'when integer literal' do
       let(:src) { '42' }
@@ -933,7 +967,7 @@ RSpec.describe RuboCop::AST::Node do
     context 'when string literal' do
       let(:src) { '"42"' }
 
-      it 'is true' do
+      it 'is false' do
         expect(node).not_to be_numeric_type
       end
     end
