@@ -38,7 +38,7 @@ jobs:
           - { ruby: truffleruby-head, os: ubuntu }
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Prism
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ruby/setup-ruby@v1
         with:
           # Specify the minimum Ruby version 2.7 required for Prism to run.
@@ -88,7 +88,7 @@ jobs:
       RUBOCOP_VERSION: ${{ matrix.rubocop }}
       PARSER_ENGINE: ${{ matrix.parser_engine }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
@@ -107,7 +107,7 @@ jobs:
     name: Coding Style
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ruby # Latest stable CRuby version
