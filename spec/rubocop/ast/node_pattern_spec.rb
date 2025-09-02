@@ -232,6 +232,13 @@ RSpec.describe RuboCop::AST::NodePattern do
       it { expect(pattern).to match_code(node) }
     end
 
+    context 'empty string literals' do
+      let(:pattern) { '(str "")' }
+      let(:ruby) { '""' }
+
+      it { expect(pattern).to match_code(node) }
+    end
+
     context 'symbol literals' do
       let(:pattern) { '(sym :foo)' }
       let(:ruby) { ':foo' }
