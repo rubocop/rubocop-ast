@@ -2,6 +2,11 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#387](https://github.com/rubocop/rubocop-ast/pull/387): Add `Node#any_sym_type?` to match `sym` and `dsym` types. ([@dvandersluis][])
+* [#328](https://github.com/rubocop/rubocop-ast/pull/328): Add `Node#any_str_type?` to match `str`, `dstr`, and `xstr` types. ([@dvandersluis][])
+
 ## 1.46.0 (2025-07-16)
 
 ### New features
