@@ -112,6 +112,9 @@ module RuboCop
         dstr: :any_str,
         xstr: :any_str,
 
+        sym: :any_sym,
+        dsym: :any_sym,
+
         irange: :range,
         erange: :range,
 
@@ -553,6 +556,10 @@ module RuboCop
 
       def any_str_type?
         GROUP_FOR_TYPE[type] == :any_str
+      end
+
+      def any_sym_type?
+        GROUP_FOR_TYPE[type] == :any_sym
       end
 
       def guard_clause?
