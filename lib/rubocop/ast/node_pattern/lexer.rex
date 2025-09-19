@@ -21,7 +21,7 @@ macros
 rules
         /\s+/
         /:(#{SYMBOL_NAME})/o      { emit :tSYMBOL, &:to_sym }
-        /"(.+?)"/                 { emit :tSTRING }
+        /"(.*?)"/                 { emit :tSTRING }
         /[-+]?\d+\.\d+/           { emit :tNUMBER, &:to_f }
         /[-+]?\d+/                { emit :tNUMBER, &:to_i }
         /#{Regexp.union(
