@@ -1164,6 +1164,56 @@ RSpec.describe RuboCop::AST::Node do
     end
   end
 
+  describe '#any_sym_type?' do
+    context 'when symbol' do
+      let(:src) { ':str' }
+
+      it 'is true' do
+        expect(node).to be_any_sym_type
+      end
+    end
+
+    context 'when interpolated symbol' do
+      let(:src) { ':"#{foo}"' }
+
+      it 'is true' do
+        expect(node).to be_any_sym_type
+      end
+    end
+
+    context 'when string' do
+      let(:src) { "'foo'" }
+
+      it 'is false' do
+        expect(node).not_to be_any_sym_type
+      end
+    end
+
+    context 'when interpolated string' do
+      let(:src) { %q("foo #{bar}") }
+
+      it 'is false' do
+        expect(node).not_to be_any_sym_type
+      end
+    end
+
+    context 'when `xstr` node' do
+      let(:src) { '`ls`' }
+
+      it 'is false' do
+        expect(node).not_to be_any_sym_type
+      end
+    end
+
+    context 'when numeric literal' do
+      let(:src) { '42' }
+
+      it 'is false' do
+        expect(node).not_to be_any_sym_type
+      end
+    end
+  end
+
   describe '#type?' do
     let(:src) do
       <<~RUBY
