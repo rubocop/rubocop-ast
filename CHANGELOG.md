@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.47.0 (2025-09-19)
+
 ### New features
 
 * [#387](https://github.com/rubocop/rubocop-ast/pull/387): Add `Node#any_sym_type?` to match `sym` and `dsym` types. ([@dvandersluis][])
