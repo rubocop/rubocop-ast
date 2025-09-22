@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.47.1 (2025-09-21)
+
 ### Bug fixes
 
 * [#386](https://github.com/rubocop/rubocop-ast/pull/386): Fix parsing of node patterns that match against the empty string. ([@earloapin][])
