@@ -32,7 +32,7 @@ module RuboCop
       #
       # @return [Parser::Source::Range] the source range for the method name or keyword
       def selector
-        if loc.respond_to? :keyword
+        if loc?(:keyword)
           loc.keyword
         else
           loc.selector
