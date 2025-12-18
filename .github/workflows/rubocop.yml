@@ -94,11 +94,6 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
       - name: install rubocop from source for full specs
         run: git clone --branch $RUBOCOP_VERSION https://github.com/rubocop/rubocop.git ../rubocop
-      - name: prevent prism from breaking tests on older RuboCop
-        # FIXME: Remove when the next prism version is released.
-        # See https://github.com/rubocop/rubocop/pull/14526
-        if: matrix.rubocop == 'v1.72.1'
-        run: cd ../rubocop && sed -i "s/gem 'prism'.*$/gem 'prism', '< 1.5.0'/" Gemfile
       - name: install rubocop dependencies
         run: cd ../rubocop && bundle install --jobs 3 --retry 3
       - name: install dependencies
