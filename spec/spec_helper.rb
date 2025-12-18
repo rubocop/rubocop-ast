@@ -71,6 +71,11 @@ RSpec.shared_context 'ruby 4.0', :ruby40 do
   let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 4.0 : 3.3 }
 end
 
+RSpec.shared_context 'ruby 4.1', :ruby41 do
+  # Parser supports parsing Ruby <= 3.3.
+  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 4.1 : 3.3 }
+end
+
 # ...
 module DefaultRubyVersion
   extend RSpec::SharedContext

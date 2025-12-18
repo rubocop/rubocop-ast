@@ -314,11 +314,9 @@ module RuboCop
           when 3.4
             Prism::Translation::Parser34
           when 3.5, 4.0
-            # TODO: The meaning of the version numbers in `Parser35` (Ruby 3.5) is the same as in
-            # `Parser40` (Ruby 4.0). Once the next version of Prism 1.6.0 is released,
-            # `Parser35` should probably be replaced with `Parser40`:
-            # See: https://github.com/ruby/prism/pull/3709
-            Prism::Translation::Parser35
+            Prism::Translation::Parser40
+          when 4.1
+            Prism::Translation::Parser41
           else
             raise ArgumentError, 'RuboCop supports target Ruby versions 3.3 and above with Prism. ' \
                                  "Specified target Ruby version: #{ruby_version.inspect}"
