@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
   }
 
   s.add_dependency('parser', '>= 3.3.7.2')
-  s.add_dependency('prism', '~> 1.4')
+  s.add_dependency('prism', '~> 1.7')
 
   ##### Do NOT add `rubocop` (or anything depending on `rubocop`) here. See Gemfile
 end

@@ -1,0 +1,1 @@
+- [#394](https://github.com/rubocop/rubocop-ast/pull/394): Support Ruby 4.1 (experimental). ([@koic][])
