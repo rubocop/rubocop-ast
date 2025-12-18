@@ -91,9 +91,7 @@ RSpec.describe RuboCop::AST::Traversal do
     end
   end
 
-  File.read("#{__dir__}/fixtures/code_examples.rb")
-      .split("#----\n")
-      .each_with_index do |example, _i|
+  File.read("#{__dir__}/fixtures/code_examples.rb").split("#----\n").each do |example|
     context "with example #{example}", :ruby27 do
       let(:klass) do
         Struct.new(:hits) do
