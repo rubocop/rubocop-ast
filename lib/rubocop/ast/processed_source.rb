@@ -213,6 +213,10 @@ module RuboCop
         @sorted_tokens ||= tokens.sort_by.with_index { |token, i| [token.begin_pos, i] }
       end
 
+      def token_index
+        @token_index ||= tokens.each_with_index.to_h
+      end
+
       private
 
       def comment_index
