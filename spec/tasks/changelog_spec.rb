@@ -2,7 +2,6 @@
 
 require_relative '../../tasks/changelog'
 
-# rubocop:disable RSpec/ExampleLength
 RSpec.describe Changelog do
   subject(:changelog) do
     list = entries.to_h { |e| [e.path, e.content] }
@@ -84,4 +83,3 @@ RSpec.describe Changelog do
     )
   end
 end
-# rubocop:enable RSpec/ExampleLength

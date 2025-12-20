@@ -11,7 +11,7 @@ RSpec.describe RuboCop::AST::NodePattern::Lexer do
     tokens
   end
 
-  it 'provides tokens via next_token' do # rubocop:disable RSpec/ExampleLength
+  it 'provides tokens via next_token' do
     type, (text, range) = tokens[3]
     expect(type).to eq :tFUNCTION_CALL
     expect(text).to eq :func
