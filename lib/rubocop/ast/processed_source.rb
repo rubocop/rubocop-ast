@@ -205,6 +205,38 @@ module RuboCop
         sorted_tokens[last_token_index(range_or_node)]
       end
 
+      # Returns the tokens immediately before the given range or node,
+      # up to the given limit, or all tokens before if no limit is given.
+      def tokens_before(range_or_node, limit = nil)
+        pos = first_token_index(range_or_node)
+        first = limit ? [0, pos - limit].max : 0
+        sorted_tokens[first...pos]
+      end
+
+      # Returns the tokens immediately after the given range or node,
+      # up to the given limit, or all tokens after if no limit is given.
+      def tokens_after(range_or_node, limit = nil)
+        pos = last_token_index(range_or_node)
+        last = limit ? pos + limit : -1
+        sorted_tokens[(pos + 1)..last]
+      end
+
+      # Returns the token immediately before the given range or node,
+      # or nil if there is none.
+      def previous_token(range_or_node)
+        pos = first_token_index(range_or_node)
+        return nil if pos.zero?
+
+        sorted_tokens[pos - 1]
+      end
+
+      # Returns the token immediately after the given range or node,
+      # or nil if there is none.
+      def following_token(range_or_node)
+        pos = last_token_index(range_or_node)
+        sorted_tokens[pos + 1]
+      end
+
       # The tokens list is always sorted by token position, except for cases when heredoc
       # is passed as a method argument. In this case tokens are interleaved by
       # heredoc contents' tokens.
