@@ -27,7 +27,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu]
-        ruby: [2.7, "3.0", 3.1, 3.2, 3.3, 3.4, head]
+        ruby: [2.7, "3.0", 3.1, 3.2, 3.3, 3.4, "4.0", head]
         modern: [null]
         title: [null]
         include:
@@ -76,14 +76,14 @@ jobs:
       matrix:
         # Instead of testing all possibilities, we test the extreme points of
         # a diagonal with the shiniest and latest
-        ruby: ["2.7", "3.4"]
+        ruby: ["2.7", "4.0"]
         rubocop: [master]
         parser_engine: [parser_whitequark]
         include:
           # as well as very old specs & ancient ruby version
           - { rubocop: "v1.72.1", parser_engine: parser_whitequark, ruby: "2.7" }
           # also test against the prism parser translator
-          - { rubocop: "master", parser_engine: parser_prism, ruby: "3.4" }
+          - { rubocop: "master", parser_engine: parser_prism, ruby: "4.0" }
     env:
       RUBOCOP_VERSION: ${{ matrix.rubocop }}
       PARSER_ENGINE: ${{ matrix.parser_engine }}
