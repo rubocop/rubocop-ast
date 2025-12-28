@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+### New features
+
+- [#394](https://github.com/rubocop/rubocop-ast/pull/394): Support Ruby 4.1 (experimental). ([@koic][])
+
 ## 1.48.0 (2025-11-08)
 
 ### New features
