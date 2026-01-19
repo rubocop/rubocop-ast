@@ -49,6 +49,5 @@ end
 task default: %i[
   codespell
   spec
-  prism_spec
   internal_investigation
 ]
