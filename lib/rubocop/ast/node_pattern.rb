@@ -24,6 +24,8 @@ module RuboCop
     # - With no block and no captures: #match returns `true`.
     #
     class NodePattern
+      class Invalid < StandardError; end
+
       # Helpers for defining methods based on a pattern string
       module Macros
         # Define a method which applies a pattern to an AST node
@@ -50,8 +52,6 @@ module RuboCop
 
       extend SimpleForwardable
       include MethodDefiner
-
-      Invalid = Class.new(StandardError)
 
       VAR = 'node'
 
