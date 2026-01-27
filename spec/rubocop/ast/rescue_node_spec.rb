@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe RuboCop::AST::RescueNode do
-  subject(:ast) { parse_source(source).ast }
+  subject(:ast) { parsed_source.ast }
 
+  let(:parsed_source) { parse_source(source) }
+  let(:node) { parsed_source.node }
   let(:rescue_node) { ast.children.first }
 
   describe '.new' do
@@ -16,26 +18,43 @@ RSpec.describe RuboCop::AST::RescueNode do
   end
 
   describe '#body' do
-    let(:source) { <<~RUBY }
-      begin
-        foo
-      rescue => e
-      end
-    RUBY
+    subject(:body) { rescue_node.body }
 
-    it { expect(rescue_node.body).to be_send_type }
+    context 'when the body is empty' do
+      let(:source) { <<~RUBY }
+        begin
+        rescue => e
+        end
+      RUBY
+
+      it { is_expected.to be_nil }
+    end
+
+    context 'when the body is a single line' do
+      let(:source) { <<~RUBY }
+        begin
+          >>foo<<
+        rescue => e
+        end
+      RUBY
+
+      it { is_expected.to eq(node) }
+    end
 
     context 'with multiple lines in body' do
       let(:source) { <<~RUBY }
         begin
-          foo
+          >>foo<<
           bar
         rescue => e
           baz
         end
       RUBY
 
-      it { expect(rescue_node.body).to be_begin_type }
+      it 'returns a begin node' do
+        expect(body).to be_begin_type
+        expect(body.children).to include(node)
+      end
     end
   end
 
