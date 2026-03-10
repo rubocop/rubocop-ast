@@ -26,6 +26,12 @@ module RuboCop
             var
           end
 
+          # Returns currently bound variable names
+          # @return [Array<String>] variable names that are currently bound
+          def bound_variables
+            @bound.values
+          end
+
           # Yields for each branch of the given union, forbidding unification of
           # bindings which only appear in a subset of the union.
           def union_bind(enum) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize

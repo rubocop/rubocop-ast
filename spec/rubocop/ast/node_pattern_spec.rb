@@ -1891,6 +1891,44 @@ RSpec.describe RuboCop::AST::NodePattern do
         it_behaves_like 'invalid'
       end
     end
+
+    context 'with unification' do
+      let(:ruby) { 'foo.bar || foo.baz' }
+
+      context 'without capture' do
+        let(:pattern) { '(or <(send _receiver :bar) (send _receiver :baz)>)' }
+
+        it { expect(pattern).to match_code(node) }
+      end
+
+      context 'when reference matches in reverse' do
+        let(:ruby) { 'foo.baz || foo.bar' }
+        let(:pattern) { '(or <(send _receiver :bar) (send _receiver :baz)>)' }
+
+        it { expect(pattern).to match_code(node) }
+      end
+
+      context 'when reference does not match' do
+        let(:ruby) { 'foo.bar || bar.baz' }
+        let(:pattern) { '(or <(send _receiver :bar) (send _receiver :baz)>)' }
+
+        it_behaves_like 'nonmatching'
+      end
+
+      context 'with single capture' do
+        let(:pattern) { '(or <(send $_receiver :bar) (send _receiver :baz)>)' }
+        let(:captured_val) { s(:send, nil, :foo) }
+
+        it_behaves_like 'single capture'
+      end
+
+      context 'with multiple capture' do
+        let(:pattern) { '(or <(send $_receiver :bar) (send $_receiver :baz)>)' }
+        let(:captured_vals) { [s(:send, nil, :foo), s(:send, nil, :foo)] }
+
+        it_behaves_like 'multiple capture'
+      end
+    end
   end
 
   describe 'repeated' do
