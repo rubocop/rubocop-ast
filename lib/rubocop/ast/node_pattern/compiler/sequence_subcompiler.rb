@@ -85,16 +85,21 @@ module RuboCop
             end
           end
 
-          def visit_any_order
+          def visit_any_order # rubocop:disable Metrics/AbcSize
             within_loop do
               compiler.with_temp_variables do |matched|
+                bound_before = compiler.binding.bound_variables
                 case_terms = compile_any_order_branches(matched)
                 else_code, init = compile_any_order_else
                 term = "#{compile_case(case_terms, else_code)} && #{compile_loop_advance}"
 
+                # Initialize unification variables before the loop to persist across iterations
+                newly_bound = compiler.binding.bound_variables - bound_before
+                unify_init = compile_unify_init(newly_bound)
+
                 all_matched_check = "&&\n#{matched}.size == #{node.term_nodes.size}" if node.rest_node
                 <<~RUBY
-                  (#{init}#{matched} = {}; true) &&
+                  (#{init}#{unify_init}#{matched} = {}; true) &&
                   #{compile_loop(term)} #{all_matched_check} \\
                 RUBY
               end
@@ -411,6 +416,13 @@ module RuboCop
               end
             end
             @in_sync = sub_compilers.all?(&:in_sync)
+          end
+
+          # Generate initialization code for unification variables
+          # @param newly_bound [Array<String>] variable names that were newly bound
+          # @return [String] initialization code
+          def compile_unify_init(newly_bound)
+            newly_bound.map { |var| "#{var} = nil; " }.join
           end
         end
       end
