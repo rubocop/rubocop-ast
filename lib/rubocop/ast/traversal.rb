@@ -86,7 +86,7 @@ module RuboCop
       no_children = %i[true false nil self cbase zsuper redo retry
                        forward_args forwarded_args match_nil_pattern
                        forward_arg forwarded_restarg forwarded_kwrestarg
-                       lambda empty_else kwnilarg
+                       lambda empty_else kwnilarg blocknilarg
                        __FILE__ __LINE__ __ENCODING__]
 
       ### children count == 0..1
