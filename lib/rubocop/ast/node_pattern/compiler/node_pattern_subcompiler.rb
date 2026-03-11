@@ -73,7 +73,7 @@ module RuboCop
           def visit_intersection
             multiple_access(:intersection) do
               node.children.map { |child| compile(child) }
-                  .join(' && ')
+                           .join(' && ')
             end
           end
 
