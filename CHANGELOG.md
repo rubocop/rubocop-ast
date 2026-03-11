@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.49.1 (2026-03-11)
+
 ### Bug fixes
 
 - [#399](https://github.com/rubocop/rubocop-ast/pull/399): Fix unification variables not persisting in any-order nodes. ([@marcandre][])
