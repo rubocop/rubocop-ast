@@ -2,9 +2,9 @@
 
 module RuboCop
   module AST
-    # A node extension for `until` nodes. This will be used in place of a plain
+    # A node extension for `and` nodes. This will be used in place of a plain
     # node when the builder constructs the AST, making its methods available
-    # to all `until` nodes within RuboCop.
+    # to all `and` nodes within RuboCop.
     class AndNode < Node
       include BinaryOperatorNode
       include PredicateOperatorNode

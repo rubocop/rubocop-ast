@@ -24,9 +24,9 @@ module RuboCop
         'until'
       end
 
-      # Checks whether the `until` node has a `do` keyword.
+      # Checks whether the `while` node has a `do` keyword.
       #
-      # @return [Boolean] whether the `until` node has a `do` keyword
+      # @return [Boolean] whether the `while` node has a `do` keyword
       def do?
         loc_is?(:begin, 'do')
       end

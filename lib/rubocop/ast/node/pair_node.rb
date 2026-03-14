@@ -32,7 +32,7 @@ module RuboCop
       end
 
       # Returns the delimiter of the `pair` as a string. Returns `=>` for a
-      # colon delimited `pair` and `:` for a hash rocket delimited `pair`.
+      # hash rocket delimited `pair` and `:` for a colon delimited `pair`.
       #
       # @param [Boolean] with_spacing whether to include spacing
       # @return [String] the delimiter of the `pair`

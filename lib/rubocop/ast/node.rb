@@ -287,7 +287,7 @@ module RuboCop
       # Some node types override this with their own custom
       # destructuring method.
       #
-      # @return [Array<Node>] the different parts of the ndde
+      # @return [Array<Node>] the different parts of the node
       alias node_parts to_a
 
       # Calls the given block for each ancestor node from parent to root.

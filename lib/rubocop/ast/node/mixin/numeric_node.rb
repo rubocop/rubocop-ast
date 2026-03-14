@@ -7,7 +7,7 @@ module RuboCop
       SIGN_REGEX = /\A[+-]/.freeze
       private_constant :SIGN_REGEX
 
-      # Checks whether this is literal has a sign.
+      # Checks whether this literal has a sign.
       #
       # @example
       #

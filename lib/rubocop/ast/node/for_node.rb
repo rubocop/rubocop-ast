@@ -8,7 +8,7 @@ module RuboCop
     class ForNode < Node
       # Returns the keyword of the `for` statement as a string.
       #
-      # @return [String] the keyword of the `until` statement
+      # @return [String] the keyword of the `for` statement
       def keyword
         'for'
       end
