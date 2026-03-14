@@ -1,0 +1,100 @@
+= ProcessedSource
+
+`ProcessedSource` is the main entry point for parsing Ruby code. It wraps the parser and provides access to the AST, tokens, comments, and diagnostics.
+
+== Creating a ProcessedSource
+
+From a string:
+
+[source,ruby]
+----
+source = RuboCop::AST::ProcessedSource.new(code, 3.4)
+----
+
+From a file:
+
+[source,ruby]
+----
+source = RuboCop::AST::ProcessedSource.from_file('foo.rb', 3.4)
+----
+
+The second argument is the Ruby version to use for parsing.
+
+== Parser Engines
+
+Two parser engines are supported:
+
+* `:parser_whitequark` -- the https://github.com/whitequark/parser[parser] gem. Supports Ruby up to 3.4.
+* `:parser_prism` -- https://github.com/ruby/prism[Prism]-based parser. Supports Ruby 3.3 and above.
+
+By default (`:default`), `parser_prism` is selected for Ruby 3.4+ and `parser_whitequark` for earlier versions. You can override this:
+
+[source,ruby]
+----
+source = RuboCop::AST::ProcessedSource.new(code, 3.3, parser_engine: :parser_prism)
+----
+
+IMPORTANT: The Parser gem does not support Ruby 3.5+ syntax. For Ruby 3.4 and later, Prism is the recommended parser engine and is selected automatically.
+
+== Pre-parsed Prism Results
+
+If you already have a `Prism::ParseLexResult` (e.g. in Ruby LSP), you can pass it to skip re-parsing:
+
+[source,ruby]
+----
+result = Prism.parse_lex(code)
+source = RuboCop::AST::ProcessedSource.new(code, 3.4, parser_engine: :parser_prism, prism_result: result)
+----
+
+This is only supported with the `:parser_prism` engine.
+
+== Public API
+
+=== Attributes
+
+[cols="m,a"]
+|===
+|Attribute|Description
+
+|ast|The root `RuboCop::AST::Node` of the parsed AST, or `nil` if parsing failed.
+|comments|Array of comments from the source.
+|tokens|Array of `RuboCop::AST::Token` objects.
+|diagnostics|Array of `Parser::Diagnostic` objects from parsing.
+|parser_error|The exception if a fatal parse error occurred, or `nil`.
+|raw_source|The original source string.
+|path|The file path, if provided.
+|buffer|The `Parser::Source::Buffer` used for parsing.
+|ruby_version|The Ruby version used for parsing.
+|parser_engine|The parser engine used (`:parser_whitequark` or `:parser_prism`).
+|===
+
+=== Source Lines
+
+[source,ruby]
+----
+source.lines         # => array of source lines (without line breaks), excluding __END__ section
+source[0]            # => first line
+source.blank?        # => true if the AST is nil
+source.valid_syntax? # => true if no fatal parse errors or diagnostics
+----
+
+=== Comments
+
+[source,ruby]
+----
+source.comment_at_line(5)               # => the comment on line 5, or nil
+source.line_with_comment?(5)            # => true if line 5 has a comment
+source.each_comment_in_lines(1..10)     # => enumerator over comments in line range
+source.contains_comment?(source_range)  # => true if the range contains any comments
+source.ast_with_comments               # => hash associating AST nodes with their comments
+----
+
+=== Tokens
+
+[source,ruby]
+----
+source.tokens_within(node)    # => tokens contained within the node's source range
+source.first_token_of(node)   # => first token in the node's source range
+source.last_token_of(node)    # => last token in the node's source range
+source.sorted_tokens          # => tokens sorted by position (handles heredoc interleaving)
+----
