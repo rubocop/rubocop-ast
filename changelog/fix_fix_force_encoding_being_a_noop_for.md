@@ -1,0 +1,1 @@
+- [#401](https://github.com/rubocop/rubocop-ast/pull/401): Fix force_encoding being a no-op for frozen string inputs. ([@bbastov][])
