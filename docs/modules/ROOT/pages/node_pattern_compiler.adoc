@@ -91,7 +91,7 @@ The bulk of the processing is in the inherited class `parser.racc.rb` that is ge
 ==== Nodes
 
 The `Parser` emits `NodePattern::Node` which are similar to RuboCop's node.
-They both inherit from ``parser``'s `Parser::AST::Source::Node`, and share additional methods  too.
+They both inherit from ``parser``'s `Parser::AST::Source::Node`, and share additional methods too.
 
 Like for RuboCop's nodes, some nodes have specialized classes (e.g.
 `Sequence`) while other nodes use the base class directly (e.g.
@@ -204,7 +204,7 @@ The complexity comes from variadic elements, which have complex processing _and_
 First child must match `int`, third child must match `str`.
 The subcompiler will use `children[0]` and `children[2]`.
 
-*Example* (one variadic terms)
+*Example* (one variadic term)
 
 ----
 (_type int _* str)

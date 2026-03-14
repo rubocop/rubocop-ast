@@ -158,7 +158,7 @@ Where `_` matches any single node, `+...+` matches any number of nodes.
 
 Say for example you want to find instances of calls to the method `sum` with any
 number of arguments, be it `sum(1, 2)` or `sum(1, 2, 3, n)`.
-First, let's check how it looks like in the AST:
+First, let's check what it looks like in the AST:
 
 [source,sh]
 ----
@@ -186,13 +186,13 @@ The following expression would only match a call with 2 arguments:
 (send nil? :sum _ _)
 ----
 
-Instead, the following expression will any number of arguments (and thus both examples above):
+Instead, the following expression will match any number of arguments (and thus both examples above):
 
 ----
 (send nil? :sum ...)
 ----
 
-Note that `+...+` can be appear anywhere in a sequence, for example `+(send nil? :sum ... int)+`
+Note that `+...+` can appear anywhere in a sequence, for example `+(send nil? :sum ... int)+`
 would no longer match the second example, as the last argument is not an integer.
 
 Nesting `+...+` is also supported; the only limitation is that `+...+` and
@@ -214,13 +214,13 @@ This would match our first example `sum(1, 2)` but not the other `sum(1, 2, 3, n
 
 This pattern would also match a call to `sum` without any argument, which might not be desirable.
 
-Using `+` would insure that only sums with at least one argument would be matched.
+Using `+` would ensure that only sums with at least one argument would be matched.
 
 ----
 (send nil? :sum int+)
 ----
 
-The `?` can limit the match only 0 or 1 nodes.
+The `?` can limit the match to only 0 or 1 nodes.
 The following example would match any sum of three integer literals
 optionally followed by a method call:
 
@@ -256,7 +256,7 @@ since the first node in the brackets is found, but not the second (`int`).
 
 == `{}` for "OR" (union)
 
-Lets make it a bit more complex and introduce floats:
+Let's make it a bit more complex and introduce floats:
 
 [source,sh]
 ----
@@ -284,7 +284,7 @@ When checking for symbols or string, you can use regexp literals for a similar e
 
 == `[]` for "AND"
 
-Imagine you want to check if the number is `odd?` and also positive numbers:
+Imagine you want to check if the number is odd and also positive:
 
 `(int [odd? positive?])` - is an int and the value should be odd and positive.
 
@@ -354,7 +354,7 @@ with a parent that is a hash:
 ----
 
 It is possible to use `^` somewhere else than the head of a sequence; in that
-case it is relative to that child (i.e. the current node). One case also use
+case it is relative to that child (i.e. the current node). One can also use
 multiple `^` to go up multiple levels.
 For example, the previous example is basically the same as:
 
@@ -394,17 +394,17 @@ end                  #     (if
 
 == Predicate methods
 
-Words which end with a `?` are predicate methods, are called on the target
-to see if it matches any Ruby method which the matched object supports can be
+Words which end with a `?` are predicate methods, called on the target
+to see if it matches. Any Ruby method which the matched object supports can be
 used.
 
 Example:
 
-* `int_type?` can be used herein replacement of `(int _)`.
+* `int_type?` can be used as a replacement for `(int _)`.
 
 And refactoring the expression to allow both int or float types:
 
-* `{int_type? float_type?}` can be used herein replacement of `({int float} _)`
+* `{int_type? float_type?}` can be used as a replacement for `({int float} _)`
 
 You can also use it at the node level, asking for each child:
 
@@ -484,7 +484,7 @@ and https://www.rubydoc.info/gems/rubocop-ast/RuboCop/AST/NodePattern/Macros#def
 
 When you define a pattern, it creates a method that accepts a node and tries to match.
 
-Lets create an example where we're trying to find the symbols `user` and
+Let's create an example where we're trying to find the symbols `user` and
 `current_user` in expressions like: `user: current_user` or
 `current_user: User.first`, so the objective here is pick all keys:
 
@@ -630,7 +630,7 @@ PATTERN
 
 == `nil` or `nil?`
 
-Take a special attention to nil behavior:
+Pay special attention to nil behavior:
 
 [source,sh]
 ----

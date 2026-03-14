@@ -116,7 +116,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |forward_arg|Forwarding argument, for Ruby 3.0 (when `emit_forward_arg` is true). Must come inside an `args` node.|None|def whatever(foo, ...)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
-|forward_args|Forwarding argument list, for Ruby 2.7 (when `emit_forward_arg` is false). Must come inside a `def`, or `defs` node.|None|def (foo(...)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ForwardArgsNode[ForwardArgsNode]
+|forward_args|Forwarding argument list, for Ruby 2.7 (when `emit_forward_arg` is false). Must come inside a `def`, or `defs` node.|None|def foo(...)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ForwardArgsNode[ForwardArgsNode]
 
 |forwarded_args|Forwarding arguments into a method call|None|foo(...)|N/A
 
@@ -128,9 +128,9 @@ The following fields are given when relevant to nodes in the source code:
 
 |gvasgn|Global variable assignment|Two children, the variable name `:$foo` and the expression being assigned|$foo = 5|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/AsgnNode[AsgnNode]
 
-|hash|Hash literal.|`pair` s and/or  `kwsplat` s.|{ foo: 'bar' }|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/HashNode[HashNode]
+|hash|Hash literal.|`pair` s and/or `kwsplat` s.|{ foo: 'bar' }|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/HashNode[HashNode]
 
-|if|If, else, elif, unless and ternary conditions|Three children. First child is the expression node representing the condition; second child is an expression node representing the true condition; third child is an expression, node representing the false condition. `elif` will nest another `if` node as the third child. `question` and `colon` location keys will only exist for ternaries.|if foo; bar; else; baz; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/IfNode[IfNode]
+|if|If, else, elif, unless and ternary conditions|Three children. First child is the expression node representing the condition; second child is an expression node representing the true condition; third child is an expression node representing the false condition. `elsif` will nest another `if` node as the third child. `question` and `colon` location keys will only exist for ternaries.|if foo; bar; else; baz; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/IfNode[IfNode]
 
 |int|Integer literal|1, the integer value|-123|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/IntNode[IntNode]
 
@@ -150,7 +150,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |kwsplat|Double splat used for keyword arguments inside a function call (as opposed to a function definition).|One child, an expression.|foo(bar, **kwargs)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/KeywordSplatNode[KeywordSplatNode]
 
-|kwrestargs|Double splat used for keyword arguments inside a function definition (as opposed to a function call). Must come inside an `args`.|One child - a symbol, representing the argument name, if a name is given. If no name given, it has no children..|def foo(**kwargs)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
+|kwrestargs|Double splat used for keyword arguments inside a function definition (as opposed to a function call). Must come inside an `args`.|One child - a symbol, representing the argument name, if a name is given. If no name given, it has no children.|def foo(**kwargs)|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ArgNode[ArgNode]
 
 |lvar|Local variable access|One child, the variable name|foo|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/VarNode[VarNode]
 
@@ -160,7 +160,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |mlhs|Multiple left-hand side. Used inside a `masgn` and block argument destructuring.|Children must all be assignment nodes or `send` nodes. Represents the left side of a multiple assignment (`a, b` in the example).|a, b = 5, 6|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/MlhsNode[MlhsNode]
 
-|module|Module definition|Two children. First child is a `const` node for the module name. Second child is a body statement.|module Foo < Bar; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ModuleNode[ModuleNode]
+|module|Module definition|Two children. First child is a `const` node for the module name. Second child is a body statement.|module Foo; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/ModuleNode[ModuleNode]
 
 |next|next keyword|Zero or one child with an expression node for the results to be passed through the next|next 1|N/A
 
