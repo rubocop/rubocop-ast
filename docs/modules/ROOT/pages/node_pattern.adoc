@@ -394,9 +394,9 @@ end                  #     (if
 
 == Predicate methods
 
-Words which end with a `?` are predicate methods, called on the target
-to see if it matches. Any Ruby method which the matched object supports can be
-used.
+Words ending with a `?` are treated as predicate methods.
+They are called on the matched object, and the match succeeds if the method returns a truthy value.
+Any method the matched object responds to can be used.
 
 Example:
 
@@ -406,10 +406,10 @@ And refactoring the expression to allow both int or float types:
 
 * `{int_type? float_type?}` can be used as a replacement for `({int float} _)`
 
-You can also use it at the node level, asking for each child:
+You can also use predicates on child nodes:
 
-* `(int odd?)` will match only with odd numbers, asking it to the current
-number.
+* `(int odd?)` will match only odd integer literals, calling `odd?` on the
+integer value.
 
 == `#` to call functions
 
