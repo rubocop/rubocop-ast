@@ -1,0 +1,58 @@
+= Traversal
+
+The `RuboCop::AST::Traversal` module provides a simple way to walk an AST and process specific node types. Unlike `Parser::AST::Processor`, it does not transform the AST -- it is read-only.
+
+== Basic Usage
+
+Include the `Traversal` module and define `on_<type>` methods for the node types you care about:
+
+[source,ruby]
+----
+class MyVisitor
+  include RuboCop::AST::Traversal
+
+  def on_send(node)
+    puts "Method call: #{node.method_name}"
+    super # continue walking child nodes
+  end
+end
+
+source = RuboCop::AST::ProcessedSource.new(code, 3.4)
+visitor = MyVisitor.new
+visitor.walk(source.ast)
+----
+
+== How It Works
+
+The `walk` method starts traversal from a given node. For each node, it calls the corresponding `on_<type>` method (e.g. `on_send` for `:send` nodes, `on_if` for `:if` nodes).
+
+The default `on_<type>` callbacks automatically recurse into child nodes. If you override a callback, call `super` to continue the traversal into that node's children. Omitting `super` will skip the subtree.
+
+[source,ruby]
+----
+def on_class(node)
+  # process the class node but skip its children
+  record_class(node)
+  # no super -- children are not visited
+end
+----
+
+== Combining with ProcessedSource
+
+A common pattern is to process every node in a source file:
+
+[source,ruby]
+----
+source = RuboCop::AST::ProcessedSource.new(code, 3.4)
+visitor = MyVisitor.new
+visitor.walk(source.ast)
+----
+
+You can also use `Node#each_node` if you just need to iterate without the visitor pattern:
+
+[source,ruby]
+----
+source.ast.each_node(:send) do |send_node|
+  puts send_node.method_name
+end
+----
