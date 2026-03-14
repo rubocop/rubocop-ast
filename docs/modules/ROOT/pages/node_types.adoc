@@ -76,6 +76,8 @@ The following fields are given when relevant to nodes in the source code:
 
 |case|Case statement.|First child is an expression node for the condition to check. Last child is an expression node for the "else" condition. All middle nodes are `when` nodes.|case a; when 1; b; when 2; c; else d; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/CaseNode[CaseNode]
 
+|case_match|Pattern matching `case` statement (Ruby 2.7+).|First child is an expression node for the value being matched. Middle children are `in_pattern` nodes. Last child is the `else` branch expression, or `nil`.|case foo; in 1; bar; in 2; baz; else; qux; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/CaseMatchNode[CaseMatchNode]
+
 |casgn|Constant assignment|Three children: the parent object (either an expression, `nil` or `cbase`), the constant name (a symbol), and the expression being assigned.|Foo::Bar = 5|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/CasgnNode[CasgnNode]
 
 |cbase|Represents the top-module constant (i.e. the '::' before a constant name). Only occurs inside a `const` node.|None|::Foo|N/A
@@ -132,6 +134,12 @@ The following fields are given when relevant to nodes in the source code:
 
 |if|If, else, elif, unless and ternary conditions|Three children. First child is the expression node representing the condition; second child is an expression node representing the true condition; third child is an expression node representing the false condition. `elsif` will nest another `if` node as the third child. `question` and `colon` location keys will only exist for ternaries.|if foo; bar; else; baz; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/IfNode[IfNode]
 
+|in_pattern|Pattern matching `in` clause (Ruby 2.7+). Must come inside a `case_match`.|Two children. First child is a pattern node. Last child is a body statement.|case foo; in [1, 2]; bar; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/InPatternNode[InPatternNode]
+
+|index|Indexing operation (modern AST only, legacy mode emits `send` with `:[]`).|First child is the receiver node, remaining children are the index arguments.|foo[bar]|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/IndexNode[IndexNode]
+
+|indexasgn|Index assignment (modern AST only, legacy mode emits `send` with `:[]=`).|First child is the receiver node, middle children are the index arguments, last child is the value being assigned.|foo[bar] = baz|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/IndexasgnNode[IndexasgnNode]
+
 |int|Integer literal|One child, the integer value|-123|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/IntNode[IntNode]
 
 |ivar|Instance variable access|One child, the variable name `:@foo`|@foo|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/VarNode[VarNode]
@@ -155,6 +163,8 @@ The following fields are given when relevant to nodes in the source code:
 |lvar|Local variable access|One child, the variable name|foo|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/VarNode[VarNode]
 
 |lvasgn|Local variable assignment|Two children: The variable name (symbol) and the expression.|a = some_thing|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/AsgnNode[AsgnNode]
+
+|lambda|Lambda literal (modern AST only, legacy mode emits `send` with `:lambda`). Used as the first child of a `block` node.|None|->(foo) { bar }|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/LambdaNode[LambdaNode]
 
 |masgn|Multiple assignment.|First set of children are all `mlhs` nodes, and the rest of the children must be expression nodes corresponding to the values in the `mlhs` nodes.|a, b, = [1, 2]|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/MasgnNode[MasgnNode]
 
@@ -181,6 +191,8 @@ The following fields are given when relevant to nodes in the source code:
 |or_asgn|Or-assignment (OR the receiver with the argument and assign it back to receiver).|Two children. First child must be an assignment node, second child is the expression node.|a \|\|= b|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/OrAsgnNode[OrAsgnNode]
 
 |pair|One entry in a hash. |Two children, the key and value nodes.|1 => 2|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/PairNode[PairNode]
+
+|procarg0|Block argument wrapper. Wraps a single block argument when destructuring is possible. Must come inside an `args`.|One child, an `arg` node.|foo { \|bar\| baz }|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/Procarg0Node[Procarg0Node]
 
 |rational|Rational literal|One child, the Rational value|2.0r|N/A
 
