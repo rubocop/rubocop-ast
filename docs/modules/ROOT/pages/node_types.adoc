@@ -132,7 +132,7 @@ The following fields are given when relevant to nodes in the source code:
 
 |if|If, else, elif, unless and ternary conditions|Three children. First child is the expression node representing the condition; second child is an expression node representing the true condition; third child is an expression node representing the false condition. `elsif` will nest another `if` node as the third child. `question` and `colon` location keys will only exist for ternaries.|if foo; bar; else; baz; end|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/IfNode[IfNode]
 
-|int|Integer literal|1, the integer value|-123|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/IntNode[IntNode]
+|int|Integer literal|One child, the integer value|-123|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/IntNode[IntNode]
 
 |ivar|Instance variable access|One child, the variable name `:@foo`|@foo|https://rubydoc.info/github/rubocop/rubocop-ast/RuboCop/AST/VarNode[VarNode]
 
