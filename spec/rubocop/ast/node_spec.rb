@@ -1140,7 +1140,7 @@ RSpec.describe RuboCop::AST::Node do
     end
 
     context 'when interpolated string' do
-      let(:src) { %q("foo #{bar}") }
+      let(:src) { '"foo #{bar}"' }
 
       it 'is true' do
         expect(node).to be_any_str_type
@@ -1190,7 +1190,7 @@ RSpec.describe RuboCop::AST::Node do
     end
 
     context 'when interpolated string' do
-      let(:src) { %q("foo #{bar}") }
+      let(:src) { '"foo #{bar}"' }
 
       it 'is false' do
         expect(node).not_to be_any_sym_type
