@@ -683,4 +683,96 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       expect(processed_source.last_token_of(node).text).to eq('baz')
     end
   end
+
+  describe '#tokens_before' do
+    let(:source) { <<~RUBY }
+      foo(1, 2)
+      bar(3)
+    RUBY
+
+    it 'returns all tokens before node when limit is not given' do
+      node = ast.children[1]
+      tokens = processed_source.tokens_before(node)
+
+      expect(tokens.map(&:text)).to eq(['foo', '(', '1', ',', '2', ')', ''])
+    end
+
+    it 'returns limited tokens before node when limit is smaller' do
+      node = ast.children[1]
+      tokens = processed_source.tokens_before(node, 2)
+
+      expect(tokens.map(&:text)).to eq([')', ''])
+    end
+
+    it 'returns all tokens before node when limit is too big' do
+      node = ast.children[1]
+      tokens = processed_source.tokens_before(node, 100)
+
+      expect(tokens.map(&:text)).to eq(['foo', '(', '1', ',', '2', ')', ''])
+    end
+  end
+
+  describe '#tokens_after' do
+    let(:source) { <<~RUBY }
+      foo(1, 2)
+      bar(3)
+    RUBY
+
+    it 'returns all tokens after node when limit is not given' do
+      node = ast.children[0]
+      tokens = processed_source.tokens_after(node)
+
+      expect(tokens.map(&:text)).to eq(['', 'bar', '(', '3', ')', ''])
+    end
+
+    it 'returns limited tokens after node when limit is smaller' do
+      node = ast.children[0]
+      tokens = processed_source.tokens_after(node, 2)
+
+      expect(tokens.map(&:text)).to eq(['', 'bar'])
+    end
+
+    it 'returns all tokens after node when limit is too big' do
+      node = ast.children[0]
+      tokens = processed_source.tokens_after(node, 100)
+
+      expect(tokens.map(&:text)).to eq(['', 'bar', '(', '3', ')', ''])
+    end
+  end
+
+  describe '#previous_token' do
+    let(:source) { 'foo; bar' }
+
+    it 'returns the token before node in typical use' do
+      node = ast.children[1]
+      token = processed_source.previous_token(node)
+
+      expect(token.text).to eq(';')
+    end
+
+    it 'returns nil when at the beginning of source' do
+      node = ast.children[0]
+      token = processed_source.previous_token(node)
+
+      expect(token).to be_nil
+    end
+  end
+
+  describe '#following_token' do
+    let(:source) { 'foo; bar' }
+
+    it 'returns the token after node in typical use' do
+      node = ast.children[0]
+      token = processed_source.following_token(node)
+
+      expect(token.text).to eq(';')
+    end
+
+    it 'returns nil when at the end of source' do
+      node = ast.children[1]
+      token = processed_source.following_token(node)
+
+      expect(token).to be_nil
+    end
+  end
 end
