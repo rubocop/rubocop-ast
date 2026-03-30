@@ -27,9 +27,3 @@ pull_request_rules:
       - "status-success=Main Gem Specs | RuboCop: master | 3.2"
       - "status-success=Coding Style | 3.0"
 
-  - name: delete head branch after auto-merge
-    conditions:
-      - merged
-      - label=auto-merge
-    actions:
-      delete_head_branch: {}
