@@ -605,6 +605,21 @@ RSpec.describe RuboCop::AST::ProcessedSource do
   end
   # rubocop:enable RSpec/RedundantPredicateMatcher
 
+  describe '#checksum' do
+    let(:source) { <<~RUBY }
+      def some_method
+      end
+    RUBY
+
+    it 'returns the SHA1 checksum of the raw source' do
+      expect(processed_source.checksum).to eq Digest::SHA1.hexdigest(source)
+    end
+
+    it 'memoizes the checksum' do
+      expect(processed_source.checksum).to equal(processed_source.checksum)
+    end
+  end
+
   describe '#preceding_line' do
     let(:source) { <<~RUBY }
       [ line, 1 ]
@@ -618,6 +633,11 @@ RSpec.describe RuboCop::AST::ProcessedSource do
 
       comment_token = processed_source.find_token(&:comment?)
       expect(processed_source.preceding_line(comment_token)).to eq '{ line: 2 }'
+    end
+
+    it 'returns nil for a token on the first line' do
+      bracket_token = processed_source.find_token(&:left_bracket?)
+      expect(processed_source.preceding_line(bracket_token)).to be_nil
     end
   end
 
@@ -719,6 +739,35 @@ RSpec.describe RuboCop::AST::ProcessedSource do
     it 'accepts Node as an argument' do
       node = ast.children[1]
       expect(processed_source.last_token_of(node).text).to eq('baz')
+    end
+  end
+
+  describe '#sorted_tokens' do
+    let(:source) { <<~RUBY }
+      foo(1, 2)
+      bar(3)
+    RUBY
+
+    it 'returns tokens sorted by begin position' do
+      positions = processed_source.sorted_tokens.map(&:begin_pos)
+      expect(positions).to eq positions.sort
+    end
+
+    context 'when heredoc as argument is present' do
+      let(:source) { <<~RUBY }
+        foo(1, [before], <<~DOC, [after])
+          inside heredoc.
+        DOC
+        bar(2)
+      RUBY
+
+      it 'returns tokens sorted by begin position' do
+        expect(processed_source.tokens.map(&:begin_pos))
+          .not_to eq processed_source.tokens.map(&:begin_pos).sort
+
+        positions = processed_source.sorted_tokens.map(&:begin_pos)
+        expect(positions).to eq positions.sort
+      end
     end
   end
 end
