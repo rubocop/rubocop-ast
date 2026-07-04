@@ -49,6 +49,8 @@ RSpec.describe RuboCop::AST::CaseNode do
 
     context 'when not passed a block' do
       it { expect(case_node.each_when).to be_a(Enumerator) }
+
+      it { expect(case_node.each_when.to_a).to eq(case_node.when_branches) }
     end
 
     context 'when passed a block' do

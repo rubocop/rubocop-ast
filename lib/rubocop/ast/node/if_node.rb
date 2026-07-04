@@ -169,7 +169,7 @@ module RuboCop
 
       # @deprecated Use `branches.each`
       def each_branch(&block)
-        return branches.to_enum(__method__) unless block
+        return to_enum(__method__) unless block
 
         branches.each(&block)
       end

@@ -46,6 +46,8 @@ RSpec.describe RuboCop::AST::WhenNode do
 
     context 'when not passed a block' do
       it { expect(when_node.each_condition).to be_a(Enumerator) }
+
+      it { expect(when_node.each_condition.to_a).to eq(when_node.conditions) }
     end
 
     context 'when passed a block' do

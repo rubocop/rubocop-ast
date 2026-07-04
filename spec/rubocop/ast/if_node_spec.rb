@@ -516,6 +516,8 @@ RSpec.describe RuboCop::AST::IfNode do
 
     context 'when not passed a block' do
       it { expect(if_node.each_branch).to be_a(Enumerator) }
+
+      it { expect(if_node.each_branch.to_a).to eq(if_node.branches) }
     end
 
     context 'when passed a block' do
