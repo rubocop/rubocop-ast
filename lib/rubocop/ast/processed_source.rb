@@ -144,7 +144,7 @@ module RuboCop
 
       # Raw source checksum for tracking infinite loops.
       def checksum
-        Digest::SHA1.hexdigest(@raw_source)
+        @checksum ||= Digest::SHA1.hexdigest(@raw_source)
       end
 
       # @deprecated Use `comments.each`
@@ -217,6 +217,8 @@ module RuboCop
       end
 
       def preceding_line(token)
+        return nil if token.line < 2
+
         lines[token.line - 2]
       end
 
@@ -266,11 +268,22 @@ module RuboCop
       # is passed as a method argument. In this case tokens are interleaved by
       # heredoc contents' tokens.
       def sorted_tokens
-        # Use stable sort.
-        @sorted_tokens ||= tokens.sort_by.with_index { |token, i| [token.begin_pos, i] }
+        # Most sources have their tokens already in order, in which case
+        # sorting can be skipped entirely. Callers only ever read from the
+        # returned array, so it is safe to reuse `tokens` as is.
+        @sorted_tokens ||= if tokens_sorted?
+                             tokens
+                           else
+                             # Use stable sort.
+                             tokens.sort_by.with_index { |token, i| [token.begin_pos, i] }
+                           end
       end
 
       private
+
+      def tokens_sorted?
+        tokens.each_cons(2).all? { |a, b| a.begin_pos <= b.begin_pos }
+      end
 
       # `__END__` only starts a data section when it isn't nested inside a
       # string or heredoc, which is what the last token's line disambiguates.
