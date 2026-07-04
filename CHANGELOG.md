@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.50.0 (2026-07-04)
+
 ### Bug fixes
 
 * [#412](https://github.com/rubocop/rubocop-ast/pull/412): Fix `Node#argument?` returning `true` for receivers that are structurally equal to an argument (e.g. the receiver in `foo.bar(foo)`). ([@bbatsov][])
