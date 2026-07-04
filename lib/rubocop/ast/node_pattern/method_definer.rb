@@ -48,7 +48,7 @@ module RuboCop
         end
 
         def def_helper(base, method_name, **defaults)
-          location = caller_locations(3, 1).first
+          location = definition_location || caller_locations(3, 1).first
           unless defaults.empty?
             call = :"without_defaults_#{method_name}"
             base.send :define_method, method_name, &wrapping_block(call, **defaults)
