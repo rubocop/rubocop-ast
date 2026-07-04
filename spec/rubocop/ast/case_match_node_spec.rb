@@ -61,6 +61,10 @@ RSpec.describe RuboCop::AST::CaseMatchNode do
         it {
           expect(case_match_node.each_in_pattern).to be_a(Enumerator)
         }
+
+        it {
+          expect(case_match_node.each_in_pattern.to_a).to eq(case_match_node.in_pattern_branches)
+        }
       end
 
       context 'when passed a block' do
