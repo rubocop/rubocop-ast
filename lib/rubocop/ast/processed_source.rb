@@ -122,14 +122,13 @@ module RuboCop
       def lines
         @lines ||= begin
           all_lines = @buffer.source_lines
-          last_token_line = tokens.any? ? tokens.last.line : all_lines.size
-          result = []
-          all_lines.each_with_index do |line, ix|
-            break if ix >= last_token_line && line == '__END__'
-
-            result << line
+          if all_lines.include?('__END__')
+            trim_lines_after_data_marker(all_lines)
+          else
+            # Don't consult the tokens (which may have to be built first) when
+            # the source can't contain a data section.
+            all_lines.dup
           end
-          result
         end
       end
 
@@ -240,7 +239,13 @@ module RuboCop
       # lazily on first access, since their conversion is costly and not
       # every caller needs them.
       def tokens
-        @tokens ||= parser_tokens.map { |t| Token.from_parser_token(t) }
+        @tokens ||= begin
+          tokens = parser_tokens.map { |t| Token.from_parser_token(t) }
+          # The parser tokens are no longer needed, and the deferred conversion
+          # holds on to the parser instance, so release both.
+          @parser_tokens = nil
+          tokens
+        end
       end
 
       def tokens_within(range_or_node)
@@ -266,6 +271,19 @@ module RuboCop
       end
 
       private
+
+      # `__END__` only starts a data section when it isn't nested inside a
+      # string or heredoc, which is what the last token's line disambiguates.
+      def trim_lines_after_data_marker(all_lines)
+        last_token_line = tokens.any? ? tokens.last.line : all_lines.size
+        result = []
+        all_lines.each_with_index do |line, ix|
+          break if ix >= last_token_line && line == '__END__'
+
+          result << line
+        end
+        result
+      end
 
       def comment_index
         @comment_index ||= {}.tap do |hash|
@@ -326,7 +344,12 @@ module RuboCop
       end
 
       def parser_tokens
-        @parser_tokens ||= @deferred_parser_tokens.call
+        if @deferred_parser_tokens
+          @parser_tokens = @deferred_parser_tokens.call
+          @deferred_parser_tokens = nil
+        end
+
+        @parser_tokens
       end
 
       # rubocop:disable Lint/FloatComparison, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength

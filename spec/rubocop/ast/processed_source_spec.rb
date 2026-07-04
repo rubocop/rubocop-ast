@@ -229,6 +229,19 @@ RSpec.describe RuboCop::AST::ProcessedSource do
         expect(processed_source.tokens.first).to be_a(RuboCop::AST::Token)
       end
 
+      it 'does not build the tokens for `lines` access' do
+        processed_source.lines
+
+        expect(processed_source.instance_variable_get(:@tokens)).to be_nil
+      end
+
+      it 'releases the deferred conversion after the tokens are built' do
+        processed_source.tokens
+
+        expect(processed_source.instance_variable_get(:@deferred_parser_tokens)).to be_nil
+        expect(processed_source.instance_variable_get(:@parser_tokens)).to be_nil
+      end
+
       it 'builds the same tokens as an eager parse' do
         eager = described_class.new(source, ruby_version, path, parser_engine: :parser_whitequark)
         deferred = processed_source.tokens.map { |t| [t.type, t.text, t.begin_pos, t.end_pos] }
