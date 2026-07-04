@@ -165,7 +165,7 @@ module RuboCop
       #
       # @return [Boolean] whether the dispatched method has a block
       def block_literal?
-        parent&.any_block_type? && eql?(parent.send_node)
+        parent&.any_block_type? && equal?(parent.send_node)
       end
 
       # Checks whether this node is an arithmetic operation

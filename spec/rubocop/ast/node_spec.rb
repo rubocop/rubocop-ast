@@ -379,6 +379,36 @@ RSpec.describe RuboCop::AST::Node do
     end
   end
 
+  describe '#chained?' do
+    context 'when the node is the receiver of a method call' do
+      let(:src) { 'foo.bar.baz' }
+
+      it 'is true' do
+        expect(node.receiver).to be_chained
+      end
+    end
+
+    context 'when the node is an argument structurally equal to the receiver' do
+      let(:src) { 'foo.bar(foo)' }
+
+      it 'is false for the argument' do
+        expect(node.first_argument).not_to be_chained
+      end
+
+      it 'is true for the receiver' do
+        expect(node.receiver).to be_chained
+      end
+    end
+
+    context 'when the node has no parent' do
+      let(:src) { 'foo' }
+
+      it 'is false' do
+        expect(node).not_to be_chained
+      end
+    end
+  end
+
   describe '#argument_type?' do
     context 'block arguments' do
       let(:src) { 'bar { |a, b = 42, *c, d: 42, **e| nil }' }
