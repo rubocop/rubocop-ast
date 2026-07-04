@@ -378,11 +378,11 @@ module RuboCop
         end
       end
 
-      # The Parser gem does not support Ruby 3.5 or later.
-      # It is also not fully compatible with Ruby 3.4 but for
-      # now respects using parser for backwards compatibility.
+      # Prism is used for all Ruby versions it can parse (3.3 and later);
+      # the Parser gem does not support Ruby 3.5 or later and is not fully
+      # compatible with Ruby 3.4.
       def default_parser_engine(ruby_version)
-        if ruby_version >= 3.4
+        if ruby_version >= 3.3
           :parser_prism
         else
           :parser_whitequark
