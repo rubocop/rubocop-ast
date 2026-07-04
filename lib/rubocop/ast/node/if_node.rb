@@ -22,7 +22,9 @@ module RuboCop
       #
       # @return [Boolean] whether the node is an `unless` statement
       def unless?
-        keyword == 'unless'
+        # Compare the keyword length to avoid allocating the keyword source;
+        # a non-ternary `if` node's keyword can only be `if`, `elsif` or `unless`.
+        !ternary? && loc.keyword.length == 6
       end
 
       # Checks whether the `if` node has an `then` clause.
@@ -120,7 +122,7 @@ module RuboCop
       # @return [Node] the truthy branch node of the `if` node
       # @return [nil] if the truthy branch is empty
       def if_branch
-        node_parts[1]
+        unless? ? children[2] : children[1]
       end
 
       # Returns the branch of the `if` node that gets evaluated when its
@@ -131,7 +133,7 @@ module RuboCop
       # @return [Node] the falsey branch node of the `if` node
       # @return [nil] when there is no else branch
       def else_branch
-        node_parts[2]
+        unless? ? children[1] : children[2]
       end
 
       # Custom destructuring method. This is used to normalize the branches
@@ -139,13 +141,7 @@ module RuboCop
       #
       # @return [Array<Node>] the different parts of the `if` statement
       def node_parts
-        if unless?
-          condition, false_branch, true_branch = *self
-        else
-          condition, true_branch, false_branch = *self
-        end
-
-        [condition, true_branch, false_branch]
+        [condition, if_branch, else_branch]
       end
 
       # Returns an array of all the branches in the conditional statement.
