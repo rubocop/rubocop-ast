@@ -1,1 +1,0 @@
-* [#412](https://github.com/rubocop/rubocop-ast/pull/412): Fix `Node#argument?` returning `true` for receivers that are structurally equal to an argument (e.g. the receiver in `foo.bar(foo)`). ([@bbatsov][])

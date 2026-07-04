@@ -1,1 +1,0 @@
-* [#411](https://github.com/rubocop/rubocop-ast/pull/411): Speed up filtered node traversals (`each_descendant(:send)` etc.) by not allocating an array per visited node, and add the non-splatting `Node#type_in?` predicate. ([@bbatsov][])

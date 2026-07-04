@@ -1,1 +1,0 @@
-- [#401](https://github.com/rubocop/rubocop-ast/pull/401): Avoid intermediate array allocations in HashNode#each_key/each_value. ([@bbastov][])

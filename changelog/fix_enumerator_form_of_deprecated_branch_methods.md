@@ -1,1 +1,0 @@
-* [#407](https://github.com/rubocop/rubocop-ast/pull/407): Fix the blockless form of the deprecated `each_when`, `each_in_pattern`, `each_condition`, and `each_branch` methods, which returned an unusable `Enumerator`. ([@bbatsov][])

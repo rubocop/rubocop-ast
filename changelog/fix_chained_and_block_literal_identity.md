@@ -1,1 +1,0 @@
-* [#409](https://github.com/rubocop/rubocop-ast/pull/409): Fix `Node#chained?` and `MethodDispatchNode#block_literal?` returning `true` for nodes that are merely structurally equal to the receiver or send node (e.g. the argument in `foo.bar(foo)`). ([@bbatsov][])
