@@ -60,11 +60,7 @@ module RuboCop
       def each_descendant(*types, &block)
         return to_enum(__method__, *types) unless block
 
-        if types.empty?
-          visit_all_descendants(&block)
-        else
-          visit_descendants_of_types(types, &block)
-        end
+        visit_descendants(types, &block)
 
         self
       end
@@ -99,13 +95,9 @@ module RuboCop
       def each_node(*types, &block)
         return to_enum(__method__, *types) unless block
 
-        if types.empty?
-          yield self
-          visit_all_descendants(&block)
-        else
-          yield self if type_in?(types)
-          visit_descendants_of_types(types, &block)
-        end
+        yield self if types.empty? || type_in?(types)
+
+        visit_descendants(types, &block)
 
         self
       end
