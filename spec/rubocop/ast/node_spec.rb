@@ -117,6 +117,23 @@ RSpec.describe RuboCop::AST::Node do
     end
   end
 
+  describe '#argument?' do
+    let(:src) { 'foo.bar(foo, 1)' }
+
+    it 'is true for an argument of a send node' do
+      argument = node.first_argument
+      expect(argument).to be_argument
+    end
+
+    it 'is false for a receiver that is structurally equal to an argument' do
+      expect(node.receiver).not_to be_argument
+    end
+
+    it 'is false for the send node itself' do
+      expect(node).not_to be_argument
+    end
+  end
+
   describe '#recursive_basic_literal?' do
     shared_examples 'literal' do |source|
       let(:src) { source }
