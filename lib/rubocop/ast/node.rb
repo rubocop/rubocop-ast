@@ -76,6 +76,13 @@ module RuboCop
       OPERATOR_KEYWORDS = %i[and or].to_set.freeze
       # @api private
       SPECIAL_KEYWORDS = %w[__FILE__ __LINE__ __ENCODING__].to_set.freeze
+      # The node types which could have a source matching `SPECIAL_KEYWORDS`:
+      # `__FILE__` parses as `str`, `__LINE__` as `int` and `__ENCODING__` as
+      # `const` (or as their own node types when the builder emits them);
+      # `str` and `sym` also cover word/symbol array elements, string parts
+      # and hash labels spelling out one of these keywords.
+      SPECIAL_KEYWORD_TYPES = %i[str sym int const __FILE__ __LINE__ __ENCODING__].to_set.freeze
+      private_constant :SPECIAL_KEYWORD_TYPES
 
       LITERAL_RECURSIVE_METHODS = (COMPARISON_OPERATORS + %i[* ! <=>]).freeze
       LITERAL_RECURSIVE_TYPES = (OPERATOR_KEYWORDS + COMPOSITE_LITERALS + %i[begin pair]).freeze
@@ -503,7 +510,7 @@ module RuboCop
       end
 
       def special_keyword?
-        SPECIAL_KEYWORDS.include?(source)
+        SPECIAL_KEYWORD_TYPES.include?(type) && SPECIAL_KEYWORDS.include?(source)
       end
 
       def operator_keyword?

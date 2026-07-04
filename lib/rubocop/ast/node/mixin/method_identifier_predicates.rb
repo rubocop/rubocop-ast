@@ -140,7 +140,7 @@ module RuboCop
       #
       # @return [Boolean] whether the method is an assignment
       def assignment_method?
-        !comparison_method? && method_name.to_s.end_with?('=')
+        !comparison_method? && method_name.end_with?('=')
       end
 
       # Checks whether the method is an enumerator method.
@@ -148,7 +148,7 @@ module RuboCop
       # @return [Boolean] whether the method is an enumerator
       def enumerator_method?
         ENUMERATOR_METHODS.include?(method_name) ||
-          method_name.to_s.start_with?('each_')
+          method_name.start_with?('each_')
       end
 
       # Checks whether the method is an Enumerable method.
@@ -162,14 +162,14 @@ module RuboCop
       #
       # @return [Boolean] whether the method is a predicate method
       def predicate_method?
-        method_name.to_s.end_with?('?')
+        method_name.end_with?('?')
       end
 
       # Checks whether the method is a bang method.
       #
       # @return [Boolean] whether the method is a bang method
       def bang_method?
-        method_name.to_s.end_with?('!')
+        method_name.end_with?('!')
       end
 
       # Checks whether the method is a camel case method,
@@ -177,7 +177,7 @@ module RuboCop
       #
       # @return [Boolean] whether the method is a camel case method
       def camel_case_method?
-        method_name.to_s =~ /\A[A-Z]/
+        method_name.match?(/\A[A-Z]/)
       end
 
       # Checks whether the *explicit* receiver of this node is `self`.
