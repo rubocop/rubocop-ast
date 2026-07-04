@@ -84,7 +84,6 @@ module DefaultRubyVersion
   let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 2.4 }
 end
 
-# rubocop:disable Style/OneClassPerFile
 module DefaultParserEngine
   extend RSpec::SharedContext
 
@@ -116,7 +115,6 @@ module ParseSourceHelper
     source
   end
 end
-# rubocop:enable Style/OneClassPerFile
 
 RSpec.configure do |config|
   config.include ParseSourceHelper
