@@ -523,7 +523,9 @@ module RuboCop
       end
 
       def argument?
-        parent&.send_type? && parent.arguments.include?(self)
+        return false unless parent&.send_type?
+
+        parent.arguments.any? { |argument| argument.equal?(self) }
       end
 
       def any_def_type?
