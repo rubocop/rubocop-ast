@@ -1274,6 +1274,13 @@ RSpec.describe RuboCop::AST::Node do
       end
     end
 
+    context 'when given an array of types via `type_in?`' do
+      it 'behaves like `type?`' do
+        expect(node).to be_type_in(%i[send const lvar])
+        expect(node).not_to be_type_in(%i[if while])
+      end
+    end
+
     context 'when it is not one of the given types' do
       it 'is false' do
         expect(node).not_to be_type(:if, :while, :until)

@@ -25,7 +25,7 @@ module RuboCop
         children.each do |child|
           next unless child.is_a?(::AST::Node)
 
-          yield child if types.empty? || child.type?(*types)
+          yield child if types.empty? || child.type_in?(types)
         end
 
         self
@@ -60,7 +60,11 @@ module RuboCop
       def each_descendant(*types, &block)
         return to_enum(__method__, *types) unless block
 
-        visit_descendants(types, &block)
+        if types.empty?
+          visit_all_descendants(&block)
+        else
+          visit_descendants_of_types(types, &block)
+        end
 
         self
       end
@@ -95,9 +99,13 @@ module RuboCop
       def each_node(*types, &block)
         return to_enum(__method__, *types) unless block
 
-        yield self if types.empty? || type?(*types)
-
-        visit_descendants(types, &block)
+        if types.empty?
+          yield self
+          visit_all_descendants(&block)
+        else
+          yield self if type_in?(types)
+          visit_descendants_of_types(types, &block)
+        end
 
         self
       end
@@ -105,11 +113,28 @@ module RuboCop
       protected
 
       def visit_descendants(types, &block)
+        if types.empty?
+          visit_all_descendants(&block)
+        else
+          visit_descendants_of_types(types, &block)
+        end
+      end
+
+      def visit_all_descendants(&block)
         children.each do |child|
           next unless child.is_a?(::AST::Node)
 
-          yield child if types.empty? || child.type?(*types)
-          child.visit_descendants(types, &block)
+          yield child
+          child.visit_all_descendants(&block)
+        end
+      end
+
+      def visit_descendants_of_types(types, &block)
+        children.each do |child|
+          next unless child.is_a?(::AST::Node)
+
+          yield child if child.type_in?(types)
+          child.visit_descendants_of_types(types, &block)
         end
       end
     end

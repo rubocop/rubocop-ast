@@ -179,6 +179,13 @@ module RuboCop
       # Allows specific single node types, as well as "grouped" types
       # (e.g. `:boolean` for `:true` or `:false`)
       def type?(*types)
+        type_in?(types)
+      end
+
+      # Non-splatting variant of `type?`, used by the traversal hot paths to
+      # avoid allocating an array per visited node.
+      # @api private
+      def type_in?(types)
         return true if types.include?(type)
 
         group_type = GROUP_FOR_TYPE[type]
@@ -704,9 +711,16 @@ module RuboCop
       def visit_ancestors(types)
         last_node = self
 
-        while (current_node = last_node.parent)
-          yield current_node if types.empty? || current_node.type?(*types)
-          last_node = current_node
+        if types.empty?
+          while (current_node = last_node.parent)
+            yield current_node
+            last_node = current_node
+          end
+        else
+          while (current_node = last_node.parent)
+            yield current_node if current_node.type_in?(types)
+            last_node = current_node
+          end
         end
       end
 
