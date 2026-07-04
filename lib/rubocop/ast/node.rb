@@ -519,7 +519,7 @@ module RuboCop
       end
 
       def chained?
-        parent&.call_type? && eql?(parent.receiver)
+        parent&.call_type? && equal?(parent.receiver)
       end
 
       def argument?

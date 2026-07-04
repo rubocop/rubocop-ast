@@ -1127,6 +1127,14 @@ RSpec.describe RuboCop::AST::SendNode do
       it { expect(send_node).not_to be_block_literal }
     end
 
+    context 'with a block whose body is structurally equal to its send node' do
+      let(:source) { 'foo { foo }' }
+      let(:block_node) { parse_source(source).node }
+
+      it { expect(block_node.send_node).to be_block_literal }
+      it { expect(block_node.body).not_to be_block_literal }
+    end
+
     context 'with Ruby >= 2.7', :ruby27 do
       context 'with a numblock literal' do
         let(:source) { '>> foo.bar << { baz(_1) }' }
