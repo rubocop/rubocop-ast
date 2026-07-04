@@ -536,6 +536,28 @@ module RuboCop
         parent&.call_type? && equal?(parent.receiver)
       end
 
+      # Returns the receiver at the base of this node's call chain, e.g. the
+      # `if` node for `(cond ? a : b).foo.bar`. Returns `self` for non-call
+      # nodes and `nil` when the chain starts with a receiverless call
+      # (e.g. for `foo.bar.baz`).
+      #
+      # @return [Node, nil] the node at the base of this call chain
+      def first_part_of_call_chain
+        node = self
+
+        while node
+          if node.call_type?
+            node = node.receiver
+          elsif node.any_block_type?
+            node = node.send_node
+          else
+            break
+          end
+        end
+
+        node
+      end
+
       def argument?
         return false unless parent&.send_type?
 
