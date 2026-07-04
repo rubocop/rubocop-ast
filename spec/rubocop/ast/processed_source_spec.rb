@@ -219,6 +219,36 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       expect(processed_source.tokens).to be_a(Array)
       expect(processed_source.tokens.first).to be_a(RuboCop::AST::Token)
     end
+
+    context 'when using parser_prism' do
+      let(:parser_engine) { :parser_prism }
+      let(:ruby_version) { 3.4 }
+
+      it 'defers building the tokens until they are first accessed' do
+        expect(processed_source.instance_variable_get(:@parser_tokens)).to be_nil
+        expect(processed_source.tokens.first).to be_a(RuboCop::AST::Token)
+      end
+
+      it 'does not build the tokens for `lines` access' do
+        processed_source.lines
+
+        expect(processed_source.instance_variable_get(:@tokens)).to be_nil
+      end
+
+      it 'releases the deferred conversion after the tokens are built' do
+        processed_source.tokens
+
+        expect(processed_source.instance_variable_get(:@deferred_parser_tokens)).to be_nil
+        expect(processed_source.instance_variable_get(:@parser_tokens)).to be_nil
+      end
+
+      it 'builds the same tokens as an eager parse' do
+        eager = described_class.new(source, ruby_version, path, parser_engine: :parser_whitequark)
+        deferred = processed_source.tokens.map { |t| [t.type, t.text, t.begin_pos, t.end_pos] }
+
+        expect(deferred).to eq(eager.tokens.map { |t| [t.type, t.text, t.begin_pos, t.end_pos] })
+      end
+    end
   end
 
   describe '#parser_error' do
