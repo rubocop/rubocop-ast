@@ -71,6 +71,7 @@ namespace :cut_release do
     update_antora(new_version)
 
     puts "Changed version from #{old_version} to #{new_version}."
+    system "git add relnotes/v#{new_version}.md"
     cmd = "git commit -am 'Cut #{new_version}'"
     puts cmd
     system cmd
