@@ -22,12 +22,12 @@ module RuboCop
         !single_line_condition?
       end
 
-      # Returns the condition of the node. This works together with each node's
-      # custom destructuring method to select the correct part of the node.
+      # Returns the condition of the node. The condition is the first child
+      # for all conditional node types, including normalized `unless` nodes.
       #
       # @return [Node, nil] the condition of the node
       def condition
-        node_parts[0]
+        children[0]
       end
 
       # Returns the body associated with the condition. This works together with
