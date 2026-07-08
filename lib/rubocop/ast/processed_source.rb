@@ -264,25 +264,33 @@ module RuboCop
         sorted_tokens[last_token_index(range_or_node)]
       end
 
-      # The tokens list is always sorted by token position, except for cases when heredoc
-      # is passed as a method argument. In this case tokens are interleaved by
-      # heredoc contents' tokens.
+      # The tokens list is out of order when a heredoc is passed as a method
+      # argument (the heredoc contents' tokens are interleaved) and, more
+      # commonly, whenever the source contains comments, whose tokens the
+      # lexer emits out of band.
       def sorted_tokens
-        # Most sources have their tokens already in order, in which case
-        # sorting can be skipped entirely. Callers only ever read from the
-        # returned array, so it is safe to reuse `tokens` as is.
+        # Callers only ever read from the returned array, so it is safe to
+        # reuse `tokens` as is when it's already in order.
         @sorted_tokens ||= if tokens_sorted?
                              tokens
                            else
-                             # Use stable sort.
-                             tokens.sort_by.with_index { |token, i| [token.begin_pos, i] }
+                             sort_tokens
                            end
       end
 
       private
 
       def tokens_sorted?
-        tokens.each_cons(2).all? { |a, b| a.begin_pos <= b.begin_pos }
+        # `each_cons` allocates an array per pair, which would defeat the
+        # point of checking before sorting.
+        (1...tokens.size).all? { |i| tokens[i - 1].begin_pos <= tokens[i].begin_pos }
+      end
+
+      def sort_tokens
+        # Combine the position and the index into a single integer to get a
+        # stable sort without allocating an array per token for the key.
+        size = tokens.size
+        tokens.sort_by.with_index { |token, i| (token.begin_pos * size) + i }
       end
 
       # `__END__` only starts a data section when it isn't nested inside a
