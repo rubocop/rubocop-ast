@@ -291,6 +291,18 @@ RSpec.describe RuboCop::AST::ProcessedSource do
           .to include('invalid byte sequence')
       end
     end
+
+    context 'when the parser raises an internal error other than `Parser::SyntaxError`' do
+      let(:source) { '/\c\xFF/ =~ ""' }
+
+      it 'returns the error' do
+        expect(processed_source.parser_error).to be_a(Exception)
+      end
+
+      it 'is not valid syntax' do
+        expect(processed_source).not_to be_valid_syntax
+      end
+    end
   end
 
   describe '#lines' do
