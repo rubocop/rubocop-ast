@@ -11,7 +11,7 @@ module RuboCop
       #
       # @return [Boolean] whether the condition is on a single line
       def single_line_condition?
-        loc.keyword.line == condition.source_range.line
+        loc.keyword.same_line?(condition)
       end
 
       # Checks whether the condition of the node is written on more than

@@ -130,7 +130,7 @@ module RuboCop
       #
       # @return [Boolean] whether the `block` literal is on a single line
       def single_line?
-        loc.begin.line == loc.end.line
+        loc.begin.same_line?(loc.end)
       end
 
       # Checks whether this is a multiline block. This is overridden here

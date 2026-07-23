@@ -73,6 +73,31 @@ module RuboCop
         each_descendant.to_a
       end
 
+      # Checks whether any descendant node matches. The types and the optional
+      # block are interpreted the same way as for `each_descendant`.
+      #
+      # @overload any_descendant?
+      #   Checks whether there is any descendant node.
+      # @overload any_descendant?(type, ...)
+      #   Checks whether there is any descendant node matching any of the types.
+      #   @param [Symbol] type a node type
+      # @yieldparam [Node] node descendant nodes matching the types, if a block is given
+      # @return [Boolean] whether any (matching) descendant node was found
+      #   (for which the block returned a truthy value, if given)
+      def any_descendant?(*types)
+        if block_given?
+          each_descendant(*types) do |descendant|
+            return true if yield(descendant)
+          end
+        else
+          each_descendant(*types) do # rubocop:disable Lint/UnreachableLoop
+            return true
+          end
+        end
+
+        false
+      end
+
       # Calls the given block for the receiver and each descendant node in
       # depth-first order.
       # If no block is given, an `Enumerator` is returned.

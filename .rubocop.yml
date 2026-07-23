@@ -26,10 +26,6 @@ InternalAffairs/LocationExpression:
   Enabled: false
 
 # It cannot be replaced with suggested methods defined by RuboCop AST itself.
-InternalAffairs/LocationLineEqualityComparison:
-  Enabled: false
-
-# It cannot be replaced with suggested methods defined by RuboCop AST itself.
 InternalAffairs/MethodNameEndWith:
   Enabled: false
 

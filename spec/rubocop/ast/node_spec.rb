@@ -1421,5 +1421,54 @@ RSpec.describe RuboCop::AST::Node do
       it_behaves_like 'traverse', 'two arguments', :restarg, :blockarg, %i[restarg blockarg]
       it_behaves_like 'traverse', 'group argument', :argument, %i[arg restarg arg kwrestarg blockarg]
     end
+
+    describe '#any_descendant?' do
+      let(:src) { 'foo(true, bar(baz))' }
+
+      it 'is true when there is any descendant' do
+        expect(node).to be_any_descendant
+      end
+
+      it 'is false for a node without descendants' do
+        expect(node.first_argument).not_to be_any_descendant
+      end
+
+      it 'respects the given types' do
+        expect(node).to be_any_descendant(:true)
+        expect(node).not_to be_any_descendant(:false)
+        expect(node).to be_any_descendant(:false, :boolean)
+      end
+
+      it 'checks the block against the matching descendants' do
+        expect(node).to be_any_descendant(:send, &:arguments?)
+        expect(node).not_to be_any_descendant(:send) { |n| n.method?(:qux) }
+      end
+    end
+  end
+
+  describe '#first_part_of_call_chain' do
+    context 'on a chain of calls and blocks' do
+      let(:src) { '[1, 2].foo.bar { |x| x }.baz' }
+
+      it 'returns the node at the base of the chain' do
+        expect(node.first_part_of_call_chain).to be_array_type
+      end
+    end
+
+    context 'on a chain starting with a receiverless call' do
+      let(:src) { 'foo.bar.baz' }
+
+      it 'returns nil' do
+        expect(node.first_part_of_call_chain).to be_nil
+      end
+    end
+
+    context 'on a non-call node' do
+      let(:src) { '[1, 2]' }
+
+      it 'returns self' do
+        expect(node.first_part_of_call_chain).to equal(node)
+      end
+    end
   end
 end
