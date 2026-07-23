@@ -1,0 +1,1 @@
+* [#417](https://github.com/rubocop/rubocop-ast/pull/417): Fix `ProcessedSource` raising parser internal errors (e.g. `RegexpError` for `/\c\xFF/ =~ ''`) instead of recording them as `parser_error`. ([@koic][])

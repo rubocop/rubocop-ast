@@ -349,6 +349,13 @@ module RuboCop
           # All errors are in diagnostics. No need to handle exception.
           comments = []
           tokens = []
+        rescue StandardError => e
+          # The parser gem may fail on invalid sources with an exception other than `Parser::SyntaxError`
+          # and without a diagnostic, e.g. with `RegexpError` for `/\c\xFF/ =~ ""`. Keep the exception
+          # so that it can be reported instead of crashing the caller.
+          @parser_error = e
+          comments = []
+          tokens = []
         end
 
         ast&.complete!
