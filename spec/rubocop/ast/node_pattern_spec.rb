@@ -2290,6 +2290,42 @@ RSpec.describe RuboCop::AST::NodePattern do
             expect { result }.to(raise_argument_error)
           end
         end
+
+        context 'when overridden in a subclass calling super' do
+          it 'matches' do
+            subclass = Class.new(defined_class) do
+              # The override exercises the lazily compiled method through `super`.
+              def my_matcher(node) # rubocop:disable Lint/UselessMethodDefinition
+                super
+              end
+            end
+
+            expect(subclass.new.my_matcher(node)).to be(true)
+          end
+        end
+      end
+
+      context 'with an invalid pattern' do
+        let(:pattern) { '(sym ' }
+        let(:helper_name) { :def_node_matcher }
+
+        it 'raises Invalid when the method is first called, not when it is defined' do
+          expect { call_helper }.not_to raise_error
+          expect { result }.to raise_error(RuboCop::AST::NodePattern::Invalid)
+        end
+
+        context 'when lazy compilation is disabled' do
+          around do |example|
+            described_class.lazy_compilation = false
+            example.run
+          ensure
+            described_class.lazy_compilation = true
+          end
+
+          it 'raises Invalid when the method is defined' do
+            expect { call_helper }.to raise_error(RuboCop::AST::NodePattern::Invalid)
+          end
+        end
       end
 
       context 'def_node_search' do
