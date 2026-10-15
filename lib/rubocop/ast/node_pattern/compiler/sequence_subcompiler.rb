@@ -57,6 +57,30 @@ module RuboCop
 
           private :compile # Not meant to be called from outside
 
+          def compile_terms(children = @seq.children, last_arity = 0..0)
+            arities = remaining_arities(children, last_arity)
+            total_arity = arities.shift
+            guard = compile_child_nb_guard(total_arity)
+            return guard if children.empty?
+
+            @remaining_arity = total_arity
+            terms = children.map do |child|
+              use_index_from_end
+              @remaining_arity = arities.shift
+              handle_prev { compile(child) }
+            end
+            [guard, terms].join(" &&\n")
+          end
+
+          # yield `sync_code` iff not already in sync
+          def sync
+            return if @in_sync
+
+            code = compile_loop_advance("= #{compile_cur_index}")
+            @in_sync = true
+            yield code
+          end
+
           # Single node patterns are all handled here
           def visit_other_type
             access = case @cur_index
@@ -225,30 +249,6 @@ module RuboCop
             end
 
             code
-          end
-
-          def compile_terms(children = @seq.children, last_arity = 0..0)
-            arities = remaining_arities(children, last_arity)
-            total_arity = arities.shift
-            guard = compile_child_nb_guard(total_arity)
-            return guard if children.empty?
-
-            @remaining_arity = total_arity
-            terms = children.map do |child|
-              use_index_from_end
-              @remaining_arity = arities.shift
-              handle_prev { compile(child) }
-            end
-            [guard, terms].join(" &&\n")
-          end
-
-          # yield `sync_code` iff not already in sync
-          def sync
-            return if @in_sync
-
-            code = compile_loop_advance("= #{compile_cur_index}")
-            @in_sync = true
-            yield code
           end
 
           # @api private
