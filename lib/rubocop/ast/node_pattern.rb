@@ -26,6 +26,18 @@ module RuboCop
     class NodePattern
       class Invalid < StandardError; end
 
+      # When `true` (the default), methods defined with the `Macros` compile
+      # their pattern on first invocation instead of at definition time.
+      # Compiling the patterns is a significant part of loading a large body
+      # of cops, and most of them are never invoked in a given run.
+      # Note that with lazy compilation an invalid pattern raises
+      # `NodePattern::Invalid` when the method is first called, not when it
+      # is defined; set to `false` to get definition-time errors back.
+      class << self
+        attr_accessor :lazy_compilation
+      end
+      self.lazy_compilation = true
+
       # Helpers for defining methods based on a pattern string
       module Macros
         # Define a method which applies a pattern to an AST node
@@ -36,7 +48,12 @@ module RuboCop
         # If the node matches, and no block is provided, the new method will
         # return the captures, or `true` if there were none.
         def def_node_matcher(method_name, pattern_str, **keyword_defaults)
-          NodePattern.new(pattern_str).def_node_matcher(self, method_name, **keyword_defaults)
+          if NodePattern.lazy_compilation
+            def_node_pattern_method_lazily(:def_node_matcher, method_name, pattern_str,
+                                           keyword_defaults, caller_locations(1, 1).first)
+          else
+            NodePattern.new(pattern_str).def_node_matcher(self, method_name, **keyword_defaults)
+          end
         end
 
         # Define a method which recurses over the descendants of an AST node,
@@ -46,7 +63,41 @@ module RuboCop
         # as soon as it finds a descendant which matches. Otherwise, it will
         # yield all descendants which match.
         def def_node_search(method_name, pattern_str, **keyword_defaults)
-          NodePattern.new(pattern_str).def_node_search(self, method_name, **keyword_defaults)
+          if NodePattern.lazy_compilation
+            def_node_pattern_method_lazily(:def_node_search, method_name, pattern_str,
+                                           keyword_defaults, caller_locations(1, 1).first)
+          else
+            NodePattern.new(pattern_str).def_node_search(self, method_name, **keyword_defaults)
+          end
+        end
+
+        private
+
+        # Defines a stub that compiles the pattern and replaces itself on
+        # first invocation. The compiled method is invoked through the owner's
+        # instance method rather than a regular dispatch, so that overrides
+        # calling `super` keep working.
+        def def_node_pattern_method_lazily(definer, method_name, pattern_str, keyword_defaults,
+                                           location)
+          base = self
+
+          define_method(method_name) do |*args, **kwargs, &block|
+            # Remove the stub before defining the compiled method in its
+            # place, so that no method redefinition warning is emitted.
+            begin
+              base.send(:remove_method, method_name)
+            rescue NameError
+              nil # the method was already compiled concurrently
+            end
+
+            pattern = NodePattern.new(pattern_str)
+            pattern.definition_location = location
+            pattern.public_send(definer, base, method_name, **keyword_defaults)
+
+            base.instance_method(method_name).bind_call(self, *args, **kwargs, &block)
+          end
+
+          method_name
         end
       end
 
@@ -72,6 +123,11 @@ module RuboCop
       end
 
       attr_reader :pattern, :ast, :match_code
+
+      # The location to attribute methods defined from this pattern to, when
+      # it can't be determined from the call stack (e.g. for lazily compiled
+      # patterns). Used by `MethodDefiner`.
+      attr_accessor :definition_location
 
       def_delegators :@compiler, :captures, :named_parameters, :positional_parameters
 
