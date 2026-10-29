@@ -16,16 +16,6 @@ namespace :cut_release do
     end
   end
 
-  def version_sans_patch(version)
-    version.split('.').take(2).join('.')
-  end
-
-  def update_antora(version)
-    update_file('docs/antora.yml') do |yaml|
-      yaml.gsub(/version: .*/, "version: '#{version_sans_patch(version)}'")
-    end
-  end
-
   def add_header_to_changelog(version)
     update_file('CHANGELOG.md') do |changelog|
       head, tail = changelog.split("## master (unreleased)\n\n", 2)
@@ -68,7 +58,6 @@ namespace :cut_release do
 
     add_header_to_changelog(new_version)
     create_release_notes(new_version)
-    update_antora(new_version)
 
     puts "Changed version from #{old_version} to #{new_version}."
     system "git add relnotes/v#{new_version}.md"
@@ -76,14 +65,4 @@ namespace :cut_release do
     puts cmd
     system cmd
   end
-end
-
-desc 'and restore docs/antora'
-task :release do
-  update_file 'docs/antora.yml' do |s|
-    s.gsub!(/version: .*/, 'version: master')
-  end
-  cmd = "git commit -am 'Restore docs/antora.yml'"
-  puts cmd
-  system cmd
 end

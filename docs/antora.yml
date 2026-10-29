@@ -1,5 +1,6 @@
 name: rubocop-ast
 title: RuboCop AST
-version: master
+# No version here: docs.rubocop.org derives it from the release tag
+# (v1.51.0 becomes 1.51), so patch versions don't appear in the docs.
 nav:
   - modules/ROOT/nav.adoc
