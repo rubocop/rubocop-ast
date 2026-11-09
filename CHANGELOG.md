@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.51.0 (2026-11-09)
+
 ### New features
 
 * [#413](https://github.com/rubocop/rubocop-ast/pull/413): Add `Range#same_line?`, `Range#begins_its_line?`, `Node#any_descendant?`, and `Node#first_part_of_call_chain`, previously private helpers in RuboCop's `Cop::Util`. ([@bbatsov][])
