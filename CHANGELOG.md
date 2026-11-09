@@ -2,6 +2,21 @@
 
 ## master (unreleased)
 
+### New features
+
+* [#413](https://github.com/rubocop/rubocop-ast/pull/413): Add `Range#same_line?`, `Range#begins_its_line?`, `Node#any_descendant?`, and `Node#first_part_of_call_chain`, previously private helpers in RuboCop's `Cop::Util`. ([@bbatsov][])
+
+### Bug fixes
+
+* [#417](https://github.com/rubocop/rubocop-ast/pull/417): Fix `ProcessedSource` raising parser internal errors (e.g. `RegexpError` for `/\c\xFF/ =~ ''`) instead of recording them as `parser_error`. ([@koic][])
+
+### Changes
+
+* [#416](https://github.com/rubocop/rubocop-ast/pull/416): Make `IfNode` branch accessors (`condition`, `if_branch`, `else_branch`, `unless?`) allocation-free. ([@bbatsov][])
+* [#415](https://github.com/rubocop/rubocop-ast/pull/415): Reduce allocations in `ProcessedSource#sorted_tokens` to almost none. ([@bbatsov][])
+* [#414](https://github.com/rubocop/rubocop-ast/pull/414): Allow lazy compilation of patterns with `def_node_matcher`/`def_node_search`, significantly reducing load time for rubocop; `NodePattern.lazy_compilation = true` enables it. ([@bbatsov][])
+* [#420](https://github.com/rubocop/rubocop-ast/pull/420): Support Prism 2.0. ([@koic][])
+
 ## 1.50.0 (2026-07-04)
 
 ### Bug fixes
