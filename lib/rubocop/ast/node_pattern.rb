@@ -26,17 +26,17 @@ module RuboCop
     class NodePattern
       class Invalid < StandardError; end
 
-      # When `true` (the default), methods defined with the `Macros` compile
+      # When changed to `true`, methods defined with the `Macros` compile
       # their pattern on first invocation instead of at definition time.
       # Compiling the patterns is a significant part of loading a large body
       # of cops, and most of them are never invoked in a given run.
       # Note that with lazy compilation an invalid pattern raises
       # `NodePattern::Invalid` when the method is first called, not when it
-      # is defined; set to `false` to get definition-time errors back.
+      # is defined; set to `false` (default) to get errors at definition-time.
       class << self
         attr_accessor :lazy_compilation
       end
-      self.lazy_compilation = true
+      self.lazy_compilation = false
 
       # Helpers for defining methods based on a pattern string
       module Macros
