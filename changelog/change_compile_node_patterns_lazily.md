@@ -1,1 +1,1 @@
-* [#414](https://github.com/rubocop/rubocop-ast/pull/414): Compile the patterns of `def_node_matcher`/`def_node_search` lazily on first invocation, significantly reducing load time; `NodePattern.lazy_compilation = false` restores compilation at definition time. ([@bbatsov][])
+* [#414](https://github.com/rubocop/rubocop-ast/pull/414): Allow lazy compilation of patterns with `def_node_matcher`/`def_node_search`, significantly reducing load time for rubocop; `NodePattern.lazy_compilation = true` enables it. ([@bbatsov][])

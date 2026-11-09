@@ -2308,19 +2308,21 @@ RSpec.describe RuboCop::AST::NodePattern do
         let(:pattern) { '(sym ' }
         let(:helper_name) { :def_node_matcher }
 
-        it 'raises Invalid when the method is first called, not when it is defined' do
-          expect { call_helper }.not_to raise_error
-          expect { result }.to raise_error(RuboCop::AST::NodePattern::Invalid)
-        end
-
-        context 'when lazy compilation is disabled' do
+        context 'when lazy compilation is enabled' do
           around do |example|
-            described_class.lazy_compilation = false
+            described_class.lazy_compilation = true
             example.run
           ensure
-            described_class.lazy_compilation = true
+            described_class.lazy_compilation = false
           end
 
+          it 'raises Invalid when the method is first called, not when it is defined' do
+            expect { call_helper }.not_to raise_error
+            expect { result }.to raise_error(RuboCop::AST::NodePattern::Invalid)
+          end
+        end
+
+        context 'when lazy compilation is disabled (default)' do
           it 'raises Invalid when the method is defined' do
             expect { call_helper }.to raise_error(RuboCop::AST::NodePattern::Invalid)
           end
