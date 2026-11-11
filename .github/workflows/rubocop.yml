@@ -67,6 +67,22 @@ jobs:
           PARSER_ENGINE: parser_prism
         run: bundle exec rake prism_spec
 
+  native_prism:
+    runs-on: ubuntu-latest
+    name: Prism (native)
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0"
+          bundler-cache: true
+      - name: spec
+        env:
+          PARSER_ENGINE: prism
+        run: bundle exec rake native_prism_spec
+      - name: compare with the translation layer
+        run: bundle exec rake prism_check
+
   rubocop_specs:
     name: >-
       Main Gem Specs | RuboCop: ${{ matrix.rubocop }} | ${{ matrix.ruby }} | ${{ matrix.parser_engine }}

@@ -1,1 +1,1 @@
-* [#422](https://github.com/rubocop/rubocop-ast/issues/422): Add an experimental `prism` parser engine that builds the AST directly from Prism nodes, without the `parser` gem's builder. ([@bbatsov][])
+* [#422](https://github.com/rubocop/rubocop-ast/issues/422): Add an experimental `prism` parser engine that builds the AST, the tokens, the comments and the diagnostics directly from the Prism result, without `Prism::Translation::Parser` and the `parser` gem's builder. ([@bbatsov][])
