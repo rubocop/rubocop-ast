@@ -87,6 +87,16 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
     end
 
+    context 'when `parser_engine` is `prism` and Prism 1 is in use' do
+      before { stub_const('Prism::VERSION', '1.9.0') }
+
+      it 'raises an error' do
+        expect { described_class.new('foo', 3.4, parser_engine: :prism) }
+          .to raise_error(ArgumentError, 'The `prism` parser engine needs Prism 2.0 or later. ' \
+                                         'The version of Prism in use is 1.9.0.')
+      end
+    end
+
     context 'when `parser_engine` is `parser_prism`' do
       let(:parser_engine) { :parser_prism }
 
@@ -294,7 +304,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
 
     context 'when the parser raises an internal error other than `Parser::SyntaxError`' do
       let(:source) do
-        if parser_engine == :parser_prism
+        if PRISM_ENGINE
           # Prism 2.0+ reports the invalid multibyte escape in `/\c\xFF/` as a syntax error itself,
           # so the parser gem's builder never gets to raise for it. Use a regexp that Prism accepts
           # but `Regexp.new` rejects instead.
@@ -304,8 +314,15 @@ RSpec.describe RuboCop::AST::ProcessedSource do
         end
       end
 
-      it 'returns the error' do
+      # The native Prism engine has no builder that could raise, the regexp
+      # is reported as a diagnostic instead.
+      it 'returns the error', unless: ENV['PARSER_ENGINE'] == 'prism' do
         expect(processed_source.parser_error).to be_a(Exception)
+      end
+
+      it 'reports an error instead', if: ENV['PARSER_ENGINE'] == 'prism' do
+        expect(processed_source.parser_error).to be_nil
+        expect(processed_source.diagnostics.map(&:reason)).to eq([:invalid_regexp])
       end
 
       it 'is not valid syntax' do

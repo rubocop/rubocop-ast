@@ -73,7 +73,7 @@ module RuboCop
       INVALID_LEVELS = %i[error fatal].freeze
       private_constant :INVALID_LEVELS
 
-      PARSER_ENGINES = %i[default parser_whitequark parser_prism].freeze
+      PARSER_ENGINES = %i[default parser_whitequark parser_prism prism].freeze
       private_constant :PARSER_ENGINES
 
       attr_reader :path, :buffer, :ast, :comments, :diagnostics,
@@ -448,32 +448,26 @@ module RuboCop
         end
       end
 
-      def builder_class(parser_engine)
-        case parser_engine
-        when :parser_whitequark
-          RuboCop::AST::Builder
-        when :parser_prism
-          RuboCop::AST::BuilderPrism
-        end
+      def translation_parser(ruby_version, prism)
+        parser_class = self.class.lazy_tokens_parser_class(parser_class(ruby_version, :parser_prism))
+
+        prism ? parser_class.new(BuilderPrism.new, parser: prism) : parser_class.new(BuilderPrism.new)
       end
 
       # rubocop:disable-next Metrics/AbcSize, Metrics/MethodLength
       def create_parser(ruby_version, parser_engine, prism_result)
-        builder = builder_class(parser_engine).new
+        # NOTE: Since it is intended for use with Ruby LSP, it targets only Prism.
+        # If there is no reuse of a pre-parsed result, such as in Ruby LSP,
+        # regular parsing with Prism occurs.
+        prism = PrismPreparsed.new(prism_result) if prism_result && parser_engine != :parser_whitequark
 
-        parser_class = parser_class(ruby_version, parser_engine)
-
-        parser_class = self.class.lazy_tokens_parser_class(parser_class) if
-          parser_engine == :parser_prism
-
-        parser_instance = if parser_engine == :parser_prism && prism_result
-                            # NOTE: Since it is intended for use with Ruby LSP, it targets only Prism.
-                            # If there is no reuse of a pre-parsed result, such as in Ruby LSP,
-                            # regular parsing with Prism occurs, and `else` branch will be executed.
-                            prism_reparsed = PrismPreparsed.new(prism_result)
-                            parser_class.new(builder, parser: prism_reparsed)
+        parser_instance = case parser_engine
+                          when :prism
+                            PrismParser.new(ruby_version, prism: prism || Prism)
+                          when :parser_prism
+                            translation_parser(ruby_version, prism)
                           else
-                            parser_class.new(builder)
+                            parser_class(ruby_version, parser_engine).new(Builder.new)
                           end
 
         parser_instance.tap do |parser|
@@ -493,7 +487,7 @@ module RuboCop
         parser_engine = parser_engine.to_sym
         unless PARSER_ENGINES.include?(parser_engine)
           raise ArgumentError, 'The keyword argument `parser_engine` accepts `default`, ' \
-                               "`parser_whitequark`, or `parser_prism`, but `#{parser_engine}` " \
+                               "`parser_whitequark`, `parser_prism`, or `prism`, but `#{parser_engine}` " \
                                'was passed.'
         end
         if parser_engine == :default

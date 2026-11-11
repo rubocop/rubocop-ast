@@ -17,44 +17,47 @@ if ENV['MODERNIZE']
   RuboCop::AST::Builder.emit_match_pattern = false # inverse of default
 end
 
+# Whether the specs run with one of the engines that parse with Prism.
+PRISM_ENGINE = %w[parser_prism prism].include?(ENV.fetch('PARSER_ENGINE', nil))
+
 RSpec.shared_context 'ruby 2.3', :ruby23 do
   # Prism supports parsing Ruby 3.3+.
-  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 2.3 }
+  let(:ruby_version) { PRISM_ENGINE ? 3.3 : 2.3 }
 end
 
 RSpec.shared_context 'ruby 2.4', :ruby24 do
   # Prism supports parsing Ruby 3.3+.
-  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 2.4 }
+  let(:ruby_version) { PRISM_ENGINE ? 3.3 : 2.4 }
 end
 
 RSpec.shared_context 'ruby 2.5', :ruby25 do
   # Prism supports parsing Ruby 3.3+.
-  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 2.5 }
+  let(:ruby_version) { PRISM_ENGINE ? 3.3 : 2.5 }
 end
 
 RSpec.shared_context 'ruby 2.6', :ruby26 do
   # Prism supports parsing Ruby 3.3+.
-  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 2.6 }
+  let(:ruby_version) { PRISM_ENGINE ? 3.3 : 2.6 }
 end
 
 RSpec.shared_context 'ruby 2.7', :ruby27 do
   # Prism supports parsing Ruby 3.3+.
-  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 2.7 }
+  let(:ruby_version) { PRISM_ENGINE ? 3.3 : 2.7 }
 end
 
 RSpec.shared_context 'ruby 3.0', :ruby30 do
   # Prism supports parsing Ruby 3.3+.
-  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 3.0 }
+  let(:ruby_version) { PRISM_ENGINE ? 3.3 : 3.0 }
 end
 
 RSpec.shared_context 'ruby 3.1', :ruby31 do
   # Prism supports parsing Ruby 3.3+.
-  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 3.1 }
+  let(:ruby_version) { PRISM_ENGINE ? 3.3 : 3.1 }
 end
 
 RSpec.shared_context 'ruby 3.2', :ruby32 do
   # Prism supports parsing Ruby 3.3+.
-  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 3.2 }
+  let(:ruby_version) { PRISM_ENGINE ? 3.3 : 3.2 }
 end
 
 RSpec.shared_context 'ruby 3.3', :ruby33 do
@@ -63,17 +66,17 @@ end
 
 RSpec.shared_context 'ruby 3.4', :ruby34 do
   # Parser supports parsing Ruby <= 3.3.
-  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.4 : 3.3 }
+  let(:ruby_version) { PRISM_ENGINE ? 3.4 : 3.3 }
 end
 
 RSpec.shared_context 'ruby 4.0', :ruby40 do
   # Parser supports parsing Ruby <= 3.3.
-  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 4.0 : 3.3 }
+  let(:ruby_version) { PRISM_ENGINE ? 4.0 : 3.3 }
 end
 
 RSpec.shared_context 'ruby 4.1', :ruby41 do
   # Parser supports parsing Ruby <= 3.3.
-  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 4.1 : 3.3 }
+  let(:ruby_version) { PRISM_ENGINE ? 4.1 : 3.3 }
 end
 
 # ...
@@ -81,7 +84,7 @@ module DefaultRubyVersion
   extend RSpec::SharedContext
 
   # The minimum version Prism can parse is 3.3.
-  let(:ruby_version) { ENV['PARSER_ENGINE'] == 'parser_prism' ? 3.3 : 2.4 }
+  let(:ruby_version) { PRISM_ENGINE ? 3.3 : 2.4 }
 end
 
 module DefaultParserEngine
@@ -137,8 +140,8 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
-  config.filter_run_excluding broken_on: :prism if ENV['PARSER_ENGINE'] == 'parser_prism'
-  config.filter_run_excluding broken_on: :parser if ENV['PARSER_ENGINE'] != 'parser_prism'
+  config.filter_run_excluding broken_on: :prism if PRISM_ENGINE
+  config.filter_run_excluding broken_on: :parser unless PRISM_ENGINE
 
   config.order = :random
   Kernel.srand config.seed
