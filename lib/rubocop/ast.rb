@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'parser'
 require 'prism'
 require 'forwardable'
 require 'set'
 
+require_relative 'ast/parser_source'
 require_relative 'ast/ext/range'
 require_relative 'ast/utilities/simple_forwardable'
 require_relative 'ast/node_pattern/method_definer'
@@ -93,8 +93,7 @@ require_relative 'ast/node/var_node'
 require_relative 'ast/node/when_node'
 require_relative 'ast/node/while_node'
 require_relative 'ast/node/yield_node'
-require_relative 'ast/builder'
-require_relative 'ast/builder_prism'
+require_relative 'ast/builder_extensions'
 require_relative 'ast/prism_compiler'
 require_relative 'ast/prism_lexer'
 require_relative 'ast/prism_parser'
@@ -106,3 +105,8 @@ require_relative 'ast/version'
 
 RuboCop::AST::NodePattern::Parser.autoload :WithMeta, "#{__dir__}/ast/node_pattern/with_meta"
 RuboCop::AST::NodePattern::Compiler.autoload :Debug, "#{__dir__}/ast/node_pattern/compiler/debug"
+
+# The builders pull in the parsers of `parser` and of the Prism translation
+# layer, which the `prism` parser engine does not need.
+RuboCop::AST.autoload :Builder, "#{__dir__}/ast/builder"
+RuboCop::AST.autoload :BuilderPrism, "#{__dir__}/ast/builder_prism"

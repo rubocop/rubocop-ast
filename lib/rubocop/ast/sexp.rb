@@ -9,7 +9,7 @@ module RuboCop
     module Sexp
       # Creates a {Node} with type `type` and children `children`.
       def s(type, *children)
-        klass = Builder::NODE_MAP[type] || Node
+        klass = BuilderExtensions::NODE_MAP[type] || Node
         klass.new(type, children)
       end
     end

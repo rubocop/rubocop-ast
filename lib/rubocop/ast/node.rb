@@ -246,7 +246,7 @@ module RuboCop
       # part of it is changed.
       def updated(type = nil, children = nil, properties = {})
         properties[:location] ||= @location
-        klass = RuboCop::AST::Builder::NODE_MAP[type || @type] || Node
+        klass = BuilderExtensions::NODE_MAP[type || @type] || Node
         klass.new(type || @type, children || @children, properties)
       end
 
