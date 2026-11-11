@@ -294,7 +294,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
 
     context 'when the parser raises an internal error other than `Parser::SyntaxError`' do
       let(:source) do
-        if parser_engine == :parser_prism
+        if PRISM_ENGINE
           # Prism 2.0+ reports the invalid multibyte escape in `/\c\xFF/` as a syntax error itself,
           # so the parser gem's builder never gets to raise for it. Use a regexp that Prism accepts
           # but `Regexp.new` rejects instead.
@@ -304,8 +304,15 @@ RSpec.describe RuboCop::AST::ProcessedSource do
         end
       end
 
-      it 'returns the error' do
+      # The native Prism engine has no builder that could raise, the regexp
+      # is reported as a diagnostic instead.
+      it 'returns the error', unless: ENV['PARSER_ENGINE'] == 'prism' do
         expect(processed_source.parser_error).to be_a(Exception)
+      end
+
+      it 'reports an error instead', if: ENV['PARSER_ENGINE'] == 'prism' do
+        expect(processed_source.parser_error).to be_nil
+        expect(processed_source.diagnostics.map(&:reason)).to eq([:invalid_regexp])
       end
 
       it 'is not valid syntax' do

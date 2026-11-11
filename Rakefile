@@ -35,6 +35,24 @@ task prism_spec: :generate do
   ENV['PARSER_ENGINE'] = original_parser_engine
 end
 
+desc 'Run RSpec code examples with the native Prism engine'
+task native_prism_spec: :generate do
+  original_parser_engine = ENV.fetch('PARSER_ENGINE', nil)
+
+  RSpec::Core::RakeTask.new(native_prism_spec: :generate) do |spec|
+    ENV['PARSER_ENGINE'] = 'prism'
+
+    spec.pattern = FileList['spec/**/*_spec.rb']
+  end
+
+  ENV['PARSER_ENGINE'] = original_parser_engine
+end
+
+desc 'Compare the native Prism engine with the Prism translation layer'
+task :prism_check do
+  ruby 'tasks/prism_compiler_check.rb', 'diff', 'lib', 'spec', RbConfig::CONFIG['rubylibdir']
+end
+
 desc 'Run RSpec with code coverage'
 task :coverage do
   ENV['COVERAGE'] = 'true'
