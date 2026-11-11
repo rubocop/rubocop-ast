@@ -87,6 +87,16 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
     end
 
+    context 'when `parser_engine` is `prism` and Prism 1 is in use' do
+      before { stub_const('Prism::VERSION', '1.9.0') }
+
+      it 'raises an error' do
+        expect { described_class.new('foo', 3.4, parser_engine: :prism) }
+          .to raise_error(ArgumentError, 'The `prism` parser engine needs Prism 2.0 or later. ' \
+                                         'The version of Prism in use is 1.9.0.')
+      end
+    end
+
     context 'when `parser_engine` is `parser_prism`' do
       let(:parser_engine) { :parser_prism }
 

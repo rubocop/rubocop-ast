@@ -10,7 +10,7 @@ module RuboCop
     # their source maps itself. The resulting tree is meant to be identical to
     # the one the translation layer produces, node for node and range for range.
     #
-    # It still relies on the `parser` gem for `Parser::Source::Range` and the
+    # It needs Prism 2, and it still relies on the `parser` gem for `Parser::Source::Range` and the
     # `Parser::Source::Map` classes.
     #
     # @api private
@@ -36,10 +36,7 @@ module RuboCop
                        :Keyword, :Condition, :NODE_MAP, :EMPTY, :BLOCK_CALL_TYPES, :PERCENT_ARRAY
 
       DUPLICATE_KEY_TYPES = %i[sym str int float rational complex regexp].freeze
-      # Prism 1 has the translation layer turn `- 1` into a negative literal,
-      # Prism 2 keeps it as the method call that it is.
-      NEGATE_SEPARATED_NUMERIC = ::Prism::VERSION.start_with?('1.')
-      private_constant :DUPLICATE_KEY_TYPES, :NEGATE_SEPARATED_NUMERIC
+      private_constant :DUPLICATE_KEY_TYPES
 
       # @param source_buffer [Parser::Source::Buffer]
       # @param offset_cache [Array<Integer>, #call] maps byte offsets to
@@ -734,8 +731,8 @@ module RuboCop
         if_true = visit(else_clause)
         children = [check_condition(predicate), if_true, statements]
 
-        unless node.keyword_loc.start_offset == node.location.start_offset
-          map = Keyword.new(r(node.keyword_loc), nil, nil, join(if_true || statements, predicate))
+        unless node.unless_keyword_loc.start_offset == node.location.start_offset
+          map = Keyword.new(r(node.unless_keyword_loc), nil, nil, join(if_true || statements, predicate))
           return n(:if, children, map)
         end
 
@@ -747,7 +744,7 @@ module RuboCop
                       (node.statements&.location || else_clause&.location ||
                        node.end_keyword_loc).start_offset)
           end
-        map = condition_map(r(node.keyword_loc), predicate, then_keyword, if_true,
+        map = condition_map(r(node.unless_keyword_loc), predicate, then_keyword, if_true,
                             r(else_clause&.else_keyword_loc), statements,
                             r(node.end_keyword_loc))
         n(:if, children, map)
@@ -765,20 +762,20 @@ module RuboCop
           guard = guard_node(:if_guard, r(pattern_node.if_keyword_loc), visit(pattern_node.predicate))
         when ::Prism::UnlessNode
           pattern = within_pattern { visit(pattern_node.statements) }
-          guard = guard_node(:unless_guard, r(pattern_node.keyword_loc),
+          guard = guard_node(:unless_guard, r(pattern_node.unless_keyword_loc),
                              visit(pattern_node.predicate))
         else
           pattern = within_pattern { visit(pattern_node) }
         end
 
         then_keyword =
-          if node.then_loc
-            r(node.then_loc)
+          if node.then_keyword_loc
+            r(node.then_keyword_loc)
           else
             semicolon(pattern_node.location.end_offset, node.statements&.location&.start_offset)
           end
         children = [pattern, guard, visit(node.statements)]
-        n(:in_pattern, children, keyword_map(r(node.in_loc), then_keyword, children.compact, nil))
+        n(:in_pattern, children, keyword_map(r(node.in_keyword_loc), then_keyword, children.compact, nil))
       end
 
       # foo[bar] += baz
@@ -915,15 +912,15 @@ module RuboCop
           return n(:sym, [node.unescaped.to_sym], map)
         end
 
-        value = node.value
+        value = node.content
         parts =
           if value.empty?
             []
           elsif value.include?("\n")
             string_nodes_from_line_continuations(node.unescaped, value,
-                                                 node.value_loc.start_offset, node.opening)
+                                                 node.content_loc.start_offset, node.opening)
           else
-            [str_internal(node.unescaped, r(node.value_loc))]
+            [str_internal(node.unescaped, r(node.content_loc))]
           end
         symbol_compose(r(node.opening_loc), parts, r(node.closing_loc))
       end
@@ -939,7 +936,7 @@ module RuboCop
       def visit_match_predicate_node(node)
         value = visit(node.value)
         pattern = within_pattern { visit(node.pattern) }
-        binary(:match_pattern_p, value, r(node.operator_loc), pattern)
+        binary(:match_pattern_p, value, r(node.keyword_loc), pattern)
       end
 
       # foo => bar
@@ -956,10 +953,9 @@ module RuboCop
       end
 
       # A node that is missing from the syntax tree, only seen for invalid code.
-      def visit_missing_node(node)
+      def visit_error_recovery_node(node)
         n(:missing, EMPTY, Map.new(r(node.location)))
       end
-      alias visit_error_recovery_node visit_missing_node # the name since Prism 2
 
       # foo, bar = baz
       # ^^^^^^^^
@@ -1165,12 +1161,12 @@ module RuboCop
 
       # until foo; bar end, bar until foo
       def visit_until_node(node)
-        visit_loop(:until, node)
+        visit_loop(:until, node, node.until_keyword_loc)
       end
 
       # while foo; bar end, bar while foo
       def visit_while_node(node)
-        visit_loop(:while, node)
+        visit_loop(:while, node, node.while_keyword_loc)
       end
 
       # case foo; when bar; end
@@ -1184,7 +1180,7 @@ module RuboCop
                       node.statements&.location&.start_offset)
           end
         children = visit_all(node.conditions) << visit(node.statements)
-        n(:when, children, keyword_map(r(node.keyword_loc), then_keyword, children, nil))
+        n(:when, children, keyword_map(r(node.when_keyword_loc), then_keyword, children, nil))
       end
 
       %i[
@@ -1419,14 +1415,6 @@ module RuboCop
       # The calls that do not end up as a plain `send`. Returns nil for the rest.
       def visit_special_call(node, name, arguments, block)
         case name
-        when :-@
-          return unless NEGATE_SEPARATED_NUMERIC
-
-          receiver = node.receiver
-          case receiver.type
-          when :integer_node, :float_node, :rational_node, :imaginary_node
-            visit(numeric_negate(node.message_loc, receiver))
-          end
         when :!
           with_block(not_op(node), block)
         when :=~
@@ -1668,20 +1656,20 @@ module RuboCop
 
       # --- loops -------------------------------------------------------------
 
-      def visit_loop(type, node)
+      def visit_loop(type, node, keyword_loc)
         predicate = visit(node.predicate)
         statements = visit(node.statements)
-        keyword = r(node.keyword_loc)
+        keyword = r(keyword_loc)
 
-        if node.location.start_offset == node.keyword_loc.start_offset
+        if node.location.start_offset == keyword_loc.start_offset
           do_keyword =
             if node.do_keyword_loc
               r(node.do_keyword_loc)
             else
               semicolon(node.predicate.location.end_offset,
-                        (node.statements&.location || node.closing_loc).start_offset)
+                        (node.statements&.location || node.end_keyword_loc).start_offset)
             end
-          map = keyword_map(keyword, do_keyword, EMPTY, r(node.closing_loc))
+          map = keyword_map(keyword, do_keyword, EMPTY, r(node.end_keyword_loc))
         else
           type = :"#{type}_post" if statements.kwbegin_type?
           map = Keyword.new(keyword, nil, nil, join(statements, predicate))
@@ -1787,7 +1775,7 @@ module RuboCop
 
           parts =
             if key.is_a?(::Prism::SymbolNode)
-              [str_internal(key.unescaped, r(key.value_loc))]
+              [str_internal(key.unescaped, r(key.content_loc))]
             else
               visit_all(key.parts)
             end
@@ -1795,7 +1783,7 @@ module RuboCop
         end
 
         value = value.value
-        range = r(key.value_loc)
+        range = r(key.content_loc)
         implicit =
           case value
           when ::Prism::CallNode
@@ -1837,8 +1825,8 @@ module RuboCop
 
       # The parts of the key in `{ "foo": 1 }`, one for each of its lines.
       def quoted_key_parts(key)
-        content = key.value
-        location = key.value_loc
+        content = key.content
+        location = key.content_loc
         if content.empty?
           EMPTY
         elsif content.include?("\n")
@@ -1865,22 +1853,6 @@ module RuboCop
 
         operator = range.with(end_pos: range.begin_pos + 1)
         n(type, [value], Operator.new(operator, range))
-      end
-
-      # `-` on one line and the number on the next is a method call for Ruby,
-      # but a negative literal in the `parser` AST.
-      def numeric_negate(message_loc, receiver)
-        location = message_loc.join(receiver.location)
-
-        case receiver.type
-        when :integer_node, :float_node
-          receiver.copy(value: -receiver.value, location: location)
-        when :rational_node
-          receiver.copy(numerator: -receiver.numerator, location: location)
-        when :imaginary_node
-          receiver.copy(numeric: numeric_negate(message_loc, receiver.numeric),
-                        location: location)
-        end
       end
 
       # --- strings, symbols, regexps -----------------------------------------

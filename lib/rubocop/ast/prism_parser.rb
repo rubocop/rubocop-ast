@@ -16,23 +16,27 @@ module RuboCop
     # Parses a source with Prism and builds the AST, the comments, the tokens
     # and the diagnostics from the result, without `Prism::Translation::Parser`
     # and without the parser classes of the `parser` gem. What it returns is
-    # meant to be the same as what the translation layer returns.
+    # meant to be the same as what the translation layer returns. Needs Prism 2.
     #
     # @api private
     class PrismParser # rubocop:disable Metrics/ClassLength
       Diagnostic = ::Parser::Diagnostic
       PRISM_VERSIONS = { 3.3 => '3.3.1', 3.4 => '3.4.0', 3.5 => '4.0.0', 4.0 => '4.0.0',
                          4.1 => '4.1.0' }.freeze
-      # The tokens of Prism 1 need lexer states to be converted, which is
-      # something that only the translation layer knows how to do.
-      NATIVE_TOKENS = !::Prism::VERSION.start_with?('1.')
-      private_constant :Diagnostic, :PRISM_VERSIONS, :NATIVE_TOKENS
+      private_constant :Diagnostic, :PRISM_VERSIONS
 
       attr_reader :diagnostics
 
       # @param ruby_version [Float] the Ruby version to parse the source as
       # @param prism [#parse_lex] what provides the result of Prism
       def initialize(ruby_version, prism: ::Prism)
+        # Prism 1 has other names for some nodes and their locations, and its
+        # tokens need lexer states to be converted.
+        if ::Prism::VERSION.to_i < 2
+          raise ArgumentError, 'The `prism` parser engine needs Prism 2.0 or later. ' \
+                               "The version of Prism in use is #{::Prism::VERSION}."
+        end
+
         @prism_version = PRISM_VERSIONS.find { |version, _| version == ruby_version }&.last
         unless @prism_version
           raise ArgumentError, 'RuboCop supports target Ruby versions 3.3 and above with Prism. ' \
@@ -93,9 +97,7 @@ module RuboCop
       end
 
       def deferred_tokens(tokens)
-        lexer = NATIVE_TOKENS ? PrismLexer : ::Prism::Translation::Parser.const_get(:Lexer)
-
-        -> { lexer.new(@source_buffer, tokens, @offset_cache).to_a }
+        -> { PrismLexer.new(@source_buffer, tokens, @offset_cache).to_a }
       end
 
       def process_diagnostics(result)

@@ -2,7 +2,7 @@
 
 require_relative '../../../tasks/tree_diff'
 
-RSpec.describe RuboCop::AST::PrismCompiler do
+RSpec.describe RuboCop::AST::PrismCompiler, if: Prism::VERSION.to_i >= 2 do
   def parse(source, engine, ruby_version = 3.4)
     RuboCop::AST::ProcessedSource.new(source, ruby_version, parser_engine: engine)
   end
@@ -159,24 +159,22 @@ RSpec.describe RuboCop::AST::PrismCompiler do
     expect(difference('foo { _1 + it }; a = [1, *b]; def c(...) = d(...)', 3.3)).to be_nil
   end
 
-  # Prism 1 reads these as negative literals, Prism 2 as calls to `-@`.
+  # `parser` reads these as negative literals, Prism as calls to `-@`.
   it 'builds the same tree as the translation layer for a minus separated from a number' do
     expect(difference("a = - 1; b = - 2.5; - 3r; - 4i; -\n5; - 6.abs")).to be_nil
   end
 
-  context 'with Prism 2', if: Prism::VERSION >= '2' do
-    it 'builds the same tree as the translation layer for a `nil` block parameter' do
-      expect(difference('foo { |&nil| }; ->(a, &nil) {}', 4.1)).to be_nil
-    end
+  it 'builds the same tree as the translation layer for a `nil` block parameter' do
+    expect(difference('foo { |&nil| }; ->(a, &nil) {}', 4.1)).to be_nil
+  end
 
-    # The translation layer of Prism 2.1 raises for this one.
-    it 'builds the tree for a method with a `nil` block parameter' do
-      ast = parse('def foo(&nil) = bar', :prism, 4.1).ast
+  # The translation layer of Prism 2.1 raises for this one.
+  it 'builds the tree for a method with a `nil` block parameter' do
+    ast = parse('def foo(&nil) = bar', :prism, 4.1).ast
 
-      expect(ast.first_argument.type).to eq(:blocknilarg)
-      expect(ast.first_argument.source).to eq('&nil')
-      expect(ast.body.source).to eq('bar')
-    end
+    expect(ast.first_argument.type).to eq(:blocknilarg)
+    expect(ast.first_argument.source).to eq('&nil')
+    expect(ast.body.source).to eq('bar')
   end
 
   it 'builds the same tree as the translation layer for the library sources' do
