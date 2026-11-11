@@ -621,8 +621,8 @@ module RuboCop
 
       # When one of these delimiters is encountered, then the other
       # one is allowed to be escaped as well.
-      DELIMITER_SYMETRY = { '[' => ']', '(' => ')', '{' => '}', '<' => '>' }.freeze
-      private_constant :DELIMITER_SYMETRY
+      DELIMITER_SYMMETRY = { '[' => ']', '(' => ')', '{' => '}', '<' => '>' }.freeze
+      private_constant :DELIMITER_SYMMETRY
 
       # https://github.com/whitequark/parser/blob/v3.3.6.0/lib/parser/lexer-strings.rl#L14
       REGEXP_META_CHARACTERS = ['\\', '$', '(', ')', '*', '+', '.', '<', '>', '?', '[', ']', '^', '{', '|', '}'].freeze
@@ -642,7 +642,7 @@ module RuboCop
         if regexp?(quote)
           # Should be escaped handled to single-quoted heredocs. The only character that is
           # allowed to be escaped is the delimiter, except when that also has special meaning
-          # in the regexp. Since all the symetry delimiters have special meaning, they don't need
+          # in the regexp. Since all the symmetry delimiters have special meaning, they don't need
           # to be considered separately.
           if REGEXP_META_CHARACTERS.include?(delimiter)
             string
@@ -666,7 +666,7 @@ module RuboCop
           append_bytes(result, string.byteslice(scanner.pos..))
           result.force_encoding(source_buffer.source.encoding)
         else
-          delimiters = Regexp.escape("#{delimiter}#{DELIMITER_SYMETRY[delimiter]}")
+          delimiters = Regexp.escape("#{delimiter}#{DELIMITER_SYMMETRY[delimiter]}")
           string.gsub(/\\([\\#{delimiters}])/, '\1')
         end
       end
@@ -736,7 +736,7 @@ module RuboCop
         end
       end
 
-      # In a percent array, certain whitespace can be preceeded with a backslash,
+      # In a percent array, certain whitespace can be preceded with a backslash,
       # causing the following characters to be part of the previous element.
       def percent_array_unescape(string)
         string.gsub(/(\\)+[ \f\n\r\t\v]/) do |full_match|
@@ -758,7 +758,7 @@ module RuboCop
         leading_whitespace
       end
 
-      # Determine if characters preceeded by a backslash should be escaped or not
+      # Determine if characters preceded by a backslash should be escaped or not
       def interpolation?(quote)
         !quote.end_with?("'") && !quote.start_with?('%q', '%w', '%i', '%s')
       end

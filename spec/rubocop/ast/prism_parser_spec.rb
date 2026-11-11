@@ -82,7 +82,9 @@ RSpec.describe RuboCop::AST::PrismParser, if: Prism::VERSION.to_i >= 2 do
     expect(diagnostic.message).to eq(Prism.parse('1 +').errors.first.message)
   end
 
-  it 'has no AST for an invalid source, but has its comments' do
+  # Every error is fatal on the other Ruby implementations, which leaves
+  # nothing but the diagnostics.
+  it 'has no AST for an invalid source, but has its comments', if: RUBY_ENGINE == 'ruby' do
     processed_source = parse("foo( # bar\n", :prism)
 
     expect(processed_source.ast).to be_nil
