@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe RuboCop::AST::PrismParser do
+RSpec.describe RuboCop::AST::PrismParser, if: Prism::VERSION.to_i >= 2 do
   def parse(source, engine, ruby_version = 3.4)
     RuboCop::AST::ProcessedSource.new(source, ruby_version, parser_engine: engine)
   end
@@ -98,8 +98,8 @@ RSpec.describe RuboCop::AST::PrismParser do
       .to raise_error(ArgumentError, /supports target Ruby versions 3.3 and above with Prism/)
   end
 
-  # Prism 2.1 fixed these two in its translation layer, so `parser` is the
-  # reference that holds for every Prism version.
+  # Prism 2.0 has these two wrong in its translation layer, so `parser` is
+  # the reference.
   it 'splits a string with a line break and an escaped newline like `parser` does' do
     source = %("a\nb\\nc")
 

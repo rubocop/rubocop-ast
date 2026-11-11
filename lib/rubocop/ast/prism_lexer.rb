@@ -7,7 +7,8 @@ module RuboCop
     # Converts the tokens of Prism into the tokens of the `parser` gem.
     #
     # This is the lexer of `Prism::Translation::Parser` as of Prism 2.1, which
-    # is private to Prism, adapted to live here. It needs the tokens of Prism 2.
+    # is private to Prism, adapted to live here. It needs the tokens of Prism 2,
+    # which already tell apart what Prism 1 needed lexer states for.
     #
     # The code is kept close to the original, so that the fixes made there are
     # easy to carry over.

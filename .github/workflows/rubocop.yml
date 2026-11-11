@@ -74,6 +74,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: ruby/setup-ruby@v1
         with:
+          # The native engine needs Prism 2.
           ruby-version: "4.0"
           bundler-cache: true
       - name: spec
