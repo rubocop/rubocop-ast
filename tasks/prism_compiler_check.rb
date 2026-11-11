@@ -13,7 +13,6 @@
 
 $LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
 require 'rubocop-ast'
-require 'benchmark'
 require_relative 'tree_diff'
 require_relative 'results_diff'
 
@@ -104,7 +103,9 @@ class PrismCompilerCheck
     yield
     time = Array.new(5) do
       GC.start
-      Benchmark.realtime(&block)
+      start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      yield
+      Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
     end.min
     allocated = allocations(&block)
 
