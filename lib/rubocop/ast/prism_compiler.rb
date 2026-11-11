@@ -36,7 +36,10 @@ module RuboCop
                        :Keyword, :Condition, :NODE_MAP, :EMPTY, :BLOCK_CALL_TYPES, :PERCENT_ARRAY
 
       DUPLICATE_KEY_TYPES = %i[sym str int float rational complex regexp].freeze
-      private_constant :DUPLICATE_KEY_TYPES
+      # Prism 1 has the translation layer turn `- 1` into a negative literal,
+      # Prism 2 keeps it as the method call that it is.
+      NEGATE_SEPARATED_NUMERIC = ::Prism::VERSION.start_with?('1.')
+      private_constant :DUPLICATE_KEY_TYPES, :NEGATE_SEPARATED_NUMERIC
 
       # @param source_buffer [Parser::Source::Buffer]
       # @param offset_cache [Array<Integer>, #call] maps byte offsets to
@@ -128,12 +131,7 @@ module RuboCop
         elsif key.is_a?(::Prism::SymbolNode) && key.opening_loc.nil?
           pair_keyword(key.unescaped, r(key.location), visit(value))
         else
-          parts =
-            if key.is_a?(::Prism::SymbolNode)
-              [str_internal(key.unescaped, r(key.value_loc))]
-            else
-              visit_all(key.parts)
-            end
+          parts = key.is_a?(::Prism::SymbolNode) ? quoted_key_parts(key) : visit_all(key.parts)
           pair_quoted(r(key.opening_loc), parts, r(key.closing_loc), visit(value))
         end
       end
@@ -961,6 +959,7 @@ module RuboCop
       def visit_missing_node(node)
         n(:missing, EMPTY, Map.new(r(node.location)))
       end
+      alias visit_error_recovery_node visit_missing_node # the name since Prism 2
 
       # foo, bar = baz
       # ^^^^^^^^
@@ -979,6 +978,11 @@ module RuboCop
         items = visit_all(elements)
         mlhs = n(:mlhs, items, collection_map(r(node.lparen_loc), items, r(node.rparen_loc)))
         binary(:masgn, mlhs, r(node.operator_loc), visit(node.value))
+      end
+
+      # def foo(&nil); end
+      def visit_no_block_parameter_node(node)
+        n(:blocknilarg, EMPTY, arg_prefix_map(r(node.operator_loc), r(node.keyword_loc)))
       end
 
       # def foo(**nil); end
@@ -1416,6 +1420,8 @@ module RuboCop
       def visit_special_call(node, name, arguments, block)
         case name
         when :-@
+          return unless NEGATE_SEPARATED_NUMERIC
+
           receiver = node.receiver
           case receiver.type
           when :integer_node, :float_node, :rational_node, :imaginary_node
@@ -1707,7 +1713,8 @@ module RuboCop
         forwarding << :* if rest.is_a?(::Prism::RestParameterNode) && rest.name.nil?
         forwarding << :** if keyword_rest.is_a?(::Prism::KeywordRestParameterNode) &&
                              keyword_rest.name.nil?
-        forwarding << :& if parameters.block && parameters.block.name.nil?
+        block = parameters.block
+        forwarding << :& if block.is_a?(::Prism::BlockParameterNode) && block.name.nil?
         forwarding |= %i[& ...] if keyword_rest.is_a?(::Prism::ForwardingParameterNode)
         forwarding
       end
@@ -1826,6 +1833,20 @@ module RuboCop
         colon = key_range.with(begin_pos: key_range.end_pos - 1)
         key = n(:sym, [name.to_sym], Collection.new(nil, nil, key_l))
         n(:pair, [key, value], Operator.new(colon, key_range.join(value.loc.expression)))
+      end
+
+      # The parts of the key in `{ "foo": 1 }`, one for each of its lines.
+      def quoted_key_parts(key)
+        content = key.value
+        location = key.value_loc
+        if content.empty?
+          EMPTY
+        elsif content.include?("\n")
+          string_nodes_from_line_continuations(key.unescaped, content, location.start_offset,
+                                               key.opening)
+        else
+          [str_internal(key.unescaped, r(location))]
+        end
       end
 
       def pair_quoted(begin_l, parts, end_l, value)
@@ -2052,7 +2073,7 @@ module RuboCop
             else
               lines.sum do |line|
                 count = line.scan(/(\\*)n/).count { |(backslashes)| backslashes&.length&.odd? }
-                count -= 1 if !line.end_with?("\n") && count.positive?
+                count -= 1 if line.match?(/(?:\A|[^\\])(?:\\\\)*\\n\z/) && count.positive?
                 count
               end
             end
