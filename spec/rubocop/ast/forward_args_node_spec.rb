@@ -5,7 +5,7 @@ RSpec.describe RuboCop::AST::ForwardArgsNode do
   let(:source) { 'def foo(...); end' }
 
   context 'when using Ruby 2.7 or newer', :ruby27 do
-    if RuboCop::AST::Builder.emit_forward_arg
+    if BuilderFlags[:emit_forward_arg]
       describe '#to_a' do
         it { expect(args_node.to_a).to contain_exactly(be_forward_arg_type) }
       end

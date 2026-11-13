@@ -65,7 +65,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       it_behaves_like 'invalid parser_engine'
     end
 
-    context 'when using `parser_engine: :parser_prism` and `prism_result` with a `ParseLexResult`' do
+    context 'when using `parser_engine: :parser_prism` and `prism_result` with a `ParseLexResult`', :parser_gem do
       let(:ruby_version) { 3.4 }
       let(:parser_engine) { :parser_prism }
       let(:prism_result) { prism_parse_lex_result }
@@ -75,7 +75,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
     end
 
-    context 'when `parser_engine` is `parser_whitequark`' do
+    context 'when `parser_engine` is `parser_whitequark`', :parser_gem do
       let(:parser_engine) { :parser_whitequark }
 
       context 'and Ruby 3.4 is requested' do
@@ -97,7 +97,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
     end
 
-    context 'when `parser_engine` is `parser_prism`' do
+    context 'when `parser_engine` is `parser_prism`', :parser_gem do
       let(:parser_engine) { :parser_prism }
 
       context 'and Ruby 3.3 is requested' do
@@ -109,7 +109,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       end
     end
 
-    context 'when `parser_engine` is `:default`' do
+    context 'when `parser_engine` is `:default`', :parser_gem do
       let(:parser_engine) { :default }
 
       context 'and Ruby 3.2 is requested' do
@@ -172,7 +172,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       expect(processed_source.path).to eq(path)
     end
 
-    context 'when using `parser_engine: :parser_prism` and `prism_result` with a `ParseLexResult`' do
+    context 'when using `parser_engine: :parser_prism` and `prism_result` with a `ParseLexResult`', :parser_gem do
       let(:ruby_version) { 3.4 }
       let(:parser_engine) { :parser_prism }
       let(:prism_result) { prism_parse_lex_result }
@@ -188,7 +188,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       expect(processed_source.buffer).to be_a(Parser::Source::Buffer)
     end
 
-    context 'when using `parser_engine: :parser_prism` and `prism_result` with a `ParseLexResult`' do
+    context 'when using `parser_engine: :parser_prism` and `prism_result` with a `ParseLexResult`', :parser_gem do
       let(:ruby_version) { 3.4 }
       let(:parser_engine) { :parser_prism }
       let(:prism_result) { prism_parse_lex_result }
@@ -204,7 +204,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       expect(processed_source.ast).to be_a(RuboCop::AST::Node)
     end
 
-    context 'when using `parser_engine: :parser_prism` and `prism_result` with a `ParseLexResult`' do
+    context 'when using `parser_engine: :parser_prism` and `prism_result` with a `ParseLexResult`', :parser_gem do
       let(:ruby_version) { 3.4 }
       let(:parser_engine) { :parser_prism }
       let(:prism_result) { prism_parse_lex_result }
@@ -238,7 +238,7 @@ RSpec.describe RuboCop::AST::ProcessedSource do
       expect(processed_source.tokens.first).to be_a(RuboCop::AST::Token)
     end
 
-    context 'when using parser_prism' do
+    context 'when using parser_prism', :parser_gem do
       let(:parser_engine) { :parser_prism }
       let(:ruby_version) { 3.4 }
 

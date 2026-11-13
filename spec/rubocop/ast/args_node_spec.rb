@@ -108,7 +108,7 @@ RSpec.describe RuboCop::AST::ArgsNode do
         let(:source) { 'def foo(...); end' }
         let(:arguments) { [s(:forward_arg)] }
 
-        it { is_expected.to eq(arguments) } if RuboCop::AST::Builder.emit_forward_arg
+        it { is_expected.to eq(arguments) } if BuilderFlags[:emit_forward_arg]
       end
     end
   end

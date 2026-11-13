@@ -20,6 +20,18 @@ end
 # Whether the specs run with one of the engines that parse with Prism.
 PRISM_ENGINE = %w[parser_prism prism].include?(ENV.fetch('PARSER_ENGINE', nil))
 
+# What the builder emits. The `prism` engine has no builder to ask: it always
+# builds what the builder of `parser` does by default.
+module BuilderFlags
+  DEFAULTS = { emit_index: false, emit_procarg0: false, emit_forward_arg: true }.freeze
+
+  def self.[](flag)
+    return DEFAULTS.fetch(flag) if ENV['PARSER_ENGINE'] == 'prism'
+
+    RuboCop::AST::Builder.public_send(flag)
+  end
+end
+
 RSpec.shared_context 'ruby 2.3', :ruby23 do
   # Prism supports parsing Ruby 3.3+.
   let(:ruby_version) { PRISM_ENGINE ? 3.3 : 2.3 }
@@ -140,6 +152,7 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
+  config.filter_run_excluding :parser_gem if RuboCop::AST::ParserSource.vendored?
   config.filter_run_excluding broken_on: :prism if PRISM_ENGINE
   config.filter_run_excluding broken_on: :parser unless PRISM_ENGINE
 

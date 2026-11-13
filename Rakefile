@@ -48,6 +48,20 @@ task native_prism_spec: :generate do
   ENV['PARSER_ENGINE'] = original_parser_engine
 end
 
+desc 'Run RSpec code examples with the native Prism engine and without the `parser` gem'
+task without_parser_spec: :generate do
+  original_parser_engine = ENV.fetch('PARSER_ENGINE', nil)
+
+  RSpec::Core::RakeTask.new(without_parser_spec: :generate) do |spec|
+    ENV['PARSER_ENGINE'] = 'prism'
+
+    spec.pattern = FileList['spec/**/*_spec.rb']
+    spec.ruby_opts = "-r#{__dir__}/spec/support/hide_parser"
+  end
+
+  ENV['PARSER_ENGINE'] = original_parser_engine
+end
+
 desc 'Compare the native Prism engine with the Prism translation layer'
 task :prism_check do
   ruby 'tasks/prism_compiler_check.rb', 'diff', 'lib', 'spec', RbConfig::CONFIG['rubylibdir']

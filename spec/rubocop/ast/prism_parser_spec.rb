@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe RuboCop::AST::PrismParser, if: Prism::VERSION.to_i >= 2 do
+RSpec.describe RuboCop::AST::PrismParser, :parser_gem, if: Prism::VERSION.to_i >= 2 do
   def parse(source, engine, ruby_version = 3.4)
     RuboCop::AST::ProcessedSource.new(source, ruby_version, parser_engine: engine)
   end

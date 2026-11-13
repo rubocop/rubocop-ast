@@ -382,6 +382,8 @@ module RuboCop
 
       # rubocop:disable-next Lint/FloatComparison, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
       def parser_class(ruby_version, parser_engine)
+        ParserSource.ensure_parser_gem(parser_engine)
+
         case parser_engine
         when :parser_whitequark
           case ruby_version
@@ -499,12 +501,15 @@ module RuboCop
 
       # Prism is used for all Ruby versions it can parse (3.3 and later);
       # the Parser gem does not support Ruby 3.5 or later and is not fully
-      # compatible with Ruby 3.4.
+      # compatible with Ruby 3.4. The translation layer of Prism needs the
+      # Parser gem as well, so without it the `prism` engine is the default.
       def default_parser_engine(ruby_version)
-        if ruby_version >= 3.3
-          :parser_prism
-        else
+        if ruby_version < 3.3
           :parser_whitequark
+        elsif ParserSource.vendored?
+          :prism
+        else
+          :parser_prism
         end
       end
 
