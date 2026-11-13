@@ -65,7 +65,7 @@ RSpec.describe RuboCop::AST::MlhsNode do
     context 'with nested assignment on LHS' do
       let(:source) { 'a, b[c+=1] = z' }
 
-      if RuboCop::AST::Builder.emit_index
+      if BuilderFlags[:emit_index]
         let(:expected_nodes) do
           [
             s(:lvasgn, :a),

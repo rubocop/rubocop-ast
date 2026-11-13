@@ -14,7 +14,7 @@ RSpec.describe RuboCop::AST::ArgNode do
     context 'with a block' do
       let(:source) { 'foo { |x| bar }' }
 
-      if RuboCop::AST::Builder.emit_procarg0
+      if BuilderFlags[:emit_procarg0]
         it { expect(arg_node).to be_a(RuboCop::AST::Procarg0Node) }
       else
         it { expect(arg_node).to be_a(described_class) }
@@ -73,7 +73,7 @@ RSpec.describe RuboCop::AST::ArgNode do
       context 'with Ruby >= 2.7', :ruby27 do
         let(:source) { 'def foo(...); end' }
 
-        if RuboCop::AST::Builder.emit_forward_arg
+        if BuilderFlags[:emit_forward_arg]
           it { expect(arg_node).to be_a(described_class) }
         else
           it { expect(arg_node).to be_forward_args_type }
@@ -162,7 +162,7 @@ RSpec.describe RuboCop::AST::ArgNode do
       context 'with Ruby >= 2.7', :ruby27 do
         let(:source) { 'def foo(...); end' }
 
-        it { is_expected.to be_nil } if RuboCop::AST::Builder.emit_forward_arg
+        it { is_expected.to be_nil } if BuilderFlags[:emit_forward_arg]
       end
 
       context 'with Ruby >= 3.0', :ruby30 do
@@ -231,7 +231,7 @@ RSpec.describe RuboCop::AST::ArgNode do
       context 'with Ruby >= 2.7', :ruby27 do
         let(:source) { 'def foo(...); end' }
 
-        it { is_expected.to be_nil } if RuboCop::AST::Builder.emit_forward_arg
+        it { is_expected.to be_nil } if BuilderFlags[:emit_forward_arg]
       end
 
       context 'with Ruby >= 3.0', :ruby30 do
@@ -298,7 +298,7 @@ RSpec.describe RuboCop::AST::ArgNode do
       context 'with Ruby >= 2.7', :ruby27 do
         let(:source) { 'def foo(...); end' }
 
-        it { is_expected.to be(false) } if RuboCop::AST::Builder.emit_forward_arg
+        it { is_expected.to be(false) } if BuilderFlags[:emit_forward_arg]
       end
 
       context 'with Ruby >= 3.0', :ruby30 do

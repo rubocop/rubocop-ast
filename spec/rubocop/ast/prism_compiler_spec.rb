@@ -2,7 +2,7 @@
 
 require_relative '../../../tasks/tree_diff'
 
-RSpec.describe RuboCop::AST::PrismCompiler, if: Prism::VERSION.to_i >= 2 do
+RSpec.describe RuboCop::AST::PrismCompiler, :parser_gem, if: Prism::VERSION.to_i >= 2 do
   def parse(source, engine, ruby_version = 3.4)
     RuboCop::AST::ProcessedSource.new(source, ruby_version, parser_engine: engine)
   end

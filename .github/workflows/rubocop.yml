@@ -83,6 +83,8 @@ jobs:
         run: bundle exec rake native_prism_spec
       - name: compare with the translation layer
         run: bundle exec rake prism_check
+      - name: spec without the parser gem
+        run: bundle exec rake without_parser_spec
 
   rubocop_specs:
     name: >-

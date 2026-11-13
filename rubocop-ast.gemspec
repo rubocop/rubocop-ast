@@ -33,8 +33,10 @@ Gem::Specification.new do |s|
     'rubygems_mfa_required' => 'true'
   }
 
+  s.add_dependency('ast', '~> 2.4')
   s.add_dependency('parser', '>= 3.3.7.2')
   s.add_dependency('prism', '>= 1.7')
+  s.add_dependency('racc')
 
   ##### Do NOT add `rubocop` (or anything depending on `rubocop`) here. See Gemfile
 end
