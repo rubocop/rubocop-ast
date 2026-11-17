@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.52.0 (2026-11-17)
+
 ### New features
 
 * [#422](https://github.com/rubocop/rubocop-ast/issues/422): Add an experimental `prism` parser engine that builds the AST, the tokens, the comments and the diagnostics directly from the Prism result, without `Prism::Translation::Parser` and the `parser` gem's builder; it needs Prism 2.0 or later. ([@bbatsov][])
