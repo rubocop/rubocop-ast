@@ -1,1 +1,0 @@
-* [#424](https://github.com/rubocop/rubocop-ast/issues/424): Ship a copy of the source layer of `parser`, so that the `prism` parser engine works when the `parser` gem is not installed. ([@bbatsov][])
