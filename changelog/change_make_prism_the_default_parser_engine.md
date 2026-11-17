@@ -1,0 +1,1 @@
+* [#422](https://github.com/rubocop/rubocop-ast/issues/422): Make `prism` the default parser engine for Ruby 3.3+ when Prism 2.0 or later is installed; `parser_prism` stays the default with an older Prism. ([@bbatsov][])

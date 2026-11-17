@@ -120,19 +120,19 @@ RSpec.describe RuboCop::AST::ProcessedSource do
         end
       end
 
-      context 'and Ruby 3.3 is requested' do
-        let(:ruby_version) { 3.3 }
+      [3.3, 3.4].each do |version|
+        context "and Ruby #{version} is requested" do
+          let(:ruby_version) { version }
 
-        it 'uses `parser_prism`' do
-          expect(processed_source.parser_engine).to eq(:parser_prism)
-        end
-      end
+          it 'uses `prism` with Prism 2 or later', if: Prism::VERSION.to_i >= 2 do
+            expect(processed_source.parser_engine).to eq(:prism)
+          end
 
-      context 'and Ruby 3.4 is requested' do
-        let(:ruby_version) { 3.4 }
+          it 'uses `parser_prism` with an older Prism' do
+            stub_const('Prism::VERSION', '1.9.0')
 
-        it 'uses `parser_prism`' do
-          expect(processed_source.parser_engine).to eq(:parser_prism)
+            expect(processed_source.parser_engine).to eq(:parser_prism)
+          end
         end
       end
     end
