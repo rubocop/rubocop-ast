@@ -27,9 +27,9 @@ Two parser engines are supported:
 * `:parser_whitequark` -- the https://github.com/whitequark/parser[parser] gem. Supports Ruby up to 3.4.
 * `:parser_prism` -- https://github.com/ruby/prism[Prism]-based parser. Supports Ruby 3.3 and above.
 
-There is also an experimental `:prism` engine. It parses with Prism like `:parser_prism` does, but builds the AST, the comments, the tokens and the diagnostics directly from the Prism result instead of going through `Prism::Translation::Parser` and the `parser` gem's builder. The results are the same. It needs Prism 2.0 or later and is never selected by default.
+There is also a `:prism` engine. It parses with Prism like `:parser_prism` does, but builds the AST, the comments, the tokens and the diagnostics directly from the Prism result instead of going through `Prism::Translation::Parser` and the `parser` gem's builder. The results are the same. It needs Prism 2.0 or later.
 
-By default (`:default`), `parser_prism` is selected for Ruby 3.4+ and `parser_whitequark` for earlier versions. You can override this:
+By default (`:default`), `parser_whitequark` is selected for Ruby 3.2 and earlier. For Ruby 3.3+ it is `prism` when Prism 2.0 or later is installed, and `parser_prism` otherwise. You can override this:
 
 [source,ruby]
 ----

@@ -501,12 +501,13 @@ module RuboCop
 
       # Prism is used for all Ruby versions it can parse (3.3 and later);
       # the Parser gem does not support Ruby 3.5 or later and is not fully
-      # compatible with Ruby 3.4. The translation layer of Prism needs the
-      # Parser gem as well, so without it the `prism` engine is the default.
+      # compatible with Ruby 3.4. The `prism` engine needs Prism 2, so with
+      # an older Prism its translation layer is used, which needs the Parser
+      # gem as well.
       def default_parser_engine(ruby_version)
         if ruby_version < 3.3
           :parser_whitequark
-        elsif ParserSource.vendored?
+        elsif ParserSource.vendored? || ::Prism::VERSION.to_i >= 2
           :prism
         else
           :parser_prism
