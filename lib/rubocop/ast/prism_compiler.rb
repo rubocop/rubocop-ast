@@ -1471,14 +1471,25 @@ module RuboCop
         parts = node.children[0...-1]
         return false unless parts.all?(&:str_type?)
 
-        compile_regexp(parts, node.children.last)
+        compile_regexp(static_string(parts), node.children.last)
         true
       rescue RegexpError, EncodingError
         false
       end
 
-      def compile_regexp(parts, options)
-        source = parts.map { |part| part.children.first }.join
+      # The source of the parts that are string literals, or interpolations
+      # of nothing but string literals.
+      def static_string(parts)
+        parts.map do |part|
+          case part.type
+          when :str then part.children.first
+          when :begin then static_string(part.children) || (return nil)
+          else return nil
+          end
+        end.join
+      end
+
+      def compile_regexp(source, options)
         options = options.children
         source =
           if options.include?(:u) then source.encode(Encoding::UTF_8)
@@ -1924,9 +1935,9 @@ module RuboCop
       end
 
       def check_regexp(parts, options, range)
-        return unless @diagnostics && parts.all?(&:str_type?)
+        return unless @diagnostics && (source = static_string(parts))
 
-        compile_regexp(parts, options)
+        compile_regexp(source, options)
       rescue RegexpError, Encoding::UndefinedConversionError => e
         diagnostic(:error, :invalid_regexp, { message: e.message }, range)
       end
