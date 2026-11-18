@@ -200,6 +200,22 @@ RSpec.describe RuboCop::AST::PrismCompiler, :parser_gem, if: Prism::VERSION.to_i
     expect(processed_source).not_to be_valid_syntax
   end
 
+  it 'reports a regexp that cannot be compiled when it only interpolates string literals' do
+    ['/#{"["}/', '/#{}\xff/u', '/a#{"b"; "("}/'].each do |source|
+      reported = parse(source, :prism).diagnostics.map { |diagnostic| [diagnostic.reason, diagnostic.message] }
+      expected = parse(source, :parser_prism).diagnostics.map { |diagnostic| [diagnostic.reason, diagnostic.message] }
+
+      expect(reported.map(&:first)).to include(:invalid_regexp), source
+      expect(reported).to eq(expected), source
+    end
+  end
+
+  it 'does not check a regexp that interpolates anything else' do
+    ['/#{foo}[/', '/#{"#{"("}"}/', '/#{1}(/'].each do |source|
+      expect(parse(source, :prism)).to be_valid_syntax, source
+    end
+  end
+
   it 'reports duplicate hash keys' do
     processed_source = parse('{ a: 1, a: 2 }', :prism)
 
