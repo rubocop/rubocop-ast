@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.53.0 (2026-11-19)
+
 ### New features
 
 * [#429](https://github.com/rubocop/rubocop-ast/pull/429): Add `NodePattern::Checker`, which finds the parts of a node pattern that can never match. ([@bbatsov][])
