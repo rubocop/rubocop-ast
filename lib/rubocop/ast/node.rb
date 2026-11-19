@@ -135,7 +135,6 @@ module RuboCop
         match_pattern: :any_match_pattern,
         match_pattern_p: :any_match_pattern
       }.freeze
-      private_constant :GROUP_FOR_TYPE
 
       # Define a +recursive_?+ predicate method for the given node kind.
       private_class_method def self.def_recursive_literal_predicate(kind) # rubocop:disable Metrics/MethodLength
