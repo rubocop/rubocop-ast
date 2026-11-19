@@ -501,6 +501,56 @@ RSpec.describe RuboCop::AST::SendNode do
     end
   end
 
+  describe '#command_call?' do
+    context 'with arguments and no parentheses' do
+      let(:source) { 'foo.bar :baz, 1' }
+
+      it { expect(send_node).to be_command_call }
+    end
+
+    context 'with safe navigation, arguments and no parentheses' do
+      let(:source) { 'foo&.bar :baz' }
+
+      it { expect(send_node).to be_command_call }
+    end
+
+    context 'with an implicit receiver, arguments and no parentheses' do
+      let(:source) { 'bar :baz' }
+
+      it { expect(send_node).to be_command_call }
+    end
+
+    context 'with arguments in parentheses' do
+      let(:source) { 'foo.bar(:baz)' }
+
+      it { expect(send_node).not_to be_command_call }
+    end
+
+    context 'without arguments' do
+      let(:source) { 'foo.bar' }
+
+      it { expect(send_node).not_to be_command_call }
+    end
+
+    context 'with a binary operator' do
+      let(:source) { 'foo + bar' }
+
+      it { expect(send_node).not_to be_command_call }
+    end
+
+    context 'with an index' do
+      let(:source) { 'foo[bar]' }
+
+      it { expect(send_node).not_to be_command_call }
+    end
+
+    context 'with a setter' do
+      let(:source) { 'foo.bar = baz' }
+
+      it { expect(send_node).not_to be_command_call }
+    end
+  end
+
   describe '#arguments' do
     context 'with no arguments' do
       let(:source) { 'foo.bar' }

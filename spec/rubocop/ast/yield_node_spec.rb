@@ -213,6 +213,26 @@ RSpec.describe RuboCop::AST::YieldNode do
     end
   end
 
+  describe '#command_call?' do
+    context 'with arguments and no parentheses' do
+      let(:source) { 'yield :foo' }
+
+      it { is_expected.to be_command_call }
+    end
+
+    context 'with arguments in parentheses' do
+      let(:source) { 'yield(:foo)' }
+
+      it { is_expected.not_to be_command_call }
+    end
+
+    context 'without arguments' do
+      let(:source) { 'yield' }
+
+      it { is_expected.not_to be_command_call }
+    end
+  end
+
   describe '#parenthesized?' do
     context 'with no arguments' do
       context 'when not using parentheses' do
