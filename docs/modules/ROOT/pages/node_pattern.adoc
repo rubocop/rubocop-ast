@@ -668,7 +668,7 @@ should. Watch out for these:
   parameters and an `itblock` has `:it` where a `block` has `(args ...)`.
 * `(const nil? :Foo)` doesn't match `::Foo`, and `(const _ :Foo)` also matches
   `Bar::Foo`. For a top-level constant use `(const {nil? cbase} :Foo)`, or
-  `#global_const?(:Foo)`.
+  the predicate `global_const?(:Foo)`.
 * A search that is defined with `def_node_search` and a name that doesn't end
   in `?` returns an enumerator when it is called without a block. An enumerator
   is truthy even when nothing matched, so don't use it as a condition.
