@@ -655,6 +655,29 @@ matched with an expression like:
 (send nil? :method)
 ----
 
+== Common mistakes
+
+A pattern that is slightly off doesn't fail, it matches less or more than it
+should. Watch out for these:
+
+* `send` doesn't match a call with safe navigation, `block` doesn't match a
+  block with numbered parameters or `it`, and `def` doesn't match a singleton
+  method. Use the groups `call`, `any_block` and `any_def` unless you mean
+  exactly one type. A pattern that spells out the block parameters needs a
+  branch for each type of block, because a `numblock` has the number of
+  parameters and an `itblock` has `:it` where a `block` has `(args ...)`.
+* `(const nil? :Foo)` doesn't match `::Foo`, and `(const _ :Foo)` also matches
+  `Bar::Foo`. For a top-level constant use `(const {nil? cbase} :Foo)`, or
+  `#global_const?(:Foo)`.
+* A search that is defined with `def_node_search` and a name that doesn't end
+  in `?` returns an enumerator when it is called without a block. An enumerator
+  is truthy even when nothing matched, so don't use it as a condition.
+* A search runs the pattern on every descendant of the node. When the node you
+  have is the one to check, a matcher does the same with one comparison.
+* A union of literals like `{:first :last}` is compiled to a `Set` lookup
+  whatever its size. A constant (`%NAMES`) gives the list a name, but it isn't
+  faster.
+
 == Checking patterns
 
 A pattern is a string, so a mistake in it only shows when it fails to match.
