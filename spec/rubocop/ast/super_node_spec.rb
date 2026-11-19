@@ -165,6 +165,26 @@ RSpec.describe RuboCop::AST::SuperNode do
     it { is_expected.not_to be_camel_case_method }
   end
 
+  describe '#command_call?' do
+    context 'with arguments and no parentheses' do
+      let(:source) { 'super :foo' }
+
+      it { is_expected.to be_command_call }
+    end
+
+    context 'with arguments in parentheses' do
+      let(:source) { 'super(:foo)' }
+
+      it { is_expected.not_to be_command_call }
+    end
+
+    context 'without arguments' do
+      let(:source) { 'super' }
+
+      it { is_expected.not_to be_command_call }
+    end
+  end
+
   describe '#parenthesized?' do
     context 'with no arguments' do
       context 'when not using parentheses' do

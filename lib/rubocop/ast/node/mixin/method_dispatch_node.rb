@@ -101,6 +101,17 @@ module RuboCop
         !receiver && method?(name)
       end
 
+      # Checks whether this is a command call: one that has arguments and no
+      # parentheses around them, like `foo bar` or `foo.bar baz`. A command
+      # call can't be used everywhere a call with parentheses can, and it
+      # takes over what follows it on the line. Operators, `foo[bar]` and
+      # setters are not command calls.
+      #
+      # @return [Boolean] whether this is a command call
+      def command_call?
+        arguments? && !parenthesized? && !operator_method? && !setter_method?
+      end
+
       # Checks whether the dispatched method is a setter method.
       #
       # @return [Boolean] whether the dispatched method is a setter
