@@ -29,7 +29,7 @@ RSpec.describe RuboCop::AST::NodePattern::Checker do
     it_behaves_like 'no problems', '(send nil? :foo)'
     it_behaves_like 'no problems', '{call any_block block-pass}'
     it_behaves_like 'a problem', '(sned nil? :foo)', 'sned', 'Unknown node type `sned`.'
-    it_behaves_like 'a problem', '{send blok}', 'blok', 'Unknown node type `blok`.'
+    it_behaves_like 'a problem', '{send frob}', 'frob', 'Unknown node type `frob`.'
   end
 
   describe 'the number of children' do
@@ -124,10 +124,10 @@ RSpec.describe RuboCop::AST::NodePattern::Checker do
   end
 
   context 'with a pattern that has several problems' do
-    let(:pattern) { '(send (blok _ _) :foo (pair _))' }
+    let(:pattern) { '(send (frob _ _) :foo (pair _))' }
 
     it 'finds them all' do
-      expect(messages).to eq ['Unknown node type `blok`.', '`pair` nodes have 2 children, not 1.']
+      expect(messages).to eq ['Unknown node type `frob`.', '`pair` nodes have 2 children, not 1.']
     end
   end
 
