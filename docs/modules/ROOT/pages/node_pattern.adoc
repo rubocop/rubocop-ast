@@ -655,6 +655,28 @@ matched with an expression like:
 (send nil? :method)
 ----
 
+== Checking patterns
+
+A pattern is a string, so a mistake in it only shows when it fails to match.
+`NodePattern::Checker` finds the mistakes that can be seen without running the
+pattern: node types that don't exist, sequences with a number of children that
+a node of that type never has, a node where a symbol or another value is (and
+the other way around), predicates that nothing responds to, and alternatives
+that are in a union twice.
+
+[source,ruby]
+----
+checker = RuboCop::AST::NodePattern::Checker.new
+checker.check('(def _ _)').map(&:message)
+# => ["`def` nodes have 3 children, not 2."]
+checker.check('(send nil? "puts" ...)').map(&:message)
+# => ["This never matches child 2 of `send` nodes, which is a symbol."]
+----
+
+Each problem also has the `range` of the part of the pattern that it is about.
+A pattern that has no problems is not necessarily right: which types of nodes
+the children are isn't checked, only whether they are nodes at all.
+
 == More resources
 
 * https://www.rubydoc.info/gems/rubocop-ast/RuboCop/AST/NodePattern[API documentation]

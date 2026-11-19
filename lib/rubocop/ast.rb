@@ -105,6 +105,8 @@ require_relative 'ast/version'
 
 RuboCop::AST::NodePattern::Parser.autoload :WithMeta, "#{__dir__}/ast/node_pattern/with_meta"
 RuboCop::AST::NodePattern::Compiler.autoload :Debug, "#{__dir__}/ast/node_pattern/compiler/debug"
+RuboCop::AST::NodePattern.autoload :Checker, "#{__dir__}/ast/node_pattern/checker"
+RuboCop::AST.autoload :NodeLayout, "#{__dir__}/ast/node_layout"
 
 # The builders pull in the parsers of `parser` and of the Prism translation
 # layer, which the `prism` parser engine does not need.
