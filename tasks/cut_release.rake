@@ -7,6 +7,10 @@ def update_file(path)
   File.write(path, yield(content))
 end
 
+# Bump would find the version itself, but it takes the first `version.rb`
+# under `lib`, which is the one of the copy of `parser`.
+VERSION_FILE = 'lib/rubocop/ast/version.rb'
+
 namespace :cut_release do
   %w[major minor patch pre].each do |release_type|
     desc "Cut a new #{release_type} release, create release notes " \
@@ -52,9 +56,9 @@ namespace :cut_release do
   end
 
   def run(release_type)
-    old_version = Bump::Bump.current
-    Bump::Bump.run(release_type, commit: false, bundle: false, tag: false)
-    new_version = Bump::Bump.current
+    old_version = File.read(VERSION_FILE)[/STRING = '(.+)'/, 1]
+    new_version = Bump::Bump.next_version(release_type, old_version)
+    update_file(VERSION_FILE) { |content| content.sub(old_version, new_version) }
 
     add_header_to_changelog(new_version)
     create_release_notes(new_version)
