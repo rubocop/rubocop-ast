@@ -138,6 +138,43 @@ RSpec.describe RuboCop::AST::ProcessedSource do
     end
   end
 
+  describe '.default_parser_engine' do
+    it 'is `parser_whitequark` for a Ruby version that Prism cannot parse' do
+      expect(described_class.default_parser_engine(3.2)).to eq(:parser_whitequark)
+    end
+
+    it 'is `prism` with Prism 2 or later' do
+      stub_const('Prism::VERSION', '2.0.0')
+
+      expect(described_class.default_parser_engine(3.3)).to eq(:prism)
+    end
+
+    it 'is `parser_prism` with an older Prism', :parser_gem do
+      stub_const('Prism::VERSION', '1.9.0')
+
+      expect(described_class.default_parser_engine(3.4)).to eq(:parser_prism)
+    end
+
+    it 'is `prism` without the `parser` gem' do
+      stub_const('Prism::VERSION', '1.9.0')
+      allow(RuboCop::AST::ParserSource).to receive(:vendored?).and_return(true)
+
+      expect(described_class.default_parser_engine(3.4)).to eq(:prism)
+    end
+  end
+
+  describe '.parser_gem_available?' do
+    it 'is true when the `parser` gem is installed', :parser_gem do
+      expect(described_class).to be_parser_gem_available
+    end
+
+    it 'is false when the copy of the source layer is in use' do
+      allow(RuboCop::AST::ParserSource).to receive(:vendored?).and_return(true)
+
+      expect(described_class).not_to be_parser_gem_available
+    end
+  end
+
   describe '.from_file' do
     describe 'when the file exists' do
       around do |example|

@@ -1,0 +1,1 @@
+* [#433](https://github.com/rubocop/rubocop-ast/pull/433): Add `ProcessedSource.default_parser_engine`, which returns the engine that `:default` stands for with a Ruby version, and `ProcessedSource.parser_gem_available?`. ([@bbatsov][])
