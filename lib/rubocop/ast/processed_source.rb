@@ -84,6 +84,31 @@ module RuboCop
         new(file, ruby_version, path, parser_engine: parser_engine)
       end
 
+      # The parser engine that `:default` stands for with a target Ruby version.
+      #
+      # Prism is used for all Ruby versions it can parse (3.3 and later);
+      # the Parser gem does not support Ruby 3.5 or later and is not fully
+      # compatible with Ruby 3.4. The `prism` engine needs Prism 2, so with
+      # an older Prism its translation layer is used, which needs the Parser
+      # gem as well.
+      #
+      # @return [Symbol] `:parser_whitequark`, `:parser_prism` or `:prism`
+      def self.default_parser_engine(ruby_version)
+        if ruby_version < 3.3
+          :parser_whitequark
+        elsif !parser_gem_available? || ::Prism::VERSION.to_i >= 2
+          :prism
+        else
+          :parser_prism
+        end
+      end
+
+      # Whether the `parser` gem is installed. The `parser_whitequark` and
+      # `parser_prism` engines need it, the `prism` engine does not.
+      def self.parser_gem_available?
+        !ParserSource.vendored?
+      end
+
       # Subclasses of the prism translation parsers with lazily built tokens.
       # @api private
       def self.lazy_tokens_parser_class(base)
@@ -493,24 +518,9 @@ module RuboCop
                                'was passed.'
         end
         if parser_engine == :default
-          default_parser_engine(ruby_version)
+          self.class.default_parser_engine(ruby_version)
         else
           parser_engine
-        end
-      end
-
-      # Prism is used for all Ruby versions it can parse (3.3 and later);
-      # the Parser gem does not support Ruby 3.5 or later and is not fully
-      # compatible with Ruby 3.4. The `prism` engine needs Prism 2, so with
-      # an older Prism its translation layer is used, which needs the Parser
-      # gem as well.
-      def default_parser_engine(ruby_version)
-        if ruby_version < 3.3
-          :parser_whitequark
-        elsif ParserSource.vendored? || ::Prism::VERSION.to_i >= 2
-          :prism
-        else
-          :parser_prism
         end
       end
 

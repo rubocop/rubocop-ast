@@ -36,6 +36,8 @@ By default (`:default`), `parser_whitequark` is selected for Ruby 3.2 and earlie
 source = RuboCop::AST::ProcessedSource.new(code, 3.3, parser_engine: :parser_prism)
 ----
 
+`ProcessedSource.default_parser_engine(ruby_version)` returns the engine that `:default` stands for, without parsing anything. The `parser_whitequark` and `parser_prism` engines need the `parser` gem, and `ProcessedSource.parser_gem_available?` tells whether it is installed.
+
 IMPORTANT: The Parser gem does not support Ruby 3.5+ syntax. For Ruby 3.4 and later, Prism is the recommended parser engine and is selected automatically.
 
 == Pre-parsed Prism Results
