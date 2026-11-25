@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 1.54.0 (2026-11-25)
+
 ### New features
 
 * [#430](https://github.com/rubocop/rubocop-ast/pull/430): Add `MethodDispatchNode#command_call?`, for calls with arguments and no parentheses around them. ([@bbatsov][])
