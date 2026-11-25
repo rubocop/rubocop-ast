@@ -16,7 +16,7 @@ module RuboCop
         if rescue_node
           rescue_node.body
         elsif ensure_node
-          ensure_node.node_parts[0]
+          ensure_node.body
         elsif node_parts.one?
           node_parts[0]
         else
