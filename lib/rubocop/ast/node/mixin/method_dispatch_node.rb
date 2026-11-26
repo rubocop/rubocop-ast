@@ -71,7 +71,7 @@ module RuboCop
       # @return [Boolean] whether the dispatched method is a bare
       #                   access modifier
       def bare_access_modifier?
-        macro? && bare_access_modifier_declaration?
+        bare_access_modifier_declaration? && macro?
       end
 
       # Checks whether the dispatched method is a non-bare access modifier that
@@ -80,7 +80,7 @@ module RuboCop
       # @return [Boolean] whether the dispatched method is a non-bare
       #                   access modifier
       def non_bare_access_modifier?
-        macro? && non_bare_access_modifier_declaration?
+        non_bare_access_modifier_declaration? && macro?
       end
 
       # Checks whether the dispatched method is a bare `private` or `protected`
